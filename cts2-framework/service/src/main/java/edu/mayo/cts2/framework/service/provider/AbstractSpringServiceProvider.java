@@ -45,7 +45,7 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 	private ApplicationContext applicationContext;
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.provider.ServiceProvider#getService(java.lang.Class)
+	 * @see edu.mayo.cts2.framework.service.provider.ServiceProvider#getService(java.lang.Class)
 	 */
 	public synchronized <T extends Cts2Profile> T getService(Class<T> serviceClass) {
 		if(this.applicationContext == null){

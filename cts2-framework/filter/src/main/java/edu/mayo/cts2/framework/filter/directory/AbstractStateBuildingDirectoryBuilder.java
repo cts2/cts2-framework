@@ -112,7 +112,7 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.directory.DirectoryBuilder#count()
+	 * @see edu.mayo.cts2.framework.filter.directory.DirectoryBuilder#count()
 	 */
 	public int count() {
 		return this.callback.executeCount(computeState());

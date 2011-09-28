@@ -51,7 +51,7 @@ public abstract class AbstractNonScoringMatcher extends AbstractMatcher {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.match.AbstractMatcher#doMatchScore(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.filter.match.AbstractMatcher#doMatchScore(java.lang.String, java.lang.String)
 	 */
 	protected float doMatchScore(String matchText, String cadidate){
 		return this.booleanToScore(

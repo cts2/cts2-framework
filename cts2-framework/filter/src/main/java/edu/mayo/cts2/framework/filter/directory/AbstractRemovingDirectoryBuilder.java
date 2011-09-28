@@ -155,7 +155,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.directory.DirectoryBuilder#count()
+	 * @see edu.mayo.cts2.framework.filter.directory.DirectoryBuilder#count()
 	 */
 	public int count() {
 	

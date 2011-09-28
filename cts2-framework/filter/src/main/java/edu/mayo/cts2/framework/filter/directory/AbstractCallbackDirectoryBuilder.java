@@ -164,7 +164,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.directory.DirectoryBuilder#count()
+	 * @see edu.mayo.cts2.framework.filter.directory.DirectoryBuilder#count()
 	 */
 	public int count() {
 		

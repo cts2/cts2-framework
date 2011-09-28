@@ -59,7 +59,7 @@ public class PropertiesFileExceptionCodeMapper implements Cts2RestExceptionCodeM
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.webapp.rest.exception.Cts2RestExceptionCodeMapper#getErrorCode(edu.mayo.cts2.framework.model.exception.Cts2RestException)
+	 * @see edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper#getErrorCode(edu.mayo.cts2.framework.model.exception.Cts2RestException)
 	 */
 	public int getErrorCode(Cts2RestException exception) {
 		String exceptionName = exception.getCts2Exception().getClass().getSimpleName();

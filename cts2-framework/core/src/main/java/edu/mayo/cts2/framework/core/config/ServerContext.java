@@ -125,14 +125,14 @@ public class ServerContext implements ConfigChangeObserver {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.core.config.ConfigChangeObserver#onContextPropertiesFileChange()
+	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onContextPropertiesFileChange()
 	 */
 	public void onContextPropertiesFileChange() {
 		this.loadProperties();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.core.config.ConfigChangeObserver#onPluginsDirectoryChange()
+	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onPluginsDirectoryChange()
 	 */
 	public void onPluginsDirectoryChange() {
 		this.loadProperties();

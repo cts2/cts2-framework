@@ -152,14 +152,14 @@ public class ConfigChangeListener implements ConfigChangeObservable {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.core.config.ConfigChangeObservable#registerListener(edu.mayo.cts2.sdk.core.config.ConfigChangeObserver)
+	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObservable#registerListener(edu.mayo.cts2.framework.core.config.ConfigChangeObserver)
 	 */
 	public void registerListener(ConfigChangeObserver observer) {
 		observers.add(observer);
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.core.config.ConfigChangeObservable#unregisterListener(edu.mayo.cts2.sdk.core.config.ConfigChangeObserver)
+	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObservable#unregisterListener(edu.mayo.cts2.framework.core.config.ConfigChangeObserver)
 	 */
 	public void unregisterListener(ConfigChangeObserver observer) {
 		observers.remove(observer);

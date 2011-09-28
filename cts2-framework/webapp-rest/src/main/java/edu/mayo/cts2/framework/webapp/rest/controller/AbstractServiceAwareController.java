@@ -103,14 +103,14 @@ public class AbstractServiceAwareController extends
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.core.config.ConfigChangeObserver#onContextPropertiesFileChange()
+	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onContextPropertiesFileChange()
 	 */
 	public void onContextPropertiesFileChange() {
 		this.loadServices();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.core.config.ConfigChangeObserver#onPluginsDirectoryChange()
+	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onPluginsDirectoryChange()
 	 */
 	public void onPluginsDirectoryChange() {
 		this.loadServices();
