@@ -9,23 +9,22 @@
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<baseDirectory>${project.build.finalName}-service-plugin</baseDirectory>
+	<files>
+		<file>
+			<source>${plugin.properties.file}</source>
+			<outputDirectory>/</outputDirectory>
+		</file>
+	</files>
 	<fileSets>	
 		<fileSet>
-			<directory>${basedir}/target</directory>
+			<directory>${project.build.directory}</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>${project.build.finalName}.jar</include>
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${basedir}/src/main/resources</directory>
-			<outputDirectory>/</outputDirectory>
-			<includes>
-				<include>plugin.properties</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/target</directory>
+			<directory>${project.build.directory}</directory>
 			<outputDirectory>/lib</outputDirectory>
 			<includes>
 				<include>${project.build.finalName}-tests.jar</include>

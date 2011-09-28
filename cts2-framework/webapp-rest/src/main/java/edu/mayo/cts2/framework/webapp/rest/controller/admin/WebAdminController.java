@@ -30,14 +30,12 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,9 +45,6 @@ import edu.mayo.cts2.framework.service.admin.AdminService;
 import edu.mayo.cts2.framework.service.admin.PluginDescription;
 import edu.mayo.cts2.framework.service.admin.PluginReference;
 import edu.mayo.cts2.framework.webapp.rest.controller.AbstractServiceAwareController;
-import edu.mayo.cts2.framework.webapp.rest.util.ajax.AjaxUtils;
-import edu.mayo.cts2.framework.webapp.rest.util.flash.FlashMap.Message;
-import edu.mayo.cts2.framework.webapp.rest.util.flash.FlashMap.MessageType;
 
 /**
  * The Class WebAdminController.
@@ -100,17 +95,21 @@ public class WebAdminController extends AbstractServiceAwareController {
 				new File(this.cts2Config.getPluginsDirectory()));
 	}
 
-	@RequestMapping(value = { "/admin/plugin/{pluginName}" }, method = RequestMethod.DELETE)
+	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.DELETE)
 	@ResponseBody
-	public void removePlugin(@PathVariable("pluginName") String pluginName) {
-		this.adminService.removePlugin(pluginName);
+	public void removePlugin(
+			@PathVariable("pluginName") String pluginName,
+			@PathVariable("pluginVersion") String pluginVersion) {
+		this.adminService.removePlugin(pluginName, pluginVersion);
 	}
 	
 
-	@RequestMapping(value = { "/admin/plugin/{pluginName}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.GET)
 	@ResponseBody
-	public PluginDescription getPlugin(@PathVariable("pluginName") String pluginName) {
-		return this.adminService.getPluginDescriptions().iterator().next();
+	public PluginDescription getPlugin(
+			@PathVariable("pluginName") String pluginName,
+			@PathVariable("pluginVersion") String pluginVersion){
+		return this.adminService.getPlugin(pluginName, pluginVersion);
 	}
 
 	public static class UploadItem {

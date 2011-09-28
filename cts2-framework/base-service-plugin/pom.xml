@@ -11,8 +11,90 @@
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+
+	<properties>
+		<generated.plugin.properties.file>${project.build.directory}/generated/plugin/plugin.properties</generated.plugin.properties.file>
+		<plugin.properties.file>${generated.plugin.properties.file}</plugin.properties.file>
+	</properties>
+
 	<build>
+
 		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-1</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/build.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<id>enforce-property</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireProperty>
+									<property>service.provider.class</property>
+									<message>You must specify a property 'service.provider.class'</message>
+								</requireProperty>
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<inherited>true</inherited>
+				<executions>
+					<execution>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<property name="output.file" value="${generated.plugin.properties.file}" />
+								<property name="name" value="${project.name}" />
+								<property name="version" value="${project.version}" />
+								<property name="service.provider.class" value="${service.provider.class}" />
+								<delete file="${output.file}" />
+								<touch mkdirs="true" file="${output.file}" />
+
+								<echo file="${output.file}" message="plugin.name = ${name}${line.separator}" />
+								<echo file="${output.file}" append="true"
+									message="plugin.version = ${version}${line.separator}" />
+								<echo file="${output.file}" append="true"
+									message="service.provider.class = ${service.provider.class}" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -124,6 +206,8 @@
 					</execution>
 				</executions>
 			</plugin>
+
+
 		</plugins>
 	</build>
 

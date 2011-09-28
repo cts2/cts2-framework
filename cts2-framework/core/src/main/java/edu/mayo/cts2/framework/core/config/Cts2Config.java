@@ -33,7 +33,6 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -57,29 +56,13 @@ public class Cts2Config implements ConfigChangeObservable {
 
 	private ServerContext serverContext;
 
-	public static final String CTS2_CONFIG_DIRECTORY_ENV_VARIABLE = "cts2.config.dir";
-
-	public static final String CTS2_CONTEXT_ENV_VARIABLE = "cts2.context";
-
-	public static final String CTS2_PLUGINS_DIRECTORY_ENV_VARIABLE = "cts2.plugins.dir";
-
-	private static final String CTS2_CONFIG_DIRECTORY = System
+	private static final String DEFAULT_CTS2_CONFIG_DIRECTORY = System
 			.getProperty("user.home") + File.separator + ".cts2";
 
-	private static final String PLUGINS_DIRECTORY = "plugins";
-
-	private static final String CONTEXT_PROPERTIES_FILE = "service.properties";
-
-	private static final String JNDI_CONTEXT_ID = "contextIdentifier";
-
-	private static final String JNDI_CONFIG_DIRECTORY = "configDirectory";
-
-	private static final String JNDI_PLUGINS_DIRECTORY = "pluginsDirectory";
-
-	private String configDirectory = CTS2_CONFIG_DIRECTORY;
+	private String configDirectory = DEFAULT_CTS2_CONFIG_DIRECTORY;
 
 	private String pluginsDirectory = configDirectory + File.separator
-			+ PLUGINS_DIRECTORY;
+			+ ConfigConstants.PLUGINS_DIRECTORY;
 
 	private File globalPropsFile;
 
@@ -88,10 +71,10 @@ public class Cts2Config implements ConfigChangeObservable {
 	 */
 	private Cts2Config() {
 		super();
-		this.configDirectory = this.getVariable(JNDI_CONFIG_DIRECTORY,
-				CTS2_CONFIG_DIRECTORY_ENV_VARIABLE, CTS2_CONFIG_DIRECTORY);
-		this.pluginsDirectory = this.getVariable(JNDI_PLUGINS_DIRECTORY,
-				CTS2_PLUGINS_DIRECTORY_ENV_VARIABLE, pluginsDirectory);
+		this.configDirectory = this.getVariable(ConfigConstants.JNDI_CONFIG_DIRECTORY,
+				ConfigConstants.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE, DEFAULT_CTS2_CONFIG_DIRECTORY);
+		this.pluginsDirectory = this.getVariable(ConfigConstants.JNDI_PLUGINS_DIRECTORY,
+				ConfigConstants.CTS2_PLUGINS_DIRECTORY_ENV_VARIABLE, pluginsDirectory);
 		
 		log.info("Cts2Sdk using Configuration Directory: " + this.configDirectory);
 		log.info("Cts2Sdk using Configuration Directory: " + this.pluginsDirectory);
@@ -167,8 +150,8 @@ public class Cts2Config implements ConfigChangeObservable {
 			instance.globalPropsFile = new File(instance.configDirectory
 					+ "/global.properties");
 
-			String jndiContext = instance.getVariable(JNDI_CONTEXT_ID,
-					CTS2_CONTEXT_ENV_VARIABLE, context);
+			String jndiContext = instance.getVariable(ConfigConstants.JNDI_CONTEXT_ID,
+					ConfigConstants.CTS2_CONTEXT_ENV_VARIABLE, context);
 			instance.context = jndiContext;
 			log.info("Webapp registered with service identifier: "
 					+ instance.context);
@@ -292,7 +275,7 @@ public class Cts2Config implements ConfigChangeObservable {
 	 */
 	private String getContextPropertiesFilePath(String context) {
 		return getContextDirectoryPath(context) + File.separator
-				+ CONTEXT_PROPERTIES_FILE;
+				+ ConfigConstants.CONTEXT_PROPERTIES_FILE;
 	}
 
 	private Properties getContextProperties() {

@@ -28,7 +28,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -38,10 +40,12 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.Cts2Config;
 
 /**
@@ -57,8 +61,8 @@ public class AdminService {
 	@Resource
 	private Cts2Config cts2Config;
 
-	public void removePlugin(String pluginName) {
-		File pluginFile = this.findPluginFile(pluginName);
+	public void removePlugin(String pluginName, String pluginVersion) {
+		File pluginFile = this.findPluginFile(pluginName, pluginVersion);
 		
 		try {
 			FileUtils.forceDelete(pluginFile);
@@ -67,57 +71,81 @@ public class AdminService {
 		}
 	}
 	
+	public PluginDescription getPlugin(String pluginName, String pluginVersion) {
+		File pluginFile = this.findPluginFile(pluginName, pluginVersion);
+		
+		return this.toPluginDescription(pluginFile);
+	}
+	
 	public Set<PluginDescription> getPluginDescriptions() {
-		File pluginDirectory = new File(this.cts2Config.getPluginsDirectory());
+		
+		return this.doInPluginDirectory(new DoInPluginDirectory<Set<PluginDescription>>(){
 
-		String currentPlugin = this.cts2Config.getProperty("provider.name");
+			public Set<PluginDescription> processPlugins(List<File> plugins) {
+				Set<PluginDescription> returnSet = new HashSet<PluginDescription>();
+				
+				for(File plugin : plugins){
 
-		Set<PluginDescription> returnSet = new HashSet<PluginDescription>();
-
-		File[] files = pluginDirectory.listFiles();
-
-		if (ArrayUtils.isEmpty(files)) {
-			log.warn("No Plugins Loaded.");
-		} else {
-			for (File plugin : pluginDirectory.listFiles()) {
-				if (plugin.isDirectory()) {
-					Properties props = this.getPluginProperties(plugin);
-
-					String name = props.getProperty("provider.name");
-					returnSet.add(new PluginDescription(name, props
-							.getProperty("provider.version"), props
-							.getProperty("provider.description"), name
-							.equals(currentPlugin)));
+					PluginDescription pluginDescription = toPluginDescription(plugin);
+					
+					returnSet.add(pluginDescription);
 				}
+				
+				return returnSet;
 			}
-		}
-		return returnSet;
+
+			
+		});
+	}
+	
+	private PluginDescription toPluginDescription(File plugin) {
+		Properties props = getPluginProperties(plugin);
+		
+		String name = getPluginName(props);
+		String version = getPluginVersion(props);
+		String description = getPluginDescription(props);
+		boolean isActive = isActivePlugin(name, version);
+		
+		PluginDescription pluginDescription = new PluginDescription(
+				name, 
+				version,
+				description,
+				isActive);
+		
+		return pluginDescription;
+	}
+	
+	private boolean isActivePlugin(String name, String version){
+		return StringUtils.equals(name, this.getInUsePluginName())
+				&&
+				StringUtils.equals(version, this.getInUsePluginVersion());
 	}
 	
 	public void activatePlugin(PluginReference plugin) {
-		this.cts2Config.setProperty("provider.name", plugin.getPluginName());	
-		this.cts2Config.setProperty("provider.version", plugin.getPluginVersion());	
+		this.cts2Config.setProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, plugin.getPluginName());	
+		this.cts2Config.setProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, plugin.getPluginVersion());	
 	}
 	
-	private File findPluginFile(String pluginName){
-		File pluginDirectory = new File(this.cts2Config.getPluginsDirectory());
-		File[] files = pluginDirectory.listFiles();
-		
-		if (! ArrayUtils.isEmpty(files)) {
-			for (File plugin : pluginDirectory.listFiles()) {
-				if (plugin.isDirectory()) {
-					Properties props = this.getPluginProperties(plugin);
+	private File findPluginFile(final String pluginName, final String pluginVersion){
+		return this.doInPluginDirectory(new DoInPluginDirectory<File>(){
 
-					String foundName = props.getProperty("provider.name");
+			public File processPlugins(List<File> plugins) {
+				for(File plugin : plugins){
+					Properties props = getPluginProperties(plugin);
 					
-					if(foundName.equals(pluginName)){
+					String name = getPluginName(props);
+					String version = getPluginVersion(props);
+					
+					if(StringUtils.equals(pluginName, name) &&
+							StringUtils.equals(pluginVersion, version)){
 						return plugin;
 					}
 				}
+				
+				log.warn("Plugin " + pluginName + " Version " + pluginVersion + " was not found.");
+				return null;
 			}
-		}
-		
-		return null;
+		});
 	}
 
 	/**
@@ -154,11 +182,52 @@ public class AdminService {
 		Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(new File(plugin.getPath()
-					+ File.separator + "plugin.properties")));
+					+ File.separator + ConfigConstants.PLUGIN_PROPERTIES_FILE_NAME)));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
 		return props;
+	}
+	
+	protected <T> T doInPluginDirectory(DoInPluginDirectory<T> pluginClosure){
+		File pluginDirectory = new File(this.cts2Config.getPluginsDirectory());
+		File[] files = pluginDirectory.listFiles();
+		
+		List<File> returnList = new ArrayList<File>();
+		
+		if (! ArrayUtils.isEmpty(files)) {
+			for (File plugin : pluginDirectory.listFiles()) {
+				if (plugin.isDirectory()) {
+					returnList.add(plugin);
+				}
+			}
+		}
+		
+		return pluginClosure.processPlugins(returnList);
+	}
+	
+	private String getInUsePluginName(){
+		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP);	
+	}
+	
+	private String getInUsePluginVersion(){
+		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP);	
+	}
+	
+	private String getPluginName(Properties props){
+		return props.getProperty(ConfigConstants.PLUGIN_NAME_PROP);
+	}
+	
+	private String getPluginDescription(Properties props){
+		return props.getProperty(ConfigConstants.PLUGIN_DESCRIPTION_PROP);
+	}
+	
+	private String getPluginVersion(Properties props){
+		return props.getProperty(ConfigConstants.PLUGIN_VERSION_PROP);
+	}
+	private static interface DoInPluginDirectory<T> {
+		
+		public T processPlugins(List<File> plugins);
 	}
 }
