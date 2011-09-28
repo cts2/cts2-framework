@@ -21,8 +21,13 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
 <div class="abs" id="wrapper">
   <div class="abs" id="desktop">
     <a class="abs icon" style="left:20px;top:20px;" href="#icon_dock_service_plugins">
-      <img src="resources/desktop/assets/images/icons/Folder-Blue-System-Icon.png" />
+      <img src="resources/desktop/assets/images/icons/folder-preferences-icon.png" />
       Service Plugins
+    </a>
+    
+    <a class="abs icon" style="left:20px;top:160px;" href="#icon_dock_admin_app">
+      <img src="resources/desktop/assets/images/icons/box-config-icon.png" />
+      Admin App
     </a>
    
     <div id="window_computer" class="abs window">
