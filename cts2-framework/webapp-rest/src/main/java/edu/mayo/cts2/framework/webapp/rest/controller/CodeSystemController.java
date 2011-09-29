@@ -65,10 +65,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private CodeSystemMaintenanceService codeSystemMaintenanceService;
-	
-	public CodeSystemController(){
-		System.out.println("hi");
-	}
+
 	/**
 	 * Gets the code systems.
 	 *
