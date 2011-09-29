@@ -6,19 +6,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 					    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean class="edu.mayo.cts2.framework.core.config.Cts2Config" factory-method="instance"/>
-	
-	<!-- Scans within the base package of the application for @Components to configure as beans -->
-	<context:component-scan base-package="edu.mayo.cts2.framework.model" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.core" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.service" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.filter" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.webapp" />
 
-	<bean id="jsonpCallbackFilter" class="edu.mayo.cts2.framework.webapp.rest.filter.jsonp.JsonpCallbackFilter"/>
+<bean id="jsonpCallbackFilter" class="edu.mayo.cts2.framework.webapp.rest.filter.jsonp.JsonpCallbackFilter"/>
 
 	<util:properties id="errorCodes" location="classpath:exceptionErrorCodes.properties"/>
-	
+
+
 </beans>

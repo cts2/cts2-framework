@@ -38,13 +38,13 @@ function removePlugin(pluginName,removeCallback){
 	
 }
 
-function activatePlugin(pluginName,activateCallback){
+function activatePlugin(pluginName, pluginVersion, activateCallback){
 	
 	$.ajax( {
 		"dataType": 'json', 
 		"type": "PUT", 
 		"contentType": "application/json",
-		"data": "{'pluginName':'"+pluginName+"'}",
+		"data": "{'pluginName':'"+pluginName+"','pluginVersion':'"+pluginVersion+"'}",
 		"url": "admin/plugins/active", 
 		"success": activateCallback
 	} );
@@ -68,8 +68,10 @@ $(document).ready(function() {
 	} );
 	
 	$('form').ajaxForm({
-        beforeSubmit: function(){alert("starting");},
-        success:      function(){alert("ending");}
+        success:      function(){
+        	oTable.fnReloadAjax();
+        	jAlert('Plugin Successfully Uploaded.', 'Alert Dialog');
+        }
 	});
 	
 	/* Click event handler */
@@ -100,6 +102,7 @@ $(document).ready(function() {
 	$('#activateButton').click( function() {
 		activatePlugin(
 				selectedPlugin[0], 
+				selectedPlugin[1], 
 				function(){
 					jAlert('Plugin Successfully Activated.', 'Alert Dialog');
 					oTable.fnReloadAjax();});

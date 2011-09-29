@@ -132,6 +132,8 @@ public class AdminService {
 	public void activatePlugin(PluginReference plugin) {
 		this.cts2Config.setProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, plugin.getPluginName());	
 		this.cts2Config.setProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, plugin.getPluginVersion());	
+	
+		this.cts2Config.refresh();
 	}
 	
 	private File findPluginFile(final String pluginName, final String pluginVersion){

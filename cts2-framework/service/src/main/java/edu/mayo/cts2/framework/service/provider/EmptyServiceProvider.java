@@ -8,4 +8,8 @@ public class EmptyServiceProvider implements ServiceProvider {
 		return null;
 	}
 
+	public void setClassLoader(ClassLoader classLoader) {
+		//
+	}
+
 }

@@ -35,84 +35,81 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 
-import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
-import edu.mayo.cts2.framework.core.config.Cts2Config;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.provider.ServiceProvider;
+import edu.mayo.cts2.framework.service.provider.ServiceProviderChangeObserver;
 import edu.mayo.cts2.framework.service.provider.ServiceProviderFactory;
 
 /**
  * The Class AbstractServiceAwareController.
- *
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class AbstractServiceAwareController extends
-		AbstractMessageWrappingController implements InitializingBean, ConfigChangeObserver {
-	
-	private static Log log = LogFactory.getLog(AbstractServiceAwareController.class);
+		AbstractMessageWrappingController implements InitializingBean, ServiceProviderChangeObserver {
+
+	private static Log log = LogFactory
+			.getLog(AbstractServiceAwareController.class);
 
 	@Resource
 	private ServiceProviderFactory serviceProviderFactory;
-	
-	@Resource
-	private Cts2Config config;
 
 	/**
 	 * The Interface Cts2Service.
-	 *
+	 * 
 	 * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
 	 */
-	@Target({ElementType.FIELD})
+	@Target({ ElementType.FIELD })
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Cts2Service {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
+		this.serviceProviderFactory.registerListener(this);
+
 		this.loadServices();
-		
-		config.registerListener(this);
 	}
-	
+
 	/**
 	 * Load services.
 	 */
-	protected void loadServices(){
-	
-		for (Field field : this.getClass().getDeclaredFields()) {
-						if (field.isAnnotationPresent(Cts2Service.class)) {
-				
-				@SuppressWarnings("unchecked")
-				Class<? extends Cts2Profile> clazz = 
-					(Class<? extends Cts2Profile>) field.getType();
+	protected void loadServices() {
+		
+		ServiceProvider serviceProvider = this.serviceProviderFactory
+				.getServiceProvider();
 
-				Cts2Profile service = serviceProviderFactory.getServiceProvider().getService(clazz);
 
-				field.setAccessible(true);
+				for (Field field : this.getClass().getDeclaredFields()) {
+					if (field.isAnnotationPresent(Cts2Service.class)) {
 
-				try {
-					field.set(this, service);
-				} catch (Exception e) {
-					throw new IllegalStateException(e);
+						@SuppressWarnings("unchecked")
+						Class<? extends Cts2Profile> clazz = (Class<? extends Cts2Profile>) field
+								.getType();
+
+						Cts2Profile service = serviceProvider.getService(clazz);
+
+						field.setAccessible(true);
+
+						try {
+							field.set(this, service);
+						} catch (Exception e) {
+							throw new IllegalStateException(e);
+						}
+
+						log.info("Setting service: " + field.getType()
+								+ " on: " + this.getClass().getName());
+					}
 				}
-
-				log.info("Setting service: " +  field.getType() + " on: " + this.getClass().getName());
 			}
-		}	
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onContextPropertiesFileChange()
-	 */
-	public void onContextPropertiesFileChange() {
-		this.loadServices();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onPluginsDirectoryChange()
-	 */
-	public void onPluginsDirectoryChange() {
+	@Override
+	public void onServiceProviderChange() {
 		this.loadServices();
 	}
 }

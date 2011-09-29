@@ -44,7 +44,6 @@ import edu.mayo.cts2.framework.core.config.Cts2Config;
 import edu.mayo.cts2.framework.service.admin.AdminService;
 import edu.mayo.cts2.framework.service.admin.PluginDescription;
 import edu.mayo.cts2.framework.service.admin.PluginReference;
-import edu.mayo.cts2.framework.webapp.rest.controller.AbstractServiceAwareController;
 
 /**
  * The Class WebAdminController.
@@ -52,7 +51,7 @@ import edu.mayo.cts2.framework.webapp.rest.controller.AbstractServiceAwareContro
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class WebAdminController extends AbstractServiceAwareController {
+public class WebAdminController {
 
 	@Resource
 	private Cts2Config cts2Config;
@@ -72,7 +71,6 @@ public class WebAdminController extends AbstractServiceAwareController {
 	public ModelAndView getAdminView(@RequestBody PluginReference plugin) {
 		return new ModelAndView("admin");
 	}
-
 	
 	@RequestMapping(value = { "/admin/plugins/active" }, method = RequestMethod.PUT)
 	@ResponseBody
@@ -100,10 +98,10 @@ public class WebAdminController extends AbstractServiceAwareController {
 	public void removePlugin(
 			@PathVariable("pluginName") String pluginName,
 			@PathVariable("pluginVersion") String pluginVersion) {
+		
 		this.adminService.removePlugin(pluginName, pluginVersion);
 	}
 	
-
 	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.GET)
 	@ResponseBody
 	public PluginDescription getPlugin(

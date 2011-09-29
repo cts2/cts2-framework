@@ -68,7 +68,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
           </div>
         </div>
         <div class="abs window_bottom">
-            <form id="uploadForm" action="../../admin/plugins" method="POST" enctype="multipart/form-data">
+            <form id="uploadForm" action="admin/plugins" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
                 <img style="margin-bottom:4px;" src="resources/desktop/assets/images/icons/plugin-add-icon.png"></img>
                 Upload Plugin: <input type="file" name="file" />

@@ -24,8 +24,12 @@
 package edu.mayo.cts2.framework.service.provider;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.Resource;
 
@@ -34,8 +38,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
+import edu.mayo.cts2.framework.core.config.Cts2Config;
 import edu.mayo.cts2.framework.core.plugin.PluginClassLoader;
 import edu.mayo.cts2.framework.service.admin.AdminService;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
  * A factory for creating ServiceProvider objects.
@@ -43,14 +50,20 @@ import edu.mayo.cts2.framework.service.admin.AdminService;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-public class ServiceProviderFactory implements InitializingBean {
+public class ServiceProviderFactory implements InitializingBean,
+		ConfigChangeObserver, ServiceProviderChangeObservable {
 
 	private final Log log = LogFactory.getLog(getClass().getName());
 
 	@Resource
 	private AdminService adminService;
 
+	@Resource
+	private Cts2Config cts2Config;
+
 	private ServiceProvider serviceProvider;
+
+	private Set<ServiceProviderChangeObserver> observers = new HashSet<ServiceProviderChangeObserver>();
 
 	/*
 	 * (non-Javadoc)
@@ -59,6 +72,7 @@ public class ServiceProviderFactory implements InitializingBean {
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
+		this.cts2Config.registerListener(this);
 		this.serviceProvider = this.createServiceProvider();
 	}
 
@@ -77,6 +91,10 @@ public class ServiceProviderFactory implements InitializingBean {
 		return this.serviceProvider;
 	}
 
+	public void refresh() {
+		this.serviceProvider = null;
+	}
+
 	/**
 	 * Creates a new ServiceProvider object.
 	 * 
@@ -91,31 +109,54 @@ public class ServiceProviderFactory implements InitializingBean {
 
 			return new EmptyServiceProvider();
 		}
-		
-		String providerClassName = this.adminService.getCurrentPluginServiceProviderClassName();
 
-		PluginClassLoader pluginClassLoader = new PluginClassLoader(
-				this.getClass().getClassLoader(),
+		String providerClassName = this.adminService
+				.getCurrentPluginServiceProviderClassName();
+
+		final PluginClassLoader pluginClassLoader = new PluginClassLoader(this
+				.getClass().getClassLoader(),
 				inUsePluginDirectory.getAbsolutePath());
-
 		try {
-			ServiceProvider provider = this.loadServiceProviderClass(
-					providerClassName, 
-					pluginClassLoader);
-			
+			final ServiceProvider provider = this.loadServiceProviderClass(
+					providerClassName, pluginClassLoader);
 
-			Thread.currentThread().setContextClassLoader(
-					new URLClassLoader(new URL[0], pluginClassLoader));
+			final ExecutorService ex = Executors.newFixedThreadPool(1,
+					new ThreadFactory() {
 
-			return provider
-					;
+						public Thread newThread(Runnable runnable) {
+							Thread t = new Thread(runnable);
+							t.setContextClassLoader(pluginClassLoader);
+
+							return t;
+						}
+
+					});
+
+			return new ServiceProvider() {
+
+				public <T extends Cts2Profile> T getService(
+						final Class<T> serviceClass) {
+					try {
+						return ex.submit(new Callable<T>() {
+
+							public T call() throws Exception {
+								return provider.getService(serviceClass);
+							}
+
+						}).get();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+
+			};
+
 		} catch (ClassNotFoundException e) {
-			log.warn("Service Provider Class: " + providerClassName + " not found!");
+			log.warn("Service Provider Class: " + providerClassName
+					+ " not found!");
 
 			return new EmptyServiceProvider();
-		}	
-		
-
+		}
 	}
 
 	/**
@@ -142,5 +183,29 @@ public class ServiceProviderFactory implements InitializingBean {
 		}
 
 		return serviceProvider;
+	}
+
+	public void onContextPropertiesFileChange() {
+		this.serviceProvider = null;
+		fireConfigChangeEvent();
+	}
+
+	public void onPluginsDirectoryChange() {
+		this.serviceProvider = null;
+		fireConfigChangeEvent();
+	}
+
+	private void fireConfigChangeEvent() {
+		for (ServiceProviderChangeObserver observer : this.observers) {
+			observer.onServiceProviderChange();
+		}
+	}
+
+	public void registerListener(ServiceProviderChangeObserver observer) {
+		this.observers.add(observer);
+	}
+
+	public void unregisterListener(ServiceProviderChangeObserver observer) {
+		this.observers.remove(observer);
 	}
 }
