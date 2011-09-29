@@ -215,6 +215,7 @@ public class Cts2Config implements ConfigChangeObservable {
 		}
 		
 		config.setProperty(propertyName, propertyValue);
+	
 		try {
 			config.save();
 		} catch (ConfigurationException e) {
@@ -222,6 +223,10 @@ public class Cts2Config implements ConfigChangeObservable {
 		}
 	}
 
+	public void refresh(){
+		this.configChangeListener.configFileChange();
+	}
+	
 	/**
 	 * Gets the property.
 	 *
@@ -331,11 +336,11 @@ public class Cts2Config implements ConfigChangeObservable {
 	}
 	
 	public String getContextConfigDirectory() {
-		return this.getContextConfigFilePath();
+		return this.getContextDirectoryPath(this.context);
 	}
 
 	protected String getContextConfigFilePath() {
-		return getContextPropertiesFilePath(context);
+		return getContextPropertiesFilePath(this.context);
 	}
 
 	/* (non-Javadoc)
