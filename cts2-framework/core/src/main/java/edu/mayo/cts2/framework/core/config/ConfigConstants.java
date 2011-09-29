@@ -26,7 +26,7 @@ public class ConfigConstants {
 	public static final String PLUGIN_NAME_PROP = "plugin.name";
 	public static final String PLUGIN_VERSION_PROP = "plugin.version";
 	public static final String PLUGIN_DESCRIPTION_PROP = "plugin.description";
-	public static final String PLUGIN_PROVIDER_CLASS_PROP = "provider.class";
+	public static final String PLUGIN_PROVIDER_CLASS_PROP = "service.provider.class";
 
 	
 

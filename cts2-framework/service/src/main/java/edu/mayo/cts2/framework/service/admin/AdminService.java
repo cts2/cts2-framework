@@ -71,10 +71,18 @@ public class AdminService {
 		}
 	}
 	
-	public PluginDescription getPlugin(String pluginName, String pluginVersion) {
-		File pluginFile = this.findPluginFile(pluginName, pluginVersion);
+	public PluginDescription getPluginDescription(String pluginName, String pluginVersion) {
+		File pluginFile = this.getPluginDirectory(pluginName, pluginVersion);
 		
 		return this.toPluginDescription(pluginFile);
+	}
+	
+	public File getInUsePluginDirectory() {
+		 return this.findPluginFile(this.getInUsePluginName(), this.getInUsePluginVersion());
+	}
+	
+	public File getPluginDirectory(String pluginName, String pluginVersion) {
+		 return this.findPluginFile(pluginName, pluginVersion);
 	}
 	
 	public Set<PluginDescription> getPluginDescriptions() {
@@ -190,6 +198,12 @@ public class AdminService {
 		return props;
 	}
 	
+	public String getCurrentPluginServiceProviderClassName(){
+		File plugin = this.getInUsePluginDirectory();
+		
+		return this.getPluginProperties(plugin).getProperty(ConfigConstants.PLUGIN_PROVIDER_CLASS_PROP);
+	}
+	
 	protected <T> T doInPluginDirectory(DoInPluginDirectory<T> pluginClosure){
 		File pluginDirectory = new File(this.cts2Config.getPluginsDirectory());
 		File[] files = pluginDirectory.listFiles();
@@ -212,7 +226,7 @@ public class AdminService {
 	}
 	
 	private String getInUsePluginVersion(){
-		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP);	
+		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP);	
 	}
 	
 	private String getPluginName(Properties props){

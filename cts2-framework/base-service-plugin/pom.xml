@@ -13,204 +13,213 @@
 
 
 	<properties>
+		<webapp.name>webapp-rest</webapp.name>
+		<webapp.port>5150</webapp.port>
 		<generated.plugin.properties.file>${project.build.directory}/generated/plugin/plugin.properties</generated.plugin.properties.file>
 		<plugin.properties.file>${generated.plugin.properties.file}</plugin.properties.file>
+		<test.config.dir>${project.build.directory}/testconfigdir</test.config.dir>
+		<test.plugins.dir>${project.build.directory}/test-plugins</test.plugins.dir>
 	</properties>
 
-	<build>
+	<profiles>
+		<profile>
+			<id>parent</id>
+			<activation>
+				<file>
+					<exists>${basedir}/marker.file</exists>
+				</file>
+			</activation>
+		</profile>
 
-		<plugins>
+		<profile>
+			<id>child</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0-alpha-1</version>
-				<inherited>false</inherited>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>read-project-properties</goal>
-						</goals>
-						<configuration>
-							<files>
-								<file>${basedir}/build.properties</file>
-							</files>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+				<plugins>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.0.1</version>
-				<executions>
-					<execution>
-						<id>enforce-property</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireProperty>
-									<property>service.provider.class</property>
-									<message>You must specify a property 'service.provider.class'</message>
-								</requireProperty>
-							</rules>
-							<fail>true</fail>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>1.0.1</version>
+						<executions>
+							<execution>
+								<id>enforce-property</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>service.provider.class</property>
+											<message>You must specify a property 'service.provider.class'</message>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.3</version>
-				<inherited>true</inherited>
-				<executions>
-					<execution>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<phase>generate-sources</phase>
-						<configuration>
-							<tasks>
-								<property name="output.file" value="${generated.plugin.properties.file}" />
-								<property name="name" value="${project.name}" />
-								<property name="version" value="${project.version}" />
-								<property name="service.provider.class" value="${service.provider.class}" />
-								<delete file="${output.file}" />
-								<touch mkdirs="true" file="${output.file}" />
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.3</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<phase>generate-sources</phase>
+								<configuration>
+									<tasks>
+										<property name="output.file" value="${generated.plugin.properties.file}" />
+										<property name="name" value="${project.name}" />
+										<property name="version" value="${project.version}" />
+										<property name="service.provider.class" value="${service.provider.class}" />
+										<delete file="${output.file}" />
+										<touch mkdirs="true" file="${output.file}" />
 
-								<echo file="${output.file}" message="plugin.name = ${name}${line.separator}" />
-								<echo file="${output.file}" append="true"
-									message="plugin.version = ${version}${line.separator}" />
-								<echo file="${output.file}" append="true"
-									message="service.provider.class = ${service.provider.class}" />
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+										<echo file="${output.file}" message="plugin.name = ${name}${line.separator}" />
+										<echo file="${output.file}" append="true"
+											message="plugin.version = ${version}${line.separator}" />
+										<echo file="${output.file}" append="true"
+											message="service.provider.class = ${service.provider.class}" />
 
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<groupId>org.apache.maven.plugins</groupId>
-				<version>2.2-beta-3</version>
-				<dependencies>
-					<dependency>
-						<groupId>edu.mayo.cts2.framework</groupId>
-						<artifactId>service-plugin-assembly-descriptor</artifactId>
-						<version>0.1.0-SNAPSHOT</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>service-plugin-distribution</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>create-plugin-assembly</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/test-plugins/${project.build.finalName}-${maven.build.timestamp}</outputDirectory>
-							<overwrite>true</overwrite>
-							<resources>
-								<resource>
-									<directory>${basedir}/target/${project.build.finalName}-service-plugin/${project.build.finalName}-service-plugin</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+										<property name="test.service.properties.output.file"
+											value="${project.build.directory}/testconfigdir/${webapp.name}/service.properties" />
+										<delete file="${test.service.properties.output.file}" />
+										<touch mkdirs="true" file="${test.service.properties.output.file}" />
+										<echo file="${test.service.properties.output.file}"
+											message="service.plugin.name = ${name}${line.separator}" />
+										<echo file="${test.service.properties.output.file}"
+											append="true" message="service.plugin.version = ${version}" />
 
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven2-plugin</artifactId>
-				<configuration>
-					<!-- Container configuration -->
-					<container>
-						<containerId>jetty6x</containerId>
-						<type>embedded</type>
-						<systemProperties>
-							<cts2.config.dir>${basedir}/src/test/resources/testconfigdir</cts2.config.dir>
-							<cts2.plugins.dir>${basedir}/target/test-plugins</cts2.plugins.dir>
-							<test.context>true</test.context>
-						</systemProperties>
-					</container>
-					<!-- Configuration to use with the container or the deployer -->
-					<configuration>
-						<deployables>
-							<deployable>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<groupId>org.apache.maven.plugins</groupId>
+						<version>2.2-beta-3</version>
+						<dependencies>
+							<dependency>
 								<groupId>edu.mayo.cts2.framework</groupId>
-								<artifactId>webapp-rest</artifactId>
-								<type>war</type>
+								<artifactId>service-plugin-assembly-descriptor</artifactId>
+								<version>0.1.0-SNAPSHOT</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>service-plugin-distribution</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+						<executions>
+							<execution>
+								<id>create-plugin-assembly</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.5</version>
+						<executions>
+							<execution>
+								<id>copy-resources</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/test-plugins/${project.build.finalName}-${maven.build.timestamp}</outputDirectory>
+									<overwrite>true</overwrite>
+									<resources>
+										<resource>
+											<directory>${basedir}/target/${project.build.finalName}-service-plugin/${project.build.finalName}-service-plugin</directory>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.2</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>test-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<configuration>
+							<!-- Container configuration -->
+							<container>
+								<containerId>jetty6x</containerId>
+								<type>embedded</type>
+								<systemProperties>
+									<cts2.config.dir>${test.config.dir}</cts2.config.dir>
+									<cts2.plugins.dir>${test.plugins.dir}</cts2.plugins.dir>
+									<test.context>true</test.context>
+								</systemProperties>
+							</container>
+							<!-- Configuration to use with the container or the deployer -->
+							<configuration>
+								<deployables>
+									<deployable>
+										<groupId>edu.mayo.cts2.framework</groupId>
+										<artifactId>webapp-rest</artifactId>
+										<type>war</type>
+										<properties>
+											<context>/${webapp.name}</context>
+										</properties>
+									</deployable>
+								</deployables>
 								<properties>
-									<context>/webapp-rest</context>
+									<cargo.servlet.port>${webapp.port}</cargo.servlet.port>
 								</properties>
-							</deployable>
-						</deployables>
-						<properties>
-							<cargo.servlet.port>5150</cargo.servlet.port>
-						</properties>
-					</configuration>
-					<!-- Don't wait, execute the tests after the container is started -->
-					<wait>false</wait>
-				</configuration>
-				<executions>
-					<execution>
-						<id>start-container</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop-container</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+							</configuration>
+							<!-- Don't wait, execute the tests after the container is started -->
+							<wait>false</wait>
+						</configuration>
+						<executions>
+							<execution>
+								<id>start-container</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>start</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>stop-container</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 
-
-		</plugins>
-	</build>
-
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
 	<dependencies>
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>

@@ -329,6 +329,10 @@ public class Cts2Config implements ConfigChangeObservable {
 	public String getConfigDirectory() {
 		return configDirectory;
 	}
+	
+	public String getContextConfigDirectory() {
+		return this.getContextConfigFilePath();
+	}
 
 	protected String getContextConfigFilePath() {
 		return getContextPropertiesFilePath(context);

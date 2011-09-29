@@ -109,7 +109,7 @@ public class WebAdminController extends AbstractServiceAwareController {
 	public PluginDescription getPlugin(
 			@PathVariable("pluginName") String pluginName,
 			@PathVariable("pluginVersion") String pluginVersion){
-		return this.adminService.getPlugin(pluginName, pluginVersion);
+		return this.adminService.getPluginDescription(pluginName, pluginVersion);
 	}
 
 	public static class UploadItem {
