@@ -22,7 +22,7 @@
 	</developers>
 
 	<scm>
-		<developerConnection>scm:git:github.com:cts2/cts2-framework.git</developerConnection>
+		<developerConnection>scm:git:https://cts2@github.com/cts2/cts2-framework.git</developerConnection>
 	</scm>
 
 	<modules>
