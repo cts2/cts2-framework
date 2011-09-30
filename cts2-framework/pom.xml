@@ -21,6 +21,10 @@
 			<timezone>-5</timezone>
 		</developer>
 	</developers>
+	
+	<scm>
+		<developerConnection>scm:git:git@github.com:cts2/cts2-framework.git</developerConnection>
+	</scm>
 
 	<modules>
 		<module>model</module>
@@ -40,7 +44,7 @@
 		</snapshotRepository>
 		<site>
 			<id>sdk-website-server</id>
-			<url>scp://72.44.34.6/var/www/sites/cts2-sdk</url>
+			<url>scp://72.44.34.6/var/www/sites/cts2-framework</url>
 		</site>
 	</distributionManagement>
 
