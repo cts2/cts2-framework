@@ -37,6 +37,10 @@
 	</modules>
 
 	<distributionManagement>
+		<repository>
+			<id>informatics-releases</id>
+			<url>http://informatics.mayo.edu/maven/content/repositories/releases</url>
+		</repository>
 		<snapshotRepository>
 			<id>informatics-snapshots</id>
 			<url>http://informatics.mayo.edu/maven/content/repositories/snapshots</url>
