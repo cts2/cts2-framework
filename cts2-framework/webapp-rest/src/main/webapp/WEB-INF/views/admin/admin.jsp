@@ -30,7 +30,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
       Admin App
     </a>
    
-    <div id="window_computer" class="abs window">
+    <div id="window_service_plugins" class="abs window">
       <div class="abs window_inner">
         <div class="window_top">
           <span class="float_left">
@@ -79,84 +79,75 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
       </div>
       <span class="abs ui-resizable-handle ui-resizable-se"></span>
     </div>
+    
+    
+    
+    
+    
+    
+    <div id="window_admin_app" class="abs window">
+      <div class="abs window_inner">
+        <div class="window_top">
+          <span class="float_left">
+            <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
+            Admin App
+          </span>
+          <span class="float_right">
+            <a href="#" class="window_min"></a>
+            <a href="#" class="window_resize"></a>
+            <a href="#icon_dock_admin_app" class="window_close"></a>
+          </span>
+        </div>
+        <div class="abs window_content">
+          <div class="window_aside">
+			<button id="saveConfigButton" type="button">Save Settings</button>
+			<button id="resetConfigButton" type="button">Reset Settings</button>
+          </div>
+          <div class="window_main">
+            <table id="contextConfigTable" class="data">
+              <thead>
+                <tr>
+                  <th>
+                    Property Name
+                  </th>
+                  <th>
+                    Property Value
+                  </th>
+                </tr>
+              </thead>
+             
+            </table>
+          </div>
+        </div>
+        <div class="abs window_bottom">
+            
+        </div>
+      </div>
+      <span class="abs ui-resizable-handle ui-resizable-se"></span>
+    </div>
+    
+    
+    
+    
+    
+    
+    
   </div>
   <div class="abs" id="bar_top">
     <span class="float_right" id="clock"></span>
     <ul>
       <li>
-        <a class="menu_trigger" href="#">jQuery Desktop</a>
+        <a class="menu_trigger" href="#">CTS2 Resources</a>
         <ul class="menu">
           <li>
-            <a href="http://www.amazon.com/dp/0596159773?tag=sons-20">jQuery Cookbook</a>
+            <a href="http://informatics.mayo.edu/cts2/framework">CTS2 Develepment Framework</a>
           </li>
           <li>
-            <a href="http://jqueryenlightenment.com/">jQuery Enlightenment</a>
-          </li>
-          <li>
-            <a href="http://jquery.com/">jQuery Home</a>
-          </li>
-          <li>
-            <a href="http://jquerymobile.com/">jQuery Mobile</a>
-          </li>
-          <li>
-            <a href="http://jqueryui.com/">jQuery UI</a>
-          </li>
-          <li>
-            <a href="http://learningjquery.com/">Learning jQuery</a>
+            <a href="http://informatics.mayo.edu/cts2/">CTS2 Main Page</a>
           </li>
         </ul>
       </li>
-      <li>
-        <a class="menu_trigger" href="#">HTML5 Resources</a>
-        <ul class="menu">
-          <li>
-            <a href="http://diveintohtml5.org/">Dive Into HTML5</a>
-          </li>
-          <li>
-            <a href="http://www.alistapart.com/articles/get-ready-for-html-5/">Get Ready for HTML5</a>
-          </li>
-          <li>
-            <a href="http://html5boilerplate.com/">HTML5 Boilerplate</a>
-          </li>
-          <li>
-            <a href="http://html5doctor.com/">HTML5 Doctor</a>
-          </li>
-          <li>
-            <a href="http://html5.org/">HTML5 Intro</a>
-          </li>
-          <li>
-            <a href="http://www.zeldman.com/superfriends/">HTML5 Super Friends</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a class="menu_trigger" href="#">Code</a>
-        <ul class="menu">
-          <li>
-            <a href="resources/desktop/assets/css/desktop.css">Desktop - CSS</a>
-          </li>
-          <li>
-            <a href="resources/desktop/assets/js/jquery.desktop.js">Desktop - JavaScript</a>
-          </li>
-          <li>
-            <a href="http://github.com/nathansmith/jQuery-Desktop">GitHub Repository</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a class="menu_trigger" href="#">Credits</a>
-        <ul class="menu">
-          <li>
-            <a href="http://sonspring.com/journal/jquery-desktop">Demo built by Nathan Smith</a>
-          </li>
-          <li>
-            <a href="http://adrian-rodriguez.net/">Wallpaper by Adrian Rodriguez</a>
-          </li>
-          <li>
-            <a href="http://tango.freedesktop.org/Tango_Desktop_Project">Icons - Tango Desktop Project</a>
-          </li>
-        </ul>
-      </li>
+
     </ul>
   </div>
   <div class="abs" id="bar_bottom">
@@ -165,22 +156,31 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
     </a>
     <ul id="dock">
       <li id="icon_dock_service_plugins">
-        <a href="#window_computer">
+        <a href="#window_service_plugins">
           <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
           Service Plugins
         </a>
       </li>
+      
+       <li id="icon_dock_admin_app">
+        <a href="#window_admin_app">
+          <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
+          Admin App
+        </a>
+      </li>
+      
     </ul>
-    <a class="float_right" href="http://www.firehost.com/?ref=spon_nsmith_desktop-sonspring" title="Secure Hosting">
-      <img src="resources/desktop/assets/images/misc/firehost.png" />
-    </a>
+    
   </div>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+<script src="resources/desktop/assets/js/jquery.json-2.3.min.js"></script>
 <script src="resources/desktop/assets/js/jquery.form.js"></script>
+<script src="resources/desktop/assets/js/jquery.jeditable.mini.js" type="text/javascript"></script>
 <script src="resources/desktop/assets/js/jquery.dataTables.min.js"></script>
 <script src="resources/desktop/assets/js/jquery.alerts.js" type="text/javascript"></script>
+
 <script>
   !window.jQuery && document.write(unescape('%3Cscript src="assets/js/jquery.js"%3E%3C/script%3E'));
   !window.jQuery.ui && document.write(unescape('%3Cscript src="assets/js/jquery.ui.js"%3E%3C/script%3E'));

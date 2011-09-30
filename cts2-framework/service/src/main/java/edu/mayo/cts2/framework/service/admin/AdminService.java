@@ -47,6 +47,7 @@ import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.Cts2Config;
+import edu.mayo.cts2.framework.core.config.Cts2Config.PropertyNamespace;
 
 /**
  * The Class AdminService.
@@ -123,6 +124,16 @@ public class AdminService {
 		return pluginDescription;
 	}
 	
+	public Properties getContextConfigProperties(){
+		return this.cts2Config.getContextConfigProperties();
+	}
+	
+	public Properties getCurrentPluginConfigProperties(){
+		String name = this.getInUsePluginName();
+		
+		return this.cts2Config.getPluginConfigProperties(name);
+	}
+	
 	private boolean isActivePlugin(String name, String version){
 		return StringUtils.equals(name, this.getInUsePluginName())
 				&&
@@ -130,8 +141,10 @@ public class AdminService {
 	}
 	
 	public void activatePlugin(PluginReference plugin) {
-		this.cts2Config.setProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, plugin.getPluginName());	
-		this.cts2Config.setProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, plugin.getPluginVersion());	
+		this.cts2Config.setProperty(
+				ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, plugin.getPluginName(), PropertyNamespace.CONTEXT);	
+		this.cts2Config.setProperty(
+				ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, plugin.getPluginVersion(), PropertyNamespace.CONTEXT);	
 	
 		this.cts2Config.refresh();
 	}
@@ -224,11 +237,11 @@ public class AdminService {
 	}
 	
 	private String getInUsePluginName(){
-		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP);	
+		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, PropertyNamespace.CONTEXT);	
 	}
 	
 	private String getInUsePluginVersion(){
-		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP);	
+		return this.cts2Config.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, PropertyNamespace.CONTEXT);	
 	}
 	
 	private String getPluginName(Properties props){

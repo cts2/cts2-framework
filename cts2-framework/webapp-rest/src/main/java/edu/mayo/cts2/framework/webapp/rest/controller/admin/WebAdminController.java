@@ -25,6 +25,9 @@ package edu.mayo.cts2.framework.webapp.rest.controller.admin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -41,6 +44,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.core.config.Cts2Config;
+import edu.mayo.cts2.framework.core.config.Cts2Config.PropertyNamespace;
 import edu.mayo.cts2.framework.service.admin.AdminService;
 import edu.mayo.cts2.framework.service.admin.PluginDescription;
 import edu.mayo.cts2.framework.service.admin.PluginReference;
@@ -70,6 +74,23 @@ public class WebAdminController {
 	@RequestMapping(value = "/admin/")
 	public ModelAndView getAdminView(@RequestBody PluginReference plugin) {
 		return new ModelAndView("admin");
+	}
+	
+	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.GET)
+	@ResponseBody
+	public Properties getCurrentPluginConfigProperties() {
+		return this.adminService.getCurrentPluginConfigProperties();
+	}
+	
+	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.PUT)
+	@ResponseBody
+	public void updatePluginConfigProperties(@RequestBody Properties properties) {
+		for(Entry<Object, Object> entry : properties.entrySet()){
+			this.cts2Config.
+				setProperty(
+						(String)entry.getKey(), 
+						(String)entry.getValue(), PropertyNamespace.PLUGIN);
+		}
 	}
 	
 	@RequestMapping(value = { "/admin/plugins/active" }, method = RequestMethod.PUT)

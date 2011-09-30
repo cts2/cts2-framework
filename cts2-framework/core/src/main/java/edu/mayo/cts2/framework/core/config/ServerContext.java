@@ -25,6 +25,8 @@ package edu.mayo.cts2.framework.core.config;
 
 import org.apache.commons.lang.StringUtils;
 
+import edu.mayo.cts2.framework.core.config.Cts2Config.PropertyNamespace;
+
 /**
  * The Class ServerContext.
  *
@@ -65,13 +67,13 @@ public class ServerContext implements ConfigChangeObserver {
 	 */
 	private void loadProperties() {
 		String serverRootFromProps = cts2Config.getProperty(
-				SERVER_ROOT_PROPERTY);
+				SERVER_ROOT_PROPERTY, PropertyNamespace.CONTEXT);
 		if (StringUtils.isNotBlank(serverRootFromProps)) {
 			this.serverRoot = serverRootFromProps;
 		}
 
 		String appNameFromProps = Cts2Config.instance().getProperty(
-				APP_NAME_PROPERTY);
+				APP_NAME_PROPERTY, PropertyNamespace.CONTEXT);
 		if (StringUtils.isNotBlank(appNameFromProps)) {
 			this.appName = appNameFromProps;
 		}

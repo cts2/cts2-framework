@@ -65,6 +65,8 @@ public class Cts2Config implements ConfigChangeObservable {
 			+ ConfigConstants.PLUGINS_DIRECTORY;
 
 	private File globalPropsFile;
+	
+	public enum PropertyNamespace {GLOBAL,CONTEXT,PLUGIN}
 
 	/**
 	 * Instantiates a new cts2 config.
@@ -199,13 +201,15 @@ public class Cts2Config implements ConfigChangeObservable {
 		}
 	}
 	
-	public void setProperty(String propertyName, String propertyValue) {
+	public void setProperty(String propertyName, String propertyValue, PropertyNamespace namespace) {
+		
+		File propsFile = this.getPropertiesFileForNamespace(namespace);
 		
 		PropertiesConfiguration config;
 		try {
-			config = new PropertiesConfiguration(this.globalPropsFile);
+			config = new PropertiesConfiguration(propsFile);
 			if(! config.containsKey(propertyName)){
-				config = new PropertiesConfiguration(this.getContextConfigFilePath());
+				config = new PropertiesConfiguration(propsFile);
 				if(!config.containsKey(propertyName)){
 					throw new RuntimeException("Property: " + propertyName + " not found.");
 				}
@@ -227,14 +231,19 @@ public class Cts2Config implements ConfigChangeObservable {
 		this.configChangeListener.configFileChange();
 	}
 	
+
+	public Properties getContextConfigProperties() {
+		return this.getContextProperties();
+	}
+	
 	/**
 	 * Gets the property.
 	 *
 	 * @param propertyName the property name
 	 * @return the property
 	 */
-	public String getProperty(String propertyName) {
-		return this.getProperty(propertyName, null);
+	public String getProperty(String propertyName, PropertyNamespace namespace) {
+		return this.getProperty(propertyName, null, namespace);
 	}
 
 	/**
@@ -244,21 +253,75 @@ public class Cts2Config implements ConfigChangeObservable {
 	 * @param defaultValue the default value
 	 * @return the property
 	 */
-	public String getProperty(String propertyName, String defaultValue) {
+	public String getProperty(
+			String propertyName, 
+			String defaultValue, 
+			PropertyNamespace namespace) {
 
-		String value = this.getContextProperties().getProperty(propertyName);
-		if (value == null) {
-			value = this.getGlobalProperties().getProperty(propertyName);
-		}
-
+		Properties props = getPropertiesForNamespace(namespace);
+		
+		String value = props.getProperty(propertyName);
+	
 		if (value == null) {
 			return defaultValue;
 		} else {
 			return value;
 		}
 	}
+	
+	private Properties getPropertiesForNamespace(PropertyNamespace namespace){
+		Properties props;
+		
+		switch(namespace){
+		case GLOBAL: { 
+			props = this.getGlobalConfigProperties();
+			break;
+		}
+		case CONTEXT: { 
+			props = this.getContextConfigProperties();
+			break;
+		}
+		case PLUGIN: { 
+			String name = this.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, PropertyNamespace.CONTEXT);
+				
+			props = this.getPluginConfigProperties(name);
+			break;
+		}
+		default: {throw new IllegalStateException();}
+		
+		}
+		
+		return props;
+	}
+	
+	private File getPropertiesFileForNamespace(PropertyNamespace namespace){
+		File props;
+		
+		switch(namespace){
+		case GLOBAL: { 
+			props = this.globalPropsFile;
+			break;
+		}
+		case CONTEXT: { 
+			props = new File(
+					getContextPropertiesFilePath(context));
+			break;
+		}
+		case PLUGIN: { 
+			String name = this.getProperty(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, PropertyNamespace.CONTEXT);
+				
+			props = new File(
+					getPluginConfigPropertiesFilePath(name));
+			break;
+		}
+		default: {throw new IllegalStateException();}
+		
+		}
+		
+		return props;
+	}
 
-	private Properties getGlobalProperties() {
+	private Properties getGlobalConfigProperties() {
 		return this.doLoadProperties(this.globalPropsFile);
 	}
 
@@ -281,6 +344,16 @@ public class Cts2Config implements ConfigChangeObservable {
 	private String getContextPropertiesFilePath(String context) {
 		return getContextDirectoryPath(context) + File.separator
 				+ ConfigConstants.CONTEXT_PROPERTIES_FILE;
+	}
+	
+	private String getPluginConfigPropertiesFilePath(String pluginName) {
+		return getContextDirectoryPath(context) + File.separator
+				+ pluginName + ".properties";
+	}
+	
+	public Properties getPluginConfigProperties(String pluginName) {	
+		return this.doLoadProperties(new File(
+				getPluginConfigPropertiesFilePath(pluginName)));
 	}
 
 	private Properties getContextProperties() {
@@ -364,4 +437,5 @@ public class Cts2Config implements ConfigChangeObservable {
 	public ServerContext getServerContext() {
 		return serverContext;
 	}
+
 }

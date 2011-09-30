@@ -1,6 +1,35 @@
 var selectedPlugin;
 
-fnServerObjectToArray = function ( aElements )
+fnContextConfigPropsObjectToArray = function ( )
+{
+	return function ( sSource, aoData, fnCallback ) {
+		$.ajax( {
+			"dataType": 'json', 
+			"type": "GET", 
+			"url": sSource, 
+			"data": aoData, 
+			"success": function (json) {
+				var newJson = new Object();
+				newJson.aaData = new Array();
+		
+				var i=0;
+				for (var key in json) {
+				  if (json.hasOwnProperty(key)) {
+					  newJson.aaData[i] = new Array();
+					  newJson.aaData[i][0] = key;
+					  newJson.aaData[i][1] = json[key];
+					  i++;
+				  }
+				}
+
+				fnCallback(newJson);
+			}
+		} );
+	};
+};
+
+
+fnPluginDescriptionObjectToArray = function ( )
 {
 	return function ( sSource, aoData, fnCallback ) {
 		$.ajax( {
@@ -27,15 +56,45 @@ fnServerObjectToArray = function ( aElements )
 };
 
 
-function removePlugin(pluginName,removeCallback){
+function removePlugin(pluginName,pluginVersion,removeCallback){
 	
 	$.ajax( {
 		"dataType": 'json', 
 		"type": "DELETE", 
-		"url": "admin/plugin/"+pluginName, 
+		"url": "admin/plugin/"+pluginName+"/version/"+pluginVersion, 
 		"success": removeCallback
 	} );
 	
+}
+
+function saveCurrentPluginConfig(saveCallback){
+	
+	$.ajax( {
+		"dataType": 'json', 
+		"type": "PUT", 
+		"contentType": "application/json",
+		"data": getPropertiesFromTable(),
+		"url": "admin/config/currentplugin", 
+		"success": saveCallback
+	} );
+	
+}
+
+function getPropertiesFromTable(){
+	var contextConfigTable = $('#contextConfigTable').dataTable();
+	
+	var aaData = contextConfigTable.fnGetData();
+	
+	var configProps = new Object();
+	
+	for(i in aaData){
+		var row = aaData[i];
+		for(j in row){
+			configProps[row[0]] = row[1];
+		}
+	}
+	
+	return $.toJSON(configProps);
 }
 
 function activatePlugin(pluginName, pluginVersion, activateCallback){
@@ -52,13 +111,13 @@ function activatePlugin(pluginName, pluginVersion, activateCallback){
 }
 
 $(document).ready(function() {
-	var oTable = $('#pluginTable').dataTable( {
+	var pluginsTable = $('#pluginTable').dataTable( {
 		"bProcessing": false,
 		"bPaginate": false,
 		"bFilter": false,
 		"sDom": '<"top">rt<"bottom"flp><"clear">',
 		"sAjaxSource": 'admin/plugins?format=json',
-		"fnServerData": fnServerObjectToArray( [ 'pluginName', 'pluginVersion' ] ),
+		"fnServerData": fnPluginDescriptionObjectToArray(),
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 	
 			$(nRow).addClass('row_selected');
@@ -67,16 +126,45 @@ $(document).ready(function() {
 		},
 	} );
 	
+	var contextConfigTable = $('#contextConfigTable').dataTable( {
+		"bProcessing": false,
+		"bPaginate": false,
+		"bFilter": false,
+		"aoColumnDefs":[
+		                {"aTargets":[0],"sClass":"readonly"},
+		                	],
+		"sDom": '<"top">rt<"bottom"flp><"clear">',
+		"sAjaxSource": 'admin/config/currentplugin?format=json',
+		"fnServerData": fnContextConfigPropsObjectToArray(),
+		"fnDrawCallback": function(){
+			var t = $('#contextConfigTable').dataTable();
+			$('td[class!="readonly sorting_1"]', t.fnGetNodes()).editable(
+					function(value, settings){
+						handleConfigTableChange();
+
+						var aPos = t.fnGetPosition(this);
+						t.fnUpdate( value, aPos[0], aPos[1] );
+						
+						return value;
+					}
+			);
+		}
+	});
+
+	function handleConfigTableChange(){
+		//
+	}
+	
 	$('form').ajaxForm({
         success:      function(){
-        	oTable.fnReloadAjax();
+        	pluginsTable.fnReloadAjax();
         	jAlert('Plugin Successfully Uploaded.', 'Alert Dialog');
         }
 	});
 	
 	/* Click event handler */
 	$('#pluginTable tbody tr').live('click', function () {
-		var aData = oTable.fnGetData( this );
+		var aData = pluginsTable.fnGetData( this );
 		
 		selectedPlugin = aData;
 		
@@ -95,7 +183,7 @@ $(document).ready(function() {
 	$('#removeButton').click( function() {
 		removePlugin(
 				selectedPlugin[0], 
-				function(){oTable.fnReloadAjax();});
+				function(){pluginsTable.fnReloadAjax();});
 	} );
 	
 	/* Add a click handler for the delete row */
@@ -105,13 +193,28 @@ $(document).ready(function() {
 				selectedPlugin[1], 
 				function(){
 					jAlert('Plugin Successfully Activated.', 'Alert Dialog');
-					oTable.fnReloadAjax();});
+					pluginsTable.fnReloadAjax();});
+	} );
+	
+	/* Add a click handler for the delete row */
+	$('#saveConfigButton').click( function() {
+		saveCurrentPluginConfig(
+				getPropertiesFromTable(),
+				function(){
+					jAlert('ConfigurationSaved.', 'Alert Dialog');
+					contextConfigTable.fnReloadAjax();
+				});
+	} );
+	
+	/* Add a click handler for the delete row */
+	$('#resetConfigButton').click( function() {
+			contextConfigTable.fnReloadAjax();
 	} );
 
 	
 	$('#removeButton').attr('disabled','disabled');
 	$('#activateButton').attr('disabled','disabled');
-	  
+	
 } );
 
 $.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
