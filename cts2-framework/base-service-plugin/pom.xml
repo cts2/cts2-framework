@@ -1,14 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>cts2-framework</artifactId>
 		<groupId>edu.mayo.cts2</groupId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.2.0</version>
 	</parent>
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>base-service-plugin</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.2.0</version>
 	<packaging>pom</packaging>
 
 
@@ -83,19 +82,14 @@
 										<touch mkdirs="true" file="${output.file}" />
 
 										<echo file="${output.file}" message="plugin.name = ${name}${line.separator}" />
-										<echo file="${output.file}" append="true"
-											message="plugin.version = ${version}${line.separator}" />
-										<echo file="${output.file}" append="true"
-											message="service.provider.class = ${service.provider.class}" />
+										<echo file="${output.file}" append="true" message="plugin.version = ${version}${line.separator}" />
+										<echo file="${output.file}" append="true" message="service.provider.class = ${service.provider.class}" />
 
-										<property name="test.service.properties.output.file"
-											value="${project.build.directory}/testconfigdir/${webapp.name}/service.properties" />
+										<property name="test.service.properties.output.file" value="${project.build.directory}/testconfigdir/${webapp.name}/service.properties" />
 										<delete file="${test.service.properties.output.file}" />
 										<touch mkdirs="true" file="${test.service.properties.output.file}" />
-										<echo file="${test.service.properties.output.file}"
-											message="service.plugin.name = ${name}${line.separator}" />
-										<echo file="${test.service.properties.output.file}"
-											append="true" message="service.plugin.version = ${version}" />
+										<echo file="${test.service.properties.output.file}" message="service.plugin.name = ${name}${line.separator}" />
+										<echo file="${test.service.properties.output.file}" append="true" message="service.plugin.version = ${version}" />
 
 									</tasks>
 								</configuration>
@@ -224,7 +218,7 @@
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>webapp-rest</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>0.2.0</version>
 			<type>war</type>
 			<scope>test</scope>
 		</dependency>
