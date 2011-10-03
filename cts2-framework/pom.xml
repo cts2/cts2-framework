@@ -46,7 +46,7 @@
 			<url>http://informatics.mayo.edu/maven/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<site>
-			<id>sdk-website-server</id>
+			<id>site-upload-server</id>
 			<url>scp://72.44.34.6/var/www/sites/cts2-framework</url>
 		</site>
 	</distributionManagement>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
-<meta name="description" content="JavaScript desktop environment built with jQuery." />
-<title>jQuery Desktop</title>
+<meta name="description" content="CTS2 Development Framework Admin Desktop." />
+<title>CTS2 Development Framework Admin Desktop</title>
 <!--[if lt IE 7]>
 <script>
 window.top.location = 'http://desktop.sonspring.com/ie.html';
