@@ -9,8 +9,10 @@
 					    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<bean id="jsonpCallbackFilter" class="edu.mayo.cts2.framework.webapp.rest.filter.jsonp.JsonpCallbackFilter"/>
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	
+	<bean class="edu.mayo.cts2.framework.webapp.rest.controller.QueryControlTestBean"/>
 
-	<util:properties id="errorCodes" location="classpath:exceptionErrorCodes.properties"/>
+	<bean class="edu.mayo.cts2.framework.webapp.rest.controller.MethodTimingAspect"/>
 
 </beans>

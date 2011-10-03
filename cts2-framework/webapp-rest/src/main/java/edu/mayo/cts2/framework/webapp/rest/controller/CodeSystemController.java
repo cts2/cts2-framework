@@ -172,6 +172,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	@ResponseBody
 	public CodeSystemCatalogEntryMsg getCodeSystemByName(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 			
 		CodeSystemCatalogEntry codeSystem = this.codeSystemReadService.read(codeSystemName);

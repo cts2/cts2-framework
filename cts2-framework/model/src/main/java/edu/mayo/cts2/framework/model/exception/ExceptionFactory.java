@@ -29,17 +29,18 @@ import java.util.List;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
+import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedPredicate;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
+import edu.mayo.cts2.framework.model.util.RestModelUtils;
 
 /**
  * A factory for creating Exception objects.
@@ -142,6 +143,16 @@ public class ExceptionFactory {
 		String message = ExceptionUtils.getFullStackTrace(exception);
 		
 		return createUnknownException(message, url, paramString);
+	}
+	
+	public static Cts2RestException createTimeoutException() {
+		QueryTimeout timeout = new QueryTimeout();
+		timeout.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
+		timeout.setSeverity(LoggingLevel.ERROR);
+		
+		Cts2RestException ex = new Cts2RestException(timeout);
+
+		return ex;
 	}
 	
 	/**

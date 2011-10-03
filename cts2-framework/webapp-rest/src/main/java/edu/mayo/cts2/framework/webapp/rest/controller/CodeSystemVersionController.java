@@ -43,6 +43,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
@@ -245,6 +246,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public CodeSystemVersionCatalogEntryMsg getCodeSystemVersionByName(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
 		

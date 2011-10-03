@@ -30,15 +30,15 @@ package edu.mayo.cts2.framework.service.command;
  */
 public class QueryControl {
 
-	private String timelimit;
+	private long timelimit = -1;
 	private String format;
 	private String sort;
 
-	public String getTimelimit() {
+	public long getTimelimit() {
 		return timelimit;
 	}
 
-	public void setTimelimit(String timelimit) {
+	public void setTimelimit(long timelimit) {
 		this.timelimit = timelimit;
 	}
 
