@@ -11,7 +11,7 @@
 
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	
-	<bean class="edu.mayo.cts2.framework.webapp.rest.controller.QueryControlTestBean"/>
+	<bean class="edu.mayo.cts2.framework.webapp.rest.controller.MethodTimingAspectTest.QueryControlTestBean"/>
 
 	<bean class="edu.mayo.cts2.framework.webapp.rest.controller.MethodTimingAspect"/>
 
