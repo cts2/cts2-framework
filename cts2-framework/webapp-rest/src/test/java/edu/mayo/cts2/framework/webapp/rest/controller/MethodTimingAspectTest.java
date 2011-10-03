@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.stereotype.Controller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,23 +30,4 @@ public class MethodTimingAspectTest {
 		qc.setTimelimit(1);
 		queryControlTestBean.testWithQueryControlOverTime(qc);
 	}
-
-	@Controller
-	public static class QueryControlTestBean {
-		
-		String testWithQueryControl(QueryControl queryControl){
-			return "done";
-		}
-		
-		String testWithQueryControlOverTime(QueryControl queryControl) throws Exception {
-			Thread.sleep((long) queryControl.getTimelimit() * 1000 * 2);
-			
-			return "done";
-		}
-		
-		String testWithQueryControlUnderTime(QueryControl queryControl){
-			return "done";
-		}
-	}
-
 }
