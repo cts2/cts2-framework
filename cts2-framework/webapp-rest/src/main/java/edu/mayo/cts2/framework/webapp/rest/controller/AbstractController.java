@@ -39,14 +39,10 @@ import org.springframework.oxm.XmlMappingException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
-import edu.mayo.cts2.framework.webapp.rest.view.NoPathParamRedirectView;
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
@@ -60,6 +56,11 @@ import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RestException;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.service.command.Filter;
+import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
+import edu.mayo.cts2.framework.webapp.rest.view.NoPathParamRedirectView;
 
 /**
  * The Class AbstractController.
@@ -95,6 +96,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the model and view
 	 */
 	@ExceptionHandler(Cts2RestException.class)
+	@ResponseBody
 	public CTS2Exception handleException(HttpServletResponse response, Cts2RestException ex) {
 		int status = this.cts2RestExceptionCodeMapper.getErrorCode(ex);
 		
@@ -112,6 +114,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the model and view
 	 */
 	@ExceptionHandler(RuntimeException.class)
+	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 
@@ -136,6 +139,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the model and view
 	 */
 	@ExceptionHandler(UnspecifiedCts2RestException.class)
+	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 
@@ -160,6 +164,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the model and view
 	 */
 	@ExceptionHandler(UnsupportedOperationException.class)
+	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 
@@ -183,6 +188,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the model and view
 	 */
 	@ExceptionHandler(XmlMappingException.class)
+	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 

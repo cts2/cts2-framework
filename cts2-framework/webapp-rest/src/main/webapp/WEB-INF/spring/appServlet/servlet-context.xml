@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-        
-        <beans:bean class="edu.mayo.cts2.framework.core.config.Cts2Config" factory-method="instance"/>
-	
-	<!-- Scans within the base package of the application for @Components to configure as beans -->
+
+	<beans:bean class="edu.mayo.cts2.framework.core.config.Cts2Config"
+		factory-method="instance" />
+
+	<!-- Scans within the base package of the application for @Components to 
+		configure as beans -->
 	<context:component-scan base-package="edu.mayo.cts2.framework.model" />
 	<context:component-scan base-package="edu.mayo.cts2.framework.core" />
 	<context:component-scan base-package="edu.mayo.cts2.framework.service" />
 	<context:component-scan base-package="edu.mayo.cts2.framework.filter" />
 	<context:component-scan base-package="edu.mayo.cts2.framework.webapp.rest">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-		
-        
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
-	
+
 	<!-- DispatcherServlet Context: defines this servlet's request-processing 
 		infrastructure -->
-	<!-- 
-	<annotation-driven>
-		<message-converters>
-			<beans:bean
-				class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-				<beans:property name="marshaller" ref="marshaller" />
-				<beans:property name="unmarshaller" ref="marshaller" />
-			</beans:bean>
-		</message-converters>
-		<
-	</annotation-driven>
-	-->
- <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<!-- <annotation-driven> <message-converters> <beans:bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"> 
+		<beans:property name="marshaller" ref="marshaller" /> <beans:property name="unmarshaller" 
+		ref="marshaller" /> </beans:bean> </message-converters> < </annotation-driven> -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 
-    </beans:bean>
-	
-	<beans:bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-    	<beans:property name="order" value="0" />
-    	<beans:property name="urlDecode" value="false" />
-    	<beans:property name="useDefaultSuffixPattern" value="false" />
 	</beans:bean>
- 
-	<beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-	      <beans:property name="messageConverters">
-	        <beans:list>
-	           <beans:bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-					<beans:property name="marshaller" ref="marshaller" />
-					<beans:property name="unmarshaller" ref="marshaller" />
-				</beans:bean> 
-			   <beans:bean class="edu.mayo.cts2.framework.webapp.rest.converter.MappingGsonHttpMessageConverter"/> 
-	           <beans:bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
-	           <beans:bean class="org.springframework.http.converter.StringHttpMessageConverter" />
-	           <beans:bean class="org.springframework.http.converter.FormHttpMessageConverter" />
-	           <beans:bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
-	        </beans:list>
-	    </beans:property>
-	 </beans:bean>
-	 
-	 <!-- jackson configuration : http://stackoverflow.com/questions/3661769 -->
-	 <!-- Disabling jackson in favor of gson
-	<beans:bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper" />
-	<beans:bean id="jacksonSerializationConfig" class="org.codehaus.jackson.map.SerializationConfig"
-	    factory-bean="jacksonObjectMapper" factory-method="getSerializationConfig" />
+
 	<beans:bean
-	    class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-	    <beans:property name="targetObject" ref="jacksonSerializationConfig" />
-	    <beans:property name="targetMethod" value="setSerializationInclusion" />
-	    <beans:property name="arguments">
-	        <util:list>
-	            <beans:value type="org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion">NON_NULL</beans:value>
-	        </util:list>
-	    </beans:property>
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<beans:property name="order" value="0" />
+		<beans:property name="urlDecode" value="false" />
+		<beans:property name="useDefaultSuffixPattern" value="false" />
 	</beans:bean>
-    -->
-	 
-	<beans:bean id="conversion-service" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
+
+	<beans:bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<beans:property name="messageConverters" ref="messageConverters" />
+	</beans:bean>
+
+	<util:list id="messageConverters">
+		<beans:bean
+			class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+			<beans:property name="marshaller" ref="marshaller" />
+			<beans:property name="unmarshaller" ref="marshaller" />
+		</beans:bean>
+		<beans:bean
+			class="edu.mayo.cts2.framework.webapp.rest.converter.MappingGsonHttpMessageConverter" />
+		<beans:bean
+			class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+		<beans:bean
+			class="org.springframework.http.converter.StringHttpMessageConverter" />
+		<beans:bean
+			class="org.springframework.http.converter.FormHttpMessageConverter" />
+		<beans:bean
+			class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+	</util:list>
+
+
+	<beans:bean id="responseBodyMethodHandlerExceptionResolverFactory"
+		class="edu.mayo.cts2.framework.webapp.rest.converter.AnnotationMethodHandlerExceptionResolverFactoryBean">
+		
+	</beans:bean>
+
+	<!-- jackson configuration : http://stackoverflow.com/questions/3661769 -->
+	<!-- Disabling jackson in favor of gson <beans:bean id="jacksonObjectMapper" 
+		class="org.codehaus.jackson.map.ObjectMapper" /> <beans:bean id="jacksonSerializationConfig" 
+		class="org.codehaus.jackson.map.SerializationConfig" factory-bean="jacksonObjectMapper" 
+		factory-method="getSerializationConfig" /> <beans:bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"> 
+		<beans:property name="targetObject" ref="jacksonSerializationConfig" /> <beans:property 
+		name="targetMethod" value="setSerializationInclusion" /> <beans:property 
+		name="arguments"> <util:list> <beans:value type="org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion">NON_NULL</beans:value> 
+		</util:list> </beans:property> </beans:bean> -->
+
+	<beans:bean id="conversion-service"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
 
 	<!-- Imports user-defined @Controller beans that process client requests -->
 	<beans:import resource="controllers.xml" />
 
-	
-	<beans:bean id="marshaller" class="edu.mayo.cts2.framework.core.xml.DelgatingMarshaller"/>
+	<beans:bean id="marshaller"
+		class="edu.mayo.cts2.framework.core.xml.DelgatingMarshaller" />
 
 	<beans:bean
 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
@@ -112,18 +112,11 @@
 		</beans:property>
 		<beans:property name="defaultViews">
 			<util:list>
-			    <!-- 
-				<beans:bean
-					class="edu.mayo.cts2.framework.webapp.rest.view.ModelNameAdjustingMappingJacksonJsonView">
-					<beans:property name="objectMapper" ref="jacksonObjectMapper"/>
-					<beans:property name="renderedAttributes">
-						<util:constant
-							static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" />
-					</beans:property>
-				</beans:bean>
-				-->
-				<beans:bean
-					class="edu.mayo.cts2.framework.webapp.rest.view.XmlView">
+				<!-- <beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.ModelNameAdjustingMappingJacksonJsonView"> 
+					<beans:property name="objectMapper" ref="jacksonObjectMapper"/> <beans:property 
+					name="renderedAttributes"> <util:constant static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" 
+					/> </beans:property> </beans:bean> -->
+				<beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.XmlView">
 					<beans:property name="modelKey">
 						<util:constant
 							static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" />
