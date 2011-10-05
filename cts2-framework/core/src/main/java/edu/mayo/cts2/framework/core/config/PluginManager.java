@@ -37,7 +37,7 @@ public class PluginManager implements InitializingBean {
 	private Map<String,ClassLoader> pluginClassLoaders =
 			new HashMap<String,ClassLoader>();
 	
-	private PluginConfigFactory pluginConfigFactory;
+	private PluginConfig pluginConfig;
 
 	@Resource
 	private ConfigInitializer configInitializer;
@@ -50,8 +50,8 @@ public class PluginManager implements InitializingBean {
 			
 			String inUsePluginName = this.getInUsePluginName();
 			
-			this.pluginConfigFactory = 
-					new PluginConfigFactory(
+			this.pluginConfig = 
+					new PluginConfig(
 							this.getPluginSpecificConfigProperties(inUsePluginName),
 							this.getPluginWorkDirectory(inUsePluginName),
 							this.configInitializer.getServerContext());
@@ -297,8 +297,8 @@ public class PluginManager implements InitializingBean {
 		return pluginName + pluginVersion;
 	}
 	
-	public PluginConfigFactory getPluginConfigFactory(){
-		return this.pluginConfigFactory;
+	public PluginConfig getPluginConfig(){
+		return this.pluginConfig;
 	}
 	
 	protected File getPluginWorkDirectory(String pluginName){
