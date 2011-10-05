@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.service.provider;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -95,7 +96,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	 * 
 	 * @return the service provider
 	 */
-	private ServiceProvider createServiceProvider() {
+	protected ServiceProvider createServiceProvider() {
 		
 		PluginReference activePlugin = pluginManager.getActivePlugin();
 
@@ -143,8 +144,10 @@ public class ServiceProviderFactory implements InitializingBean,
 							}
 
 						}).get();
-					} catch (Exception e) {
-						throw new RuntimeException(e);
+					} catch (ExecutionException e) {
+						throw handleException(e);
+					} catch (InterruptedException e) {
+						throw new IllegalStateException(e);
 					}
 				}
 				
@@ -160,8 +163,10 @@ public class ServiceProviderFactory implements InitializingBean,
 							}
 
 						}).get();
-					} catch (Exception e) {
-						throw new RuntimeException(e);
+					} catch (ExecutionException e) {
+						throw handleException(e);
+					} catch (InterruptedException e) {
+						throw new IllegalStateException(e);
 					}
 				}
 				
@@ -176,15 +181,17 @@ public class ServiceProviderFactory implements InitializingBean,
 							}
 
 						}).get();
-					} catch (Exception e) {
-						throw new RuntimeException(e);
+					} catch (ExecutionException e) {
+						throw handleException(e);
+					} catch (InterruptedException e) {
+						throw new IllegalStateException(e);
 					}
 				}
 
 			};
 			
 			serviceProvider.initialize(
-					this.pluginManager.getPluginConfigFactory().getPluginConfig());
+					this.pluginManager.getPluginConfig());
 			
 			return serviceProvider;
 
@@ -193,6 +200,16 @@ public class ServiceProviderFactory implements InitializingBean,
 					+ " not found!");
 
 			return new EmptyServiceProvider();
+		}
+	}
+	
+	private RuntimeException handleException(ExecutionException executionException)  {
+		Throwable e = executionException.getCause();
+		
+		if(e instanceof RuntimeException){
+			return (RuntimeException) e;
+		} else {
+			return new RuntimeException(e);
 		}
 	}
 
