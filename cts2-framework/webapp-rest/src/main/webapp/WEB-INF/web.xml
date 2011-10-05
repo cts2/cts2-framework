@@ -8,7 +8,7 @@
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
 	</context-param>
 	<listener>
-		<listener-class>edu.mayo.cts2.framework.core.config.Cts2ConfigFactory</listener-class>
+		<listener-class>edu.mayo.cts2.framework.core.config.ConfigInitializerFactory</listener-class>
 	</listener>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

@@ -74,5 +74,9 @@ public class ConfigConstants {
 	
 	/** The Constant PLUGIN_PROVIDER_CLASS_PROP. */
 	public static final String PLUGIN_PROVIDER_CLASS_PROP = "service.provider.class";
+	
+	public static String SERVER_ROOT_PROPERTY = "server.root";
+	
+	public static String APP_NAME_PROPERTY = "app.name";
 
 }

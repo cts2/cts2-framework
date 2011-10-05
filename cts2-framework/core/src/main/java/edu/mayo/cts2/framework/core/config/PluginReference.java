@@ -1,9 +1,17 @@
-package edu.mayo.cts2.framework.service.admin;
+package edu.mayo.cts2.framework.core.config;
 
 public class PluginReference {
 
 	private String _pluginName;
 	private String _pluginVersion;
+
+	public PluginReference(
+			String pluginName, 
+			String pluginVersion) {
+		super();
+		this._pluginName = pluginName;
+		this._pluginVersion = pluginVersion;
+	}
 
 	public String getPluginName() {
 		return _pluginName;

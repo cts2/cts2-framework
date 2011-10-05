@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.provider;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -39,9 +38,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
-import edu.mayo.cts2.framework.core.config.Cts2Config;
-import edu.mayo.cts2.framework.core.plugin.PluginClassLoader;
-import edu.mayo.cts2.framework.service.admin.AdminService;
+import edu.mayo.cts2.framework.core.config.PluginManager;
+import edu.mayo.cts2.framework.core.config.PluginReference;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -56,10 +54,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	private final Log log = LogFactory.getLog(getClass().getName());
 
 	@Resource
-	private AdminService adminService;
-
-	@Resource
-	private Cts2Config cts2Config;
+	private PluginManager pluginManager;
 
 	private ServiceProvider serviceProvider;
 
@@ -72,7 +67,6 @@ public class ServiceProviderFactory implements InitializingBean,
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		this.cts2Config.registerListener(this);
 		this.serviceProvider = this.createServiceProvider();
 	}
 
@@ -101,21 +95,25 @@ public class ServiceProviderFactory implements InitializingBean,
 	 * @return the service provider
 	 */
 	private ServiceProvider createServiceProvider() {
+		
+		PluginReference activePlugin = pluginManager.getActivePlugin();
 
-		File inUsePluginDirectory = this.adminService.getInUsePluginDirectory();
-
-		if (inUsePluginDirectory == null) {
+		if (activePlugin == null) {
 			log.warn("No Service Plugin declared.");
 
 			return new EmptyServiceProvider();
 		}
 
-		String providerClassName = this.adminService
-				.getCurrentPluginServiceProviderClassName();
+		String providerClassName = pluginManager
+				.getPluginServiceProviderClassName(
+						activePlugin.getPluginName(), 
+						activePlugin.getPluginVersion());
 
-		final PluginClassLoader pluginClassLoader = new PluginClassLoader(this
-				.getClass().getClassLoader(),
-				inUsePluginDirectory.getAbsolutePath());
+		final ClassLoader pluginClassLoader = 
+				pluginManager.getPluginClassLoader(
+						activePlugin.getPluginName(), 
+						activePlugin.getPluginVersion());
+		
 		try {
 			final ServiceProvider provider = this.loadServiceProviderClass(
 					providerClassName, pluginClassLoader);

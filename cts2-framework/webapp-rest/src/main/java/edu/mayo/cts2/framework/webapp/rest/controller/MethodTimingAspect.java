@@ -31,6 +31,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -61,11 +62,21 @@ public class MethodTimingAspect {
 
 		QueryControl queryControl = null;
 		
+		//this should never happen
+		if(ArrayUtils.isEmpty(pjp.getArgs())){
+			throw new IllegalStateException("Pointcut failure!");
+		}
+		
 		for(Object arg : pjp.getArgs()){
 			if(arg.getClass() == QueryControl.class){
 				queryControl = (QueryControl) arg;
 				break;
 			}
+		}
+		
+		//this also should never happen
+		if(queryControl == null){
+			throw new IllegalStateException("Pointcut failure!");
 		}
 		
 		Future<Object> future = this.executorService.submit(new Callable<Object>(){

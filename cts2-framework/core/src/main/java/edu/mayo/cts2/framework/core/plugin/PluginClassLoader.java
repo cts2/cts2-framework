@@ -44,6 +44,10 @@ public class PluginClassLoader extends AntClassLoader {
 	private final static String LIB_DIR = File.separator + "lib";
 	
 	private URL pluginJarUrl;
+	
+	public PluginClassLoader(ClassLoader parent, File pluginDir) {
+		this(parent, pluginDir.getPath());
+	}
 
 	/**
 	 * Instantiates a new plugin class loader.

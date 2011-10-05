@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller.admin;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -42,11 +41,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.core.config.Cts2Config;
-import edu.mayo.cts2.framework.core.config.Cts2Config.PropertyNamespace;
-import edu.mayo.cts2.framework.service.admin.AdminService;
-import edu.mayo.cts2.framework.service.admin.PluginDescription;
-import edu.mayo.cts2.framework.service.admin.PluginReference;
+import edu.mayo.cts2.framework.core.config.PluginDescription;
+import edu.mayo.cts2.framework.core.config.PluginManager;
+import edu.mayo.cts2.framework.core.config.PluginReference;
+import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 /**
  * The Class WebAdminController.
@@ -57,10 +55,7 @@ import edu.mayo.cts2.framework.service.admin.PluginReference;
 public class WebAdminController {
 
 	@Resource
-	private Cts2Config cts2Config;
-	
-	@Resource
-	private AdminService adminService;
+	private PluginManager getPluginManager;
 
 	@RequestMapping
 	public ModelAndView getValueSetDefinitionsOfValueSet() {
@@ -77,40 +72,48 @@ public class WebAdminController {
 	
 	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.GET)
 	@ResponseBody
-	public Properties getCurrentPluginConfigProperties() {
-		return this.adminService.getCurrentPluginConfigProperties();
+	public OptionHolder getCurrentPluginSpecificConfigProperties() {
+		PluginReference activePlugin = 
+				this.getPluginManager.getActivePlugin();
+
+		return this.getPluginManager.getPluginSpecificConfigProperties(
+				activePlugin.getPluginName());
 	}
 	
 	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.PUT)
 	@ResponseBody
-	public void updatePluginConfigProperties(@RequestBody Properties properties) {
+	public void updateCurrentPluginSpecificConfigProperties(@RequestBody Properties properties) {
+		PluginReference activePlugin = 
+				this.getPluginManager.getActivePlugin();
+		
 		for(Entry<Object, Object> entry : properties.entrySet()){
-			this.cts2Config.
-				setProperty(
+			this.getPluginManager.
+				setPluginSpecificConfigProperties(
+						activePlugin.getPluginName(),
 						(String)entry.getKey(), 
-						(String)entry.getValue(), PropertyNamespace.PLUGIN);
+						(String)entry.getValue());
 		}
 	}
 	
 	@RequestMapping(value = { "/admin/plugins/active" }, method = RequestMethod.PUT)
 	@ResponseBody
 	public void activatePlugin(@RequestBody PluginReference plugin) {
-		this.adminService.activatePlugin(plugin);
+		this.getPluginManager.
+			activatePlugin(plugin.getPluginName(), plugin.getPluginVersion());
 	}
 
 	@RequestMapping(value = { "/admin/plugins" }, method = RequestMethod.GET)
 	@ResponseBody
 	public Set<PluginDescription> getPlugins() {
-		return this.adminService.getPluginDescriptions();	
+		return this.getPluginManager.getPluginDescriptions();	
 	}
 	
 	@RequestMapping(value = { "/admin/plugins" }, method = RequestMethod.POST)
 	@ResponseBody
 	public void addPlugin(@RequestParam MultipartFile file) throws IOException {
 
-		this.adminService.installPlugin(
-				file.getInputStream(),
-				new File(this.cts2Config.getPluginsDirectory()));
+		this.getPluginManager.installPlugin(
+				file.getInputStream());
 	}
 
 	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.DELETE)
@@ -119,7 +122,7 @@ public class WebAdminController {
 			@PathVariable("pluginName") String pluginName,
 			@PathVariable("pluginVersion") String pluginVersion) {
 		
-		this.adminService.removePlugin(pluginName, pluginVersion);
+		this.getPluginManager.removePlugin(pluginName, pluginVersion);
 	}
 	
 	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.GET)
@@ -127,7 +130,7 @@ public class WebAdminController {
 	public PluginDescription getPlugin(
 			@PathVariable("pluginName") String pluginName,
 			@PathVariable("pluginVersion") String pluginVersion){
-		return this.adminService.getPluginDescription(pluginName, pluginVersion);
+		return this.getPluginManager.getPluginDescription(pluginName, pluginVersion);
 	}
 
 	public static class UploadItem {

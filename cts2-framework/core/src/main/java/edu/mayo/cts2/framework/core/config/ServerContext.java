@@ -23,30 +23,22 @@
  */
 package edu.mayo.cts2.framework.core.config;
 
-import org.apache.commons.lang.StringUtils;
-
-import edu.mayo.cts2.framework.core.config.Cts2Config.PropertyNamespace;
 
 /**
  * The Class ServerContext.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ServerContext implements ConfigChangeObserver {
-
-	private static String SERVER_ROOT_PROPERTY = "server.root";
-	private static String APP_NAME_PROPERTY = "app.name";
+public class ServerContext {
 
 	private String serverRoot = "http://informatics.mayo.edu/exist/cts2";
 
 	private String appName = "rest";
-	
-	private Cts2Config cts2Config;
-	
+
 	/**
 	 * Instantiates a new server context.
 	 */
-	private ServerContext(){
+	protected ServerContext(){
 		super();
 	}
 
@@ -55,28 +47,15 @@ public class ServerContext implements ConfigChangeObserver {
 	 *
 	 * @param cts2Config the cts2 config
 	 */
-	protected ServerContext(Cts2Config cts2Config) {
-		this();
-		this.cts2Config = cts2Config;
-		this.cts2Config.registerListener(this);
-		this.loadProperties();
+	protected ServerContext(String serverRoot, String appName) {
+		super();
+		this.serverRoot = serverRoot;
+		this.appName = appName;
 	}
-
-	/**
-	 * Load properties.
-	 */
-	private void loadProperties() {
-		String serverRootFromProps = cts2Config.getProperty(
-				SERVER_ROOT_PROPERTY, PropertyNamespace.CONTEXT);
-		if (StringUtils.isNotBlank(serverRootFromProps)) {
-			this.serverRoot = serverRootFromProps;
-		}
-
-		String appNameFromProps = Cts2Config.instance().getProperty(
-				APP_NAME_PROPERTY, PropertyNamespace.CONTEXT);
-		if (StringUtils.isNotBlank(appNameFromProps)) {
-			this.appName = appNameFromProps;
-		}
+	
+	protected void refresh(String serverRoot, String appName){
+		this.serverRoot = serverRoot;
+		this.appName = appName;
 	}
 
 	/**
@@ -98,45 +77,11 @@ public class ServerContext implements ConfigChangeObserver {
 	}
 
 	/**
-	 * Sets the server root.
-	 * 
-	 * @param serverRoot
-	 *            the new server root
-	 */
-	public void setServerRoot(String serverRoot) {
-		this.serverRoot = serverRoot;
-	}
-
-	/**
 	 * Gets the app name.
 	 * 
 	 * @return the app name
 	 */
 	public String getAppName() {
 		return appName;
-	}
-
-	/**
-	 * Sets the app name.
-	 * 
-	 * @param appName
-	 *            the new app name
-	 */
-	public void setAppName(String appName) {
-		this.appName = appName;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onContextPropertiesFileChange()
-	 */
-	public void onContextPropertiesFileChange() {
-		this.loadProperties();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObserver#onPluginsDirectoryChange()
-	 */
-	public void onPluginsDirectoryChange() {
-		this.loadProperties();
 	}
 }

@@ -1,4 +1,4 @@
-package edu.mayo.cts2.framework.service.admin;
+package edu.mayo.cts2.framework.core.config;
 
 public class PluginDescription extends PluginReference{
 
@@ -10,9 +10,7 @@ public class PluginDescription extends PluginReference{
 			String version, 
 			String description,
 			boolean isActive) {
-		super();
-		super.setPluginName(name);
-		super.setPluginVersion(version);
+		super(name, version);
 		this._description = description;
 		this.setActive(isActive);
 	}

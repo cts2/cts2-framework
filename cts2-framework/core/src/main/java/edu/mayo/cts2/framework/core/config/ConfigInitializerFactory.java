@@ -38,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class Cts2ConfigFactory implements ObjectFactory, ServletContextListener {
+public class ConfigInitializerFactory implements ObjectFactory, ServletContextListener {
 
 	/* (non-Javadoc)
 	 * @see javax.naming.spi.ObjectFactory#getObjectInstance(java.lang.Object, javax.naming.Name, javax.naming.Context, java.util.Hashtable)
@@ -48,7 +48,7 @@ public class Cts2ConfigFactory implements ObjectFactory, ServletContextListener 
 			Name name, 
 			Context nameCtx,
 			Hashtable<?, ?> environment) throws Exception {
-		return Cts2Config.instance();
+		return ConfigInitializer.instance();
 	}
 
 	/* (non-Javadoc)
@@ -56,7 +56,7 @@ public class Cts2ConfigFactory implements ObjectFactory, ServletContextListener 
 	 */
 	public void contextInitialized(ServletContextEvent sce){
 		try {
-			Cts2Config.initialize(StringUtils.removeStart(sce.getServletContext().getContextPath(), "/"));
+			ConfigInitializer.initialize(StringUtils.removeStart(sce.getServletContext().getContextPath(), "/"));
 		} catch (Cts2ConfigAlreadyInitializedException e) {
 			throw new IllegalStateException(e);
 		}

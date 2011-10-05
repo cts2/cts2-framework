@@ -10,7 +10,7 @@
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<beans:bean class="edu.mayo.cts2.framework.core.config.Cts2Config"
+	<beans:bean class="edu.mayo.cts2.framework.core.config.ConfigInitializer"
 		factory-method="instance" />
 
 	<!-- Scans within the base package of the application for @Components to 
