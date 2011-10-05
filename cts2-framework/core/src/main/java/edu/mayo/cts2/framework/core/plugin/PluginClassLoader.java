@@ -49,6 +49,8 @@ public class PluginClassLoader extends AntClassLoader {
 		this(parent, pluginDir.getPath());
 	}
 
+	
+	
 	/**
 	 * Instantiates a new plugin class loader.
 	 *

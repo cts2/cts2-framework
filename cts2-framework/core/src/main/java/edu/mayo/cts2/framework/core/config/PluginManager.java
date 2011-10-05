@@ -1,7 +1,6 @@
 package edu.mayo.cts2.framework.core.config;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -201,38 +200,48 @@ public class PluginManager implements InitializingBean {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void installPlugin(InputStream source)
-			throws IOException {
-		
-		String destination = this.configInitializer.getPluginsDirectory().getPath();
-		
+	public void installPlugin(InputStream source) throws IOException {
+
+		String destination = this.configInitializer.getPluginsDirectory()
+				.getPath();
+
 		ZipInputStream zis = new ZipInputStream(source);
+
 		byte[] buffer = new byte[1024];
-		for (ZipEntry zip; (zip = zis.getNextEntry()) != null;) {
-			File file = new File(destination, zip.getName());
-			if (zip.isDirectory()) {
-				file.mkdir();
-			} else {
-				FileOutputStream fos = new FileOutputStream(file);
-				for (int length; (length = zis.read(buffer)) > 0;) {
-					fos.write(buffer, 0, length);
+		try {
+			for (ZipEntry zip; (zip = zis.getNextEntry()) != null;) {
+
+				File file = new File(destination, zip.getName());
+				if (zip.isDirectory()) {
+					file.mkdir();
+				} else {
+					FileOutputStream fos = null;
+					try {
+						fos = new FileOutputStream(file);
+						for (int length; (length = zis.read(buffer)) > 0;) {
+							fos.write(buffer, 0, length);
+						}
+					} finally {
+						if (fos != null) {
+							fos.close();
+						}
+					}
 				}
-				fos.close();
+				zis.closeEntry();
 			}
-			zis.closeEntry();
+		} finally {
+			if (zis != null) {
+				zis.closeEntry();
+				zis.close();
+			}
 		}
-		zis.close();
 	}
 
 	private Properties getPluginProperties(File plugin) {
-		Properties props = new Properties();
-		try {
-			props.load(new FileInputStream(new File(plugin.getPath()
-					+ File.separator + ConfigConstants.PLUGIN_PROPERTIES_FILE_NAME)));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
+		Properties props = ConfigUtils.loadProperties(
+				new File(plugin.getPath()
+					+ File.separator + ConfigConstants.PLUGIN_PROPERTIES_FILE_NAME));
+		
 		return props;
 	}
 	

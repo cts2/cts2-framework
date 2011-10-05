@@ -38,8 +38,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ReflectionUtils;
 
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
-import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
@@ -55,9 +55,9 @@ import edu.mayo.cts2.framework.service.command.Page;
  */
 public abstract class AbstractMessageWrappingController extends
 		AbstractController {
-
+	
 	@Resource
-	private UrlConstructor urlConstructor;
+	private ServiceConfigManager serviceConfigManager;
 
 	/*
 	 * (non-Javadoc)
@@ -122,7 +122,7 @@ public abstract class AbstractMessageWrappingController extends
 		}
 
 		String urlRoot = 
-			this.getUrlConstructor().getServerRootWithAppName();
+			this.serviceConfigManager.getServerContext().getServerRootWithAppName();
 		
 		if(! urlRoot.endsWith("/")){
 			urlRoot = urlRoot + "/";
@@ -177,7 +177,7 @@ public abstract class AbstractMessageWrappingController extends
 		resource.setAccessDate(new Date());
 
 		String urlRoot = 
-			this.getUrlConstructor().getServerRootWithAppName();
+				this.serviceConfigManager.getServerContext().getServerRootWithAppName();
 		
 		if(! urlRoot.endsWith("/")){
 			urlRoot = urlRoot + "/";
@@ -269,13 +269,5 @@ public abstract class AbstractMessageWrappingController extends
 		}
 
 		return parameterValueToString(value);
-	}
-
-	public UrlConstructor getUrlConstructor() {
-		return urlConstructor;
-	}
-
-	public void setUrlConstructor(UrlConstructor urlConstructor) {
-		this.urlConstructor = urlConstructor;
 	}
 }

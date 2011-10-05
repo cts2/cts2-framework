@@ -24,11 +24,17 @@
 package edu.mayo.cts2.framework.service.provider;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
 
+import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -48,26 +54,69 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 	 * @see edu.mayo.cts2.framework.service.provider.ServiceProvider#getService(java.lang.Class)
 	 */
 	public synchronized <T extends Cts2Profile> T getService(Class<T> serviceClass) {
-		if(this.applicationContext == null){
-			
-			String prop = System.getProperty(TEST_CONTEXT_SYSTEM_PROP);
 
-			if(BooleanUtils.toBoolean(prop)){
-				log.warn("Using Test Context for: " + this.getClass().getCanonicalName());
-				this.applicationContext = this.getIntegrationTestApplicationContext();
-			} else {
-				this.applicationContext = this.getApplicationContext();	
-			}	
-		}
-		
 		try {
 			return this.applicationContext.getBean(serviceClass);
 		} catch (BeansException e) {
 			log.warn(e);
 			return null;
 		}
+		
+	}
+
+	public void initialize(PluginConfig pluginConfig) {
+		String prop = System.getProperty(TEST_CONTEXT_SYSTEM_PROP);
+
+		if(BooleanUtils.toBoolean(prop)){
+			log.warn("Using Test Context for: " + this.getClass().getCanonicalName());
+			this.applicationContext = this.getIntegrationTestApplicationContext();
+		} else {
+			this.applicationContext = this.getApplicationContext();	
+		}	
+			
+		BeanFactory factory = this.applicationContext.getAutowireCapableBeanFactory();	
+	    BeanDefinitionRegistry registry = (BeanDefinitionRegistry) factory;
+	    
+	    GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        beanDefinition.setBeanClass(RuntimePluginConfigFactory.class);
+        beanDefinition.setAutowireCandidate(true);
+        beanDefinition.setAttribute("pluginConfig", pluginConfig);
+	    
+	    registry.registerBeanDefinition(
+	    		WordUtils.uncapitalize(
+	    				PluginConfig.class.getCanonicalName()), 
+	    				beanDefinition);
 	}
 	
+	public static class RuntimePluginConfigFactory implements FactoryBean<PluginConfig>{
+
+		private PluginConfig pluginConfig;
+		
+		public PluginConfig getObject() throws Exception {
+			return this.pluginConfig;
+		}
+
+		public Class<?> getObjectType() {
+			return PluginConfig.class;
+		}
+
+		public boolean isSingleton() {
+			return true;
+		}
+
+		protected PluginConfig getPluginConfig() {
+			return pluginConfig;
+		}
+
+		protected void setPluginConfig(PluginConfig pluginConfig) {
+			this.pluginConfig = pluginConfig;
+		}
+	}
+	
+	public void destroy() {
+		//
+	}
+
 	protected abstract ApplicationContext getApplicationContext();
 	
 	protected abstract ApplicationContext getIntegrationTestApplicationContext();

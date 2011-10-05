@@ -38,6 +38,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
+import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -130,7 +131,7 @@ public class ServiceProviderFactory implements InitializingBean,
 
 					});
 
-			return new ServiceProvider() {
+			ServiceProvider serviceProvider = new ServiceProvider() {
 
 				public <T extends Cts2Profile> T getService(
 						final Class<T> serviceClass) {
@@ -146,8 +147,46 @@ public class ServiceProviderFactory implements InitializingBean,
 						throw new RuntimeException(e);
 					}
 				}
+				
+				public void initialize(
+						final PluginConfig pluginConfig) {
+					try {
+						ex.submit(new Callable<Void>() {
+
+							public Void call() throws Exception {
+								provider.initialize(pluginConfig);
+								
+								return null;
+							}
+
+						}).get();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+				
+				public void destroy() {
+					try {
+						ex.submit(new Callable<Void>() {
+
+							public Void call() throws Exception {
+								provider.destroy();
+								
+								return null;
+							}
+
+						}).get();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
 
 			};
+			
+			serviceProvider.initialize(
+					this.pluginManager.getPluginConfigFactory().getPluginConfig());
+			
+			return serviceProvider;
 
 		} catch (ClassNotFoundException e) {
 			log.warn("Service Provider Class: " + providerClassName

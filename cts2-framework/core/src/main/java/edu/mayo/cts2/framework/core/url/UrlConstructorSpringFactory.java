@@ -38,7 +38,6 @@ import edu.mayo.cts2.framework.core.config.PluginConfigSpringFactory;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-@Component
 public class UrlConstructorSpringFactory implements FactoryBean<UrlConstructor> {
 	
 	protected Log log = LogFactory.getLog(getClass().getName());
