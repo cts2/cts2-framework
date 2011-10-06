@@ -93,22 +93,54 @@ public class ConfigUtils {
 
 		return props;
 	}
+	
+	protected static void addProperty(String propertyName, String propertyValue, File propsFile) {
+		doModifyPropertiesFile(propertyName, propertyValue, propsFile, PropertiesModifyAction.FAIL_IF_FOUND);
+	}
+	
+	protected static void addOrUpdateProperty(String propertyName, String propertyValue, File propsFile) {
+		doModifyPropertiesFile(propertyName, propertyValue, propsFile, PropertiesModifyAction.ADD_OR_UPDATE);
+	}
+	
+	protected static void addPropertyIfNotFound(String propertyName, String propertyValue, File propsFile) {
+		doModifyPropertiesFile(propertyName, propertyValue, propsFile, PropertiesModifyAction.ADD_IF_NOT_FOUND);
+	}
+	
+	protected static void updateProperty(String propertyName, String propertyValue, File propsFile) {
+		doModifyPropertiesFile(propertyName, propertyValue, propsFile, PropertiesModifyAction.FAIL_IF_NOT_FOUND);
+	}
 
-	protected static void setProperty(String propertyName, String propertyValue, File propsFile ) {
-		
+	private enum PropertiesModifyAction {FAIL_IF_FOUND, FAIL_IF_NOT_FOUND, ADD_OR_UPDATE, ADD_IF_NOT_FOUND}
+	
+	private static void doModifyPropertiesFile(
+			String propertyName, 
+			String propertyValue, 
+			File propsFile,
+			PropertiesModifyAction action) {
+
 		PropertiesConfiguration config;
 		try {
 			config = new PropertiesConfiguration(propsFile);
-			if(! config.containsKey(propertyName)){
-				config = new PropertiesConfiguration(propsFile);
-				if(!config.containsKey(propertyName)){
-					throw new RuntimeException("Property: " + propertyName + " not found.");
-				}
+
+			boolean exists = config.containsKey(propertyName);
+			
+			if(exists && action.equals(PropertiesModifyAction.FAIL_IF_FOUND)){
+				throw new RuntimeException("Property: " + propertyName + " already exists. It cannot be added.");
 			}
+			
+			if(!exists && action.equals(PropertiesModifyAction.FAIL_IF_NOT_FOUND)){
+				throw new RuntimeException("Property: " + propertyName + " does not exists. It cannot be updated.");
+			}
+				
+			//if its already there, don't overwrite it
+			if(exists && action.equals(PropertiesModifyAction.ADD_IF_NOT_FOUND)){
+				return;
+			}
+
 		} catch (ConfigurationException e) {
 			throw new IllegalStateException(e);
 		}
-		
+
 		config.setProperty(propertyName, propertyValue);
 	
 		try {

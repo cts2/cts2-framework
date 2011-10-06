@@ -12,14 +12,13 @@ fnContextConfigPropsObjectToArray = function ( )
 				var newJson = new Object();
 				newJson.aaData = new Array();
 		
-				var i=0;
-				for (var key in json) {
-				  if (json.hasOwnProperty(key)) {
-					  newJson.aaData[i] = new Array();
-					  newJson.aaData[i][0] = key;
-					  newJson.aaData[i][1] = json[key];
-					  i++;
-				  }
+				for(var i in json){
+					var option = json[i];
+					for (var key in option) {
+						  newJson.aaData[i] = new Array();
+						  newJson.aaData[i][0] = option.optionName;
+						  newJson.aaData[i][1] = option.optionValue;
+					}
 				}
 
 				fnCallback(newJson);
@@ -85,16 +84,20 @@ function getPropertiesFromTable(){
 	
 	var aaData = contextConfigTable.fnGetData();
 	
-	var configProps = new Object();
+	var options = new Array();
 	
 	for(i in aaData){
 		var row = aaData[i];
-		for(j in row){
-			configProps[row[0]] = row[1];
-		}
+
+		var option = new Option();
+		option.optionName = row[0];
+		option.optionValue = row[1];
+			
+		options[i] = option;
+
 	}
 	
-	return $.toJSON(configProps);
+	return $.toJSON(options);
 }
 
 function activatePlugin(pluginName, pluginVersion, activateCallback){

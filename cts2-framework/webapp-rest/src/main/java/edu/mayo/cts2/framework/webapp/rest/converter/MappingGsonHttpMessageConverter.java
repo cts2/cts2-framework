@@ -111,7 +111,9 @@ public class MappingGsonHttpMessageConverter extends AbstractHttpMessageConverte
 			public String translateName(Field field) {
 				char[] array = field.getName().toCharArray();
 
-				array = ArrayUtils.remove(array, 0);
+				if(array[0] == '_'){
+					array = ArrayUtils.remove(array, 0);
+				}
 				
 				return new String(array);
 			}

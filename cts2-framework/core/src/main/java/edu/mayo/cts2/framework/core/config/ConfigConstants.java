@@ -78,5 +78,11 @@ public class ConfigConstants {
 	public static String SERVER_ROOT_PROPERTY = "server.root";
 	
 	public static String APP_NAME_PROPERTY = "app.name";
+	
+	public static String ADMIN_USERNAME_PROPERTY = "admin.username";
+	public static String DEFAULT_ADMIN_USERNAME_VALUE = "admin";
+	
+	public static String ADMIN_PASSWORD_PROPERTY = "admin.password";
+	public static String DEFAULT_ADMIN_PASSWORD_VALUE = "admin";
 
 }

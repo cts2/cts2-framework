@@ -1,5 +1,6 @@
 package edu.mayo.cts2.framework.core.config.option;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -8,8 +9,8 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class OptionHolder {
 
-	private Map<String,AbstractOption<?>> options = 
-			new HashMap<String,AbstractOption<?>>();
+	private Map<String,Option<?>> options = 
+			new HashMap<String,Option<?>>();
 	
 	public OptionHolder(Set<StringOption> stringOptions){
 		if(CollectionUtils.isNotEmpty(stringOptions)){
@@ -18,6 +19,7 @@ public class OptionHolder {
 			}
 		}
 	}
+	
 	public StringOption getStringOption(String optionName){
 		StringOption option = (StringOption) options.get(optionName);
 		
@@ -26,5 +28,13 @@ public class OptionHolder {
 		}
 		
 		return option;
+	}
+	
+	public void updateOption(String optionName, Option<?> option){
+		this.options.put(optionName, option);
+	}
+	
+	public Collection<Option<?>> getAllOptions(){
+		return this.options.values();
 	}
 }

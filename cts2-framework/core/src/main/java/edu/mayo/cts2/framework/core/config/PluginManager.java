@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -28,12 +29,10 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.plugin.PluginClassLoader;
 
 @Component
-public class PluginManager implements InitializingBean {
+public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	
 	private Log log = LogFactory.getLog(getClass());
-	
-	private Properties inUsePluginProperties;
-	
+
 	private Map<String,ClassLoader> pluginClassLoaders =
 			new HashMap<String,ClassLoader>();
 	
@@ -47,28 +46,54 @@ public class PluginManager implements InitializingBean {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-			this.inUsePluginProperties =
-					this.getPluginProperties(
-						this.getInUsePluginDirectory());
-			
-			String inUsePluginName = this.getInUsePluginName();
-			
-			this.pluginConfig = 
-					new PluginConfig(
-							this.getPluginSpecificConfigProperties(inUsePluginName),
-							this.getPluginWorkDirectory(inUsePluginName),
-							this.configInitializer.getServerContext());
+
+		String inUsePluginName = this.getInUsePluginName();
+		
+		this.pluginConfig = 
+				new PluginConfig(
+						this.getPluginSpecificConfigProperties(inUsePluginName),
+						this.getPluginWorkDirectory(inUsePluginName),
+						this.configInitializer.getServerContext());
 	}
 	
-	public void setPluginSpecificConfigProperties(
+	public void updatePluginSpecificConfigProperties(
+			String pluginName,
+			Map<String,String> properties) {
+		
+		File propertiesFile = 
+				this.getPluginSpecificConfigPropertiesFile(pluginName);
+		
+		for(Entry<String, String> entry : properties.entrySet()){
+			
+			ConfigUtils.updateProperty(
+					entry.getKey(), 
+					entry.getValue(), 
+					propertiesFile);
+		}
+
+		this.serviceConfigManager.fireContextConfigPropertiesChangeEvent(
+				ConfigUtils.propertiesToOptionHolder(
+						ConfigUtils.loadProperties(
+								this.getPluginSpecificConfigPropertiesFile(pluginName))));
+	}
+	
+	public void updatePluginSpecificConfigProperty(
 			String pluginName,
 			String propertyName, 
 			String propertyValue) {
 		
-		ConfigUtils.setProperty(
+		File propertiesFile = 
+				this.getPluginSpecificConfigPropertiesFile(pluginName);
+		
+		ConfigUtils.updateProperty(
 				propertyName, 
 				propertyValue, 
-				this.getPluginSpecificConfigPropertiesFile(pluginName));
+				propertiesFile);
+		
+		this.serviceConfigManager.fireContextConfigPropertiesChangeEvent(
+				ConfigUtils.propertiesToOptionHolder(
+						ConfigUtils.loadProperties(
+								this.getPluginSpecificConfigPropertiesFile(pluginName))));
 	}
 
 	public OptionHolder getPluginSpecificConfigProperties(String pluginName) {
@@ -99,9 +124,8 @@ public class PluginManager implements InitializingBean {
 			throw new RuntimeException(e);
 		}
 		
-		if(this.isActivePlugin(pluginName, pluginVersion)){
-			this.serviceConfigManager.reload();
-		}
+		this.serviceConfigManager.firePluginRemovedEvent(
+				new PluginReference(pluginName, pluginVersion));
 	}
 	
 	protected ClassLoader createClassLoaderForPlugin(String pluginName, String pluginVersion){
@@ -172,14 +196,13 @@ public class PluginManager implements InitializingBean {
 	
 	public void activatePlugin(String name, String version) {
 		this.serviceConfigManager.
-			setContextConfigProperty(
+			updateContextConfigProperty(
 				ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, name);
 		
 		this.serviceConfigManager.
-			setContextConfigProperty(
+			updateContextConfigProperty(
 				ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, version);
-	
-		this.serviceConfigManager.reload();
+
 	}
 	
 	private File findPluginFile(final String pluginName, final String pluginVersion){
@@ -221,14 +244,23 @@ public class PluginManager implements InitializingBean {
 				.getPath();
 
 		ZipInputStream zis = new ZipInputStream(source);
+		
+		File pluginDestinationFile = null;
 
 		byte[] buffer = new byte[1024];
 		try {
 			for (ZipEntry zip; (zip = zis.getNextEntry()) != null;) {
-
+				
 				File file = new File(destination, zip.getName());
 				if (zip.isDirectory()) {
+					
 					file.mkdir();
+					
+					//record the new Plugin directory
+					if(pluginDestinationFile == null){
+						pluginDestinationFile = file;
+					}
+			
 				} else {
 					FileOutputStream fos = null;
 					try {
@@ -250,6 +282,14 @@ public class PluginManager implements InitializingBean {
 				zis.close();
 			}
 		}
+		
+		Properties pluginProps = this.getPluginProperties(pluginDestinationFile);
+		
+		String pluginName = this.getPluginName(pluginProps);
+		String pluginVersion = this.getPluginVersion(pluginProps);
+		
+		this.serviceConfigManager.firePluginAddedEvent(
+				new PluginReference(pluginName, pluginVersion));
 	}
 
 	private Properties getPluginProperties(File plugin) {
@@ -325,7 +365,9 @@ public class PluginManager implements InitializingBean {
 	}
 	
 	public String getPluginServiceProviderClassName(String pluginName, String pluginVersion) {
-		return this.inUsePluginProperties.getProperty(ConfigConstants.PLUGIN_PROVIDER_CLASS_PROP);
+		Properties props = this.getPluginProperties(this.getPluginDirectory(pluginName, pluginVersion));
+		
+		return props.getProperty(ConfigConstants.PLUGIN_PROVIDER_CLASS_PROP);
 	}
 	
 	public PluginReference getActivePlugin() {
@@ -334,6 +376,20 @@ public class PluginManager implements InitializingBean {
 				this.getInUsePluginVersion());
 	}
 	
+	public boolean isActivePlugin(PluginReference ref) {
+		return this.isActivePlugin(ref.getPluginName(), ref.getPluginVersion());
+	}
+	
+	@Override
+	public void registerListener(ConfigChangeObserver observer) {
+		this.serviceConfigManager.registerListener(observer);
+	}
+
+	@Override
+	public void unregisterListener(ConfigChangeObserver observer) {
+		this.serviceConfigManager.unregisterListener(observer);
+	}
+
 	private String getPluginName(Properties props){
 		return props.getProperty(ConfigConstants.PLUGIN_NAME_PROP);
 	}
@@ -357,4 +413,5 @@ public class PluginManager implements InitializingBean {
 	protected void setConfigInitializer(ConfigInitializer configInitializer) {
 		this.configInitializer = configInitializer;
 	}
+
 }

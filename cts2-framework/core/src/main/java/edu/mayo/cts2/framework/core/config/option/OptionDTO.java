@@ -1,10 +1,12 @@
 package edu.mayo.cts2.framework.core.config.option;
 
+public class OptionDTO extends AbstractOption<String>{
 
-public class StringOption extends AbstractOption<String>{
-
-	public StringOption(String optionName, String optionValue) {
-		super(optionName, optionValue, OptionType.STRING);
+	public OptionDTO(
+			String optionName, 
+			String optionValue,
+			OptionType optionType) {
+		super(optionName, optionValue, optionType);
 	}
 
 	@Override

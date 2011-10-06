@@ -23,19 +23,26 @@
  */
 package edu.mayo.cts2.framework.core.config;
 
+
 /**
- * An asynchronous update interface for receiving notifications
- * about ConfigChange information as the ConfigChange is constructed.
+ * The Interface ConfigChangeObservable.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ReloadObserver {
-
-	/**
-	 * This method is called when information about an ConfigChange
-	 * which was previously requested using an asynchronous
-	 * interface becomes available.
-	 */
-	public void onReload();
+public interface ConfigChangeObservable {
 	
+	/**
+	 * Register listener.
+	 *
+	 * @param observer the observer
+	 */
+	public void registerListener(ConfigChangeObserver observer);
+	
+	/**
+	 * Unregister listener.
+	 *
+	 * @param observer the observer
+	 */
+	public void unregisterListener(ConfigChangeObserver observer);
+
 }

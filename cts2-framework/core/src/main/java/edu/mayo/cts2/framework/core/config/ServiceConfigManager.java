@@ -1,6 +1,9 @@
 package edu.mayo.cts2.framework.core.config;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -8,23 +11,18 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.ConfigChangeListener.ConfigChangeCallback;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 @Component
-public class ServiceConfigManager extends BaseReloadObservable implements InitializingBean {
+public class ServiceConfigManager extends BaseConfigChangeObservable 
+	implements InitializingBean {
 	
 	@Resource
 	private ConfigInitializer configInitializer;
 
-	private Properties globalProperties;
-	private Properties contextProperties;
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this.globalProperties = ConfigUtils.loadProperties(this.configInitializer.getGlobalConfigFile());
-		this.contextProperties = ConfigUtils.loadProperties(this.configInitializer.getContextConfigFile());	
-	
+	    /*
 		ConfigChangeListener configChangeListener = 
 				new ConfigChangeListener(
 				this.configInitializer.getPluginsDirectory(),
@@ -40,6 +38,32 @@ public class ServiceConfigManager extends BaseReloadObservable implements Initia
 				});
 		
 		configChangeListener.start();
+		*/
+		
+		Map<String,String> contextConfigDefaults = new HashMap<String,String>();
+		contextConfigDefaults.put(ConfigConstants.ADMIN_USERNAME_PROPERTY, ConfigConstants.DEFAULT_ADMIN_USERNAME_VALUE);
+		contextConfigDefaults.put(ConfigConstants.ADMIN_PASSWORD_PROPERTY, ConfigConstants.DEFAULT_ADMIN_PASSWORD_VALUE);
+	
+		this.initializePropertiesFile(
+				this.configInitializer.getContextConfigFile(), 
+				contextConfigDefaults);
+	}
+	
+	
+	protected void initializePropertiesFile(File propertiesFile, Map<String,String> defaults){
+		
+		Properties props = ConfigUtils.loadProperties(propertiesFile);
+		
+		if(defaults != null){
+			for(Entry<String, String> entry : defaults.entrySet()){
+				if(! props.contains(entry.getKey())){
+					ConfigUtils.addPropertyIfNotFound(
+							entry.getKey(),
+							entry.getValue(), 
+							propertiesFile);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -51,61 +75,74 @@ public class ServiceConfigManager extends BaseReloadObservable implements Initia
 	 */
 	public String getGlobalConfigProperty(
 			String propertyName) {
-		return this.globalProperties.getProperty(propertyName);
+		return this.doGetPropertyValue(this.configInitializer.getGlobalConfigFile(), propertyName);
 	}
 	
 	public OptionHolder getGlobalConfigProperties(
 			String propertyName) {
-		return ConfigUtils.propertiesToOptionHolder(this.globalProperties);
+		return this.doGetProperties(this.configInitializer.getGlobalConfigFile());
 	}
 	
 	public OptionHolder getContextConfigProperties(
 			String propertyName) {
-		return ConfigUtils.propertiesToOptionHolder(this.contextProperties);
+		return this.doGetProperties(this.configInitializer.getContextConfigFile());
 	}
 	
 	public String getContextConfigProperty(
 			String propertyName) {
-		return this.contextProperties.getProperty(propertyName);
+		return this.doGetPropertyValue(this.configInitializer.getContextConfigFile(), propertyName);
+	}
+	
+	private String doGetPropertyValue(File propertiesFile, String propertyName){
+		return ConfigUtils.loadProperties(
+				propertiesFile).getProperty(propertyName);
+	}
+	
+	private OptionHolder doGetProperties(File propertiesFile){
+		return ConfigUtils.propertiesToOptionHolder(
+				ConfigUtils.loadProperties(
+				propertiesFile));
 	}
 
-	public void setGlobalConfigProperty(
+	public void updateGlobalConfigProperty(
 			String propertyName, 
 			String propertyValue) {
 		
-		this.doSetProperty(
+		OptionHolder newOptions = this.doUpdateProperty(
 				propertyName, 
 				propertyValue, 
 				this.configInitializer.getGlobalConfigFile());
+		
+		this.fireGlobalConfigPropertiesChangeEvent(newOptions);
 	}
 	
-	public void setContextConfigProperty(
+	public void updateContextConfigProperty(
 			String propertyName,
 			String propertyValue) {
 		
-		this.doSetProperty(
+		OptionHolder newOptions = this.doUpdateProperty(
 				propertyName, 
 				propertyValue, 
 				this.configInitializer.getContextConfigFile());
+		
+		this.fireContextConfigPropertiesChangeEvent(newOptions);
 	}
 	
-	private void doSetProperty(
+	private OptionHolder doUpdateProperty(
 			String propertyName, 
 			String propertyValue, 
 			File propertiesFile){
-		ConfigUtils.setProperty(
+		
+		ConfigUtils.updateProperty(
 				propertyName, 
 				propertyValue, 
 				propertiesFile);
 		
-		this.reload();
+		return ConfigUtils.propertiesToOptionHolder(
+				ConfigUtils.loadProperties(propertiesFile));
 	}
 
 	public ServerContext getServerContext() {
 		return this.configInitializer.getServerContext();
-	}
-	
-	protected void reload() {
-		this.fireReloadEvent();
 	}
 }

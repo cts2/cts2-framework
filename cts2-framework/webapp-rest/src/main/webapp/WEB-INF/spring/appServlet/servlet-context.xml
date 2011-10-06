@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
 
-	<beans:bean class="edu.mayo.cts2.framework.core.config.ConfigInitializer"
-		factory-method="instance" />
 
-	<!-- Scans within the base package of the application for @Components to 
-		configure as beans -->
-	<context:component-scan base-package="edu.mayo.cts2.framework.model" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.core" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.service" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.filter" />
-	<context:component-scan base-package="edu.mayo.cts2.framework.webapp.rest">
-		<context:include-filter type="annotation"
-			expression="org.aspectj.lang.annotation.Aspect" />
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>
 	
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 
@@ -32,14 +23,8 @@
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing 
-		infrastructure -->
-	<!-- <annotation-driven> <message-converters> <beans:bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"> 
-		<beans:property name="marshaller" ref="marshaller" /> <beans:property name="unmarshaller" 
-		ref="marshaller" /> </beans:bean> </message-converters> < </annotation-driven> -->
 	<beans:bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-
 	</beans:bean>
 
 	<beans:bean
@@ -77,16 +62,6 @@
 		class="edu.mayo.cts2.framework.webapp.rest.converter.AnnotationMethodHandlerExceptionResolverFactoryBean">
 	</beans:bean>
 
-	<!-- jackson configuration : http://stackoverflow.com/questions/3661769 -->
-	<!-- Disabling jackson in favor of gson <beans:bean id="jacksonObjectMapper" 
-		class="org.codehaus.jackson.map.ObjectMapper" /> <beans:bean id="jacksonSerializationConfig" 
-		class="org.codehaus.jackson.map.SerializationConfig" factory-bean="jacksonObjectMapper" 
-		factory-method="getSerializationConfig" /> <beans:bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"> 
-		<beans:property name="targetObject" ref="jacksonSerializationConfig" /> <beans:property 
-		name="targetMethod" value="setSerializationInclusion" /> <beans:property 
-		name="arguments"> <util:list> <beans:value type="org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion">NON_NULL</beans:value> 
-		</util:list> </beans:property> </beans:bean> -->
-
 	<beans:bean id="conversion-service"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
 
@@ -117,10 +92,6 @@
 		</beans:property>
 		<beans:property name="defaultViews">
 			<util:list>
-				<!-- <beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.ModelNameAdjustingMappingJacksonJsonView"> 
-					<beans:property name="objectMapper" ref="jacksonObjectMapper"/> <beans:property 
-					name="renderedAttributes"> <util:constant static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" 
-					/> </beans:property> </beans:bean> -->
 				<beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.XmlView">
 					<beans:property name="modelKey">
 						<util:constant

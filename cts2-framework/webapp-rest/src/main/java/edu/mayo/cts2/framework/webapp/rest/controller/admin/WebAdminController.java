@@ -24,8 +24,11 @@
 package edu.mayo.cts2.framework.webapp.rest.controller.admin;
 
 import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -44,7 +47,8 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.mayo.cts2.framework.core.config.PluginDescription;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
-import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.core.config.option.Option;
+import edu.mayo.cts2.framework.core.config.option.OptionDTO;
 
 /**
  * The Class WebAdminController.
@@ -55,7 +59,7 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 public class WebAdminController {
 
 	@Resource
-	private PluginManager getPluginManager;
+	private PluginManager pluginManager;
 
 	@RequestMapping
 	public ModelAndView getValueSetDefinitionsOfValueSet() {
@@ -72,47 +76,52 @@ public class WebAdminController {
 	
 	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.GET)
 	@ResponseBody
-	public OptionHolder getCurrentPluginSpecificConfigProperties() {
+	public Collection<OptionDTO> getCurrentPluginSpecificConfigProperties() {
 		PluginReference activePlugin = 
-				this.getPluginManager.getActivePlugin();
+				this.pluginManager.getActivePlugin();
 
-		return this.getPluginManager.getPluginSpecificConfigProperties(
-				activePlugin.getPluginName());
+		Collection<Option<?>> options = this.pluginManager.getPluginSpecificConfigProperties(
+				activePlugin.getPluginName()).
+					getAllOptions();
+		
+		return this.optionsToDtos(options);
 	}
 	
 	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.PUT)
 	@ResponseBody
-	public void updateCurrentPluginSpecificConfigProperties(@RequestBody Properties properties) {
+	public void updateCurrentPluginSpecificConfigProperties(@RequestBody OptionDTO[] options) {
 		PluginReference activePlugin = 
-				this.getPluginManager.getActivePlugin();
+				this.pluginManager.getActivePlugin();
 		
-		for(Entry<Object, Object> entry : properties.entrySet()){
-			this.getPluginManager.
-				setPluginSpecificConfigProperties(
-						activePlugin.getPluginName(),
-						(String)entry.getKey(), 
-						(String)entry.getValue());
+		Map<String,String> optionMap = new HashMap<String,String>();
+
+		for(OptionDTO option : options){
+			optionMap.put(
+				option.getOptionName(), 
+					option.getOptionValueAsString());
 		}
+
+		this.pluginManager.updatePluginSpecificConfigProperties(activePlugin.getPluginName(), optionMap);
 	}
 	
 	@RequestMapping(value = { "/admin/plugins/active" }, method = RequestMethod.PUT)
 	@ResponseBody
 	public void activatePlugin(@RequestBody PluginReference plugin) {
-		this.getPluginManager.
+		this.pluginManager.
 			activatePlugin(plugin.getPluginName(), plugin.getPluginVersion());
 	}
 
 	@RequestMapping(value = { "/admin/plugins" }, method = RequestMethod.GET)
 	@ResponseBody
 	public Set<PluginDescription> getPlugins() {
-		return this.getPluginManager.getPluginDescriptions();	
+		return this.pluginManager.getPluginDescriptions();	
 	}
 	
 	@RequestMapping(value = { "/admin/plugins" }, method = RequestMethod.POST)
 	@ResponseBody
 	public void addPlugin(@RequestParam MultipartFile file) throws IOException {
 
-		this.getPluginManager.installPlugin(
+		this.pluginManager.installPlugin(
 				file.getInputStream());
 	}
 
@@ -122,7 +131,7 @@ public class WebAdminController {
 			@PathVariable("pluginName") String pluginName,
 			@PathVariable("pluginVersion") String pluginVersion) {
 		
-		this.getPluginManager.removePlugin(pluginName, pluginVersion);
+		this.pluginManager.removePlugin(pluginName, pluginVersion);
 	}
 	
 	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.GET)
@@ -130,7 +139,20 @@ public class WebAdminController {
 	public PluginDescription getPlugin(
 			@PathVariable("pluginName") String pluginName,
 			@PathVariable("pluginVersion") String pluginVersion){
-		return this.getPluginManager.getPluginDescription(pluginName, pluginVersion);
+		return this.pluginManager.getPluginDescription(pluginName, pluginVersion);
+	}
+	
+	private Collection<OptionDTO> optionsToDtos(Collection<Option<?>> options){
+		List<OptionDTO> returnList = new ArrayList<OptionDTO>();
+		
+		for(Option<?> option : options){
+			returnList.add(new OptionDTO(
+					option.getOptionName(), 
+					option.getOptionValueAsString(), 
+					option.getOptionType()));
+		}
+		
+		return returnList;
 	}
 
 	public static class UploadItem {

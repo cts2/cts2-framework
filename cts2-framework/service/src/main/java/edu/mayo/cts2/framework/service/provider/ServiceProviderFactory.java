@@ -38,11 +38,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
 import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
-import edu.mayo.cts2.framework.core.config.ReloadObserver;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
+import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -52,7 +53,7 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  */
 @Component
 public class ServiceProviderFactory implements InitializingBean,
-		ReloadObserver, ServiceProviderChangeObservable {
+		ConfigChangeObserver, ServiceProviderChangeObservable {
 
 	private final Log log = LogFactory.getLog(getClass().getName());
 
@@ -92,8 +93,9 @@ public class ServiceProviderFactory implements InitializingBean,
 		return this.serviceProvider;
 	}
 
-	public void refresh() {
+	private void refresh() {
 		this.serviceProvider = null;
+		this.serviceProvider = this.createServiceProvider();
 	}
 
 	/**
@@ -244,7 +246,7 @@ public class ServiceProviderFactory implements InitializingBean,
 		return serviceProvider;
 	}
 
-	private void fireConfigChangeEvent() {
+	private void fireServiceProviderChangeEvent() {
 		for (ServiceProviderChangeObserver observer : this.observers) {
 			observer.onServiceProviderChange();
 		}
@@ -259,7 +261,39 @@ public class ServiceProviderFactory implements InitializingBean,
 	}
 
 	@Override
-	public void onReload() {
-		this.fireConfigChangeEvent();
+	public void onPluginRemoved(PluginReference ref) {
+		if(this.pluginManager.isActivePlugin(ref)){
+			this.refresh();
+			this.fireServiceProviderChangeEvent();
+		}
+	}
+
+	@Override
+	public void onPluginAdded(PluginReference ref) {
+		//no-op
+	}
+
+	@Override
+	public void onContextConfigPropertiesChange() {
+		this.refresh();
+		this.fireServiceProviderChangeEvent();
+	}
+
+	@Override
+	public void onGlobalConfigPropertiesChange(OptionHolder newOptions) {
+		this.refresh();
+		this.fireServiceProviderChangeEvent();
+	}
+
+	@Override
+	public void onContextConfigPropertiesChange(OptionHolder newOptions) {
+		this.refresh();
+		this.fireServiceProviderChangeEvent();
+	}
+
+	@Override
+	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions) {
+		this.refresh();
+		this.fireServiceProviderChangeEvent();
 	}
 }

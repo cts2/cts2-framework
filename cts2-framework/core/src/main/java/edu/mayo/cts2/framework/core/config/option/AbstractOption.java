@@ -1,29 +1,38 @@
 package edu.mayo.cts2.framework.core.config.option;
 
-public class AbstractOption<T> {
+public abstract class AbstractOption<T> implements Option<T> {
 	
 	private String optionName;
 	
-	private T optionValue;
+	private String optionValue;
 	
-	protected AbstractOption(String optionName, T optionValue){
+	private OptionType optionType;
+
+	protected AbstractOption(String optionName, T optionValue, OptionType optionType){
 		this.optionName = optionName;
-		this.optionValue = optionValue;
+		this.optionValue = this.optionValueToString(optionValue);
+		
+		this.optionType = optionType;
 	}
 
+	@Override
+	public String getOptionValueAsString() {
+		return this.optionValue;
+	}
+
+	protected abstract String optionValueToString(T optionValue);
+
+	protected abstract T stringToOptionValue(String optionValue);
+	
 	public String getOptionName() {
 		return optionName;
 	}
 
-	public void setOptionName(String optionName) {
-		this.optionName = optionName;
-	}
-
 	public T getOptionValue() {
-		return optionValue;
+		return this.stringToOptionValue(optionValue);
 	}
 
-	public void setOptionValue(T optionValue) {
-		this.optionValue = optionValue;
+	public OptionType getOptionType() {
+		return optionType;
 	}
 }

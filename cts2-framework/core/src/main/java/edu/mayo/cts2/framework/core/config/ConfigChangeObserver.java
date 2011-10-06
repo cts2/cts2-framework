@@ -23,26 +23,26 @@
  */
 package edu.mayo.cts2.framework.core.config;
 
+import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 /**
- * The Interface ConfigChangeObservable.
+ * An asynchronous update interface for receiving notifications
+ * about ConfigChange information as the ConfigChange is constructed.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ReloadObservable {
-	
-	/**
-	 * Register listener.
-	 *
-	 * @param observer the observer
-	 */
-	public void registerListener(ReloadObserver observer);
-	
-	/**
-	 * Unregister listener.
-	 *
-	 * @param observer the observer
-	 */
-	public void unregisterListener(ReloadObserver observer);
+public interface ConfigChangeObserver {
 
+	public void onPluginRemoved(PluginReference ref);
+	
+	public void onPluginAdded(PluginReference ref);
+	
+	public void onContextConfigPropertiesChange();
+	
+	public void onGlobalConfigPropertiesChange(OptionHolder newOptions);
+	
+	public void onContextConfigPropertiesChange(OptionHolder newOptions);
+	
+	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions);
+	
 }
