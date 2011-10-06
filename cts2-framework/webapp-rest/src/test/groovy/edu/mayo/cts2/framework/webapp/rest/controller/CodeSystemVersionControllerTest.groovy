@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest
 import org.junit.Before
 import org.junit.Test
 
-import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface
-import edu.mayo.cts2.framework.core.url.UrlConstructor
+import edu.mayo.cts2.framework.core.config.ServerContext
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry
 import edu.mayo.cts2.framework.model.core.Message
+import edu.mayo.cts2.framework.service.command.QueryControl
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
-import edu.mayo.cts2.framework.webapp.rest.controller.CodeSystemVersionController
 
  class CodeSystemVersionControllerTest {
 	
@@ -27,28 +27,32 @@ import edu.mayo.cts2.framework.webapp.rest.controller.CodeSystemVersionControlle
 		getRequestURL:  { 'http://test/webapp/codesystem/ID/version/V_ID'<<'' },
 		getParameterMap:  { ["format":"xml"] } ] as HttpServletRequest
 
-	def urlConstructor = [
+	def serverContext = [
 		getServerRootWithAppName: { "http://test/webapp" }
-	] as UrlConstructor
+	] as ServerContext
+
+	def serviceConfigManager = [
+		getServerContext: { serverContext }
+	] as ServiceConfigManager
 
 	
 	@Before
 	void setup(){
 		controller = new CodeSystemVersionController()
 		controller.codeSystemVersionReadService = codeSystemVersionReadService
-		controller.setUrlConstructor(urlConstructor)
+		controller.serviceConfigManager = serviceConfigManager
 	}
 	
 	@Test
 	void testGetCodeSystemVersionByNameInstanceOfMessage(){
-		def result = controller.getCodeSystemVersionByName(httpServletRequest, "csname", "csvname")
+		def result = controller.getCodeSystemVersionByName(httpServletRequest, new QueryControl(), "csname", "csvname")
 		
 		assert result instanceof Message	
 	}
 	
 	@Test
 	void testGetCodeSystemVersionByNameHasEverything(){
-		def result = controller.getCodeSystemVersionByName(httpServletRequest, "csname", "csvname")
+		def result = controller.getCodeSystemVersionByName(httpServletRequest, new QueryControl(), "csname", "csvname")
 	
 		assertNotNull result.heading
 		assertNotNull result.heading.resourceRoot

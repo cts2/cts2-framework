@@ -122,7 +122,7 @@ public abstract class AbstractMessageWrappingController extends
 		}
 
 		String urlRoot = 
-			this.serviceConfigManager.getServerContext().getServerRootWithAppName();
+			this.getServiceConfigManager().getServerContext().getServerRootWithAppName();
 		
 		if(! urlRoot.endsWith("/")){
 			urlRoot = urlRoot + "/";
@@ -177,7 +177,7 @@ public abstract class AbstractMessageWrappingController extends
 		resource.setAccessDate(new Date());
 
 		String urlRoot = 
-				this.serviceConfigManager.getServerContext().getServerRootWithAppName();
+				this.getServiceConfigManager().getServerContext().getServerRootWithAppName();
 		
 		if(! urlRoot.endsWith("/")){
 			urlRoot = urlRoot + "/";
@@ -269,5 +269,13 @@ public abstract class AbstractMessageWrappingController extends
 		}
 
 		return parameterValueToString(value);
+	}
+
+	protected ServiceConfigManager getServiceConfigManager() {
+		return serviceConfigManager;
+	}
+
+	protected void setServiceConfigManager(ServiceConfigManager serviceConfigManager) {
+		this.serviceConfigManager = serviceConfigManager;
 	}
 }

@@ -23,15 +23,13 @@
  */
 package edu.mayo.cts2.framework.core.url;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.PluginConfig;
-import edu.mayo.cts2.framework.core.config.PluginConfigFactory;
-import edu.mayo.cts2.framework.core.config.PluginConfigSpringFactory;
 
 /**
  * A factory for creating UrlConstructor objects.
@@ -42,16 +40,10 @@ public class UrlConstructorSpringFactory implements FactoryBean<UrlConstructor> 
 	
 	protected Log log = LogFactory.getLog(getClass().getName());
 	
-	@Autowired(required = false)
+	@Resource
 	private PluginConfig pluginConfig;
 	
 	public UrlConstructor getObject() throws Exception {
-		if(this.pluginConfig == null){
-			log.warn("Autowire of " + PluginConfig.class.getName() 
-					+ " failed. Consider using the factory bean " + PluginConfigSpringFactory.class.getName());
-		
-			this.pluginConfig = PluginConfigFactory.instance().getPluginConfig();
-		}
 		return new UrlConstructor(this.pluginConfig.getServerContext());
 	}
 

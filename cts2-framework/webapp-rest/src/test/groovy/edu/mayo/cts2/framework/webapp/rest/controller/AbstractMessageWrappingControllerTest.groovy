@@ -6,21 +6,25 @@ import javax.servlet.http.HttpServletRequest
 
 import org.junit.Test
 
-import edu.mayo.cts2.framework.core.url.UrlConstructor
+import edu.mayo.cts2.framework.core.config.ServerContext
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory
 import edu.mayo.cts2.framework.model.directory.DirectoryResult
 import edu.mayo.cts2.framework.service.command.Page
-import edu.mayo.cts2.framework.webapp.rest.controller.AbstractMessageWrappingController
 
 
 class AbstractMessageWrappingControllerTest {
 
-	def urlConstructor = [
+	def serverContext = [
 		getServerRootWithAppName: { "http://test/webapp" }
-	] as UrlConstructor
+	] as ServerContext
+
+	def ServiceConfigManager = [ 
+		getServerContext: { serverContext } 
+	] as ServiceConfigManager
 
 	def controller = [
-		getUrlConstructor: { urlConstructor }
+		getServiceConfigManager : { ServiceConfigManager }
 	] as AbstractMessageWrappingController
 
 	def httpServletRequest = [ 

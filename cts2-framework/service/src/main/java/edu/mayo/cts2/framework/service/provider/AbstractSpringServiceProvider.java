@@ -28,11 +28,11 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -63,32 +63,45 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 		}
 		
 	}
+	
+	protected ApplicationContext buildParentApplicationContext(PluginConfig pluginConfig){
+		
+		GenericApplicationContext parent = new GenericApplicationContext();
+		
+		BeanDefinitionBuilder builder = 
+				BeanDefinitionBuilder.
+					genericBeanDefinition(RuntimePluginConfigFactory.class).
+						addPropertyValue("pluginConfig", pluginConfig);
+		    
+        String beanName = WordUtils.uncapitalize(
+				PluginConfig.class.getSimpleName());
+        
+        BeanDefinition def = 
+        		builder.getBeanDefinition();
+      
+	    parent.registerBeanDefinition(
+	    				beanName, 
+	    				def);
+	    
+	    parent.refresh();
+	    
+	    return parent;
+	}
 
 	public void initialize(PluginConfig pluginConfig) {
 		String prop = System.getProperty(TEST_CONTEXT_SYSTEM_PROP);
 
+		ApplicationContext parent = this.buildParentApplicationContext(pluginConfig);
+
 		if(BooleanUtils.toBoolean(prop)){
 			log.warn("Using Test Context for: " + this.getClass().getCanonicalName());
-			this.applicationContext = this.getIntegrationTestApplicationContext();
+			this.applicationContext = this.getIntegrationTestApplicationContext(parent);
 		} else {
-			this.applicationContext = this.getApplicationContext();	
+			this.applicationContext = this.getApplicationContext(parent);	
 		}	
-			
-		BeanFactory factory = this.applicationContext.getAutowireCapableBeanFactory();	
-	    BeanDefinitionRegistry registry = (BeanDefinitionRegistry) factory;
-	    
-	    GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-        beanDefinition.setBeanClass(RuntimePluginConfigFactory.class);
-        beanDefinition.setAutowireCandidate(true);
-        beanDefinition.setAttribute("pluginConfig", pluginConfig);
-	    
-	    registry.registerBeanDefinition(
-	    		WordUtils.uncapitalize(
-	    				PluginConfig.class.getCanonicalName()), 
-	    				beanDefinition);
 	}
 	
-	public static class RuntimePluginConfigFactory implements FactoryBean<PluginConfig>{
+	public static class RuntimePluginConfigFactory implements FactoryBean<PluginConfig> {
 
 		private PluginConfig pluginConfig;
 		
@@ -104,11 +117,11 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 			return true;
 		}
 
-		protected PluginConfig getPluginConfig() {
+		public PluginConfig getPluginConfig() {
 			return pluginConfig;
 		}
 
-		protected void setPluginConfig(PluginConfig pluginConfig) {
+		public void setPluginConfig(PluginConfig pluginConfig) {
 			this.pluginConfig = pluginConfig;
 		}
 	}
@@ -117,7 +130,11 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 		//
 	}
 
-	protected abstract ApplicationContext getApplicationContext();
+	protected abstract ApplicationContext getApplicationContext(ApplicationContext parent);
 	
-	protected abstract ApplicationContext getIntegrationTestApplicationContext();
+	protected abstract ApplicationContext getIntegrationTestApplicationContext(ApplicationContext parent);
+
+	protected ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
 }

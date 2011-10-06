@@ -8,16 +8,16 @@ import org.junit.Before
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletResponse
 
-import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface
+import edu.mayo.cts2.framework.core.config.ServerContext
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface
-import edu.mayo.cts2.framework.core.url.UrlConstructor
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.Message
 import edu.mayo.cts2.framework.model.exception.Cts2RestException
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem
+import edu.mayo.cts2.framework.service.command.QueryControl
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
-import edu.mayo.cts2.framework.webapp.rest.controller.CodeSystemController
 
  class CodeSystemControllerTest {
 	
@@ -31,29 +31,32 @@ import edu.mayo.cts2.framework.webapp.rest.controller.CodeSystemController
 		getServletPath: { '/codesystem/ID' },
 		getRequestURL:  { 'http://test/webapp/codesystem/ID'<<'' },
 		getParameterMap:  { ["format":"xml"] } ] as HttpServletRequest
-
-	def urlConstructor = [
+	
+	def serverContext = [
 		getServerRootWithAppName: { "http://test/webapp" }
-	] as UrlConstructor
+	] as ServerContext
 
+	def serviceConfigManager = [
+		getServerContext: { serverContext }
+	] as ServiceConfigManager
 	
 	@Before
 	void setup(){
 		controller = new CodeSystemController()
 		controller.codeSystemReadService = codeSystemReadService
-		controller.setUrlConstructor(urlConstructor)
+		controller.serviceConfigManager = serviceConfigManager
 	}
 	
 	@Test
 	void testGetCodeSystemByNameInstanceOfMessage(){
-		def result = controller.getCodeSystemByName(httpServletRequest, "id")
+		def result = controller.getCodeSystemByName(httpServletRequest, new QueryControl(), "id")
 		
 		assert result instanceof Message	
 	}
 	
 	@Test
 	void testGetCodeSystemByNameHasEverything(){
-		def result = controller.getCodeSystemByName(httpServletRequest, "id")
+		def result = controller.getCodeSystemByName(httpServletRequest, new QueryControl(), "id")
 	
 		assertNotNull result.heading
 		assertNotNull result.heading.resourceRoot
