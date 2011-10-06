@@ -24,8 +24,6 @@
 package edu.mayo.cts2.framework.core.config;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,7 +39,9 @@ import java.util.TimerTask;
  * @see ConfigChangeEvent
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ConfigChangeListener implements ConfigChangeObservable {
+public class ConfigChangeListener {
+	
+	private ConfigChangeCallback callback;
 	
 	private Long contextConfigFileLastChange;
 	private Long pluginDirLastChange;
@@ -51,7 +51,10 @@ public class ConfigChangeListener implements ConfigChangeObservable {
 	private File pluginsDir;
 	private File contextConfigFile;
 	
-	private Set<ConfigChangeObserver> observers = new HashSet<ConfigChangeObserver>();
+	protected interface ConfigChangeCallback {
+		
+		public void onConfigChange();
+	}
 	
 	/**
 	 * Instantiates a new config change listener.
@@ -59,9 +62,13 @@ public class ConfigChangeListener implements ConfigChangeObservable {
 	 * @param pluginsDir the plugins dir
 	 * @param contextConfigFile the context config file
 	 */
-	protected ConfigChangeListener(File pluginsDir, File contextConfigFile){
+	protected ConfigChangeListener(
+			File pluginsDir, 
+			File contextConfigFile,
+			ConfigChangeCallback callback){
 		this.pluginsDir = pluginsDir;
 		this.contextConfigFile = contextConfigFile;
+		this.callback = callback;
 	}
 	
 	/**
@@ -125,44 +132,12 @@ public class ConfigChangeListener implements ConfigChangeObservable {
 				} else {
 					if(lastUpdateTime > lastRecordedUpdateTime){
 						lastUpdateTimeBean.setLastUpdateTime(lastUpdateTime);
-						configFileChange();
+						
+						callback.onConfigChange();
 					}
 				}
 			}
 			
 		}, start, period);
 	}
-	
-	/**
-	 * Config file change.
-	 */
-	protected void configFileChange(){
-		for(ConfigChangeObserver observer : this.observers){
-			observer.onContextPropertiesFileChange();
-		}
-	}
-	
-	/**
-	 * Plugin dir change.
-	 */
-	protected void pluginDirChange(){
-		for(ConfigChangeObserver observer : this.observers){
-			observer.onPluginsDirectoryChange();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObservable#registerListener(edu.mayo.cts2.framework.core.config.ConfigChangeObserver)
-	 */
-	public void registerListener(ConfigChangeObserver observer) {
-		observers.add(observer);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObservable#unregisterListener(edu.mayo.cts2.framework.core.config.ConfigChangeObserver)
-	 */
-	public void unregisterListener(ConfigChangeObserver observer) {
-		observers.remove(observer);
-	}
-
 }

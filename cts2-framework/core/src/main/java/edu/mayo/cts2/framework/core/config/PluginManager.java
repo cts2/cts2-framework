@@ -42,6 +42,9 @@ public class PluginManager implements InitializingBean {
 	@Resource
 	private ConfigInitializer configInitializer;
 	
+	@Resource
+	private ServiceConfigManager serviceConfigManager;
+	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 			this.inUsePluginProperties =
@@ -94,6 +97,10 @@ public class PluginManager implements InitializingBean {
 			this.cleanUpAfterRemove(pluginName, pluginVersion);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+		
+		if(this.isActivePlugin(pluginName, pluginVersion)){
+			this.serviceConfigManager.reload();
 		}
 	}
 	
@@ -164,7 +171,15 @@ public class PluginManager implements InitializingBean {
 	}
 	
 	public void activatePlugin(String name, String version) {
+		this.serviceConfigManager.
+			setContextConfigProperty(
+				ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, name);
 		
+		this.serviceConfigManager.
+			setContextConfigProperty(
+				ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, version);
+	
+		this.serviceConfigManager.reload();
 	}
 	
 	private File findPluginFile(final String pluginName, final String pluginVersion){

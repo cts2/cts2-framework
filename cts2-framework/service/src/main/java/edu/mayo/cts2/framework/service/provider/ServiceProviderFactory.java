@@ -38,10 +38,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
 import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
+import edu.mayo.cts2.framework.core.config.ReloadObserver;
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -51,12 +52,15 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  */
 @Component
 public class ServiceProviderFactory implements InitializingBean,
-		ConfigChangeObserver, ServiceProviderChangeObservable {
+		ReloadObserver, ServiceProviderChangeObservable {
 
 	private final Log log = LogFactory.getLog(getClass().getName());
 
 	@Resource
 	private PluginManager pluginManager;
+	
+	@Resource
+	private ServiceConfigManager serviceConfigManager;
 
 	private ServiceProvider serviceProvider;
 
@@ -70,6 +74,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	 */
 	public void afterPropertiesSet() throws Exception {
 		this.serviceProvider = this.createServiceProvider();
+		this.serviceConfigManager.registerListener(this);
 	}
 
 	/**
@@ -239,16 +244,6 @@ public class ServiceProviderFactory implements InitializingBean,
 		return serviceProvider;
 	}
 
-	public void onContextPropertiesFileChange() {
-		this.serviceProvider = null;
-		fireConfigChangeEvent();
-	}
-
-	public void onPluginsDirectoryChange() {
-		this.serviceProvider = null;
-		fireConfigChangeEvent();
-	}
-
 	private void fireConfigChangeEvent() {
 		for (ServiceProviderChangeObserver observer : this.observers) {
 			observer.onServiceProviderChange();
@@ -261,5 +256,10 @@ public class ServiceProviderFactory implements InitializingBean,
 
 	public void unregisterListener(ServiceProviderChangeObserver observer) {
 		this.observers.remove(observer);
+	}
+
+	@Override
+	public void onReload() {
+		this.fireConfigChangeEvent();
 	}
 }

@@ -29,20 +29,20 @@ package edu.mayo.cts2.framework.core.config;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ConfigChangeObservable {
+public interface ReloadObservable {
 	
 	/**
 	 * Register listener.
 	 *
 	 * @param observer the observer
 	 */
-	public void registerListener(ConfigChangeObserver observer);
+	public void registerListener(ReloadObserver observer);
 	
 	/**
 	 * Unregister listener.
 	 *
 	 * @param observer the observer
 	 */
-	public void unregisterListener(ConfigChangeObserver observer);
+	public void unregisterListener(ReloadObserver observer);
 
 }

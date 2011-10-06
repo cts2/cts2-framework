@@ -39,13 +39,11 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ConfigInitializer implements ConfigChangeObservable {
+public class ConfigInitializer {
 
 	protected static Log log = LogFactory.getLog(ConfigInitializer.class);
 
 	private static ConfigInitializer instance;
-
-	private ConfigChangeListener configChangeListener;
 
 	private String context;
 
@@ -104,15 +102,7 @@ public class ConfigInitializer implements ConfigChangeObservable {
 		this.contextConfigPropsFile = ConfigUtils.createFile(
 				this.getContextPropertiesFilePath(this.context));
 
-		ConfigChangeListener configChangeListener = new ConfigChangeListener(
-				this.getPluginsDirectory(),
-				contextConfigPropsFile);
-		
 		this.serverContext = this.createServerContext();
-
-		configChangeListener.start();
-
-		this.configChangeListener = configChangeListener;
 	}
 	
 	private ServerContext createServerContext(){
@@ -225,21 +215,6 @@ public class ConfigInitializer implements ConfigChangeObservable {
 
 	protected File getConfigDirectory() {
 		return this.configDirectory;
-	}
-	
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObservable#registerListener(edu.mayo.cts2.framework.core.config.ConfigChangeObserver)
-	 */
-	public void registerListener(ConfigChangeObserver observer) {
-		this.configChangeListener.registerListener(observer);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.ConfigChangeObservable#unregisterListener(edu.mayo.cts2.framework.core.config.ConfigChangeObserver)
-	 */
-	public void unregisterListener(ConfigChangeObserver observer) {
-		this.configChangeListener.unregisterListener(observer);
 	}
 
 	protected File getGlobalConfigFile() {

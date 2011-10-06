@@ -29,20 +29,13 @@ package edu.mayo.cts2.framework.core.config;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ConfigChangeObserver {
+public interface ReloadObserver {
 
 	/**
 	 * This method is called when information about an ConfigChange
 	 * which was previously requested using an asynchronous
 	 * interface becomes available.
 	 */
-	public void onContextPropertiesFileChange();
+	public void onReload();
 	
-	/**
-	 * This method is called when information about an ConfigChange
-	 * which was previously requested using an asynchronous
-	 * interface becomes available.
-	 */
-	public void onPluginsDirectoryChange();
-
 }
