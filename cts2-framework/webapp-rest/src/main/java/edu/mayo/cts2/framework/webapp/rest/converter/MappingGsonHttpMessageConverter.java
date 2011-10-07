@@ -90,11 +90,18 @@ public class MappingGsonHttpMessageConverter extends AbstractHttpMessageConverte
 			throws IOException, HttpMessageNotWritableException {
 		String json = gson.toJson(t);
 		
-		OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody());
+		OutputStreamWriter writer = null;
+		try {
+			writer = new OutputStreamWriter(outputMessage.getBody());
 		
-		writer.write(json);
+			writer.write(json);
 		
-		writer.flush();
+			writer.flush();
+		} finally {
+			if(writer != null){
+				writer.close();
+			}
+		}
 	}
 	
 	/**
