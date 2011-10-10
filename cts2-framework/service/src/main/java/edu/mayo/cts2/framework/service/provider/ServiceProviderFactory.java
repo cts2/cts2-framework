@@ -85,17 +85,16 @@ public class ServiceProviderFactory implements InitializingBean,
 		super();
 	}
 
-	public synchronized ServiceProvider getServiceProvider() {
-		if (this.serviceProvider == null) {
-			this.serviceProvider = this.createServiceProvider();
+	public ServiceProvider getServiceProvider() {
+		synchronized(this.serviceProvider){
+			return this.serviceProvider;
 		}
-
-		return this.serviceProvider;
 	}
 
 	private void refresh() {
-		this.serviceProvider = null;
-		this.serviceProvider = this.createServiceProvider();
+		synchronized(this.serviceProvider){
+			this.serviceProvider = this.createServiceProvider();
+		}
 	}
 
 	/**
@@ -127,75 +126,7 @@ public class ServiceProviderFactory implements InitializingBean,
 			final ServiceProvider provider = this.loadServiceProviderClass(
 					providerClassName, pluginClassLoader);
 
-			final ExecutorService ex = Executors.newFixedThreadPool(1,
-					new ThreadFactory() {
-
-						public Thread newThread(Runnable runnable) {
-							Thread t = new Thread(runnable);
-							t.setContextClassLoader(pluginClassLoader);
-
-							return t;
-						}
-
-					});
-
-			ServiceProvider serviceProvider = new ServiceProvider() {
-
-				public <T extends Cts2Profile> T getService(
-						final Class<T> serviceClass) {
-					try {
-						return ex.submit(new Callable<T>() {
-
-							public T call() throws Exception {
-								return provider.getService(serviceClass);
-							}
-
-						}).get();
-					} catch (ExecutionException e) {
-						throw handleException(e);
-					} catch (InterruptedException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-				
-				public void initialize(
-						final PluginConfig pluginConfig) {
-					try {
-						ex.submit(new Callable<Void>() {
-
-							public Void call() throws Exception {
-								provider.initialize(pluginConfig);
-								
-								return null;
-							}
-
-						}).get();
-					} catch (ExecutionException e) {
-						throw handleException(e);
-					} catch (InterruptedException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-				
-				public void destroy() {
-					try {
-						ex.submit(new Callable<Void>() {
-
-							public Void call() throws Exception {
-								provider.destroy();
-								
-								return null;
-							}
-
-						}).get();
-					} catch (ExecutionException e) {
-						throw handleException(e);
-					} catch (InterruptedException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-
-			};
+			this.serviceProvider = this.decorateServiceProvider(provider, pluginClassLoader);
 			
 			serviceProvider.initialize(
 					this.pluginManager.getPluginConfig());
@@ -218,6 +149,20 @@ public class ServiceProviderFactory implements InitializingBean,
 		} else {
 			return new RuntimeException(e);
 		}
+	}
+	
+	protected ExecutorService createExecutorService(final ClassLoader pluginClassLoader){
+		return Executors.newFixedThreadPool(1,
+				new ThreadFactory() {
+
+					public Thread newThread(Runnable runnable) {
+						Thread t = new Thread(runnable);
+						t.setContextClassLoader(pluginClassLoader);
+
+						return t;
+					}
+
+				});
 	}
 
 	/**
@@ -243,6 +188,70 @@ public class ServiceProviderFactory implements InitializingBean,
 			throw new IllegalStateException(e);
 		}
 
+		return serviceProvider;
+	}
+	
+	protected ServiceProvider decorateServiceProvider(final ServiceProvider delegate, ClassLoader pluginClassLoader){
+		final ExecutorService ex = this.createExecutorService(pluginClassLoader);
+		
+		ServiceProvider serviceProvider = new ServiceProvider() {
+
+			public <T extends Cts2Profile> T getService(
+					final Class<T> serviceClass) {
+				try {
+					return ex.submit(new Callable<T>() {
+
+						public T call() throws Exception {
+							return delegate.getService(serviceClass);
+						}
+
+					}).get();
+				} catch (ExecutionException e) {
+					throw handleException(e);
+				} catch (InterruptedException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+			
+			public void initialize(
+					final PluginConfig pluginConfig) {
+				try {
+					ex.submit(new Callable<Void>() {
+
+						public Void call() throws Exception {
+							delegate.initialize(pluginConfig);
+							
+							return null;
+						}
+
+					}).get();
+				} catch (ExecutionException e) {
+					throw handleException(e);
+				} catch (InterruptedException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+			
+			public void destroy() {
+				try {
+					ex.submit(new Callable<Void>() {
+
+						public Void call() throws Exception {
+							delegate.destroy();
+							
+							return null;
+						}
+
+					}).get();
+				} catch (ExecutionException e) {
+					throw handleException(e);
+				} catch (InterruptedException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+
+		};
+		
 		return serviceProvider;
 	}
 

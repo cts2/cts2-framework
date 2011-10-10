@@ -27,7 +27,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
     
     <a class="abs icon" style="left:20px;top:160px;" href="#icon_dock_admin_app">
       <img src="resources/desktop/assets/images/icons/box-config-icon.png" />
-      Admin App
+      Plugin Admin
     </a>
    
     <div id="window_service_plugins" class="abs window">
@@ -90,7 +90,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
         <div class="window_top">
           <span class="float_left">
             <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
-            Admin App
+            Plugin Admin
           </span>
           <span class="float_right">
             <a href="#" class="window_min"></a>
@@ -165,7 +165,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
        <li id="icon_dock_admin_app">
         <a href="#window_admin_app">
           <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
-          Admin App
+          Plugin Admin
         </a>
       </li>
       
