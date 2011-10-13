@@ -12,7 +12,7 @@ class TestPluginConfigSpringFactory implements FactoryBean {
 	
 	private File workDirectory;
 	
-	private ServerContext serverContext = new ServerContext();
+	private ServerContext serverContext = new TestServerContext();
 
 	@Override
 	public Object getObject() throws Exception {
@@ -28,4 +28,27 @@ class TestPluginConfigSpringFactory implements FactoryBean {
 	public boolean isSingleton() {
 		true
 	}		
+}
+
+class TestServerContext implements ServerContext {
+	
+	def appName = "http://test.org"
+	def serverRoot = "testApp"
+
+	@Override
+	public String getServerRoot() {
+		serverRoot
+	}
+
+	@Override
+	public String getServerRootWithAppName() {
+		getServerRoot() + "/" + getAppName()
+	}
+
+	@Override
+	public String getAppName() {
+		appName
+	}
+	
+	
 }

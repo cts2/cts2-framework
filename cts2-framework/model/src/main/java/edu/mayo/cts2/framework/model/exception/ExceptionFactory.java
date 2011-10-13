@@ -120,7 +120,7 @@ public class ExceptionFactory {
 		try {
 			ex = exceptionClazz.newInstance();
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e);
+			throw new UnspecifiedCts2RuntimeException(e);
 		}
 		
 		ex.setSeverity(LoggingLevel.ERROR);
@@ -183,8 +183,8 @@ public class ExceptionFactory {
 	 *
 	 * @return the unspecified cts2 rest exception
 	 */
-	public static UnspecifiedCts2RestException createPageOutOfBoundsException() {
-		return new UnspecifiedCts2RestException("Page Out of Bounds.", 416);
+	public static UnspecifiedCts2RuntimeException createPageOutOfBoundsException() {
+		return new UnspecifiedCts2RuntimeException("Page Out of Bounds.", 416);
 	}
 	
 	/**

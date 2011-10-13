@@ -332,6 +332,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_GRAPH_OF_CODESYSTEMVERSION, method=RequestMethod.GET)
 	@ResponseBody
+	//TODO: Not complete
 	public AssociationGraph getGraphCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			AssociationQueryServiceRestrictions associationRestrictions,
@@ -350,8 +351,7 @@ public class AssociationController extends AbstractServiceAwareController {
 					GraphDirection.FORWARD,
 					depth);
 
-		directoryResult.setHeading(this.getHeading(httpServletRequest));
-		
+		//TODO -- need to add 'next', 'prev' links, etc.
 		return directoryResult;
 	}
 	

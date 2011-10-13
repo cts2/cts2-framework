@@ -53,7 +53,7 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 				new PluginConfig(
 						this.getPluginSpecificConfigProperties(inUsePluginName),
 						this.getPluginWorkDirectory(inUsePluginName),
-						this.configInitializer.getServerContext());
+						this.serviceConfigManager.getServerContext());
 	}
 	
 	public void updatePluginSpecificConfigProperties(
@@ -71,7 +71,7 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 					propertiesFile);
 		}
 
-		this.serviceConfigManager.fireContextConfigPropertiesChangeEvent(
+		this.serviceConfigManager.firePluginSpecificConfigPropertiesChangeEvent(
 				ConfigUtils.propertiesToOptionHolder(
 						ConfigUtils.loadProperties(
 								this.getPluginSpecificConfigPropertiesFile(pluginName))));
@@ -114,6 +114,12 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	}
 	
 	public void removePlugin(String pluginName, String pluginVersion) {
+		boolean isActive = this.isActivePlugin(pluginName, pluginVersion);
+		
+		if(isActive){
+			this.activatePlugin("", "");
+		}
+		
 		File pluginFile = this.findPluginFile(pluginName, pluginVersion);
 		
 		try {
@@ -371,9 +377,17 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	}
 	
 	public PluginReference getActivePlugin() {
+		String name = this.getInUsePluginName();
+		String version = this.getInUsePluginVersion();
+		
+		if(StringUtils.isBlank(name) ||
+				StringUtils.isBlank(version)){
+			return null;
+		}
+		
 		return new PluginReference(
-				this.getInUsePluginName(),
-				this.getInUsePluginVersion());
+				name,
+				version);
 	}
 	
 	public boolean isActivePlugin(PluginReference ref) {

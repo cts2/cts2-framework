@@ -26,7 +26,6 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import java.beans.PropertyEditorSupport;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +51,7 @@ import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RestException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
@@ -60,7 +59,6 @@ import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
-import edu.mayo.cts2.framework.webapp.rest.view.NoPathParamRedirectView;
 
 /**
  * The Class AbstractController.
@@ -138,12 +136,12 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @param ex the ex
 	 * @return the model and view
 	 */
-	@ExceptionHandler(UnspecifiedCts2RestException.class)
+	@ExceptionHandler(UnspecifiedCts2RuntimeException.class)
 	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 
-			UnspecifiedCts2RestException ex) {
+			UnspecifiedCts2RuntimeException ex) {
 		log.error(ex);
 		
 		int status = ex.getStatusCode();
@@ -261,14 +259,13 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @param pathParametersToRemove the path parameters to remove
 	 * @return the model and view
 	 */
-	@SuppressWarnings("unchecked")
-	protected ModelAndView redirect(String redirectUrl, HttpServletRequest httpServletRequest, String... pathParametersToRemove){
-		RedirectView rmv = new NoPathParamRedirectView(redirectUrl, Arrays.asList(pathParametersToRemove));
+	protected ModelAndView redirect(String redirectUrl, HttpServletRequest httpServletRequest){
+		RedirectView rmv = new RedirectView(redirectUrl);
 
+		rmv.setExposeModelAttributes(false);
+		
 		ModelAndView mav = new ModelAndView(rmv);
 
-		mav.addAllObjects(httpServletRequest.getParameterMap());
-		
 		return mav;
 	}
 	

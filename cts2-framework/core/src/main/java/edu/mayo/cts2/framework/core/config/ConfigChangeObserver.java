@@ -37,8 +37,6 @@ public interface ConfigChangeObserver {
 	
 	public void onPluginAdded(PluginReference ref);
 	
-	public void onContextConfigPropertiesChange();
-	
 	public void onGlobalConfigPropertiesChange(OptionHolder newOptions);
 	
 	public void onContextConfigPropertiesChange(OptionHolder newOptions);

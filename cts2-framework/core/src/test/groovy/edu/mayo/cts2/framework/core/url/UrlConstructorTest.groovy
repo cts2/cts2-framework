@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 
 import edu.mayo.cts2.framework.core.config.ServerContext
+import edu.mayo.cts2.framework.core.config.TestServerContext
 
 class UrlConstructorTest {
 	
@@ -13,7 +14,7 @@ class UrlConstructorTest {
 	
 	@Before
 	void setup(){
-		ServerContext serverContext = new ServerContext()
+		ServerContext serverContext = new TestServerContext()
 		serverContext.appName = "testapp"
 		serverContext.serverRoot = "http://serverRoot:8080"
 		

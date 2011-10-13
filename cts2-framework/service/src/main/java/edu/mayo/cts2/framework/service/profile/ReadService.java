@@ -30,7 +30,7 @@ package edu.mayo.cts2.framework.service.profile;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ReadService<R,I> extends Cts2Profile {
+public interface ReadService<R,I> extends Cts2Profile, UriResolvable<R> {
 
 	/**
 	 * Read.
@@ -47,4 +47,5 @@ public interface ReadService<R,I> extends Cts2Profile {
 	 * @return true, if successful
 	 */
 	public boolean exists(I identifier);
+	
 }

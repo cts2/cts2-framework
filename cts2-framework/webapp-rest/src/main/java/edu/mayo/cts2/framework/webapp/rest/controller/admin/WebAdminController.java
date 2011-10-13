@@ -47,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.mayo.cts2.framework.core.config.PluginDescription;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionDTO;
 
@@ -60,6 +61,9 @@ public class WebAdminController {
 
 	@Resource
 	private PluginManager pluginManager;
+	
+	@Resource
+	private ServiceConfigManager serviceConfigManager;
 
 	@RequestMapping
 	public ModelAndView getValueSetDefinitionsOfValueSet() {
@@ -74,20 +78,36 @@ public class WebAdminController {
 		return new ModelAndView("admin");
 	}
 	
-	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/admin/plugins/currentplugin/properties" }, method = RequestMethod.GET)
 	@ResponseBody
 	public Collection<OptionDTO> getCurrentPluginSpecificConfigProperties() {
 		PluginReference activePlugin = 
 				this.pluginManager.getActivePlugin();
 
-		Collection<Option<?>> options = this.pluginManager.getPluginSpecificConfigProperties(
-				activePlugin.getPluginName()).
-					getAllOptions();
+		Collection<Option<?>> options;
+		
+		if(activePlugin != null){
+			options = this.pluginManager.getPluginSpecificConfigProperties(
+					activePlugin.getPluginName()).
+						getAllOptions();
+		} else {
+			options = new ArrayList<Option<?>>();
+		}
 		
 		return this.optionsToDtos(options);
 	}
 	
-	@RequestMapping(value = { "/admin/config/currentplugin" }, method = RequestMethod.PUT)
+	@RequestMapping(value = { "/admin/servicecontext/properties" }, method = RequestMethod.GET)
+	@ResponseBody
+	public Collection<OptionDTO> getServiceContextConfigProperties() {
+		
+		Collection<Option<?>> options = this.serviceConfigManager.getContextConfigProperties().
+				getAllOptions();
+		
+		return this.optionsToDtos(options);
+	}
+	
+	@RequestMapping(value = { "/admin/plugins/currentplugin/properties" }, method = RequestMethod.POST)
 	@ResponseBody
 	public void updateCurrentPluginSpecificConfigProperties(@RequestBody OptionDTO[] options) {
 		PluginReference activePlugin = 
@@ -102,6 +122,21 @@ public class WebAdminController {
 		}
 
 		this.pluginManager.updatePluginSpecificConfigProperties(activePlugin.getPluginName(), optionMap);
+	}
+	
+	@RequestMapping(value = { "/admin/servicecontext/properties" }, method = RequestMethod.POST)
+	@ResponseBody
+	public void updateServiceContextConfigProperties(@RequestBody OptionDTO[] options) {
+		
+		Map<String,String> optionMap = new HashMap<String,String>();
+
+		for(OptionDTO option : options){
+			optionMap.put(
+				option.getOptionName(), 
+					option.getOptionValueAsString());
+		}
+
+		this.serviceConfigManager.updateContextConfigProperties(optionMap);
 	}
 	
 	@RequestMapping(value = { "/admin/plugins/active" }, method = RequestMethod.PUT)

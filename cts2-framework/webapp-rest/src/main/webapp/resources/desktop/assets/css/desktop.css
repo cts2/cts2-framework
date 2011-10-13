@@ -277,6 +277,7 @@ div.ui-resizable-handle {
   font-size: 11px;
   padding: 10px 12px 10px 10px;
   width: 150px;
+  position: absolute;
 }
 
 .window_main {
@@ -295,50 +296,6 @@ div.ui-resizable-handle {
 
 .window_full .window_inner {
   bottom: -1px;
-}
-
-/* `Table >> Data
-----------------------------------------------------------------------------------------------------*/
-
-table.data {
-  width: 100%;
-  white-space: nowrap;
-}
-
-table.data th,
-table.data td {
-  padding: 5px 10px;
-  vertical-align: middle;
-}
-
-table.data th {
-  background: #fff url(../images/gui/bar_top.png) repeat-x left bottom;
-  border-left: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-  font-weight: bold;
-  text-shadow: #fff 0 1px 1px;
-  white-space: nowrap;
-}
-
-table.data th:first-child {
-  border-left: 0;
-}
-
-table.data img {
-  display: block;
-}
-
-table.data tbody tr:nth-child(even) td {
-  background: #def;
-}
-
-table.data tbody tr.active td {
-  background: #06c url(../images/gui/bar_top_link.png) repeat-x;
-  color: #fff;
-}
-
-th.shrink {
-  width: 1%;
 }
 
 /* `Bar >> Top + Bottom
@@ -526,4 +483,55 @@ th.shrink {
   bottom: 0;
   min-width: 700px;
   min-height: 500px;
+}
+
+/* JqueryUI 
+---------------------------------------------------------------------------------*/
+input, label {
+	display: block;
+}
+
+label {
+	margin-top: 6px;
+}
+
+.ui-tabs {
+	border: none;	
+}
+label.error { 
+	float: none; 
+	color: red; 
+	padding-left: .5em; 
+	vertical-align: top; 
+}
+
+input.text {
+	width: 95%;
+	padding: .4em;
+}
+
+fieldset {
+	padding: 0;
+	border: 0;
+}
+
+.passwordStatus {
+	
+}
+
+.ui-dialog .ui-state-error {
+	padding: .3em;
+}
+
+.validateTips {
+	border: 1px solid transparent;
+	padding: 0.3em;
+}
+
+.full_width {
+	width: 100%;
+}
+
+table {
+	
 }

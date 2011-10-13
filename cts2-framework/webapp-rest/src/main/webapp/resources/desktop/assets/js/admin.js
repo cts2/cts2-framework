@@ -70,19 +70,32 @@ function saveCurrentPluginConfig(saveCallback){
 	
 	$.ajax( {
 		"dataType": 'json', 
-		"type": "PUT", 
+		"type": "POST", 
 		"contentType": "application/json",
 		"data": getPropertiesFromTable(),
-		"url": "admin/config/currentplugin", 
+		"url": "admin/plugins/currentplugin/properties", 
+		"success": saveCallback
+	} );
+	
+}
+
+function saveServiceContextConfig(saveCallback){
+	
+	$.ajax( {
+		"dataType": 'json', 
+		"type": "POST", 
+		"contentType": "application/json",
+		"data": getPropertiesFromTable(),
+		"url": "admin/servicecontext/properties", 
 		"success": saveCallback
 	} );
 	
 }
 
 function getPropertiesFromTable(){
-	var contextConfigTable = $('#contextConfigTable').dataTable();
+	var pluginAdminTable = $('#pluginAdminTable').dataTable();
 	
-	var aaData = contextConfigTable.fnGetData();
+	var aaData = pluginAdminTable.fnGetData();
 	
 	var options = new Array();
 	
@@ -100,6 +113,28 @@ function getPropertiesFromTable(){
 	return $.toJSON(options);
 }
 
+
+function populateServerContextFields(){
+	$.ajax( {
+		"dataType": 'json', 
+		"type": "GET", 
+		"contentType": "application/json",
+		"url": "admin/servicecontext/properties", 
+		"success": function(json){
+			for(i in json){
+				var option = json[i];
+				
+				if(option.optionName == 'server.root'){
+					 $('input[name="server_url"]').val(option.optionValue);
+				}
+				if(option.optionName == 'app.name'){
+					$('input[name="webapp_name"]').val(option.optionValue);
+				}
+			}
+		}
+	} );
+}
+
 function activatePlugin(pluginName, pluginVersion, activateCallback){
 	
 	$.ajax( {
@@ -115,32 +150,30 @@ function activatePlugin(pluginName, pluginVersion, activateCallback){
 
 $(document).ready(function() {
 	var pluginsTable = $('#pluginTable').dataTable( {
+		"sDom": '<"top">rt<"bottom"flp><"clear">',
 		"bProcessing": false,
 		"bPaginate": false,
 		"bFilter": false,
-		"sDom": '<"top">rt<"bottom"flp><"clear">',
 		"sAjaxSource": 'admin/plugins?format=json',
 		"fnServerData": fnPluginDescriptionObjectToArray(),
-		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-	
-			$(nRow).addClass('row_selected');
-
-			return nRow;
-		},
 	} );
 	
-	var contextConfigTable = $('#contextConfigTable').dataTable( {
+	var pluginAdminTable = $('#pluginAdminTable').dataTable( {
+		//"sDom": 'R<"H"lfr>t<"F"ip<',
+		"sDom": '<"top">rt<"bottom"flp><"clear">',
+		//"bJQueryUI": true,
 		"bProcessing": false,
 		"bPaginate": false,
 		"bFilter": false,
 		"aoColumnDefs":[
 		                {"aTargets":[0],"sClass":"readonly"},
 		                	],
-		"sDom": '<"top">rt<"bottom"flp><"clear">',
-		"sAjaxSource": 'admin/config/currentplugin?format=json',
+		"sAjaxSource": 'admin/plugins/currentplugin/properties?format=json',
 		"fnServerData": fnContextConfigPropsObjectToArray(),
-		"fnDrawCallback": function(){
-			var t = $('#contextConfigTable').dataTable();
+		"fnDrawCallback": function(nRow, aData, iDisplayIndex ){
+			$(nRow).addClass('row_selected');
+
+			var t = $('#pluginAdminTable').dataTable();
 			$('td[class!="readonly sorting_1"]', t.fnGetNodes()).editable(
 					function(value, settings){
 						handleConfigTableChange();
@@ -151,20 +184,14 @@ $(document).ready(function() {
 						return value;
 					}
 			);
+
 		}
 	});
 
 	function handleConfigTableChange(){
 		//
 	}
-	
-	$('form').ajaxForm({
-        success:      function(){
-        	pluginsTable.fnReloadAjax();
-        	jAlert('Plugin Successfully Uploaded.', 'Alert Dialog');
-        }
-	});
-	
+
 	/* Click event handler */
 	$('#pluginTable tbody tr').live('click', function () {
 		var aData = pluginsTable.fnGetData( this );
@@ -174,19 +201,23 @@ $(document).ready(function() {
 		$(this).toggleClass('row_selected');
 		
 		if(aData[2]){
-			$('#activateButton').attr('disabled','disabled');
+			$('#activateButton').button('disable')
 		} else {
-			$('#activateButton').removeAttr('disabled');
+			$('#activateButton').button('enable')
 		}
 		
-		$('#removeButton').removeAttr('disabled');
+		$('#removeButton').button('enable')
 	} );
 	
 	/* Add a click handler for the delete row */
 	$('#removeButton').click( function() {
 		removePlugin(
 				selectedPlugin[0], 
-				function(){pluginsTable.fnReloadAjax();});
+				selectedPlugin[1], 
+				function(){
+					pluginsTable.fnReloadAjax();
+					pluginAdminTable.fnReloadAjax()
+				});
 	} );
 	
 	/* Add a click handler for the delete row */
@@ -196,7 +227,9 @@ $(document).ready(function() {
 				selectedPlugin[1], 
 				function(){
 					jAlert('Plugin Successfully Activated.', 'Alert Dialog');
-					pluginsTable.fnReloadAjax();});
+					pluginsTable.fnReloadAjax();
+					pluginAdminTable.fnReloadAjax()
+				});
 	} );
 	
 	/* Add a click handler for the delete row */
@@ -205,19 +238,157 @@ $(document).ready(function() {
 				getPropertiesFromTable(),
 				function(){
 					jAlert('ConfigurationSaved.', 'Alert Dialog');
-					contextConfigTable.fnReloadAjax();
+					pluginAdminTable.fnReloadAjax();
 				});
 	} );
 	
 	/* Add a click handler for the delete row */
 	$('#resetConfigButton').click( function() {
-			contextConfigTable.fnReloadAjax();
+			pluginAdminTable.fnReloadAjax();
 	} );
+	
+	$( "#cancel_web-admin-change_password_button" )
+		.button()
+			.click(function() {
+				$("#changeAdminPasswordForm").validate().resetForm();
+	});
+	
+	$( "#change-web-admin-password-button" )
+		.button()
+			.click(function() {
+				var isValid = $("#changeAdminPasswordForm").valid();
+				if(!isValid){
+					jAlert('Password cannot be changed. Please fix the indicated errors.', 'Error');
+				} else {
+					var newPassword = $("#new_password").val();
+					$.ajax( {
+							"dataType": 'json', 
+							"type": "POST", 
+							"contentType": "application/json",
+							"data": "[{'optionName':'admin.password', 'optionValue':'"+newPassword+"'}]",
+							"url": "admin/servicecontext/properties", 
+							"success": function(){
+								jAlert('Password changed.', 'Success', function(){
+									$( "#change-web-admin-password-form" ).dialog( "close" );
+								});
+							}
+						} );
+				}	
+	});
+	
+	$.validator.setDefaults({
+		submitHandler: function() { alert("submitted!"); },
+		highlight: function(input) {
+			$(input).addClass("ui-state-highlight");
+		},
+		unhighlight: function(input) {
+			$(input).removeClass("ui-state-highlight");
+		}
+	});
+	
+	// validate signup form on keyup and submit
+	$("#changeAdminPasswordForm").validate({
+		rules: {
+			old_password: {
+				required: true,
+				remote: {
+					type: "GET",
+					dataType: "json",
+					url: "admin/servicecontext/properties",
+					dataFilter: function (data,type) {
+				
+						var oldPassword = $("#old_password").val();
+						var json = $.parseJSON(data);
+						for(i in json){
+							var option = json[i];
+							if(option.optionName == 'admin.password' &&
+									option.optionValue == oldPassword){
+								return "true";
+							}
+						}
+						
+						return "false";
+					},
+					data: null,
+				}
+			},
+			new_password: {
+				required: true,
+				minlength: 4
+			},
+			confirm_password: {
+				equalTo: "#new_password"
+			},
+		},
 
+		messages: {
+			old_password: {
+				remote: "Password Mismatch"
+			},
+			new_password: {
+				required: "Please provide a password",
+				minlength: "Your password must be at least 4 characters long"
+			},
+			confirm_password: {
+				equalTo: "Passwords don't match"
+			},
+		
+		}
+	});
 	
-	$('#removeButton').attr('disabled','disabled');
-	$('#activateButton').attr('disabled','disabled');
+	populateServerContextFields();
 	
+	$('#changeServerUrlForm').submit(function() { 
+	    
+	    var value = $("#server_url").val();
+	 
+		    $.ajax( {
+				"dataType": 'json', 
+				"type": "POST", 
+				"contentType": "application/json",
+				"data": "[{'optionName':'server.root', 'optionValue':'"+value+"'}]",
+				"url": "admin/servicecontext/properties", 
+				"success": function(){
+					jAlert('Server URL changed.', 'Success');
+					populateServerContextFields();
+				}
+			} );
+	    return false; 
+	});
+	
+	$('#changeWebappNameForm').submit(function() { 
+	    
+	    var value = $("#webapp_name").val();
+	 
+		    $.ajax( {
+				"dataType": 'json', 
+				"type": "POST", 
+				"contentType": "application/json",
+				"data": "[{'optionName':'app.name', 'optionValue':'"+value+"'}]",
+				"url": "admin/servicecontext/properties", 
+				"success": function(){
+					jAlert('WebApp Name changed.', 'Success');
+					populateServerContextFields();
+				}
+			} );
+	    return false; 
+	});
+	
+	$('#tabs').tabs();
+	
+	$("button, input:submit, input:button").not('#fileUploadButton').button();
+
+	$('#removeButton').button('disable');
+	$('#activateButton').button('disable');
+	
+	$('#uploadForm').submit(function() {
+	    $(this).ajaxSubmit(function(){
+	    	pluginsTable.fnReloadAjax();
+	    	jAlert('Plugin Successfully Uploaded.', 'Alert Dialog');
+	    });
+	    return false;
+	});
+
 } );
 
 $.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )

@@ -28,7 +28,7 @@ package edu.mayo.cts2.framework.model.exception;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class UnspecifiedCts2RestException extends RuntimeException {
+public class UnspecifiedCts2RuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1252172451874543855L;
 	
@@ -41,7 +41,7 @@ public class UnspecifiedCts2RestException extends RuntimeException {
 	 *
 	 * @param message the message
 	 */
-	public UnspecifiedCts2RestException(String message) {
+	public UnspecifiedCts2RuntimeException(String message) {
 		super(message);
 	}
 	
@@ -50,7 +50,7 @@ public class UnspecifiedCts2RestException extends RuntimeException {
 	 *
 	 * @param throwable the throwable
 	 */
-	public UnspecifiedCts2RestException(Throwable throwable) {
+	public UnspecifiedCts2RuntimeException(Throwable throwable) {
 		super(throwable);
 	}
 
@@ -60,7 +60,7 @@ public class UnspecifiedCts2RestException extends RuntimeException {
 	 * @param message the message
 	 * @param statusCode the status code
 	 */
-	public UnspecifiedCts2RestException(String message, int statusCode) {
+	public UnspecifiedCts2RuntimeException(String message, int statusCode) {
 		super(message);
 		this.statusCode = statusCode;
 	}
@@ -71,7 +71,7 @@ public class UnspecifiedCts2RestException extends RuntimeException {
 	 * @param cause the cause
 	 * @param statusCode the status code
 	 */
-	public UnspecifiedCts2RestException(Throwable cause, int statusCode) {
+	public UnspecifiedCts2RuntimeException(Throwable cause, int statusCode) {
 		super(cause);
 		this.statusCode = statusCode;
 	}

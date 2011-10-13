@@ -23,7 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapentry.id;
 
-import edu.mayo.cts2.framework.core.util.SdkUtils;
+import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 
 /**
@@ -64,7 +64,7 @@ public class MapEntryId {
 		MapEntryId id = new MapEntryId();
 		
 		id.setMapVersion(mapVersion);
-		id.setMapFrom(SdkUtils.decodeEntityName(encodedEntityName));
+		id.setMapFrom(EncodingUtils.decodeEntityName(encodedEntityName));
 		
 		return id;
 	}

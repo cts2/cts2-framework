@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RestException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 
 /**
  * The Class JsonpCallbackFilter.
@@ -60,11 +60,11 @@ public class JsonpCallbackFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if(! (request instanceof HttpServletRequest)){
-			throw new UnspecifiedCts2RestException("ServletRequest expected to be of type HttpServletRequest");
+			throw new UnspecifiedCts2RuntimeException("ServletRequest expected to be of type HttpServletRequest");
 		}
 		
 		if(! (response instanceof HttpServletResponse)){
-			throw new UnspecifiedCts2RestException("ServletResponse expected to be of type HttpServletResponse");
+			throw new UnspecifiedCts2RuntimeException("ServletResponse expected to be of type HttpServletResponse");
 		}
 		
 		HttpServletRequest httpRequest = (HttpServletRequest) request;

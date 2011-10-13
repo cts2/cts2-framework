@@ -283,12 +283,6 @@ public class ServiceProviderFactory implements InitializingBean,
 	}
 
 	@Override
-	public void onContextConfigPropertiesChange() {
-		this.refresh();
-		this.fireServiceProviderChangeEvent();
-	}
-
-	@Override
 	public void onGlobalConfigPropertiesChange(OptionHolder newOptions) {
 		this.refresh();
 		this.fireServiceProviderChangeEvent();

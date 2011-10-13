@@ -19,6 +19,8 @@ public class ServiceConfigManager extends BaseConfigChangeObservable
 	
 	@Resource
 	private ConfigInitializer configInitializer;
+	
+	private ServerContext serverContext;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -47,8 +49,27 @@ public class ServiceConfigManager extends BaseConfigChangeObservable
 		this.initializePropertiesFile(
 				this.configInitializer.getContextConfigFile(), 
 				contextConfigDefaults);
+		
+		this.serverContext = this.createServerContext();
 	}
 	
+	private ServerContext createServerContext(){
+		String appName = 
+				(String) ConfigUtils.loadProperties(
+				this.configInitializer.getContextConfigFile()).get(
+						ConfigConstants.APP_NAME_PROPERTY);
+		String serverRoot = 
+				(String) ConfigUtils.loadProperties(
+				this.configInitializer.getContextConfigFile()).get(
+						ConfigConstants.SERVER_ROOT_PROPERTY);
+		
+		RefreshableServerContext refreshableServerContext = 
+				new RefreshableServerContext(serverRoot, appName);
+		
+		this.registerListener(refreshableServerContext);
+		
+		return refreshableServerContext;
+	}
 	
 	protected void initializePropertiesFile(File propertiesFile, Map<String,String> defaults){
 		
@@ -83,8 +104,7 @@ public class ServiceConfigManager extends BaseConfigChangeObservable
 		return this.doGetProperties(this.configInitializer.getGlobalConfigFile());
 	}
 	
-	public OptionHolder getContextConfigProperties(
-			String propertyName) {
+	public OptionHolder getContextConfigProperties() {
 		return this.doGetProperties(this.configInitializer.getContextConfigFile());
 	}
 	
@@ -128,6 +148,26 @@ public class ServiceConfigManager extends BaseConfigChangeObservable
 		this.fireContextConfigPropertiesChangeEvent(newOptions);
 	}
 	
+	public void updateContextConfigProperties(
+			Map<String,String> properties) {
+		
+		File propertiesFile = 
+				this.configInitializer.getContextConfigFile();
+		
+		for(Entry<String, String> entry : properties.entrySet()){
+			
+			ConfigUtils.updateProperty(
+					entry.getKey(), 
+					entry.getValue(), 
+					propertiesFile);
+		}
+
+		this.fireContextConfigPropertiesChangeEvent(
+				ConfigUtils.propertiesToOptionHolder(
+						ConfigUtils.loadProperties(
+								propertiesFile)));
+	}
+	
 	private OptionHolder doUpdateProperty(
 			String propertyName, 
 			String propertyValue, 
@@ -143,6 +183,6 @@ public class ServiceConfigManager extends BaseConfigChangeObservable
 	}
 
 	public ServerContext getServerContext() {
-		return this.configInitializer.getServerContext();
+		return this.serverContext;
 	}
 }

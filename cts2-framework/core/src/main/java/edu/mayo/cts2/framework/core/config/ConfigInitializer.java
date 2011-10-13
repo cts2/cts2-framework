@@ -55,8 +55,6 @@ public class ConfigInitializer {
 	private String pluginsDirectoryPath = configDirectoryPath + File.separator
 			+ ConfigConstants.PLUGINS_DIRECTORY;
 	
-	private ServerContext serverContext;
-
 	private File configDirectory;
 	private File globalConfigPropsFile;
 	private File contextConfigPropsFile;
@@ -101,22 +99,8 @@ public class ConfigInitializer {
 		
 		this.contextConfigPropsFile = ConfigUtils.createFile(
 				this.getContextPropertiesFilePath(this.context));
-
-		this.serverContext = this.createServerContext();
 	}
 	
-	private ServerContext createServerContext(){
-		String appName = 
-				(String) ConfigUtils.loadProperties(
-				this.contextConfigPropsFile).get(
-						ConfigConstants.APP_NAME_PROPERTY);
-		String serverRoot = 
-				(String) ConfigUtils.loadProperties(
-				this.contextConfigPropsFile).get(
-						ConfigConstants.SERVER_ROOT_PROPERTY);
-		
-		return new ServerContext(serverRoot, appName);
-	}
 	/**
 	 * Gets the variable.
 	 *
@@ -223,9 +207,5 @@ public class ConfigInitializer {
 	
 	protected File getContextConfigFile() {
 		return this.contextConfigPropsFile;
-	}
-	
-	protected ServerContext getServerContext(){
-		return this.serverContext;
 	}
 }

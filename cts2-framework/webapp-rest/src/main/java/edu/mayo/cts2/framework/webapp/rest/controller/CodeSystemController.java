@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory;
@@ -65,7 +66,29 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private CodeSystemMaintenanceService codeSystemMaintenanceService;
+	
+	private UrlBinder<CodeSystemCatalogEntry> urlBinder;
 
+	protected void doInitialize(){
+		this.urlBinder = new CodeSystemCatalogEntryUrlBinder();
+	}
+	
+	private static class CodeSystemCatalogEntryUrlBinder implements UrlBinder<CodeSystemCatalogEntry>{
+
+		@Override
+		public String getValueForPathAttribute(
+				String attribute,
+				CodeSystemCatalogEntry resource) throws UrlVariableNotBoundException {
+			if(attribute.equals(VAR_CODESYSTEMID)){
+				return resource.getCodeSystemName();
+			}
+			else {
+				throw new UrlVariableNotBoundException();
+			}
+		}
+		
+	}
+	
 	/**
 	 * Gets the code systems.
 	 *
@@ -212,20 +235,25 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 * @return the code system by uri
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMBYURI, method=RequestMethod.GET)
-	public CodeSystemCatalogEntry getCodeSystemByUri(
+	public ModelAndView getCodeSystemByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_URI) String uri) {
+			HttpServletResponse httpServletResponse,
+			@RequestParam(VAR_URI) String uri) {
+		
 		/*
+		
 		uri = this.decodeUri(uri);
 		
-		String name = this.codeSystemService.getCodeSystemNameFromUri(uri);
-			
-		String path = "../../" + CODESYSTEM + "/" + name;
-
-		return this.redirect(path, httpServletRequest, VAR_URI);
+		CodeSystemCatalogEntry codeSystem = this.codeSystemReadService.readByUri(uri);
+		
+		CodeSystemCatalogEntryMsg msg = new CodeSystemCatalogEntryMsg();
+		msg.setCodeSystemCatalogEntry(codeSystem);
+		
+		msg = this.wrapMessage(msg, PATH_CODESYSTEMBYURI, this.urlBinder, codeSystem, httpServletRequest);
 		*/
-		//TODO
-		return null;
+		
+		
+		return this.redirect("codesystem/test", httpServletRequest);
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMQUERYSERVICE, method=RequestMethod.GET)

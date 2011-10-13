@@ -30,7 +30,7 @@ import edu.mayo.cts2.framework.model.core.ScopedEntityName;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class SdkUtils {
+public class EncodingUtils {
 	
 	private static final String ESCAPE_CHAR = "%3A";
 	private static final String SCOPED_ENTITY_NAME_SEPERATOR = ":";

@@ -28,8 +28,11 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -40,22 +43,25 @@ import org.springframework.util.ReflectionUtils;
 
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
+import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
 import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.webapp.rest.controller.UrlBinder.UrlVariableNotBoundException;
 
 /**
  * The Class AbstractMessageWrappingController.
- *
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public abstract class AbstractMessageWrappingController extends
 		AbstractController {
-	
+
 	@Resource
 	private ServiceConfigManager serviceConfigManager;
 
@@ -68,36 +74,61 @@ public abstract class AbstractMessageWrappingController extends
 	 */
 	/**
 	 * Wrap message.
-	 *
-	 * @param <T> the generic type
-	 * @param message the message
-	 * @param httpServletRequest the http servlet request
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param message
+	 *            the message
+	 * @param httpServletRequest
+	 *            the http servlet request
 	 * @return the t
 	 */
 	protected <T extends Message> T wrapMessage(T message,
 			HttpServletRequest httpServletRequest) {
 
-		message.setHeading(this.getHeading(httpServletRequest));
+		RESTResource heading = this
+				.getHeadingForNameRequest(httpServletRequest);
+
+		message.setHeading(heading);
+
+		return message;
+	}
+
+	protected <T extends Message, R extends AbstractResourceDescription> T wrapMessage(T message,
+			String urlTemplate,
+			UrlBinder<R> binder,
+			R resource,
+			HttpServletRequest httpServletRequest) {
+		
+		String resourceUrl = this.bindResourceToUrlTemplate(binder, resource, urlTemplate);
+
+		RESTResource heading = this
+				.getHeadingWithKnownUrlRequest(httpServletRequest, resourceUrl);
+
+		message.setHeading(heading);
 
 		return message;
 	}
 
 	/**
 	 * Populate directory.
-	 *
-	 * @param <T> the generic type
-	 * @param result the result
-	 * @param page the page
-	 * @param httpServletRequest the http servlet request
-	 * @param directoryClazz the directory clazz
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param result
+	 *            the result
+	 * @param page
+	 *            the page
+	 * @param httpServletRequest
+	 *            the http servlet request
+	 * @param directoryClazz
+	 *            the directory clazz
 	 * @return the t
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T extends Directory> T populateDirectory(
-			DirectoryResult<?> result, 
-			Page page,
-			HttpServletRequest httpServletRequest, 
-			Class<T> directoryClazz) {
+			DirectoryResult<?> result, Page page,
+			HttpServletRequest httpServletRequest, Class<T> directoryClazz) {
 
 		boolean isComplete = result.isComplete();
 
@@ -107,66 +138,127 @@ public abstract class AbstractMessageWrappingController extends
 
 			final Field field = ReflectionUtils.findField(directoryClazz,
 					"_entryList");
-			
+
 			AccessController.doPrivileged(new PrivilegedAction<Void>() {
-	            public Void run() {
-	            	field.setAccessible(true);
-	            	
-	            	return null;
-	            }
-	        });
+				public Void run() {
+					field.setAccessible(true);
+
+					return null;
+				}
+			});
 
 			ReflectionUtils.setField(field, directory, result.getEntries());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
-		String urlRoot = 
-			this.getServiceConfigManager().getServerContext().getServerRootWithAppName();
-		
-		if(! urlRoot.endsWith("/")){
+		String urlRoot = this.getServiceConfigManager().getServerContext()
+				.getServerRootWithAppName();
+
+		if (!urlRoot.endsWith("/")) {
 			urlRoot = urlRoot + "/";
 		}
-			
+
 		String url = urlRoot
-				+ StringUtils.removeStart(httpServletRequest.getServletPath(), "/");
-		
+				+ StringUtils.removeStart(httpServletRequest.getServletPath(),
+						"/");
+
 		if (isComplete) {
 			directory.setComplete(CompleteDirectory.COMPLETE);
 		} else {
 			directory.setComplete(CompleteDirectory.PARTIAL);
 
 			if (!result.isAtEnd()) {
-				directory.setNext(url + getParametersString(
-						httpServletRequest.getParameterMap(), 
-						page.getPage() + 1, page.getMaxtoreturn()));
+				directory.setNext(url
+						+ getParametersString(
+								httpServletRequest.getParameterMap(),
+								page.getPage() + 1, page.getMaxtoreturn()));
 			}
 
 			if (page.getPage() > 0) {
-				directory.setPrev(url + getParametersString(
-						httpServletRequest.getParameterMap(), 
-						page.getPage() - 1, page.getMaxtoreturn()));
+				directory.setPrev(url
+						+ getParametersString(
+								httpServletRequest.getParameterMap(),
+								page.getPage() - 1, page.getMaxtoreturn()));
 			}
 		}
-		
-		directory.setNumEntries((long)
-				result.getEntries().size());
+
+		directory.setNumEntries((long) result.getEntries().size());
 
 		return this.wrapMessage(directory, httpServletRequest);
 	}
 
-	/**
-	 * Gets the heading.
-	 *
-	 * @param httpServletRequest the http servlet request
-	 * @return the heading
-	 */
-	protected RESTResource getHeading(HttpServletRequest httpServletRequest) {
+	@SuppressWarnings("unchecked")
+	private RESTResource getHeadingForNameRequest(HttpServletRequest request) {
+
+		return this.getHeading(request.getParameterMap(),
+				request.getServletPath());
+
+	}
+
+	@SuppressWarnings("unchecked")
+	private RESTResource getHeadingWithKnownUrlRequest(HttpServletRequest request,
+			String resourceUrl) {
+
+		return this.getHeading(request.getParameterMap(), resourceUrl);
+
+	}
+	
+	protected <R extends AbstractResourceDescription> String bindResourceToUrlTemplate(
+			UrlBinder<R> binder, 
+			R resource,  
+			String urlTemplate){
+		Set<String> variables = this.getUrlTemplateVariables(urlTemplate);
+		
+		String[] matchArray = new String[variables.size()];
+		String[] valuesArray = new String[variables.size()];
+		
+		{//scope limit
+			int i=0;
+			for(Iterator<String> itr = variables.iterator(); itr.hasNext(); i++){
+				String variable = itr.next();
+				String value;
+				try {
+					value = binder.getValueForPathAttribute(variable, resource);
+				} catch (UrlVariableNotBoundException e) {
+					throw new UnspecifiedCts2RuntimeException(e);
+				}
+				
+				valuesArray[i] = value;			
+				matchArray[i] = '{' + variable + '}';
+			}
+		}//end scope limit
+		
+		return StringUtils.replaceEach(urlTemplate, matchArray, valuesArray);
+	}
+	
+	protected Set<String> getUrlTemplateVariables(String urlTemplate){
+		Set<String> pathParamNames = new HashSet<String>();
+
+		char[] chars = urlTemplate.toCharArray();
+		
+		for(int i=0;i<chars.length;i++){
+			char c = chars[i];
+			
+			if(c == '{'){
+				 String pathParam = "";
+				 
+				 while(chars[++i] != '}'){
+					 pathParam += chars[i];
+				 }
+				 
+				 pathParamNames.add(pathParam);	 
+			}
+		}
+		
+		return pathParamNames;
+	}
+
+	private RESTResource getHeading(Map<Object, Object> parameterMap,
+			String resourceUrl) {
 		RESTResource resource = new RESTResource();
 
-		@SuppressWarnings("unchecked")
-		Map<Object, Object> parameterMap = httpServletRequest.getParameterMap();
-		for (Entry<Object,Object> param : parameterMap.entrySet()) {
+		for (Entry<Object, Object> param : parameterMap.entrySet()) {
 			Parameter headingParam = new Parameter();
 			headingParam.setArg(param.getKey().toString());
 			headingParam.setVal(getParamValue(param.getValue()));
@@ -176,91 +268,96 @@ public abstract class AbstractMessageWrappingController extends
 
 		resource.setAccessDate(new Date());
 
-		String urlRoot = 
-				this.getServiceConfigManager().getServerContext().getServerRootWithAppName();
-		
-		if(! urlRoot.endsWith("/")){
+		String urlRoot = this.getServiceConfigManager().getServerContext()
+				.getServerRootWithAppName();
+
+		if (!urlRoot.endsWith("/")) {
 			urlRoot = urlRoot + "/";
 		}
-		
-		String resourceRoot = StringUtils.removeStart(
-					httpServletRequest.getServletPath(), "/");
 
-		
+		String resourceRoot = StringUtils.removeStart(resourceUrl, "/");
+
 		String resourceURI = urlRoot + resourceRoot;
-		
+
 		resource.setResourceURI(resourceURI);
-		
+
 		resource.setResourceRoot(resourceRoot);
 
 		return resource;
 	}
-	
+
 	/**
 	 * Gets the parameters string.
-	 *
-	 * @param parameters the parameters
-	 * @param page the page
-	 * @param pageSize the page size
+	 * 
+	 * @param parameters
+	 *            the parameters
+	 * @param page
+	 *            the page
+	 * @param pageSize
+	 *            the page size
 	 * @return the parameters string
 	 */
-	private String getParametersString(Map<String,Object> parameters, int page, int pageSize){
+	private String getParametersString(Map<String, Object> parameters,
+			int page, int pageSize) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("?");
-		
-		parameters = new HashMap<String,Object>(parameters);
+
+		parameters = new HashMap<String, Object>(parameters);
 
 		parameters.put(URIHelperInterface.PARAM_PAGE, Integer.toString(page));
-	
-		parameters.put(URIHelperInterface.PARAM_MAXTORETURN, Integer.toString(pageSize));
-		
-		for(Entry<String, Object> entry : parameters.entrySet()){
-			if(entry.getValue().getClass().isArray()){
 
-				for(Object val : (Object[])entry.getValue()){
+		parameters.put(URIHelperInterface.PARAM_MAXTORETURN,
+				Integer.toString(pageSize));
+
+		for (Entry<String, Object> entry : parameters.entrySet()) {
+			if (entry.getValue().getClass().isArray()) {
+
+				for (Object val : (Object[]) entry.getValue()) {
 					sb.append(entry.getKey() + "=" + val);
 					sb.append("&");
 				}
-			
+
 			} else {
 				sb.append(entry.getKey() + "=" + entry.getValue());
 				sb.append("&");
 			}
 		}
-		
+
 		return StringUtils.removeEnd(sb.toString(), "&");
 	}
 
 	/**
 	 * Parameter value to string.
-	 *
-	 * @param param the param
+	 * 
+	 * @param param
+	 *            the param
 	 * @return the string
 	 */
 	private String parameterValueToString(Object param) {
 		String paramString;
-		
-		if(param.getClass().isArray()){
-			paramString =  ArrayUtils.toString(param);
+
+		if (param.getClass().isArray()) {
+			paramString = ArrayUtils.toString(param);
 		} else {
-			paramString =  param.toString().trim();
+			paramString = param.toString().trim();
 		}
-		
-		if(paramString.startsWith("{")){
+
+		if (paramString.startsWith("{")) {
 			paramString = paramString.substring(1);
 		}
-		
-		if(paramString.endsWith("}")){
+
+		if (paramString.endsWith("}")) {
 			paramString = paramString.substring(0, paramString.length() - 1);
 		}
-		
+
 		return paramString;
 	}
 
 	/**
 	 * Gets the param value.
-	 *
-	 * @param value the value
+	 * 
+	 * @param value
+	 *            the value
 	 * @return the param value
 	 */
 	private String getParamValue(Object value) {
@@ -275,7 +372,8 @@ public abstract class AbstractMessageWrappingController extends
 		return serviceConfigManager;
 	}
 
-	protected void setServiceConfigManager(ServiceConfigManager serviceConfigManager) {
+	protected void setServiceConfigManager(
+			ServiceConfigManager serviceConfigManager) {
 		this.serviceConfigManager = serviceConfigManager;
 	}
 }

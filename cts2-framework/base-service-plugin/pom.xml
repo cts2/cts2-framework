@@ -76,20 +76,20 @@
 									<tasks>
 										<property name="output.file" value="${generated.plugin.properties.file}" />
 										<property name="name" value="${project.name}" />
-										<property name="version" value="${project.version}" />
+										<property name="ver" value="${project.version}" />
 										<property name="service.provider.class" value="${service.provider.class}" />
 										<delete file="${output.file}" />
 										<touch mkdirs="true" file="${output.file}" />
 
 										<echo file="${output.file}" message="plugin.name = ${name}${line.separator}" />
-										<echo file="${output.file}" append="true" message="plugin.version = ${version}${line.separator}" />
+										<echo file="${output.file}" append="true" message="plugin.version = ${ver}${line.separator}" />
 										<echo file="${output.file}" append="true" message="service.provider.class = ${service.provider.class}" />
 
 										<property name="test.service.properties.output.file" value="${project.build.directory}/testconfigdir/${webapp.name}/service.properties" />
 										<delete file="${test.service.properties.output.file}" />
 										<touch mkdirs="true" file="${test.service.properties.output.file}" />
 										<echo file="${test.service.properties.output.file}" message="service.plugin.name = ${name}${line.separator}" />
-										<echo file="${test.service.properties.output.file}" append="true" message="service.plugin.version = ${version}" />
+										<echo file="${test.service.properties.output.file}" append="true" message="service.plugin.version = ${ver}" />
 
 									</tasks>
 								</configuration>

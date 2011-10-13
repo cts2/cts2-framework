@@ -70,10 +70,16 @@ public class AbstractServiceAwareController extends
 	 * @see
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	public void afterPropertiesSet() throws Exception {
+	public final void afterPropertiesSet() throws Exception {
 		this.serviceProviderFactory.registerListener(this);
 
 		this.loadServices();
+		
+		this.doInitialize();
+	}
+	
+	protected void doInitialize(){
+		//no-op
 	}
 
 	/**
