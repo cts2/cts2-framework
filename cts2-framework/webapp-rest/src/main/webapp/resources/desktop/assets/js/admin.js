@@ -158,6 +158,8 @@ $(document).ready(function() {
 		"fnServerData": fnPluginDescriptionObjectToArray(),
 	} );
 	
+	
+	
 	var pluginAdminTable = $('#pluginAdminTable').dataTable( {
 		//"sDom": 'R<"H"lfr>t<"F"ip<',
 		"sDom": '<"top">rt<"bottom"flp><"clear">',
@@ -197,6 +199,10 @@ $(document).ready(function() {
 		var aData = pluginsTable.fnGetData( this );
 		
 		selectedPlugin = aData;
+
+		$(pluginsTable.fnSettings().aoData).each(function (){
+			$(this.nTr).removeClass('row_selected');
+		});
 		
 		$(this).toggleClass('row_selected');
 		

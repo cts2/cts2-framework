@@ -19,6 +19,7 @@ public class PluginConfig {
 			ServerContext serverContext){
 		super();
 		this.options = options;
+		this.workDirectory = workDirectory;
 		this.serverContext = serverContext;
 	}
 

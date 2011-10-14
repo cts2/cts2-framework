@@ -201,14 +201,12 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	}
 	
 	public void activatePlugin(String name, String version) {
-		this.serviceConfigManager.
-			updateContextConfigProperty(
-				ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, name);
+		Map<String,String> propsMap = new HashMap<String,String>();
 		
-		this.serviceConfigManager.
-			updateContextConfigProperty(
-				ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, version);
-
+		propsMap.put(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, name);
+		propsMap.put(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, version);
+		
+		this.serviceConfigManager.updateContextConfigProperties(propsMap);
 	}
 	
 	private File findPluginFile(final String pluginName, final String pluginVersion){
