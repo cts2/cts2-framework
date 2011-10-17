@@ -116,7 +116,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_CHILDREN_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
 	@ResponseBody
-	public AssociationDirectory getChildrenAssociationsOfEntity(
+	public EntityDirectory getChildrenAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			Filter filter,
@@ -127,6 +127,7 @@ public class AssociationController extends AbstractServiceAwareController {
 		
 		return this.getChildrenAssociationsOfEntity(
 				httpServletRequest, 
+				queryControl,
 				null, 
 				filter, 
 				page, 

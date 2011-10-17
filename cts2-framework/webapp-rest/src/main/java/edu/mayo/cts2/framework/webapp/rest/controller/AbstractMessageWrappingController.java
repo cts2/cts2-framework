@@ -42,7 +42,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UrlPathHelper;
 
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
@@ -280,13 +279,13 @@ public abstract class AbstractMessageWrappingController extends
 			char c = chars[i];
 			
 			if(c == '{'){
-				 String pathParam = "";
+				 StringBuilder sb = new StringBuilder();
 				 
 				 while(chars[++i] != '}'){
-					 pathParam += chars[i];
+					 sb.append(chars[i]);
 				 }
 				 
-				 pathParamNames.add(pathParam);	 
+				 pathParamNames.add(sb.toString());	 
 			}
 		}
 		
