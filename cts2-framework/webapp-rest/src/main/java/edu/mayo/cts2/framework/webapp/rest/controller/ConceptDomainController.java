@@ -33,17 +33,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomain;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
@@ -65,6 +68,31 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	@Cts2Service
 	private ConceptDomainMaintenanceService conceptDomainMaintenanceService;
 
+	private final static UrlTemplateBinder<ConceptDomainCatalogEntry> URL_BINDER =
+			new UrlTemplateBinder<ConceptDomainCatalogEntry>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, ConceptDomainCatalogEntry resource) {
+			if(attribute.equals(VAR_CONCEPTDOMAINID)){
+				return resource.getConceptDomainName();
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<ConceptDomainCatalogEntry> MESSAGE_FACTORY = 
+			new MessageFactory<ConceptDomainCatalogEntry>() {
+
+		@Override
+		public Message createMessage(ConceptDomainCatalogEntry resource) {
+			ConceptDomainCatalogEntryMsg msg = new ConceptDomainCatalogEntryMsg();
+			msg.setConceptDomainCatalogEntry(resource);
+
+			return msg;
+		}
+	};
+	
 	/**
 	 * Gets the concept domains.
 	 *
@@ -134,10 +162,8 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	public void doesConceptDomainExist(
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
-		
-		boolean exists = this.conceptDomainReadService.exists(conceptDomainName);
-		
-		this.handleExists(conceptDomainName, UnknownConceptDomain.class, httpServletResponse, exists);
+	
+		this.doExists(httpServletResponse, this.conceptDomainReadService, new Name(conceptDomainName));
 	}
 	
 	/**
@@ -174,18 +200,16 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.GET)
 	@ResponseBody
-	public ConceptDomainCatalogEntryMsg getConceptDomainByName(
+	public Message getConceptDomainByName(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 			
-		ConceptDomainCatalogEntry conceptDomain = this.conceptDomainReadService.read(conceptDomainName);
-		
-		ConceptDomainCatalogEntryMsg msg = new ConceptDomainCatalogEntryMsg();
-		msg.setConceptDomainCatalogEntry(conceptDomain);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-		
-		return msg;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.conceptDomainReadService,
+				new Name(conceptDomainName));
 	}
 	
 	/**
@@ -218,20 +242,21 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYURI, method=RequestMethod.GET)
 	@ResponseBody
-	public ConceptDomainCatalogEntryMsg getConceptDomainByUri(
+	public ModelAndView getConceptDomainByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_URI) String uri) {
-		/*
-		uri = this.decodeUri(uri);
+			QueryControl queryControl,
+			@PathVariable(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		String name = this.conceptDomainService.getConceptDomainNameFromUri(uri);
-			
-		String path = "../../" + CONCEPTDOMAIN + "/" + name;
-
-		return this.redirect(path, httpServletRequest, VAR_URI);
-		*/
-		//TODO!
-		return null;
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_CONCEPTDOMAIN_BYID, 
+				PATH_CONCEPTDOMAIN_BYURI, 
+				URL_BINDER, 
+				this.conceptDomainReadService, 
+				uri, 
+				redirect);
 	}
 
 }

@@ -36,23 +36,28 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
 
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
-import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
 import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
+import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.webapp.rest.controller.UrlBinder.UrlVariableNotBoundException;
+import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
+import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
  * The Class AbstractMessageWrappingController.
@@ -94,9 +99,9 @@ public abstract class AbstractMessageWrappingController extends
 		return message;
 	}
 
-	protected <T extends Message, R extends AbstractResourceDescription> T wrapMessage(T message,
+	protected <T extends Message, R> T wrapMessage(T message,
 			String urlTemplate,
-			UrlBinder<R> binder,
+			UrlTemplateBinder<R> binder,
 			R resource,
 			HttpServletRequest httpServletRequest) {
 		
@@ -189,24 +194,29 @@ public abstract class AbstractMessageWrappingController extends
 	}
 
 	@SuppressWarnings("unchecked")
-	private RESTResource getHeadingForNameRequest(HttpServletRequest request) {
+	protected RESTResource getHeadingForNameRequest(HttpServletRequest request) {
 
 		return this.getHeading(request.getParameterMap(),
-				request.getServletPath());
+				this.getUrlPathHelper().getServletPath(request));
 
 	}
 
 	@SuppressWarnings("unchecked")
-	private RESTResource getHeadingWithKnownUrlRequest(HttpServletRequest request,
+	protected RESTResource getHeadingWithKnownUrlRequest(HttpServletRequest request,
 			String resourceUrl) {
 
 		return this.getHeading(request.getParameterMap(), resourceUrl);
 
 	}
 	
-	protected <R extends AbstractResourceDescription> String bindResourceToUrlTemplate(
-			UrlBinder<R> binder, 
-			R resource,  
+	private interface Binder {
+		
+		public String doBind(String attribute);
+		
+	}
+	
+	private String dobindResourceToUrlTemplate(
+			Binder binder,
 			String urlTemplate){
 		Set<String> variables = this.getUrlTemplateVariables(urlTemplate);
 		
@@ -217,12 +227,8 @@ public abstract class AbstractMessageWrappingController extends
 			int i=0;
 			for(Iterator<String> itr = variables.iterator(); itr.hasNext(); i++){
 				String variable = itr.next();
-				String value;
-				try {
-					value = binder.getValueForPathAttribute(variable, resource);
-				} catch (UrlVariableNotBoundException e) {
-					throw new UnspecifiedCts2RuntimeException(e);
-				}
+				
+				String value = binder.doBind(variable);
 				
 				valuesArray[i] = value;			
 				matchArray[i] = '{' + variable + '}';
@@ -230,6 +236,39 @@ public abstract class AbstractMessageWrappingController extends
 		}//end scope limit
 		
 		return StringUtils.replaceEach(urlTemplate, matchArray, valuesArray);
+	}
+	/*
+	protected <I extends ResourceIdentifier<?>> String bindResourceToUrlTemplate(
+			final UrlTemplateBinder<?,I> binder, 
+			final I identifier,  
+			String urlTemplate){
+		
+		return this.dobindResourceToUrlTemplate(
+				new Binder(){
+
+					@Override
+					public String doBind(String attribute) {
+						return binder.getValueForPathAttribute(attribute, identifier);
+					}
+			
+		}, urlTemplate);
+	}
+	*/
+	
+	protected <R> String bindResourceToUrlTemplate(
+			final UrlTemplateBinder<R> binder, 
+			final R resource,  
+			String urlTemplate){
+		
+		return this.dobindResourceToUrlTemplate(
+				new Binder(){
+
+					@Override
+					public String doBind(String attribute) {
+						return binder.getValueForPathAttribute(attribute, resource);
+					}
+			
+		}, urlTemplate);
 	}
 	
 	protected Set<String> getUrlTemplateVariables(String urlTemplate){
@@ -254,6 +293,123 @@ public abstract class AbstractMessageWrappingController extends
 		return pathParamNames;
 	}
 
+	protected <R> ModelAndView forward(
+			HttpServletRequest request, 
+			Message message,
+			R resource, 	
+			UrlTemplateBinder<R> urlBinder,
+			String urlTemplate, 
+			boolean redirect){
+		ModelAndView mav;
+		
+		if(!redirect){
+			mav = new ModelAndView(
+				"forward:"+ UriResolutionController.FORWARDING_URL, 
+				UriResolutionController.ATTRIBUTE_NAME, 
+				message);
+		} else {
+			mav = new ModelAndView(
+				"redirect:"+ this.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate));
+		}
+		
+		return mav;
+	}
+	
+	protected <R,I extends ResourceIdentifier<?>> Message doRead(
+			HttpServletRequest httpServletRequest,
+			MessageFactory<R> messageFactory,
+			ReadService<R,I> readService, 
+			I id) {
+			
+		R resource = readService.read(
+				id);
+		
+		Message msg = messageFactory.createMessage(resource);
+		
+		msg = this.wrapMessage(msg, httpServletRequest);
+		
+		return msg;
+	}
+	
+	protected <I extends ResourceIdentifier<?>> void doExists(
+			HttpServletResponse httpServletResponse,
+			ReadService<?,I> readService,
+			I id) {
+		
+		boolean exists = readService.exists(id);
+		
+		this.handleExists(id, UnknownCodeSystem.class, httpServletResponse, exists);
+	}
+	
+
+	/**
+	 * Handle exists.
+	 *
+	 * @param resourceName the resource name
+	 * @param exceptionClass the exception class
+	 * @param httpServletResponse the http servlet response
+	 * @param exists the exists
+	 */
+	private void handleExists(ResourceIdentifier<?> resourceName, 
+			Class<? extends UnknownResourceReference> exceptionClass, 
+			HttpServletResponse httpServletResponse,
+			boolean exists){
+		
+		if(exists){
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+		} else {
+			throw ExceptionFactory.createUnknownResourceException(
+					resourceName.getResourceId().toString(), 
+					exceptionClass);
+		}
+	}
+	
+	protected <R, I extends ResourceIdentifier<?>> ModelAndView doReadByUri(
+			HttpServletRequest httpServletRequest,
+			MessageFactory<R> messageFactory,
+			String byUriTemplate,
+			String byNameTemaplate,
+			UrlTemplateBinder<R> urlBinder,
+			ReadService<R,I> readService,
+			String uri,
+			boolean redirect) {
+		
+		R resource = 
+				readService.readByUri(uri);
+		
+		if(! this.isPartialRedirect(httpServletRequest, byUriTemplate)){
+
+			Message msg = messageFactory.createMessage(resource);
+
+			msg = this.wrapMessage(msg, byNameTemaplate, urlBinder, resource, httpServletRequest);
+			
+			return this.forward(httpServletRequest, msg, resource, urlBinder, byNameTemaplate, redirect);
+		} else {
+
+			return this.forward(httpServletRequest, urlBinder, byNameTemaplate, resource, redirect);
+		}
+	}
+	
+	private String getForwardOrRedirectString(boolean redirect){
+		return redirect ? "redirect" : "forward";
+	}
+	
+	protected <R> ModelAndView forward(
+			HttpServletRequest httpServletRequest,
+			UrlTemplateBinder<R> urlBinder,
+			String urlTemplate, 
+			R resource,
+			boolean redirect) {
+		String forwardOrRedirect = getForwardOrRedirectString(redirect);
+		
+		String url = this.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate);
+		
+		ModelAndView mav = new ModelAndView(
+				forwardOrRedirect + ":" + url);
+		
+		return mav;
+	}
+	
 	private RESTResource getHeading(Map<Object, Object> parameterMap,
 			String resourceUrl) {
 		RESTResource resource = new RESTResource();

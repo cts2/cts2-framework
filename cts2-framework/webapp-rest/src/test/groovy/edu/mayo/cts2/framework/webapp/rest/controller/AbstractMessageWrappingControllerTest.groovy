@@ -2,9 +2,10 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import static org.junit.Assert.*
 
-import javax.servlet.http.HttpServletRequest
-
+import org.junit.Before
 import org.junit.Test
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockServletContext
 
 import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager
@@ -20,39 +21,34 @@ class AbstractMessageWrappingControllerTest {
 		getServerRootWithAppName: { "http://test/webapp" }
 	] as ServerContext
 
-	def ServiceConfigManager = [ 
+	def serviceConfigManager = [ 
 		getServerContext: { serverContext } 
 	] as ServiceConfigManager
 
-	def controller = [
-		getServiceConfigManager : { ServiceConfigManager }
-	] as AbstractMessageWrappingController
+	def controller = new AbstractMessageWrappingController(){}
 
-	def httpServletRequest = [ 
-		getServletPath: { '/codesystems' },
-		getRequestURL:  { 'http://test/webapp/codesystems'<<'' },
-		getParameterMap:  { ["arg1":"value1", "arg2":"value2"] } ] as HttpServletRequest 
+	MockHttpServletRequest httpServletRequest
+	
+	@Before
+	void init(){
+		controller.serviceConfigManager = serviceConfigManager
+		httpServletRequest = new MockHttpServletRequest("GET", "test/codesystems")
+	}
 
 	@Test
 	void testGetHeadingAccessDate(){
 			
-		def restResource = controller.getHeading( httpServletRequest )
+		def restResource = controller.getHeadingForNameRequest( httpServletRequest )
 
 		assertNotNull restResource.accessDate	
 	}
 	
 	@Test
-	void testGetHeadingResourceRoot(){
-			
-		def restResource = controller.getHeading( httpServletRequest )
-
-		assertEquals "codesystems", restResource.resourceRoot
-	}
-	
-	@Test
 	void "Test for parameter count"(){
+		httpServletRequest.addParameter("test1", "val1")
+		httpServletRequest.addParameter("test2", "val2")
 
-		def restResource = controller.getHeading( httpServletRequest )
+		def restResource = controller.getHeadingForNameRequest( httpServletRequest )
 
 		assertEquals 2, restResource.parameter.size()
 	}
@@ -60,7 +56,7 @@ class AbstractMessageWrappingControllerTest {
 	@Test
 	void testParameterValues(){
 
-		def restResource = controller.getHeading( httpServletRequest )
+		def restResource = controller.getHeadingForNameRequest( httpServletRequest )
 		
 		restResource.parameter.each { 
 			
@@ -126,10 +122,10 @@ class AbstractMessageWrappingControllerTest {
 	}
 	
 	@Test
-	void "bindResourceToUrlTemplate()"() {
+	void "bindResourceToUrlTemplate"() {
 		def binder = [
 			getValueForPathAttribute : {varName,resource -> varName + "CHANGED"}
-		] as UrlBinder
+		] as UrlTemplateBinder
 		
 		def urlPath = controller.bindResourceToUrlTemplate(binder, new CodeSystemCatalogEntry(), "/this/{is}/a/{test}/of/this/{method}")
 	

@@ -23,9 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.id.ConceptDomainBindingId;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
+import edu.mayo.cts2.framework.service.name.Name;
+import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
  * The Interface ConceptDomainBindingReadService.
@@ -33,5 +33,5 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ConceptDomainBindingReadService extends
-		ReadService<ConceptDomainBinding, ConceptDomainBindingId> {
+		ReadService<ConceptDomainBinding, Name> {
 }

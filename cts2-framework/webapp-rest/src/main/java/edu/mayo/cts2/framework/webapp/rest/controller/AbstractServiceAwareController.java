@@ -118,4 +118,14 @@ public class AbstractServiceAwareController extends
 	public void onServiceProviderChange() {
 		this.loadServices();
 	}
+
+	protected ServiceProviderFactory getServiceProviderFactory() {
+		return serviceProviderFactory;
+	}
+
+	protected void setServiceProviderFactory(
+			ServiceProviderFactory serviceProviderFactory) {
+		this.serviceProviderFactory = serviceProviderFactory;
+	}
+	
 }

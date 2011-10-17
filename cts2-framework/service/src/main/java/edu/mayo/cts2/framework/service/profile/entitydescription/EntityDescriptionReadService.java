@@ -23,9 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Interface EntityDescriptionReadService.
@@ -33,5 +33,5 @@ import edu.mayo.cts2.framework.model.entity.EntityDescription;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface EntityDescriptionReadService extends
-		ReadService<EntityDescription, EntityDescriptionId> {
+		ReadService<EntityDescription, EntityDescriptionName> {
 }

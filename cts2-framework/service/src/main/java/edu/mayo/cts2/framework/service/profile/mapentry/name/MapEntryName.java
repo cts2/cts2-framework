@@ -21,48 +21,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.association.id;
+package edu.mayo.cts2.framework.service.profile.mapentry.name;
+
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
 
 /**
- * The Class AssociationId.
+ * The Class MapEntryId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class AssociationId {
+public class MapEntryName extends ResourceIdentifier<ScopedEntityName> {
 
-	private String codeSystemVersion;
+	private String mapVersionName;
 	
-	private String associationUri;
-
-	public String getCodeSystemVersion() {
-		return codeSystemVersion;
-	}
-	
-	public void setCodeSystemVersion(String codeSystemVersion) {
-		this.codeSystemVersion = codeSystemVersion;
+	public MapEntryName(ScopedEntityName mapFromName, String mapVersionName) {
+		super(mapFromName);
+		this.mapVersionName = mapVersionName;
 	}
 
-	public String getAssociationUri() {
-		return associationUri;
-	}
-
-	public void setAssociationUri(String associationUri) {
-		this.associationUri = associationUri;
-	}
-
-	/**
-	 * Builds the association id.
-	 *
-	 * @param codeSystemVersion the code system version
-	 * @param associationUri the association uri
-	 * @return the association id
-	 */
-	public static AssociationId buildAssociationId(String codeSystemVersion, String associationUri){
-		AssociationId id = new AssociationId();
-		
-		id.setCodeSystemVersion(codeSystemVersion);
-		id.setAssociationUri(associationUri);
-		
-		return id;
+	public String getMapVersionName() {
+		return mapVersionName;
 	}
 }

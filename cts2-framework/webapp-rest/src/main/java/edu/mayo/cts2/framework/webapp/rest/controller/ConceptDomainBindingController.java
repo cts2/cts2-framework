@@ -39,16 +39,15 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDi
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.id.ConceptDomainBindingId;
 
 /**
  * The Class ConceptDomainBindingController.
@@ -67,6 +66,30 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@Cts2Service
 	private ConceptDomainBindingMaintenanceService conceptDomainBindingMaintenanceService;
 	
+	private final static UrlTemplateBinder<ConceptDomainBinding> URL_BINDER =
+			new UrlTemplateBinder<ConceptDomainBinding>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, ConceptDomainBinding resource) {
+			if(attribute.equals(VAR_VALUESETID)){
+				//TODO:
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<ConceptDomainBinding> MESSAGE_FACTORY = 
+			new MessageFactory<ConceptDomainBinding>() {
+
+		@Override
+		public Message createMessage(ConceptDomainBinding resource) {
+			ConceptDomainBindingMsg msg = new ConceptDomainBindingMsg();
+			msg.setConceptDomainBinding(resource);
+
+			return msg;
+		}
+	};
 	/**
 	 * Creates the concept domain binding.
 	 *
@@ -160,12 +183,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
 			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingName) {
 		
-		boolean exists = this.conceptDomainBindingReadService.exists(
-				ConceptDomainBindingId.buildConceptDomainBindingId(
-						conceptDomainName, 
-						conceptDomainBindingName));
-		
-		this.handleExists(conceptDomainBindingName, UnknownConceptDomainBinding.class, httpServletResponse, exists);
+		//TODO:
 	}
 	
 	/**
@@ -299,9 +317,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 		
 		ConceptDomainBinding conceptDomainBinding = 
 			this.conceptDomainBindingReadService.read(
-					ConceptDomainBindingId.buildConceptDomainBindingId(
-							conceptDomainName, 
-							conceptDomainBindingName));
+					null);
 		
 		ConceptDomainBindingMsg msg = new ConceptDomainBindingMsg();
 		msg.setConceptDomainBinding(conceptDomainBinding);

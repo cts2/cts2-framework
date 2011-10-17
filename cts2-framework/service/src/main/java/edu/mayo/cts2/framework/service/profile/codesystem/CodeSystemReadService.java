@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystem;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.service.name.Name;
+import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
  * The Interface CodeSystemReadService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface CodeSystemReadService extends
-		ReadService<CodeSystemCatalogEntry, String> {
+		ReadService<CodeSystemCatalogEntry, Name> {
 }

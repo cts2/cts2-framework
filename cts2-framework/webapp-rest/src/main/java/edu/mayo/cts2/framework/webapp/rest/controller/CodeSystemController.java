@@ -40,12 +40,13 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
@@ -67,27 +68,30 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	@Cts2Service
 	private CodeSystemMaintenanceService codeSystemMaintenanceService;
 	
-	private UrlBinder<CodeSystemCatalogEntry> urlBinder;
-
-	protected void doInitialize(){
-		this.urlBinder = new CodeSystemCatalogEntryUrlBinder();
-	}
-	
-	private static class CodeSystemCatalogEntryUrlBinder implements UrlBinder<CodeSystemCatalogEntry>{
+	private final static UrlTemplateBinder<CodeSystemCatalogEntry> URL_BINDER =
+			new UrlTemplateBinder<CodeSystemCatalogEntry>(){
 
 		@Override
-		public String getValueForPathAttribute(
-				String attribute,
-				CodeSystemCatalogEntry resource) throws UrlVariableNotBoundException {
+		public String getValueForPathAttribute(String attribute, CodeSystemCatalogEntry resource) {
 			if(attribute.equals(VAR_CODESYSTEMID)){
 				return resource.getCodeSystemName();
 			}
-			else {
-				throw new UrlVariableNotBoundException();
-			}
+			return null;
 		}
-		
-	}
+
+	};
+	
+	private final static MessageFactory<CodeSystemCatalogEntry> MESSAGE_FACTORY = 
+			new MessageFactory<CodeSystemCatalogEntry>() {
+
+		@Override
+		public Message createMessage(CodeSystemCatalogEntry resource) {
+			CodeSystemCatalogEntryMsg msg = new CodeSystemCatalogEntryMsg();
+			msg.setCodeSystemCatalogEntry(resource);
+
+			return msg;
+		}
+	};
 	
 	/**
 	 * Gets the code systems.
@@ -156,9 +160,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 		
-		boolean exists = this.codeSystemReadService.exists(codeSystemName);
-		
-		this.handleExists(codeSystemName, UnknownCodeSystem.class, httpServletResponse, exists);
+		this.doExists(httpServletResponse, this.codeSystemReadService, new Name(codeSystemName));
 	}
 	
 	/**
@@ -193,19 +195,16 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.GET)
 	@ResponseBody
-	public CodeSystemCatalogEntryMsg getCodeSystemByName(
+	public Message getCodeSystemByName(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 			
-		CodeSystemCatalogEntry codeSystem = this.codeSystemReadService.read(codeSystemName);
-		
-		CodeSystemCatalogEntryMsg msg = new CodeSystemCatalogEntryMsg();
-		msg.setCodeSystemCatalogEntry(codeSystem);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-		
-		return msg;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.codeSystemReadService, 
+				new Name(codeSystemName));
 	}
 	
 	/**
@@ -238,24 +237,21 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public ModelAndView getCodeSystemByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
-			@RequestParam(VAR_URI) String uri) {
-		
-		/*
-		
-		uri = this.decodeUri(uri);
-		
-		CodeSystemCatalogEntry codeSystem = this.codeSystemReadService.readByUri(uri);
-		
-		CodeSystemCatalogEntryMsg msg = new CodeSystemCatalogEntryMsg();
-		msg.setCodeSystemCatalogEntry(codeSystem);
-		
-		msg = this.wrapMessage(msg, PATH_CODESYSTEMBYURI, this.urlBinder, codeSystem, httpServletRequest);
-		*/
-		
-		
-		return this.redirect("codesystem/test", httpServletRequest);
-	}
+			QueryControl queryControl,
+			@RequestParam(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 	
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_CODESYSTEMBYURI,
+				PATH_CODESYSTEMBYID, 
+				URL_BINDER, 
+				this.codeSystemReadService, 
+				uri, 
+				redirect);
+	}
+
 	@RequestMapping(value=PATH_CODESYSTEMQUERYSERVICE, method=RequestMethod.GET)
 	@ResponseBody
 	public edu.mayo.cts2.framework.model.service.codesystem.CodeSystemQueryService getCodeSystemCatalogQueryService() {

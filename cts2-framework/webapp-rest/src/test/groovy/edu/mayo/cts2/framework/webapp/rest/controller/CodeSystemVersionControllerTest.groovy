@@ -2,10 +2,9 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import static org.junit.Assert.*
 
-import javax.servlet.http.HttpServletRequest
-
 import org.junit.Before
 import org.junit.Test
+import org.springframework.mock.web.MockHttpServletRequest
 
 import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager
@@ -22,10 +21,7 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 		read: {csvId -> return new CodeSystemVersionCatalogEntry() }
 	] as CodeSystemVersionReadService
 
-	def httpServletRequest = [
-		getServletPath: { '/codesystem/ID/version/V_ID' },
-		getRequestURL:  { 'http://test/webapp/codesystem/ID/version/V_ID'<<'' },
-		getParameterMap:  { ["format":"xml"] } ] as HttpServletRequest
+	def httpServletRequest = new MockHttpServletRequest()
 
 	def serverContext = [
 		getServerRootWithAppName: { "http://test/webapp" }

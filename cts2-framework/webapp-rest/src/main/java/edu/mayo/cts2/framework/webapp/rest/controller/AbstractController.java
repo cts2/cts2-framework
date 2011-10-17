@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UrlPathHelper;
 
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
@@ -54,7 +55,6 @@ import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
-import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.profile.QueryService;
@@ -71,6 +71,8 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 
 	@Resource
 	private Cts2RestExceptionCodeMapper cts2RestExceptionCodeMapper;
+	
+	private UrlPathHelper urlPathHelper = new UrlPathHelper();
 	
 	/**
 	 * Decode uri.
@@ -220,26 +222,6 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	private String getParameterString(HttpServletRequest request){
 		return request.getQueryString();
 	}
-
-	/**
-	 * Handle exists.
-	 *
-	 * @param resourceName the resource name
-	 * @param exceptionClass the exception class
-	 * @param httpServletResponse the http servlet response
-	 * @param exists the exists
-	 */
-	protected void handleExists(String resourceName, 
-			Class<? extends UnknownResourceReference> exceptionClass, 
-			HttpServletResponse httpServletResponse,
-			boolean exists){
-		
-		if(exists){
-			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-		} else {
-			throw ExceptionFactory.createUnknownResourceException(resourceName, exceptionClass);
-		}
-	}
 	
 	/**
 	 * Sets the count.
@@ -267,6 +249,13 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		ModelAndView mav = new ModelAndView(rmv);
 
 		return mav;
+	}
+	
+	protected boolean isPartialRedirect(HttpServletRequest request, String urlTemplatePath){
+		String urlRequest = this.getUrlPathHelper().getContextPath(request);
+		
+		return ! (StringUtils.removeStart(StringUtils.removeEnd(urlRequest, "/"), "/").equals(
+				StringUtils.removeStart(StringUtils.removeEnd(urlTemplatePath, "/"), "/")));
 	}
 	
 	/**
@@ -416,5 +405,9 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		}
 		
 		return scopedName;
+	}
+
+	protected UrlPathHelper getUrlPathHelper() {
+		return urlPathHelper;
 	}
 }

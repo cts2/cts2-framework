@@ -47,7 +47,7 @@ import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQuer
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Class EntityDescriptionController.
@@ -310,9 +310,9 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 		EntityDescription entity = 
 			this.entityDescriptionReadService.
-				read(EntityDescriptionId.buildEntityDescriptionId(
-						codeSystemVersionName,
-						getScopedEntityName(entityName, codeSystemName)));
+				read(new EntityDescriptionName(
+						getScopedEntityName(entityName, codeSystemName),
+						codeSystemVersionName));
 		
 		EntityDescriptionMsg msg = new EntityDescriptionMsg();
 		msg.setEntityDescription(entity);

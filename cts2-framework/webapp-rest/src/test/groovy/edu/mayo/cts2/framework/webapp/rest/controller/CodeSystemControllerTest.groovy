@@ -2,10 +2,9 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import static org.junit.Assert.*
 
-import javax.servlet.http.HttpServletRequest
-
 import org.junit.Before
 import org.junit.Test
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 
 import edu.mayo.cts2.framework.core.config.ServerContext
@@ -16,6 +15,7 @@ import edu.mayo.cts2.framework.model.core.Message
 import edu.mayo.cts2.framework.model.exception.Cts2RestException
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem
 import edu.mayo.cts2.framework.service.command.QueryControl
+import edu.mayo.cts2.framework.service.name.Name
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 
@@ -27,10 +27,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 		read: {name -> return new CodeSystemCatalogEntry() }
 	] as CodeSystemReadService
 
-	def httpServletRequest = [
-		getServletPath: { '/codesystem/ID' },
-		getRequestURL:  { 'http://test/webapp/codesystem/ID'<<'' },
-		getParameterMap:  { ["format":"xml"] } ] as HttpServletRequest
+	def httpServletRequest = new MockHttpServletRequest()
 	
 	def serverContext = [
 		getServerRootWithAppName: { "http://test/webapp" }
@@ -86,7 +83,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 		controller.codeSystemReadService = codeSystemReadService
 			
 		try{
-			def result = controller.doesCodeSystemExist(response, null)
+			def result = controller.doesCodeSystemExist(response, "test")
 		} catch (Cts2RestException e){
 		assert e.cts2Exception instanceof UnknownCodeSystem
 		return

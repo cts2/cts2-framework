@@ -23,9 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.association;
 
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
 import edu.mayo.cts2.framework.model.association.AssociationGraph;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Interface AdvancedAssociationQueryService.
@@ -43,7 +43,7 @@ public interface AdvancedAssociationQueryService {
 	 * @return the association graph
 	 */
 	public AssociationGraph getAssociationGraph(
-			EntityDescriptionId id, 
+			EntityDescriptionName focus, 
 			GraphDirection direction,
 			long depth);
 }

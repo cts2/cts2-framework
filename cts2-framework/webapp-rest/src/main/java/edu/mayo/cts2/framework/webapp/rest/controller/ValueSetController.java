@@ -35,18 +35,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
@@ -67,6 +70,31 @@ public class ValueSetController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private ValueSetMaintenanceService valueSetMaintenanceService;
+	
+	private final static UrlTemplateBinder<ValueSetCatalogEntry> URL_BINDER =
+			new UrlTemplateBinder<ValueSetCatalogEntry>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, ValueSetCatalogEntry resource) {
+			if(attribute.equals(VAR_VALUESETID)){
+				return resource.getValueSetName();
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<ValueSetCatalogEntry> MESSAGE_FACTORY = 
+			new MessageFactory<ValueSetCatalogEntry>() {
+
+		@Override
+		public Message createMessage(ValueSetCatalogEntry resource) {
+			ValueSetCatalogEntryMsg msg = new ValueSetCatalogEntryMsg();
+			msg.setValueSetCatalogEntry(resource);
+
+			return msg;
+		}
+	};
 	
 	/**
 	 * Gets the value sets.
@@ -118,9 +146,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String valueSetName) {
 		
-		boolean exists = this.valueSetReadService.exists(valueSetName);
-		
-		this.handleExists(valueSetName, UnknownResourceReference.class, httpServletResponse, exists);
+		this.doExists(httpServletResponse, this.valueSetReadService, new Name(valueSetName));
 	}
 	
 	/**
@@ -158,18 +184,35 @@ public class ValueSetController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.GET)
 	@ResponseBody
-	public ValueSetCatalogEntryMsg getValueSetByName(
+	public Message getValueSetByName(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 			
-		ValueSetCatalogEntry valueSet = this.valueSetReadService.read(valueSetName);
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.valueSetReadService, 
+				new Name(valueSetName));
+	}
+	
+	@RequestMapping(value=PATH_VALUESET_BYURI, method=RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView getValueSetByUri(
+			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
+			@PathVariable(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		ValueSetCatalogEntryMsg msg = new ValueSetCatalogEntryMsg();
-		msg.setValueSetCatalogEntry(valueSet);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-		
-		return msg;
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_MAP_BYURI, 
+				PATH_MAP_BYID, 
+				URL_BINDER, 
+				this.valueSetReadService,
+				uri, 
+				redirect);
 	}
 	
 	/**

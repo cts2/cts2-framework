@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
@@ -136,9 +135,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 		
-		boolean exists = this.valueSetDefinitionReadService.exists(valueSetDefinitionDocumentUri);
-		
-		this.handleExists(valueSetName, UnknownResourceReference.class, httpServletResponse, exists);
+		//
 	}
 	
 	/**
@@ -251,16 +248,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 		
-		ValueSetDefinition valueSetDefinition = 
-			this.valueSetDefinitionReadService.
-				read(valueSetDefinitionDocumentUri);
-		
-		ValueSetDefinitionMsg msg = new ValueSetDefinitionMsg();
-		msg.setValueSetDefinition(valueSetDefinition);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-
-		return msg;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**

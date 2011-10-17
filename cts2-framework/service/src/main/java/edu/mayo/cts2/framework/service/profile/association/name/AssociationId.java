@@ -21,51 +21,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.conceptdomainbinding.id;
+package edu.mayo.cts2.framework.service.profile.association.name;
+
+import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
 
 /**
- * The Class ConceptDomainBindingId.
+ * The Class AssociationId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ConceptDomainBindingId {
+public class AssociationId extends ResourceIdentifier<String>{
 
-	private String conceptDomain;
+	private String codeSystemVersion;
 	
-	private String conceptDomainBinding;
+	public AssociationId(String associationUri, String codeSystemVersionName) {
+		super(associationUri);
 
-	
-	public String getConceptDomain() {
-		return conceptDomain;
 	}
 
-	public void setConceptDomain(String conceptDomain) {
-		this.conceptDomain = conceptDomain;
-	}
-
-
-	public String getConceptDomainBinding() {
-		return conceptDomainBinding;
-	}
-
-
-	public void setConceptDomainBinding(String conceptDomainBinding) {
-		this.conceptDomainBinding = conceptDomainBinding;
-	}
-
-	/**
-	 * Builds the concept domain binding id.
-	 *
-	 * @param conceptDomain the concept domain
-	 * @param conceptDomainBinding the concept domain binding
-	 * @return the concept domain binding id
-	 */
-	public static ConceptDomainBindingId buildConceptDomainBindingId(String conceptDomain, String conceptDomainBinding){
-		ConceptDomainBindingId id = new ConceptDomainBindingId();
-		
-		id.setConceptDomain(conceptDomain);
-		id.setConceptDomainBinding(conceptDomainBinding);
-		
-		return id;
+	public String getCodeSystemVersion() {
+		return codeSystemVersion;
 	}
 }

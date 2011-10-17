@@ -33,18 +33,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectory;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionMsg;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownMapVersion;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.MapVersionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
@@ -65,6 +68,34 @@ public class MapVersionController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private MapVersionMaintenanceService mapVersionMaintenanceService;
+	
+	private static UrlTemplateBinder<MapVersion> URL_BINDER = new 
+			UrlTemplateBinder<MapVersion>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, MapVersion resource) {
+			if(attribute.equals(VAR_MAPVERSIONID)){
+				return resource.getMapVersionName();
+			}
+			if(attribute.equals(VAR_MAPID)){
+				return resource.getVersionOf().getContent();
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<MapVersion> MESSAGE_FACTORY = 
+			new MessageFactory<MapVersion>() {
+
+		@Override
+		public Message createMessage(MapVersion resource) {
+			MapVersionMsg msg = new MapVersionMsg();
+			msg.setMapVersion(resource);
+
+			return msg;
+		}
+	};
 	
 	/**
 	 * Creates the map version.
@@ -206,9 +237,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 		
-		boolean exists = this.mapVersionReadService.exists(mapVersionName);
-		
-		this.handleExists(mapName, UnknownMapVersion.class, httpServletResponse, exists);
+		this.doExists(httpServletResponse, this.mapVersionReadService, new Name(mapVersionName));
 	}
 	
 	/**
@@ -281,19 +310,34 @@ public class MapVersionController extends AbstractServiceAwareController {
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public MapVersionMsg getMapVersionByName(
+	public Message getMapVersionByName(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 		
-		MapVersion mapVersion = 
-			this.mapVersionReadService.read(mapVersionName);
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.mapVersionReadService, 
+				new Name(mapVersionName));
+	}
+	
+	@RequestMapping(value=PATH_MAPVERSION_BYURI, method=RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView getMapVersionByUri(
+			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
+			@PathVariable(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		MapVersionMsg msg = new MapVersionMsg();
-		msg.setMapVersion(mapVersion);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-
-		return msg;
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_MAP_BYURI, 
+				PATH_MAP_BYID, 
+				URL_BINDER, 
+				this.mapVersionReadService,
+				uri, 
+				redirect);
 	}
 }

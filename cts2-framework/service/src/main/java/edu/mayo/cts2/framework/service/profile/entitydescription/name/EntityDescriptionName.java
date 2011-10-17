@@ -21,20 +21,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.id;
+package edu.mayo.cts2.framework.service.profile.entitydescription.name;
+
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
 
 /**
- * The Class VersionedResourceIdentifier.
+ * The Class EntityDescriptionId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class VersionedResourceIdentifier {
+public class EntityDescriptionName extends ResourceIdentifier<ScopedEntityName> {
 
-	public String getResourceName(){
-		return null;
-	}
+	private String codeSystemVersionName;
 	
-	public String getVersionOfName(){
-		return null;
+	public EntityDescriptionName(ScopedEntityName name, String codeSystemVersionName) {
+		super(name);
+		
 	}
+
+	public String getCodeSystemVersionName() {
+		return codeSystemVersionName;
+	}
+
 }

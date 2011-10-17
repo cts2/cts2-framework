@@ -23,9 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.association;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
-import edu.mayo.cts2.framework.service.profile.association.id.AssociationId;
 import edu.mayo.cts2.framework.model.association.Association;
+import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.association.name.AssociationId;
 
 /**
  * The Interface AssociationReadService.

@@ -33,18 +33,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownMap;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
@@ -65,6 +68,31 @@ public class MapController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private MapMaintenanceService mapMaintenanceService;
+	
+	private static UrlTemplateBinder<MapCatalogEntry> URL_BINDER = new 
+			UrlTemplateBinder<MapCatalogEntry>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, MapCatalogEntry resource) {
+			if(attribute.equals(VAR_MAPID)){
+				return resource.getMapName();
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<MapCatalogEntry> MESSAGE_FACTORY = 
+			new MessageFactory<MapCatalogEntry>() {
+
+		@Override
+		public Message createMessage(MapCatalogEntry resource) {
+			MapCatalogEntryMsg msg = new MapCatalogEntryMsg();
+			msg.setMap(resource);
+
+			return msg;
+		}
+	};
 	
 	/**
 	 * Gets the maps.
@@ -134,9 +162,7 @@ public class MapController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
-		boolean exists = this.mapReadService.exists(mapName);
-		
-		this.handleExists(mapName, UnknownMap.class, httpServletResponse, exists);
+		this.doExists(httpServletResponse, this.mapReadService, new Name(mapName));
 	}
 	
 	/**
@@ -174,18 +200,16 @@ public class MapController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.GET)
 	@ResponseBody
-	public MapCatalogEntryMsg getMapByName(
+	public Message getMapByName(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			@PathVariable(VAR_MAPID) String mapName) {
 			
-		MapCatalogEntry map = this.mapReadService.read(mapName);
-		
-		MapCatalogEntryMsg msg = new MapCatalogEntryMsg();
-		msg.setMap(map);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-		
-		return msg;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.mapReadService, 
+				new Name(mapName));
 	}
 	
 	/**
@@ -216,18 +240,20 @@ public class MapController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAP_BYURI, method=RequestMethod.GET)
 	@ResponseBody
-	public MapCatalogEntryMsg getMapByUri(
+	public ModelAndView getMapByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_URI) String uri) {
-		/*
-		uri = this.decodeUri(uri);
+			QueryControl queryControl,
+			@PathVariable(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		String name = this.mapService.getMapNameFromUri(uri);
-			
-		String path = "../../" + MAP + "/" + name;
-
-		return this.redirect(path, httpServletRequest, VAR_URI);
-		*/ 
-		return null;
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_MAP_BYURI, 
+				PATH_MAP_BYID, 
+				URL_BINDER, 
+				this.mapReadService,
+				uri, 
+				redirect);
 	}
 }

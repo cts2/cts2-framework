@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
+import edu.mayo.cts2.framework.service.name.Name;
+import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
  * The Interface ConceptDomainReadService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ConceptDomainReadService extends
-		ReadService<ConceptDomainCatalogEntry, String> {
+		ReadService<ConceptDomainCatalogEntry, Name> {
 }

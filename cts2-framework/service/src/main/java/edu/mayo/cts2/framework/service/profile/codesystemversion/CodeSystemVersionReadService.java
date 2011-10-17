@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.service.name.Name;
+import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
  * The Interface CodeSystemVersionReadService.
@@ -32,7 +33,7 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface CodeSystemVersionReadService extends
-		ReadService<CodeSystemVersionCatalogEntry, String> {
+		ReadService<CodeSystemVersionCatalogEntry, Name> {
 
 	/**
 	 * Exists code system version for code system.

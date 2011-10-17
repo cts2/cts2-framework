@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.map;
 
-import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
+import edu.mayo.cts2.framework.service.name.Name;
+import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
  * The Interface MapReadService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MapReadService extends
-		ReadService<MapCatalogEntry, String> {
+		ReadService<MapCatalogEntry, Name> {
 }

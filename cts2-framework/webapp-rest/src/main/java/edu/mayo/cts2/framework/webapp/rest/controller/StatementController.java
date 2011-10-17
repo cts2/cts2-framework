@@ -35,15 +35,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownStatement;
 import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectory;
 import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
 import edu.mayo.cts2.framework.model.statement.StatementMsg;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.profile.statement.StatementMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
@@ -64,6 +65,31 @@ public class StatementController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private StatementMaintenanceService statementMaintenanceService;
+	
+	private final static UrlTemplateBinder<Statement> URL_BINDER =
+			new UrlTemplateBinder<Statement>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, Statement resource) {
+			if(attribute.equals(VAR_VALUESETID)){
+				//TODO:
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<Statement> MESSAGE_FACTORY = 
+			new MessageFactory<Statement>() {
+
+		@Override
+		public Message createMessage(Statement resource) {
+			StatementMsg msg = new StatementMsg();
+			msg.setStatement(resource);
+
+			return msg;
+		}
+	};
 	
 	/**
 	 * Gets the statements.
@@ -128,9 +154,7 @@ public class StatementController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_STATEMENTID) String statementName) {
 		
-		boolean exists = this.statementReadService.exists(statementName);
-		
-		this.handleExists(statementName, UnknownStatement.class, httpServletResponse, exists);
+		//
 	}
 	
 	/**
@@ -166,18 +190,13 @@ public class StatementController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.GET)
 	@ResponseBody
-	public StatementMsg getStatementByName(
+	public StatementMsg getStatementByExternalUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_STATEMENTID) String statementName) {
+			QueryControl queryControl,
+			@PathVariable(VAR_STATEMENTID) String statementExternalUri) {
 			
-		Statement statement = this.statementReadService.read(statementName);
-		
-		StatementMsg msg = new StatementMsg();
-		msg.setStatement(statement);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-		
-		return msg;
+		//
+		return null;
 	}
 	
 	/**

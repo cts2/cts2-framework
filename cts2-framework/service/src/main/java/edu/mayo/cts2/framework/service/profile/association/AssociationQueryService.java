@@ -23,16 +23,16 @@
  */
 package edu.mayo.cts2.framework.service.profile.association;
 
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Interface AssociationQueryService.
@@ -55,22 +55,8 @@ public interface AssociationQueryService extends
 			Query query,
 			FilterComponent filterComponent,
 			Page page,
-			EntityDescriptionId id);
+			EntityDescriptionName entity);
 
-	/**
-	 * Gets the parent associations of entity.
-	 *
-	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param page the page
-	 * @param id the id
-	 * @return the parent associations of entity
-	 */
-	public DirectoryResult<EntityDirectoryEntry> getParentAssociationsOfEntity(
-			Query query,
-			FilterComponent filterComponent,
-			Page page,
-			EntityDescriptionId id);
 
 	/**
 	 * Gets the source of associations of entity.
@@ -85,5 +71,5 @@ public interface AssociationQueryService extends
 			Query query,
 			FilterComponent filterComponent, 
 			Page page, 
-			EntityDescriptionId id);
+			EntityDescriptionName entity);
 }

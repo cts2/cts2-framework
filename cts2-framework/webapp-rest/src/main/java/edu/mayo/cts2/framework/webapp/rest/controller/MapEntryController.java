@@ -46,7 +46,7 @@ import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceR
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQueryService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
-import edu.mayo.cts2.framework.service.profile.mapentry.id.MapEntryId;
+import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryName;
 
 /**
  * The Class MapEntryController.
@@ -122,10 +122,12 @@ public class MapEntryController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
 			
 		MapEntryMsg msg = new MapEntryMsg();
-		MapEntryId id = MapEntryId.buildMapEntryId(mapVersionName, mapsFromName);
+		MapEntryName name = new MapEntryName(
+				this.getScopedEntityName(mapsFromName, null), 
+				mapVersionName);
 		
 		msg.setEntry(
-				this.mapEntryReadService.read(id)
+				this.mapEntryReadService.read(name)
 				);
 		
 		msg = this.wrapMessage(msg, httpServletRequest);

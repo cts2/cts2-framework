@@ -44,15 +44,12 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
 		+ VERSION + "/{"+ VAR_CODESYSTEMVERSIONID + "}";
 	
+	public static final String PATH_CODESYSTEMVERSIONBYURI = "/" + CODESYSTEMVERSION_BY_URI;
+	
 	public static final String PATH_CODESYSTEMVERSIONS = CODESYSTEMVERSIONS;
 
 	public static final String PATH_CODESYSTEMVERSIONS_OF_CODESYSTEM = 
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" + VERSIONS;
-
-	public static final String PATH_VALIDATECODESYSTEMBYID = "/" + CODESYSTEMS
-			+ "/" + EXISTINGCODESYSTEMIDS;
-	public static final String PATH_NUMBEROFCODESINCODESYSTEM = "/"
-			+ CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" + NUMBEROFCODES;
 
 	/* Entities */
 
@@ -66,7 +63,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/"
 			+ ENTITY + "/{" + VAR_ENTITYID + "}";
 	
-	public static final String PATH_ENTITYBYURI = PATH_ENTITIES + "/" + URI + "/{" + VAR_URI + "}";
+	public static final String PATH_ENTITYBYURI = "/" + ENTITY_BY_URI;
 			
 	public static final String PATH_ENTITYIDS = "/" + CODESYSTEM + "/{"
 			+ VAR_CODESYSTEMID + "}/" + ENTITYIDS;
@@ -86,14 +83,13 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_ASSOCIATIONS = "/" + ASSOCIATIONS;
 	public static final String PATH_ASSOCIATIONBYID = 
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ASSOCIATION + "/{" + VAR_ASSOCIATIONID + "}";
+	public static final String PATH_ASSOCIATIONBYURI = "/" + ASSOCIATION_BY_URI;
 	public static final String PATH_ASSOCIATIONS_OF_CODESYSTEMVERSION = 
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ASSOCIATIONS;
 	public static final String PATH_GRAPH_OF_CODESYSTEMVERSION = 
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + GRAPH;
 	public static final String PATH_CHILDREN_ASSOCIATIONS_OF_ENTITY = 
 		PATH_ENTITYBYID + "/" + CHILDREN;
-	public static final String PATH_PARENT_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + PARENTS;
 	public static final String PATH_SOURCEOF_ASSOCIATIONS_OF_ENTITY = 
 		PATH_ENTITYBYID + "/" + SOURCEOF;
 	
@@ -113,17 +109,18 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_MAPS = "/" + MAPS;
 	public static final String PATH_MAPVERSIONS = "/" + MAPVERSIONS;
 	public static final String PATH_MAPVERSIONS_OF_MAP = PATH_MAP_BYID + "/" + VERSIONS;
-	public static final String PATH_MAP_BYURI = PATH_MAPS + "/" + URI + "/{" + VAR_URI + "}";
+	public static final String PATH_MAPVERSION_BYURI = "/" + MAPVERSION_BY_URI;
+	public static final String PATH_MAP_BYURI = "/" + MAP_BY_URI;
 	public static final String PATH_MAPENTRY_OF_MAPVERSION_BYID = PATH_MAPVERSION_OF_MAP_BYID + "/" + ENTRY + "/{" + VAR_MAPENTRYID + "}";
 	public static final String PATH_MAPENTRIES = PATH_MAPVERSION_OF_MAP_BYID + "/" + ENTRIES;
 	
 	/* ConceptDomain */
 	public static final String PATH_CONCEPTDOMAINS = "/" + CONCEPTDOMAINS;
 	public static final String PATH_CONCEPTDOMAIN_BYID = "/" + CONCEPTDOMAIN + "/{" + VAR_CONCEPTDOMAINID + "}";
+	public static final String PATH_CONCEPTDOMAIN_BYURI = "/" + CONCEPTDOMAIN_BY_URI;
 	public static final String PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID = PATH_CONCEPTDOMAIN_BYID + "/" + BINDING + "/{" + VAR_CONCEPTDOMAINBINDINGID + "}"; 
 	public static final String PATH_CONCEPTDOMAINBINDINGS = "/" + CONCEPTDOMAINBINDINGS;
 	public static final String PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN = PATH_CONCEPTDOMAIN_BYID + "/" + VERSIONS;
-	public static final String PATH_CONCEPTDOMAIN_BYURI = PATH_CONCEPTDOMAINS + "/" + URI + "/{" + VAR_URI + "}";
 	public static final String PATH_CONCEPTDOMAINBINDING_BYURI = PATH_CONCEPTDOMAINS + "/" + URI + "/{" + VAR_URI + "}";
 
 
@@ -132,6 +129,8 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 
 	public static final String PATH_VALUESETBYID = "/" + VALUESET + "/{"
 			+ VAR_VALUESETID + "}";
+	
+	public static final String PATH_VALUESET_BYURI = "/" + VALUESET_BY_URI;
 
 	public static final String PATH_ENTITIESINVALUESET = "/" + VALUESET + "/{"
 			+ VAR_VALUESETID + "}/" + ENTITIES;
@@ -149,10 +148,6 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_VALIDATEENTITYINVALUESET = "/" + VALUESET
 			+ "/{" + VAR_VALUESETID + "}/" + ENTITIES + "/" + EXISTINGENTITYIDS;
 
-	public static final String PATH_NUMBEROFCODESINVALUESET = "/" + VALUESET
-			+ "/{" + VAR_VALUESETID + "}/" + NUMBEROFCODES;
-
-	
 	/* Services */
 	public static final String PATH_CODESYSTEMQUERYSERVICE = 
 		SERVICE + "/" + CODESYSTEMQUERYSERVICE;
@@ -173,11 +168,12 @@ interface PathKeywords {
 	public static final String CODESYSTEMS = "codesystems";
 
 	public static final String CODESYSTEMVERSIONS = "codesystemversions";
-	public static final String EXISTINGCODESYSTEMIDS = "existingcodesystemids";
-	public static final String NUMBEROFCODES = "numberofcodes";
+	public static final String CODESYSTEMVERSION_BY_URI = "codesystemversionbyuri";
+
 
 	public static final String ENTITIES = "entities";
 	public static final String ENTITY = "entity";
+	public static final String ENTITY_BY_URI = "entitybyuri";
 	public static final String ENTITYIDS = "entityids";
 
 	public static final String STATEMENTS = "statements";
@@ -185,13 +181,16 @@ interface PathKeywords {
 
 	public static final String MAPS = "maps";
 	public static final String MAP = "map";
+	public static final String MAP_BY_URI = "mapbyuri";
 	public static final String MAPVRESION = "mapversion";
+	public static final String MAPVERSION_BY_URI = "mapversionbyuri";
 	public static final String MAPVERSIONS = "mapversions";
 	public static final String ENTRIES = "entries";
 	public static final String ENTRY = "entry";
 
 	public static final String CONCEPTDOMAINS = "conceptdomains";
 	public static final String CONCEPTDOMAIN = "conceptdomain";
+	public static final String CONCEPTDOMAIN_BY_URI = "conceptdomainbyuri";
 	public static final String CONCEPTDOMAINBINDING = "conceptdomainbinding";
 	public static final String CONCEPTDOMAINBINDINGS = "conceptdomainbindings";
 	public static final String BINDINGS = "bindings";
@@ -207,15 +206,12 @@ interface PathKeywords {
 	public static final String DELIMITEDFILE = "delimitedfile";
 
 	public static final String VALUESET = "valueset";
+	public static final String VALUESET_BY_URI = "valuesetbyuri";
 	public static final String VALUESETS = "valuesets";
 	public static final String VALUESETDEFINITION = "definition";
 	public static final String VALUESETDEFINITIONS_SHORT = "definitions";
 	public static final String VALUESETDEFINITIONS_LONG = "valuesetdefinitions";
 
-	public static final String EXISTINGENTITYMAPPINGS = "existingentitymappings";
-	public static final String EXISTINGEFFECTIVEENTITYMAPPING = "existingeffectiveentitymapping";
-	public static final String EXISTINGINVERSEMAPPING = "existinginversemapping";
-	public static final String INVERSEMAPPING = "inversemapping";
 
 	public static final String SOURCEENTITY = "sourceentity";
 	public static final String TARGETENTITIES = "targetentities";
@@ -228,13 +224,15 @@ interface PathKeywords {
 	public static final String CODESYSTEMVERSIONQUERYSERVICE = "codesystemversionqueryservice";
 	public static final String CODESYSTEMVERSIONREADSERVICE = "codesystemversionreadservice";
 
-	public static final String SERVICE = "service";
+
 	public static final String ASSOCIATIONS = "associations";
 	public static final String ASSOCIATION = "association";
+	public static final String ASSOCIATION_BY_URI = "associationbyuri";
 	public static final String GRAPH = "graph";
-	public static final String PARENTS = "parents";
 	public static final String SOURCEOF = "sourceof";
 	public static final String CHILDREN = "children";
+	
+	public static final String SERVICE = "service";
 	public static final String URI = "uri";
 }
 
