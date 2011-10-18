@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
 
 /**

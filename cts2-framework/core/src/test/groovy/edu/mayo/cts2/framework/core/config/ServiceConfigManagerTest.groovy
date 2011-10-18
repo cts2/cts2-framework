@@ -54,7 +54,7 @@ class ServiceConfigManagerTest {
 	
 	
 	@Test
-	void "Check context config default properties"(){
+	void Test_Context_Default_Props(){
 		def contextConfigFile = new File(configDir + File.separator +
 			contextDir + File.separator + ConfigConstants.CONTEXT_PROPERTIES_FILE)
 		
@@ -73,7 +73,7 @@ class ServiceConfigManagerTest {
 	}
 	
 	@Test
-	void "Check context config default property values"(){
+	void Test_Context_Default_Values(){
 		def contextConfigFile = new File(configDir + File.separator +
 			contextDir + File.separator + ConfigConstants.CONTEXT_PROPERTIES_FILE)
 		
