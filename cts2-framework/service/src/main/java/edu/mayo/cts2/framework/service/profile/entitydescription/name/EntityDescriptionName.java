@@ -37,7 +37,7 @@ public class EntityDescriptionName extends ResourceIdentifier<ScopedEntityName> 
 	
 	public EntityDescriptionName(ScopedEntityName name, String codeSystemVersionName) {
 		super(name);
-		
+		this.codeSystemVersionName = codeSystemVersionName;
 	}
 
 	public String getCodeSystemVersionName() {
