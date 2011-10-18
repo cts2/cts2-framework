@@ -76,8 +76,8 @@ public class ConfigInitializer {
 		this.context = this.getVariable(ConfigConstants.JNDI_CONTEXT_ID,
 				ConfigConstants.CTS2_CONTEXT_ENV_VARIABLE, context);
 		
-		log.info("Cts2Sdk using Configuration Directory: " + this.configDirectoryPath);
-		log.info("Cts2Sdk using Plugin Directory: " + this.pluginsDirectoryPath);
+		log.info("CTS2 Development Framework using Configuration Directory: " + this.configDirectoryPath);
+		log.info("CTS2 Development Framework using Plugin Directory: " + this.pluginsDirectoryPath);
 
 		//create config directory if its not there
 		this.configDirectory = ConfigUtils.createDirectory(this.configDirectoryPath);

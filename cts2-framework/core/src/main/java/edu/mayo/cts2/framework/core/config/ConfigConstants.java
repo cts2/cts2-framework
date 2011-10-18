@@ -76,13 +76,18 @@ public class ConfigConstants {
 	public static final String PLUGIN_PROVIDER_CLASS_PROP = "service.provider.class";
 	
 	public static String SERVER_ROOT_PROPERTY = "server.root";
+	public static String DEFAULT_SERVER_ROOT_PROPERTY_VALUE = "http://localhost:8080";
 	
-	public static String APP_NAME_PROPERTY = "app.name";
+	public static String APP_NAME_PROPERTY = "app.name";	
+	public static String DEFAULT_APP_NAME_PROPERTY_VALUE = "webapp-rest";
+
 	
 	public static String ADMIN_USERNAME_PROPERTY = "admin.username";
 	public static String DEFAULT_ADMIN_USERNAME_VALUE = "admin";
 	
 	public static String ADMIN_PASSWORD_PROPERTY = "admin.password";
 	public static String DEFAULT_ADMIN_PASSWORD_VALUE = "admin";
+	
+	public static String BLANK_VALUE = "";
 
 }

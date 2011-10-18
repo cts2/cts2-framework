@@ -45,7 +45,11 @@ public class ServiceConfigManager extends BaseConfigChangeObservable
 		Map<String,String> contextConfigDefaults = new HashMap<String,String>();
 		contextConfigDefaults.put(ConfigConstants.ADMIN_USERNAME_PROPERTY, ConfigConstants.DEFAULT_ADMIN_USERNAME_VALUE);
 		contextConfigDefaults.put(ConfigConstants.ADMIN_PASSWORD_PROPERTY, ConfigConstants.DEFAULT_ADMIN_PASSWORD_VALUE);
-	
+		contextConfigDefaults.put(ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP, ConfigConstants.BLANK_VALUE);
+		contextConfigDefaults.put(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, ConfigConstants.BLANK_VALUE);
+		contextConfigDefaults.put(ConfigConstants.SERVER_ROOT_PROPERTY, ConfigConstants.DEFAULT_SERVER_ROOT_PROPERTY_VALUE);
+		contextConfigDefaults.put(ConfigConstants.APP_NAME_PROPERTY, ConfigConstants.DEFAULT_APP_NAME_PROPERTY_VALUE);
+
 		this.initializePropertiesFile(
 				this.configInitializer.getContextConfigFile(), 
 				contextConfigDefaults);
