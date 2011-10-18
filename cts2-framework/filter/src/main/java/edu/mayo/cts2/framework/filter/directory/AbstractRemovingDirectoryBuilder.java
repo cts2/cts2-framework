@@ -124,9 +124,10 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @param reference the reference
 	 * @return the directory builder
 	 */
-	public DirectoryBuilder<T> addSupportedModelAttributeReference(
+	public DirectoryBuilder<T> addSupportedMatchAlgorithmReference(
 			ResolvableMatchAlgorithmReference reference){
 		this.matchAlgorithmReferences.add(reference);
+		
 		return this;
 	}
 	
