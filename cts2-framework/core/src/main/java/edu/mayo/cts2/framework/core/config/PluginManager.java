@@ -361,7 +361,9 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	}
 	
 	protected File getPluginWorkDirectory(String pluginName){
-		return ConfigUtils.createDirectory(this.configInitializer.getContextConfigDirectory().getPath()
+		File file = this.configInitializer.getContextConfigDirectory();
+		
+		return ConfigUtils.createDirectory(file.getPath()
 						+ File.separator
 						+ ".work"
 						+ File.separator

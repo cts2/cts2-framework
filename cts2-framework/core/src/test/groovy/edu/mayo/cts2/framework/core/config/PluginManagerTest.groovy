@@ -4,11 +4,13 @@ import static org.junit.Assert.*
 
 import java.io.File
 
-import org.apache.tools.ant.AntClassLoader
+import org.easymock.EasyMock
+import org.gmock.WithGMock
 import org.junit.Test
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder
 
+@WithGMock
 class PluginManagerTest {
 
 	@Test
@@ -33,7 +35,7 @@ class PluginManagerTest {
 	
 	@Test
 	void "Test getPluginClassLoader with different plugin"(){
-		def manager = new TestPluginManager();
+		def manager = new TestPluginManager()
 		
 		def classloader1 = manager.getPluginClassLoader("test", "1")
 		
@@ -41,9 +43,46 @@ class PluginManagerTest {
 		
 		assertFalse classloader1.equals(classloader2)
 	}
+	
+	@Test
+	void "Test work directory path"(){
+
+		def manager = new PluginManager();
+		
+		ConfigInitializer init = EasyMock.createMock(ConfigInitializer)
+		
+		EasyMock.expect(init.getContextConfigDirectory()).andReturn(new File("test"))
+		
+		EasyMock.replay(init)
+		
+		manager.setConfigInitializer(init)
+		
+		def workDir = manager.getPluginWorkDirectory("test-plugin");
+			
+		assertEquals "test/.work/test-plugin", workDir.getPath()
+	}
+	
+	@Test
+	void "Test activatePlugin"(){
+		def manager = new PluginManager();
+		
+		ServiceConfigManager scm = EasyMock.createMock(ServiceConfigManager)
+		
+		manager.serviceConfigManager = scm
+		
+		EasyMock.expect(scm.updateContextConfigProperties([
+			"service.plugin.name" : "test",
+			"service.plugin.version" : "testversion"
+			
+		])).once()
+		
+		EasyMock.replay(scm)
+		
+		manager.activatePlugin("test", "testversion")
+
+	}
+	
 }
-
-
 
 class TestPluginManager extends PluginManager {
 	
