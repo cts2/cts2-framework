@@ -35,7 +35,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import edu.mayo.cts2.framework.core.xml.DelgatingMarshaller;
+import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 
 /**
  * The Class Cts2RestClient.
@@ -48,7 +48,7 @@ public class Cts2RestClient {
 	
 	private RestTemplate template;
 	
-	private DelgatingMarshaller marshaller = new DelgatingMarshaller();
+	private DelegatingMarshaller marshaller = new DelegatingMarshaller();
 	private HttpMessageConverter<Object> converter = new MarshallingHttpMessageConverter(marshaller);
 	
 	/**

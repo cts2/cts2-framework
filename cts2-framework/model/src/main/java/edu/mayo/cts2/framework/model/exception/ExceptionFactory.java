@@ -40,7 +40,7 @@ import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedPredicate;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
  * A factory for creating Exception objects.
@@ -125,7 +125,7 @@ public class ExceptionFactory {
 		
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-		ex.setMessage(RestModelUtils.createOpaqueData("Resource with Name: " + name + " not found."));
+		ex.setMessage(ModelUtils.createOpaqueData("Resource with Name: " + name + " not found."));
 		
 		return new Cts2RestException(ex);
 	}
@@ -151,7 +151,7 @@ public class ExceptionFactory {
 		timeout.setSeverity(LoggingLevel.ERROR);
 		
 		Cts2RestException ex = new Cts2RestException(timeout);
-
+	
 		return ex;
 	}
 	
@@ -173,7 +173,7 @@ public class ExceptionFactory {
 		" Request was: " + url + 
 			", Parameters were: " + paramString;
 		
-		ex.setMessage(RestModelUtils.createOpaqueData(message));
+		ex.setMessage(ModelUtils.createOpaqueData(message));
 		
 		return ex;
 	}
@@ -259,7 +259,7 @@ public class ExceptionFactory {
 			}
 		}
 		
-		return RestModelUtils.createOpaqueData(sb.toString());
+		return ModelUtils.createOpaqueData(sb.toString());
 	}
 
 	/**

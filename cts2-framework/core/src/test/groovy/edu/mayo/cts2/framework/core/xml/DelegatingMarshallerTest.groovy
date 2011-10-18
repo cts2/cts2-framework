@@ -9,11 +9,11 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.oxm.UnmarshallingFailureException
 
-import edu.mayo.cts2.framework.core.xml.DelgatingMarshaller;
+import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 
 class DelegatingMarshallerTest {
 	
-	DelgatingMarshaller marshaller = new DelgatingMarshaller()
+	DelegatingMarshaller marshaller = new DelegatingMarshaller()
 	
 	Resource valid = new ClassPathResource("xml/codeSystemValid.xml");
 	Resource invalid = new ClassPathResource("xml/codeSystemInvalid.xml");

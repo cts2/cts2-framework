@@ -25,7 +25,7 @@ package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
  * The Class AbstractService.
@@ -56,7 +56,7 @@ public abstract class AbstractService<T extends BaseService> implements Cts2Prof
 		service.setServiceProvider(this.getServiceProvider());
 		service.setServiceName(name);
 		service.setServiceVersion(getVersion());
-		service.setServiceDescription(RestModelUtils.createOpaqueData("The " + name + ", Service. " + this.getDescription()));
+		service.setServiceDescription(ModelUtils.createOpaqueData("The " + name + ", Service. " + this.getDescription()));
 	
 		return service;
 	}

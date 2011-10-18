@@ -46,11 +46,11 @@ import org.springframework.util.ClassUtils;
 import com.google.common.collect.Iterables;
 
 /**
- * The Class DelgatingMarshaller.
+ * The Class DelegatingMarshaller.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class DelgatingMarshaller implements Marshaller, Unmarshaller {
+public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 
 	public static final String NS_PROP = "org.exolab.castor.builder.nspackages";
 	public static final String CASTORBUILDER_PROPS = "castorbuilder.properties";
@@ -72,7 +72,7 @@ public class DelgatingMarshaller implements Marshaller, Unmarshaller {
 	 *
 	 * @throws Exception the exception
 	 */
-	public DelgatingMarshaller() throws Exception {
+	public DelegatingMarshaller() throws Exception {
 		this.populateNamespaceMaps(); 
 		
 		Properties castorProps = new Properties();

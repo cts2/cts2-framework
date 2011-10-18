@@ -69,7 +69,7 @@
 	<beans:import resource="controllers.xml" />
 
 	<beans:bean id="marshaller"
-		class="edu.mayo.cts2.framework.core.xml.DelgatingMarshaller" />
+		class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller" />
 
 	<beans:bean
 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">

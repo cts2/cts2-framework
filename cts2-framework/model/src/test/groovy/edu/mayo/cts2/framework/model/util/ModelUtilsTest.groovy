@@ -2,18 +2,21 @@ package edu.mayo.cts2.framework.model.util;
 
 import org.scalatest.junit.AssertionsForJUnit
 import scala.collection.mutable.ListBuffer
-import org.junit.Assert._
+import static org.junit.Assert.*
 import org.junit.Test
 import edu.mayo.cts2.framework.model.entity.NamedIndividualDescription
 
-class RestModelUtilsTest extends AssertionsForJUnit {
+
+
+class ModelUtilsTest {
  
  
-  @Test def testToEntityDescription() {
+  @Test 
+  void testToEntityDescription() {
     
-    var namedIndividual = new NamedIndividualDescription()
+    def namedIndividual = new NamedIndividualDescription()
     
-    var util =  RestModelUtils.toEntityDescription(namedIndividual);
+    def util =  ModelUtils.toEntityDescription(namedIndividual);
     
     assertEquals(util.getChoiceValue(), namedIndividual)
    

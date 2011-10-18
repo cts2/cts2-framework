@@ -42,12 +42,12 @@ import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class RestModelUtils {
+public class ModelUtils {
 	
 	/**
 	 * Instantiates a new rest model utils.
 	 */
-	private RestModelUtils(){
+	private ModelUtils(){
 		super();
 	}
 	

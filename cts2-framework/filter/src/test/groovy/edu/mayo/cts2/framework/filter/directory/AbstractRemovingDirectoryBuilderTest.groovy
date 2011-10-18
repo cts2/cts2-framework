@@ -126,18 +126,48 @@ class AbstractRemovingDirectoryBuilderTest {
 
 		assertEquals expected.size(), result.size()
 	}
+	
+	@Test
+	void Test_createDirectoryResult_size(){
+		def builder = new TestAbstractRemovingDirectoryBuilder()
+		
+		def results = builder.createDirectoryResult(["one","two"])
+		
+		assertEquals 2, results.getEntries().size()
+	}
+	
+	@Test
+	void Test_createDirectoryResult_is_not_complete(){
+		def builder = new TestAbstractRemovingDirectoryBuilder()
+		builder.addStart(0)
+		builder.addMaxToReturn(1)
+		
+		def results = builder.createDirectoryResult(["one","two"])
+		
+		assertFalse results.isComplete()
+	}
+	
+	@Test
+	void Test_createDirectoryResult_is_complete(){
+		def builder = new TestAbstractRemovingDirectoryBuilder()
+		builder.addStart(0)
+		builder.addMaxToReturn(10)
+		
+		def results = builder.createDirectoryResult(["one","two"])
+		
+		assertTrue results.isComplete()
+	}
 }
 
 class TestAbstractRemovingDirectoryBuilder extends AbstractRemovingDirectoryBuilder<String,String> {
 
 	public TestAbstractRemovingDirectoryBuilder() {
-		super(Arrays.asList("one", "two"));
+		super(Arrays.asList("one", "two"))
 	}
 
 	@Override
 	protected List<String> transformResults(List results) {
-		// TODO Auto-generated method stub
-		return null;
+		return results
 	}
 }
 
