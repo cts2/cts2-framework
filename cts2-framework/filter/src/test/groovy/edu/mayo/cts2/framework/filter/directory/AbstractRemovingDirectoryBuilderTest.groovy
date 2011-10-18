@@ -38,7 +38,7 @@ class AbstractRemovingDirectoryBuilderTest {
 	}
 
 	@Test
-	void "Test doRestrict score over"(){
+	void Test_doRestrict_score_over(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
 		def filter = new FilterComponent(matchValue:"test")
@@ -68,7 +68,7 @@ class AbstractRemovingDirectoryBuilderTest {
 	}
 	
 	@Test
-	void "Test doRestrict score under"(){
+	void Test_doRestrict_score_under(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
 		def filter = new FilterComponent(matchValue:"test")
@@ -98,7 +98,7 @@ class AbstractRemovingDirectoryBuilderTest {
 	}
 	
 	@Test
-	void "Test doRestrict score equals"(){
+	void Test_doRestrict_score_equals(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
 		def filter = new FilterComponent(matchValue:"test")
