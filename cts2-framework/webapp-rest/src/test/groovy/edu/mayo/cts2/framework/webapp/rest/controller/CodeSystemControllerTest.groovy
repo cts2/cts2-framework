@@ -23,7 +23,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 	CodeSystemController controller
 	
 	def codeSystemReadService = [
-		read: {name -> return new CodeSystemCatalogEntry() }
+		read: {name, context -> return new CodeSystemCatalogEntry() }
 	] as CodeSystemReadService
 
 	def httpServletRequest = new MockHttpServletRequest()
@@ -78,7 +78,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 	void testDoesCodeSystemExistFalse(){
 		MockHttpServletResponse response = new MockHttpServletResponse()
 		
-		def codeSystemReadService = [ exists: {query -> false}] as CodeSystemReadService
+		def codeSystemReadService = [ exists: {query,context -> false}] as CodeSystemReadService
 		controller.codeSystemReadService = codeSystemReadService
 			
 		try{
@@ -95,7 +95,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 	void testDoesCodeSystemExistTrue(){
 		MockHttpServletResponse response = new MockHttpServletResponse()
 		
-		def codeSystemReadService = [ exists: {query -> true}] as CodeSystemReadService
+		def codeSystemReadService = [ exists: {query,context -> true}] as CodeSystemReadService
 		
 		controller.codeSystemReadService = codeSystemReadService
 		def result = controller.doesCodeSystemExist(response, null)

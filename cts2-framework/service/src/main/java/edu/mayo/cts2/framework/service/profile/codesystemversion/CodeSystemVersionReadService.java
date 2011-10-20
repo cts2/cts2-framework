@@ -23,8 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -42,7 +44,7 @@ public interface CodeSystemVersionReadService extends
 	 * @param tagName the tag name
 	 * @return true, if successful
 	 */
-	public boolean existsCodeSystemVersionForCodeSystem(String codeSystemName, String tagName);
+	public boolean existsCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName);
 	
 	/**
 	 * Gets the code system version for code system.
@@ -51,7 +53,7 @@ public interface CodeSystemVersionReadService extends
 	 * @param tagName the tag name
 	 * @return the code system version for code system
 	 */
-	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(String codeSystemName, String tagName);
+	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName);
 	
 	/**
 	 * Exists version id.
@@ -60,7 +62,12 @@ public interface CodeSystemVersionReadService extends
 	 * @param officialResourceVersionId the official resource version id
 	 * @return true, if successful
 	 */
-	public boolean existsVersionId(String codeSystemName, String officialResourceVersionId);
+	public boolean existsVersionId(NameOrURI codeSystem, String officialResourceVersionId);
+	
+	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName, ReadContext readContext);
+	
+	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(NameOrURI codeSystem, String officialResourceVersionId, ReadContext readContext);
+
 
 }
 

@@ -273,34 +273,25 @@ public class AssociationController extends AbstractServiceAwareController {
 						associationRestrictions, 
 						page);
 	}
-
-	/**
-	 * Gets the association by name.
-	 *
-	 * @param httpServletRequest the http servlet request
-	 * @param page the page
-	 * @param codeSystemName the code system name
-	 * @param codeSystemVersionName the code system version name
-	 * @param associationName the association name
-	 * @return the association by name
-	 */
+	
 	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.GET)
 	@ResponseBody
 	public Message getAssociationByAssociationId(
 			HttpServletRequest httpServletRequest,
-			Page page,
-			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			HttpServletResponse httpServletResponse,
+			QueryControl queryControl,
 			@PathVariable(VAR_ASSOCIATIONID) String associationId) {
-		
-		AssociationReadId id =
-					new AssociationReadId(associationId, codeSystemVersionName);
-		
-		return this.doRead(httpServletRequest, MESSAGE_FACTORY, this.associationReadService, id);
-	}
 	
+		return this.doRead(
+				httpServletRequest,
+				MESSAGE_FACTORY, 
+				this.associationReadService, 
+				//TODO:
+				new AssociationReadId(associationId, null));
+	}
+
 	@RequestMapping(value=PATH_ASSOCIATIONBYURI, method=RequestMethod.GET)
-	public ModelAndView getAssociationByExternalStatementId(
+	public ModelAndView getAssociationByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
 			QueryControl queryControl,

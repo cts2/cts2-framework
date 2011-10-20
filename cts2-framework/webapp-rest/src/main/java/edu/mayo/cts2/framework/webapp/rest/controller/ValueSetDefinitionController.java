@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
@@ -64,6 +65,29 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	
 	@Cts2Service
 	private ValueSetDefinitionMaintenanceService valueSetDefinitionMaintenanceService;
+	
+	private final static UrlTemplateBinder<ValueSetDefinition> URL_BINDER =
+			new UrlTemplateBinder<ValueSetDefinition>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, ValueSetDefinition resource) {
+			//TODO:
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<ValueSetDefinition> MESSAGE_FACTORY = 
+			new MessageFactory<ValueSetDefinition>() {
+
+		@Override
+		public Message createMessage(ValueSetDefinition resource) {
+			ValueSetDefinitionMsg msg = new ValueSetDefinitionMsg();
+			msg.setValueSetDefinition(resource);
+
+			return msg;
+		}
+	};
 
 	/**
 	 * Gets the value set definitions of value set.
@@ -243,12 +267,16 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public ValueSetDefinitionMsg getValueSetDefinitionByName(
+	public Message getValueSetDefinitionByUri(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 		
-		throw new UnsupportedOperationException();
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.valueSetDefinitionReadService, 
+				valueSetDefinitionDocumentUri);
 	}
 	
 	/**

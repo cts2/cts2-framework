@@ -86,9 +86,15 @@ public class MethodTimingAspect {
 				try {
 					return pjp.proceed();
 				} catch (Throwable e) {
+					
+					if(e instanceof Error){
+						throw (Error)e;
+					}
+					
 					if(e instanceof Exception){
 						throw (Exception)e;
 					}
+					
 					throw new Exception(e);
 				}
 			}

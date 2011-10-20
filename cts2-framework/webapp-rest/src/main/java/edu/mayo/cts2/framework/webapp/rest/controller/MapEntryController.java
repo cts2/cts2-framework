@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectory;
@@ -64,6 +65,29 @@ public class MapEntryController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private MapEntryMaintenanceService mapEntryMaintenanceService;
+	
+	private static UrlTemplateBinder<MapEntry> URL_BINDER = new 
+			UrlTemplateBinder<MapEntry>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, MapEntry resource) {
+			//TODO
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<MapEntry> MESSAGE_FACTORY = 
+			new MessageFactory<MapEntry>() {
+
+		@Override
+		public Message createMessage(MapEntry resource) {
+			MapEntryMsg msg = new MapEntryMsg();
+			msg.setEntry(resource);
+
+			return msg;
+		}
+	};
 
 	/**
 	 * Creates the map entry.
@@ -90,7 +114,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
 	@ResponseBody
-	public MapEntryMsg getMapEntryByMapsFromName(
+	public Message getMapEntryByMapsFromName(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
@@ -114,25 +138,22 @@ public class MapEntryController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.POST)
 	@ResponseBody
-	public MapEntryMsg getMapEntryByMapsFromName(
+	public Message getMapEntryByMapsFromName(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
 			
-		MapEntryMsg msg = new MapEntryMsg();
-		MapEntryReadId name = new MapEntryReadId(
+		
+		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 
 				mapVersionName);
 		
-		msg.setEntry(
-				this.mapEntryReadService.read(name)
-				);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-
-		return msg;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.mapEntryReadService, id);
 	}
 	
 	/**

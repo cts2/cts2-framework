@@ -52,6 +52,7 @@ import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.profile.ReadService;
@@ -318,8 +319,8 @@ public abstract class AbstractMessageWrappingController extends
 			ReadService<R,I> readService, 
 			I id) {
 			
-		R resource = readService.read(
-				id);
+		//TODO:  ReadContext
+		R resource = readService.read(id, null);
 		
 		Message msg = messageFactory.createMessage(resource);
 		
@@ -334,7 +335,8 @@ public abstract class AbstractMessageWrappingController extends
 			Class<? extends UnknownResourceReference > exceptionClazz,
 			I id) {
 		
-		boolean exists = readService.exists(id);
+		//TODO: ReadContext
+		boolean exists = readService.exists(id, null);
 		
 		this.handleExists(id.toString(), exceptionClazz, httpServletResponse, exists);
 	}
@@ -372,8 +374,9 @@ public abstract class AbstractMessageWrappingController extends
 			I identifier,
 			boolean redirect) {
 		
+		//TODO: ReadContext
 		R resource = 
-				readService.read(identifier);
+				readService.read(identifier, null);
 		
 		if(! this.isPartialRedirect(httpServletRequest, byUriTemplate)){
 

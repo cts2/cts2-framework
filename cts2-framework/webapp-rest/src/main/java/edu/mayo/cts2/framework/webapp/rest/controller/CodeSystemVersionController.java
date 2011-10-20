@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryMsg;
@@ -42,6 +44,7 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
@@ -278,17 +281,35 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public Message getCodeSystemVersionByName(
+	public Message getCodeSystemVersionByNameOrOfficialResourceVersionId(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionNameOrVersionId) {
+		Message msg;
 		
-		return this.doRead(
-				httpServletRequest, 
-				MESSAGE_FACTORY, 
-				this.codeSystemVersionReadService, 
-				ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		//TODO: complete ReadContext
+		ReadContext readContext = null;
+		
+		CodeSystemVersionCatalogEntry readByVersionId = this.codeSystemVersionReadService.
+			getCodeSystemByVersionId(
+					ModelUtils.nameOrUriFromName(codeSystemName), 
+					codeSystemVersionNameOrVersionId, 
+					readContext);
+		
+		if(readByVersionId != null){
+			msg = this.wrapMessage(
+					MESSAGE_FACTORY.createMessage(readByVersionId), 
+					httpServletRequest);
+		} else {
+			msg = this.doRead(
+					httpServletRequest, 
+					MESSAGE_FACTORY, 
+					this.codeSystemVersionReadService, 
+					ModelUtils.nameOrUriFromName(codeSystemVersionNameOrVersionId));
+		}
+		
+		return msg;
 	}
 	
 	@RequestMapping(value={	

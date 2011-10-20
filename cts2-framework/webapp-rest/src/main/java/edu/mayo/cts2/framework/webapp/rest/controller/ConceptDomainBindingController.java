@@ -310,20 +310,15 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public  ConceptDomainBindingMsg getConceptDomainBindingByName(
+	public Message getConceptDomainBindingByUri(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
-			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingName) {
+			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingUri) {
 		
-		ConceptDomainBinding conceptDomainBinding = 
-			this.conceptDomainBindingReadService.read(
-					null);
-		
-		ConceptDomainBindingMsg msg = new ConceptDomainBindingMsg();
-		msg.setConceptDomainBinding(conceptDomainBinding);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-
-		return msg;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.conceptDomainBindingReadService, 
+				conceptDomainBindingUri);
 	}
 }

@@ -333,25 +333,22 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_ENTITYBYID, method=RequestMethod.GET)
 	@ResponseBody
-	public EntityDescriptionMsg getEntityDescriptionByName(
+	public Message getEntityDescriptionByName(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 
+
+		EntityDescriptionReadId id = new EntityDescriptionReadId(
+				getScopedEntityName(entityName, codeSystemName),
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
-		EntityDescription entity = 
-			this.entityDescriptionReadService.
-				read(new EntityDescriptionReadId(
-						getScopedEntityName(entityName, codeSystemName),
-						ModelUtils.nameOrUriFromName(codeSystemVersionName)));
-		
-		EntityDescriptionMsg msg = new EntityDescriptionMsg();
-		msg.setEntityDescription(entity);
-		
-		msg = this.wrapMessage(msg, httpServletRequest);
-		
-		return msg;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.entityDescriptionReadService, 
+				id);
 	}
 	
 	/**

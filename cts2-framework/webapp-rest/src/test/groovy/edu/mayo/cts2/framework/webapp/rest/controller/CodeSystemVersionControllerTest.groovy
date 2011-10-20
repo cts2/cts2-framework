@@ -18,7 +18,8 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 	CodeSystemVersionController controller
 	
 	def codeSystemVersionReadService = [
-		read: {csvId -> return new CodeSystemVersionCatalogEntry() }
+		read: {csvId,context -> return new CodeSystemVersionCatalogEntry() },
+		getCodeSystemByVersionId: {csId,csvId,context -> return new CodeSystemVersionCatalogEntry() }
 	] as CodeSystemVersionReadService
 
 	def httpServletRequest = new MockHttpServletRequest()
@@ -40,15 +41,15 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 	}
 	
 	@Test
-	void testGetCodeSystemVersionByNameInstanceOfMessage(){
-		def result = controller.getCodeSystemVersionByName(httpServletRequest, new QueryControl(), "csname", "csvname")
+	void testGetCodeSystemVersionByNameOrOfficialResourceVersionIdInstanceOfMessage(){
+		def result = controller.getCodeSystemVersionByNameOrOfficialResourceVersionId(httpServletRequest, new QueryControl(), "csname", "csvname")
 		
 		assert result instanceof Message	
 	}
 	
 	@Test
-	void testGetCodeSystemVersionByNameHasEverything(){
-		def result = controller.getCodeSystemVersionByName(httpServletRequest, new QueryControl(), "csname", "csvname")
+	void testGetCodeSystemVersionByNameOrOfficialResourceVersionIdNameHasEverything(){
+		def result = controller.getCodeSystemVersionByNameOrOfficialResourceVersionId(httpServletRequest, new QueryControl(), "csname", "csvname")
 	
 		assertNotNull result.heading
 		assertNotNull result.heading.resourceRoot

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
@@ -71,9 +72,7 @@ public class StatementController extends AbstractServiceAwareController {
 
 		@Override
 		public String getValueForPathAttribute(String attribute, Statement resource) {
-			if(attribute.equals(VAR_VALUESETID)){
-				//TODO:
-			}
+			//TODO:
 			return null;
 		}
 
@@ -152,7 +151,7 @@ public class StatementController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void doesStatementExist(
 			HttpServletResponse httpServletResponse,
-			@PathVariable(VAR_STATEMENTID) String statementName) {
+			@PathVariable(VAR_STATEMENTID) String statementId) {
 		
 		//
 	}
@@ -190,13 +189,16 @@ public class StatementController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.GET)
 	@ResponseBody
-	public StatementMsg getStatementByExternalUri(
+	public Message getStatementById(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			@PathVariable(VAR_STATEMENTID) String statementExternalUri) {
+			@PathVariable(VAR_STATEMENTID) String statementId) {
 			
-		//
-		return null;
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.statementReadService, 
+				statementId);
 	}
 	
 	/**
@@ -227,19 +229,19 @@ public class StatementController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_STATEMENTBYURI, method=RequestMethod.GET)
 	@ResponseBody
-	public StatementMsg getStatementByUri(
+	public ModelAndView getStatementByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_URI) String uri) {
-		/*
-		uri = this.decodeUri(uri);
+			@PathVariable(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		String name = this.statementService.getStatementNameFromUri(uri);
-			
-		String path = "../../" + STATEMENT + "/" + name;
-
-		return this.redirect(path, httpServletRequest, VAR_URI);
-		*/
-		return null;
-		//TODO!!
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_STATEMENTBYID, 
+				PATH_STATEMENTBYURI, 
+				URL_BINDER, 
+				this.statementReadService, 
+				uri,
+				redirect);
 	}
 }
