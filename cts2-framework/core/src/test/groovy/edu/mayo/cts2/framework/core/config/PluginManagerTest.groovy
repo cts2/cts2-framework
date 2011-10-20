@@ -59,7 +59,7 @@ class PluginManagerTest {
 		
 		def workDir = manager.getPluginWorkDirectory("test-plugin");
 			
-		assertEquals "test/.work/test-plugin", workDir.getPath()
+		assertEquals "test" + File.separator + ".work" + File.separator + "test-plugin", workDir.getPath()
 	}
 	
 	@Test
