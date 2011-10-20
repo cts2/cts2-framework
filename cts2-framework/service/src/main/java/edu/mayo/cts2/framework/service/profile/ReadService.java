@@ -36,7 +36,7 @@ import edu.mayo.cts2.framework.model.service.core.ReadContext;
 public interface ReadService<R,I> extends Cts2Profile {
 
 	/**
-	 * Read.
+	 * Reads the specified CTS2 Resource
 	 *
 	 * @param identifier the identifier
 	 * @return the r

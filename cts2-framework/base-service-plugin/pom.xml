@@ -6,10 +6,9 @@
 		<version>0.2.2-SNAPSHOT</version>
 	</parent>
 	<groupId>edu.mayo.cts2.framework</groupId>
+	
 	<artifactId>base-service-plugin</artifactId>
-	<version>0.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 
 	<properties>
 		<webapp.name>webapp-rest</webapp.name>
@@ -75,20 +74,20 @@
 								<configuration>
 									<tasks>
 										<property name="output.file" value="${generated.plugin.properties.file}" />
-										<property name="name" value="${project.name}" />
+										<property name="projname" value="${project.name}" />
 										<property name="ver" value="${project.version}" />
 										<property name="service.provider.class" value="${service.provider.class}" />
 										<delete file="${output.file}" />
 										<touch mkdirs="true" file="${output.file}" />
 
-										<echo file="${output.file}" message="plugin.name = ${name}${line.separator}" />
+										<echo file="${output.file}" message="plugin.name = ${projname}${line.separator}" />
 										<echo file="${output.file}" append="true" message="plugin.version = ${ver}${line.separator}" />
 										<echo file="${output.file}" append="true" message="service.provider.class = ${service.provider.class}" />
 
 										<property name="test.service.properties.output.file" value="${project.build.directory}/testconfigdir/${webapp.name}/service.properties" />
 										<delete file="${test.service.properties.output.file}" />
 										<touch mkdirs="true" file="${test.service.properties.output.file}" />
-										<echo file="${test.service.properties.output.file}" message="service.plugin.name = ${name}${line.separator}" />
+										<echo file="${test.service.properties.output.file}" message="service.plugin.name = ${projname}${line.separator}" />
 										<echo file="${test.service.properties.output.file}" append="true" message="service.plugin.version = ${ver}" />
 
 									</tasks>
@@ -198,6 +197,9 @@
 								<goals>
 									<goal>start</goal>
 								</goals>
+								<configuration>
+        							<timeout>60000</timeout>
+      							</configuration>
 							</execution>
 							<execution>
 								<id>stop-container</id>
