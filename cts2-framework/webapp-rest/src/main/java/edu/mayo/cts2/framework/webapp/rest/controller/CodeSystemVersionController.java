@@ -42,11 +42,12 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
@@ -173,7 +174,8 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 		this.doExists(
 				httpServletResponse,
 				this.codeSystemVersionReadService, 
-				new Name(codeSystemVersionName));
+				UnknownCodeSystemVersion.class,
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	}
 	
 	/**
@@ -286,7 +288,25 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.codeSystemVersionReadService, 
-				new Name(codeSystemVersionName));
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
+	}
+	
+	@RequestMapping(value={	
+			PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG
+			},
+		method=RequestMethod.GET)
+	@ResponseBody
+	public Message getCodeSystemVersionOfCodeSystemByTag(
+			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+		
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.codeSystemVersionReadService, 
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI, method=RequestMethod.GET)
@@ -304,7 +324,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, 
 				URL_BINDER, 
 				this.codeSystemVersionReadService, 
-				uri, 
+				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
 	

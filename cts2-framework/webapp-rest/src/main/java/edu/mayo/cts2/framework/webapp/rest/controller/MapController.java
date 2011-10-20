@@ -43,11 +43,12 @@ import edu.mayo.cts2.framework.model.map.MapCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownMap;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
@@ -162,7 +163,11 @@ public class MapController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
-		this.doExists(httpServletResponse, this.mapReadService, new Name(mapName));
+		this.doExists(
+				httpServletResponse, 
+				this.mapReadService, 
+				UnknownMap.class,
+				ModelUtils.nameOrUriFromName(mapName));
 	}
 	
 	/**
@@ -209,7 +214,7 @@ public class MapController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapReadService, 
-				new Name(mapName));
+				ModelUtils.nameOrUriFromName(mapName));
 	}
 	
 	/**
@@ -253,7 +258,7 @@ public class MapController extends AbstractServiceAwareController {
 				PATH_MAP_BYID, 
 				URL_BINDER, 
 				this.mapReadService,
-				uri, 
+				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
 }

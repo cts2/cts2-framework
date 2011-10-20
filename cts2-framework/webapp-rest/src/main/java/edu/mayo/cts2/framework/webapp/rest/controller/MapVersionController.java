@@ -43,11 +43,12 @@ import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectory;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionMsg;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownMapVersion;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.MapVersionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
@@ -237,7 +238,11 @@ public class MapVersionController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 		
-		this.doExists(httpServletResponse, this.mapVersionReadService, new Name(mapVersionName));
+		this.doExists(
+				httpServletResponse, 
+				this.mapVersionReadService, 
+				UnknownMapVersion.class, 
+				ModelUtils.nameOrUriFromName(mapVersionName));
 	}
 	
 	/**
@@ -319,7 +324,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapVersionReadService, 
-				new Name(mapVersionName));
+				ModelUtils.nameOrUriFromName(mapVersionName));
 	}
 	
 	@RequestMapping(value=PATH_MAPVERSION_BYURI, method=RequestMethod.GET)
@@ -337,7 +342,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 				PATH_MAP_BYID, 
 				URL_BINDER, 
 				this.mapVersionReadService,
-				uri, 
+				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
 }

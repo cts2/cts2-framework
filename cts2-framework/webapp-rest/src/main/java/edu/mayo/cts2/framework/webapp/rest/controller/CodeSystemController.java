@@ -43,10 +43,11 @@ import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
@@ -159,8 +160,11 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public void doesCodeSystemExist(
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
-		
-		this.doExists(httpServletResponse, this.codeSystemReadService, new Name(codeSystemName));
+
+		this.doExists(httpServletResponse, 
+				this.codeSystemReadService, 
+				UnknownCodeSystem.class,
+				ModelUtils.nameOrUriFromName(codeSystemName));
 	}
 	
 	/**
@@ -204,7 +208,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.codeSystemReadService, 
-				new Name(codeSystemName));
+				ModelUtils.nameOrUriFromName(codeSystemName));
 	}
 	
 	/**
@@ -248,7 +252,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				PATH_CODESYSTEMBYID, 
 				URL_BINDER, 
 				this.codeSystemReadService, 
-				uri, 
+				ModelUtils.nameOrUriFromUri(uri), 
 				redirect);
 	}
 

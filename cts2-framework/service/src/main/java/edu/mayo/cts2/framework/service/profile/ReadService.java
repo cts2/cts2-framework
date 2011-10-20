@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
 
 /**
  * The Interface ReadService.
@@ -32,7 +31,7 @@ import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ReadService<R,I extends ResourceIdentifier<?>> extends Cts2Profile, UriResolvable<R,I> {
+public interface ReadService<R,I> extends Cts2Profile {
 
 	/**
 	 * Read.

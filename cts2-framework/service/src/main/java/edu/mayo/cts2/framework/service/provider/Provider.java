@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
 public @interface Provider {
 
 	/**
-	 * Name.
+	 * ResourceNameOrUri.
 	 *
 	 * @return the string
 	 */

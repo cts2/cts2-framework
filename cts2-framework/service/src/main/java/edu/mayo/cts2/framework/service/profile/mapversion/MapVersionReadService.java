@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.mapversion;
 
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
-import edu.mayo.cts2.framework.service.name.Name;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -33,7 +33,7 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MapVersionReadService extends
-		ReadService<MapVersion, Name> {
+		ReadService<MapVersion, NameOrURI> {
 }
 
 

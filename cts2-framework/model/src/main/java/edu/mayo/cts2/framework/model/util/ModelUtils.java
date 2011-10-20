@@ -36,6 +36,7 @@ import edu.mayo.cts2.framework.model.entity.Designation;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
  * The Class RestModelUtils.
@@ -206,5 +207,19 @@ public class ModelUtils {
 	public static String getCodeSystemNameOfCodeSystemVersion(
 			CodeSystemVersionCatalogEntry resource) {
 		return resource.getVersionOf().getContent();
+	}
+
+	public static NameOrURI nameOrUriFromName(String name) {
+		NameOrURI nameOrUri = new NameOrURI();
+		nameOrUri.setName(name);
+		
+		return nameOrUri;
+	}
+
+	public static NameOrURI nameOrUriFromUri(String uri) {
+		NameOrURI nameOrUri = new NameOrURI();
+		nameOrUri.setUri(uri);
+		
+		return nameOrUri;
 	}
 }

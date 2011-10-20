@@ -45,6 +45,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
+import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
@@ -405,6 +406,10 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		}
 		
 		return scopedName;
+	}
+	
+	protected ScopedEntityName getScopedEntityName(String encodedEntityName){
+		return EncodingUtils.decodeEntityName(encodedEntityName);
 	}
 
 	protected UrlPathHelper getUrlPathHelper() {

@@ -1,0 +1,16 @@
+<ChangeSet xmlns="http://schema.omg.org/spec/CTS2/1.0/Updates"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:core="http://schema.omg.org/spec/CTS2/1.0/Core"
+    xmlns:codesystem="http://schema.omg.org/spec/CTS2/1.0/CodeSystem"
+    xsi:schemaLocation="http://schema.omg.org/spec/CTS2/1.0/Updates http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/schema/Updates.xsd"
+    changeSetURI="asdf" creationDate="2010-11-11T10:29:15">
+
+	<member entryOrder="1">
+		<codeSystem about="asdf" codeSystemName="asdf">
+		<
+		</codeSystem>
+	
+	</member>
+
+
+</ChangeSet>

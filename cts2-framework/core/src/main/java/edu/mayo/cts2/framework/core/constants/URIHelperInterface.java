@@ -40,9 +40,13 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_CODESYSTEMBYURI = "/" + CODESYSTEM_BY_URI;
 	
-	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID = 
+	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG = 
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
-		+ VERSION + "/{"+ VAR_CODESYSTEMVERSIONID + "}";
+		+ TAG + "/{"+ VAR_TAG + "}";
+	
+	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID = 
+			"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
+			+ VERSION + "/{"+ VAR_CODESYSTEMVERSIONID + "}";
 	
 	public static final String PATH_CODESYSTEMVERSIONBYURI = "/" + CODESYSTEMVERSION_BY_URI;
 	
@@ -63,7 +67,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/"
 			+ ENTITY + "/{" + VAR_ENTITYID + "}";
 	
-	public static final String PATH_ENTITYBYURI = "/" + ENTITY_BY_URI;
+	public static final String PATH_ENTITYBYURI = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ENTITY_BY_URI;
 			
 	public static final String PATH_ENTITYIDS = "/" + CODESYSTEM + "/{"
 			+ VAR_CODESYSTEMID + "}/" + ENTITYIDS;
@@ -234,6 +238,7 @@ interface PathKeywords {
 	
 	public static final String SERVICE = "service";
 	public static final String URI = "uri";
+	public static final String TAG = "tag";
 }
 
 interface PathVariables {
@@ -252,6 +257,7 @@ interface PathVariables {
 	public static final String VAR_CONCEPTDOMAINID = "conceptDomainID";
 	public static final String VAR_CONCEPTDOMAINBINDINGID = "conceptDomainBindingID";
 	public static final String VAR_URI = "uri";
+	public static final String VAR_TAG = "tag";
 }
 
 interface PathParameters {

@@ -24,7 +24,6 @@
 package edu.mayo.cts2.framework.service.profile.statement;
 
 import edu.mayo.cts2.framework.model.statement.Statement;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -33,5 +32,5 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface StatementReadService extends
-		ReadService<Statement, Name> {
+		ReadService<Statement, String> {
 }

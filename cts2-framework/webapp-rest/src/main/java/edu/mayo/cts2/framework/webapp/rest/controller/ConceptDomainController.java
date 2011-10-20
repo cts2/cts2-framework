@@ -43,10 +43,11 @@ import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomain;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
@@ -163,7 +164,10 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 	
-		this.doExists(httpServletResponse, this.conceptDomainReadService, new Name(conceptDomainName));
+		this.doExists(httpServletResponse, 
+				this.conceptDomainReadService,
+				UnknownConceptDomain.class,
+				ModelUtils.nameOrUriFromName(conceptDomainName));
 	}
 	
 	/**
@@ -209,7 +213,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.conceptDomainReadService,
-				new Name(conceptDomainName));
+				ModelUtils.nameOrUriFromName(conceptDomainName));
 	}
 	
 	/**
@@ -255,7 +259,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				PATH_CONCEPTDOMAIN_BYURI, 
 				URL_BINDER, 
 				this.conceptDomainReadService, 
-				uri, 
+				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
 

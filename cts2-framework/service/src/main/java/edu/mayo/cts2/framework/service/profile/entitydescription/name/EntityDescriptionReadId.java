@@ -21,25 +21,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.association.name;
+package edu.mayo.cts2.framework.service.profile.entitydescription.name;
 
-import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
- * The Class AssociationId.
+ * The Class EntityDescriptionId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class AssociationId extends ResourceIdentifier<String>{
+public class EntityDescriptionReadId extends EntityNameOrURI {
 
-	private String codeSystemVersion;
+	private static final long serialVersionUID = 6314775768311853179L;
 	
-	public AssociationId(String associationUri, String codeSystemVersionName) {
-		super(associationUri);
-
+	private NameOrURI codeSystemVersion;
+	
+	public EntityDescriptionReadId(ScopedEntityName scopedEntityName, NameOrURI codeSystemVersion) {
+		super();
+		this.setEntityName(scopedEntityName);
+		this.codeSystemVersion = codeSystemVersion;
+	}
+	
+	public EntityDescriptionReadId(String uri, NameOrURI codeSystemVersion) {
+		super();
+		this.setUri(uri);
+		this.codeSystemVersion = codeSystemVersion;
 	}
 
-	public String getCodeSystemVersion() {
+	public EntityDescriptionReadId(String entityName, String entityNamespace, NameOrURI codeSystemVersion) {
+		super();
+		this.setEntityName(ModelUtils.createScopedEntityName(entityName, entityNamespace));
+		this.codeSystemVersion = codeSystemVersion;
+	}
+
+	public NameOrURI getCodeSystemVersion() {
 		return codeSystemVersion;
 	}
+
 }

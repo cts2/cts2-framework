@@ -48,6 +48,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
@@ -55,8 +56,8 @@ import edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQu
 import edu.mayo.cts2.framework.service.profile.association.AssociationMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationReadService;
-import edu.mayo.cts2.framework.service.profile.association.name.AssociationId;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
+import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Class AssociationController.
@@ -162,10 +163,10 @@ public class AssociationController extends AbstractServiceAwareController {
 		
 		FilterComponent filterComponent = this.processFilter(filter, this.associationQueryService);
 		
-		EntityDescriptionName name = 
-				new EntityDescriptionName(
+		EntityDescriptionReadId name = 
+				new EntityDescriptionReadId(
 						this.getScopedEntityName(entityName, codeSystemName), 
-						codeSystemVersionName);
+						ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		DirectoryResult<EntityDirectoryEntry> directoryResult = 
 			this.associationQueryService.getChildrenAssociationsOfEntity(
@@ -292,8 +293,8 @@ public class AssociationController extends AbstractServiceAwareController {
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ASSOCIATIONID) String associationId) {
 		
-		AssociationId id =
-					new AssociationId(associationId, codeSystemVersionName);
+		AssociationReadId id =
+					new AssociationReadId(associationId, codeSystemVersionName);
 		
 		return this.doRead(httpServletRequest, MESSAGE_FACTORY, this.associationReadService, id);
 	}
@@ -313,7 +314,8 @@ public class AssociationController extends AbstractServiceAwareController {
 				PATH_ASSOCIATIONBYID, 
 				URL_BINDER, 
 				this.associationReadService,
-				uri, 
+				//TODO:
+				new AssociationReadId(uri, null), 
 				redirect);
 	}
 	
@@ -345,9 +347,9 @@ public class AssociationController extends AbstractServiceAwareController {
 
 		AssociationGraph directoryResult = 
 			this.advancedAssociationQueryService.getAssociationGraph(
-					new EntityDescriptionName(
+					new EntityDescriptionReadId(
 							this.getScopedEntityName(focus, codeSystemName), 
-							codeSystemVersionName),
+							ModelUtils.nameOrUriFromName(codeSystemVersionName)),
 					GraphDirection.FORWARD,
 					depth);
 

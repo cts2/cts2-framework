@@ -52,10 +52,8 @@ import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -314,7 +312,7 @@ public abstract class AbstractMessageWrappingController extends
 		return mav;
 	}
 	
-	protected <R,I extends ResourceIdentifier<?>> Message doRead(
+	protected <R,I> Message doRead(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			ReadService<R,I> readService, 
@@ -330,14 +328,15 @@ public abstract class AbstractMessageWrappingController extends
 		return msg;
 	}
 	
-	protected <I extends ResourceIdentifier<?>> void doExists(
+	protected <I> void doExists(
 			HttpServletResponse httpServletResponse,
 			ReadService<?,I> readService,
+			Class<? extends UnknownResourceReference > exceptionClazz,
 			I id) {
 		
 		boolean exists = readService.exists(id);
 		
-		this.handleExists(id, UnknownCodeSystem.class, httpServletResponse, exists);
+		this.handleExists(id.toString(), exceptionClazz, httpServletResponse, exists);
 	}
 	
 
@@ -349,7 +348,7 @@ public abstract class AbstractMessageWrappingController extends
 	 * @param httpServletResponse the http servlet response
 	 * @param exists the exists
 	 */
-	private void handleExists(ResourceIdentifier<?> resourceName, 
+	private void handleExists(String resourceIdAsString, 
 			Class<? extends UnknownResourceReference> exceptionClass, 
 			HttpServletResponse httpServletResponse,
 			boolean exists){
@@ -358,23 +357,23 @@ public abstract class AbstractMessageWrappingController extends
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} else {
 			throw ExceptionFactory.createUnknownResourceException(
-					resourceName.getResourceId().toString(), 
+					resourceIdAsString, 
 					exceptionClass);
 		}
 	}
 	
-	protected <R, I extends ResourceIdentifier<?>> ModelAndView doReadByUri(
+	protected <R, I> ModelAndView doReadByUri(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			String byUriTemplate,
 			String byNameTemaplate,
 			UrlTemplateBinder<R> urlBinder,
 			ReadService<R,I> readService,
-			String uri,
+			I identifier,
 			boolean redirect) {
 		
 		R resource = 
-				readService.readByUri(uri);
+				readService.read(identifier);
 		
 		if(! this.isPartialRedirect(httpServletRequest, byUriTemplate)){
 

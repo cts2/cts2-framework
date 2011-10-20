@@ -41,6 +41,8 @@ import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownValueSet;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryMsg;
@@ -49,7 +51,6 @@ import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
@@ -146,7 +147,11 @@ public class ValueSetController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String valueSetName) {
 		
-		this.doExists(httpServletResponse, this.valueSetReadService, new Name(valueSetName));
+		this.doExists(
+				httpServletResponse, 
+				this.valueSetReadService, 
+				UnknownValueSet.class,
+				ModelUtils.nameOrUriFromName(valueSetName));
 	}
 	
 	/**
@@ -193,7 +198,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.valueSetReadService, 
-				new Name(valueSetName));
+				ModelUtils.nameOrUriFromName(valueSetName));
 	}
 	
 	@RequestMapping(value=PATH_VALUESET_BYURI, method=RequestMethod.GET)
@@ -211,7 +216,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 				PATH_MAP_BYID, 
 				URL_BINDER, 
 				this.valueSetReadService,
-				uri, 
+				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
 	

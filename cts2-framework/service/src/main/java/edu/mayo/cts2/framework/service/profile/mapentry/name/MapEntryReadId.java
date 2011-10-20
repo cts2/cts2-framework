@@ -24,20 +24,34 @@
 package edu.mayo.cts2.framework.service.profile.mapentry.name;
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
  * The Class MapEntryId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class MapEntryName extends ResourceIdentifier<ScopedEntityName> {
+public class MapEntryReadId extends EntityNameOrURI {
+
+	private static final long serialVersionUID = 2567172778896717738L;
 
 	private String mapVersionName;
 	
-	public MapEntryName(ScopedEntityName mapFromName, String mapVersionName) {
-		super(mapFromName);
+	public MapEntryReadId(String uri, String mapVersionName) {
+		super();
+		this.setUri(uri);
 		this.mapVersionName = mapVersionName;
+	}
+	
+	public MapEntryReadId(ScopedEntityName mapFromName, String mapVersionName) {
+		super();
+		this.setEntityName(mapFromName);
+		this.mapVersionName = mapVersionName;
+	}
+	
+	public MapEntryReadId(String mapFromName, String mapFromNamespace, String mapVersionName) {
+		this(ModelUtils.createScopedEntityName(mapFromName, mapFromNamespace), mapVersionName);
 	}
 
 	public String getMapVersionName() {

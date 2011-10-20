@@ -32,7 +32,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Interface AssociationQueryService.
@@ -55,7 +55,7 @@ public interface AssociationQueryService extends
 			Query query,
 			FilterComponent filterComponent,
 			Page page,
-			EntityDescriptionName entity);
+			EntityDescriptionReadId entity);
 
 
 	/**
@@ -71,5 +71,5 @@ public interface AssociationQueryService extends
 			Query query,
 			FilterComponent filterComponent, 
 			Page page, 
-			EntityDescriptionName entity);
+			EntityDescriptionReadId entity);
 }

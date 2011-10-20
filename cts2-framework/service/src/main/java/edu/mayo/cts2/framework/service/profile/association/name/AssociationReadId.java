@@ -21,27 +21,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.entitydescription.name;
+package edu.mayo.cts2.framework.service.profile.association.name;
 
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.service.name.ResourceIdentifier;
+
 
 /**
- * The Class EntityDescriptionId.
+ * The Class AssociationId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class EntityDescriptionName extends ResourceIdentifier<ScopedEntityName> {
+public class AssociationReadId {
 
-	private String codeSystemVersionName;
-	
-	public EntityDescriptionName(ScopedEntityName name, String codeSystemVersionName) {
-		super(name);
-		this.codeSystemVersionName = codeSystemVersionName;
+	private String associationUri;
+	private String codeSystemVersion;
+
+	public AssociationReadId(
+			String associationUri,
+			String codeSystemVersion) {
+		
+		this.codeSystemVersion = codeSystemVersion;
+		this.associationUri = associationUri;
 	}
 
-	public String getCodeSystemVersionName() {
-		return codeSystemVersionName;
+	public String getAssociationUri() {
+		return associationUri;
+	}
+
+	public String getCodeSystemVersion() {
+		return codeSystemVersion;
 	}
 
 }

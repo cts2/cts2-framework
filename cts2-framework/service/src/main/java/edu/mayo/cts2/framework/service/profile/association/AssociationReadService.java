@@ -25,7 +25,7 @@ package edu.mayo.cts2.framework.service.profile.association;
 
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.service.profile.ReadService;
-import edu.mayo.cts2.framework.service.profile.association.name.AssociationId;
+import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 
 /**
  * The Interface AssociationReadService.
@@ -33,5 +33,5 @@ import edu.mayo.cts2.framework.service.profile.association.name.AssociationId;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface AssociationReadService extends
-		ReadService<Association, AssociationId> {
+		ReadService<Association, AssociationReadId> {
 }

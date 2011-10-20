@@ -15,7 +15,6 @@ import edu.mayo.cts2.framework.model.core.Message
 import edu.mayo.cts2.framework.model.exception.Cts2RestException
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem
 import edu.mayo.cts2.framework.service.command.QueryControl
-import edu.mayo.cts2.framework.service.name.Name
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 

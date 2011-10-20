@@ -33,21 +33,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.core.Message;
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Class EntityDescriptionController.
@@ -65,6 +70,33 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	
 	@Cts2Service
 	private EntityDescriptionMaintenanceService entityDescriptionMaintenanceService;
+	
+	private final static UrlTemplateBinder<EntityDescription> URL_BINDER =
+			new UrlTemplateBinder<EntityDescription>(){
+
+		@Override
+		public String getValueForPathAttribute(String attribute, EntityDescription resource) {
+			if(attribute.equals(VAR_ENTITYID)){
+				ScopedEntityName id = ModelUtils.getEntity(resource).getEntityID();
+				
+				return EncodingUtils.encodeScopedEntityName(id);
+			}
+			return null;
+		}
+
+	};
+	
+	private final static MessageFactory<EntityDescription> MESSAGE_FACTORY = 
+			new MessageFactory<EntityDescription>() {
+
+		@Override
+		public Message createMessage(EntityDescription resource) {
+			EntityDescriptionMsg msg = new EntityDescriptionMsg();
+			msg.setEntityDescription(resource);
+
+			return msg;
+		}
+	};
 	
 	/**
 	 * Creates the entity description.
@@ -310,9 +342,9 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 		EntityDescription entity = 
 			this.entityDescriptionReadService.
-				read(new EntityDescriptionName(
+				read(new EntityDescriptionReadId(
 						getScopedEntityName(entityName, codeSystemName),
-						codeSystemVersionName));
+						ModelUtils.nameOrUriFromName(codeSystemVersionName)));
 		
 		EntityDescriptionMsg msg = new EntityDescriptionMsg();
 		msg.setEntityDescription(entity);
@@ -331,21 +363,22 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_ENTITYBYURI, method=RequestMethod.GET)
 	@ResponseBody
-	public EntityDescriptionMsg getEntityDescriptionByUri(
+	public ModelAndView getEntityDescriptionByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_URI) String uri) {
-		/*
-		uri = this.decodeUri(uri);
-		
-		String name = 
-			this.entityDescriptionService.
-				getEntityDescriptionNameFromUri(uri);
-		
-		String path = "../../" + ENTITY +"/" + name;
-		
-		return this.redirect(path, httpServletRequest, VAR_URI);
-		*/
-		//TODO!!
-		return null;
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@RequestParam(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+
+		return this.doReadByUri(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_ENTITYBYID, 
+				PATH_ENTITYBYURI, 
+				URL_BINDER, 
+				this.entityDescriptionReadService, 
+				new EntityDescriptionReadId(uri,
+						ModelUtils.nameOrUriFromName(codeSystemVersionName)),
+				redirect);
 	}
 }
