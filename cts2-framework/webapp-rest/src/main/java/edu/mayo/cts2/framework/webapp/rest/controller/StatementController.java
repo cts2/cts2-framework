@@ -39,6 +39,7 @@ import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownStatement;
 import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectory;
 import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
@@ -198,6 +199,7 @@ public class StatementController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.statementReadService, 
+				UnknownStatement.class,
 				statementId);
 	}
 	

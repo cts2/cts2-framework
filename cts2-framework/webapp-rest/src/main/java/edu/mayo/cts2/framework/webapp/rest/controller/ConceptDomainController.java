@@ -213,6 +213,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.conceptDomainReadService,
+				UnknownConceptDomain.class,
 				ModelUtils.nameOrUriFromName(conceptDomainName));
 	}
 	

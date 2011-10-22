@@ -41,6 +41,7 @@ import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectory;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryMsg;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceRestrictions;
@@ -153,7 +154,9 @@ public class MapEntryController extends AbstractServiceAwareController {
 		return this.doRead(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				this.mapEntryReadService, id);
+				this.mapEntryReadService, 
+				//TODO: This needs to be fixed
+				UnknownResourceReference.class,id);
 	}
 	
 	/**

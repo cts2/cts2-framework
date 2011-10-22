@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,8 +36,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryMsg;
@@ -44,7 +43,6 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
@@ -54,6 +52,7 @@ import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQuer
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
+import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 
 /**
  * The Class CodeSystemVersionController.
@@ -72,6 +71,8 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@Cts2Service
 	private CodeSystemVersionMaintenanceService codeSystemVersionMaintenanceService;
 	
+	@Resource
+	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
 	
 	private static UrlTemplateBinder<CodeSystemVersionCatalogEntry> URL_BINDER = new 
 			UrlTemplateBinder<CodeSystemVersionCatalogEntry>(){
@@ -285,29 +286,20 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionNameOrVersionId) {
-		Message msg;
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId) {
 		
-		//TODO: complete ReadContext
-		ReadContext readContext = null;
+		String codeSystemVersionName = 
+				codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+						this.codeSystemVersionReadService,
+						codeSystemName, 
+						versionId);
 		
-		CodeSystemVersionCatalogEntry readByVersionId = this.codeSystemVersionReadService.
-			getCodeSystemByVersionId(
-					ModelUtils.nameOrUriFromName(codeSystemName), 
-					codeSystemVersionNameOrVersionId, 
-					readContext);
-		
-		if(readByVersionId != null){
-			msg = this.wrapMessage(
-					MESSAGE_FACTORY.createMessage(readByVersionId), 
-					httpServletRequest);
-		} else {
-			msg = this.doRead(
+		Message msg = this.doRead(
 					httpServletRequest, 
 					MESSAGE_FACTORY, 
 					this.codeSystemVersionReadService, 
-					ModelUtils.nameOrUriFromName(codeSystemVersionNameOrVersionId));
-		}
+					UnknownCodeSystemVersion.class,
+					ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		return msg;
 	}
@@ -323,10 +315,12 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
 		
+		//TODO: redirect this
 		return this.doRead(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.codeSystemVersionReadService, 
+				UnknownCodeSystemVersion.class,
 				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	}
 	
@@ -337,7 +331,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			QueryControl queryControl,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
-		
+	
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 

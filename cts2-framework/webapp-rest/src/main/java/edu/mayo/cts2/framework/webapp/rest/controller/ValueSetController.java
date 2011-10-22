@@ -198,6 +198,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.valueSetReadService, 
+				UnknownValueSet.class,
 				ModelUtils.nameOrUriFromName(valueSetName));
 	}
 	

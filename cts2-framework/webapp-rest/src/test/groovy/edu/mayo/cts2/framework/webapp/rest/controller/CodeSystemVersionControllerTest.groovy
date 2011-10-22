@@ -12,6 +12,7 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.core.Message
 import edu.mayo.cts2.framework.service.command.QueryControl
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
+import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver
 
  class CodeSystemVersionControllerTest {
 	
@@ -21,6 +22,10 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 		read: {csvId,context -> return new CodeSystemVersionCatalogEntry() },
 		getCodeSystemByVersionId: {csId,csvId,context -> return new CodeSystemVersionCatalogEntry() }
 	] as CodeSystemVersionReadService
+
+	def codeSystemVersionNameResolver = [
+		getCodeSystemVersionNameFromVersionId: {service,csName,versionId -> return csName+"_"+versionId },
+	] as CodeSystemVersionNameResolver
 
 	def httpServletRequest = new MockHttpServletRequest()
 
@@ -36,6 +41,7 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 	@Before
 	void setup(){
 		controller = new CodeSystemVersionController()
+		controller.codeSystemVersionNameResolver = codeSystemVersionNameResolver
 		controller.codeSystemVersionReadService = codeSystemVersionReadService
 		controller.serviceConfigManager = serviceConfigManager
 	}

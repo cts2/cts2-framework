@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,14 +46,17 @@ import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
 
 /**
  * The Class EntityDescriptionController.
@@ -70,6 +74,12 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	
 	@Cts2Service
 	private EntityDescriptionMaintenanceService entityDescriptionMaintenanceService;
+	
+	@Cts2Service
+	private CodeSystemVersionReadService codeSystemVersionReadService;
+		
+	@Resource
+	private EntityDescriptionValidator entityDescriptionValidator;
 	
 	private final static UrlTemplateBinder<EntityDescription> URL_BINDER =
 			new UrlTemplateBinder<EntityDescription>(){
@@ -113,14 +123,20 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@RequestParam(required=false) String changeseturi,
 			@RequestBody EntityDescription entity,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
-
-			this.entityDescriptionMaintenanceService.createResource(
+		
+		this.entityDescriptionValidator.validateCreateEntityDescription(
+				this.codeSystemVersionReadService,
+				codeSystemName, 
+				versionId, 
+				entity);
+		
+		this.entityDescriptionMaintenanceService.createResource(
 					changeseturi, 
 					entity);
 	}
-	
+
 	/**
 	 * Gets the entity descriptions of code system version.
 	 *
@@ -339,7 +355,6 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 
-
 		EntityDescriptionReadId id = new EntityDescriptionReadId(
 				getScopedEntityName(entityName, codeSystemName),
 				ModelUtils.nameOrUriFromName(codeSystemVersionName));
@@ -348,6 +363,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.entityDescriptionReadService, 
+				UnknownEntity.class,
 				id);
 	}
 	

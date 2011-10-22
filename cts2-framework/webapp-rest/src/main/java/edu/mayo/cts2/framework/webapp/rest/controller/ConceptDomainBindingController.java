@@ -42,6 +42,7 @@ import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
@@ -319,6 +320,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.conceptDomainBindingReadService, 
+				UnknownConceptDomainBinding.class,
 				conceptDomainBindingUri);
 	}
 }

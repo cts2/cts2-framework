@@ -214,6 +214,7 @@ public class MapController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapReadService, 
+				UnknownMap.class,
 				ModelUtils.nameOrUriFromName(mapName));
 	}
 	

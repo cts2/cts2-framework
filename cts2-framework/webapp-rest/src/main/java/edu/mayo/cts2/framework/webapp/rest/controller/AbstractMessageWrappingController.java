@@ -52,7 +52,6 @@ import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.profile.ReadService;
@@ -317,10 +316,15 @@ public abstract class AbstractMessageWrappingController extends
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			ReadService<R,I> readService, 
+			Class<? extends UnknownResourceReference > exceptionClazz,
 			I id) {
 			
 		//TODO:  ReadContext
 		R resource = readService.read(id, null);
+		
+		if(resource == null){
+			throw ExceptionFactory.createUnknownResourceException(id.toString(), exceptionClazz);
+		}
 		
 		Message msg = messageFactory.createMessage(resource);
 		

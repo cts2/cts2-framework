@@ -208,6 +208,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.codeSystemReadService, 
+				UnknownCodeSystem.class,
 				ModelUtils.nameOrUriFromName(codeSystemName));
 	}
 	

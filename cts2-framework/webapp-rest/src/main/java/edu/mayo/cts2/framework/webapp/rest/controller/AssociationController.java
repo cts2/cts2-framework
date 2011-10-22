@@ -48,6 +48,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
@@ -285,7 +286,8 @@ public class AssociationController extends AbstractServiceAwareController {
 		return this.doRead(
 				httpServletRequest,
 				MESSAGE_FACTORY, 
-				this.associationReadService, 
+				this.associationReadService,
+				UnknownAssociation.class,
 				//TODO:
 				new AssociationReadId(associationId, null));
 	}

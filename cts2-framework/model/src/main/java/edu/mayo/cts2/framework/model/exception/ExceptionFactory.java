@@ -145,6 +145,18 @@ public class ExceptionFactory {
 		return createUnknownException(message, url, paramString);
 	}
 	
+	public static Cts2RestException createUnknownException(
+			String message) {
+		
+		UnspecifiedCts2Exception ex = new UnspecifiedCts2Exception();
+		
+		ex.setMessage(ModelUtils.createOpaqueData(message));
+		
+		ex.setSeverity(LoggingLevel.ERROR);
+		
+		return new Cts2RestException(ex);
+	}
+	
 	public static Cts2RestException createTimeoutException() {
 		QueryTimeout timeout = new QueryTimeout();
 		timeout.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);

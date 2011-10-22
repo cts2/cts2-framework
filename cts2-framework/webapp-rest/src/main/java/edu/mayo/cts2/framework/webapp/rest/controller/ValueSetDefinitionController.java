@@ -38,6 +38,7 @@ import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
@@ -276,6 +277,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.valueSetDefinitionReadService, 
+				UnknownValueSetDefinition.class,
 				valueSetDefinitionDocumentUri);
 	}
 	

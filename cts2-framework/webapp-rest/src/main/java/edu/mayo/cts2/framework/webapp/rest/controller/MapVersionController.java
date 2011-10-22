@@ -324,6 +324,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapVersionReadService, 
+				UnknownMapVersion.class,
 				ModelUtils.nameOrUriFromName(mapVersionName));
 	}
 	
