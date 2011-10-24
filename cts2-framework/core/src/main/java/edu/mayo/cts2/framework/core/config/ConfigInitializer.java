@@ -44,6 +44,8 @@ public class ConfigInitializer {
 	protected static Log log = LogFactory.getLog(ConfigInitializer.class);
 
 	private static ConfigInitializer instance;
+	
+	private static final String DEFAULT_CONTEXT = "default";
 
 	private String context;
 
@@ -161,6 +163,10 @@ public class ConfigInitializer {
 	 */
 	protected static synchronized void initialize(String context) throws Cts2ConfigAlreadyInitializedException {
 		if (instance == null) {
+			if(StringUtils.isBlank(context)	|| 
+					StringUtils.equals(context, "/")){
+				context = DEFAULT_CONTEXT;
+			}
 			instance = new ConfigInitializer(context);
 		} else {
 			throw new IllegalStateException(

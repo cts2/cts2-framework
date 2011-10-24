@@ -238,9 +238,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
-				<configuration>
-					<warName>webapp</warName>
-				</configuration>
 			</plugin>
 
 			<plugin>
@@ -266,6 +263,27 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<plugin>
+			    <groupId>org.simplericity.jettyconsole</groupId>
+			    <artifactId>jetty-console-maven-plugin</artifactId>
+			    <version>1.43</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>createconsole</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			    <configuration>
+				    <backgroundImage>${basedir}/src/main/webapp/resources/images/dflogo-large.png</backgroundImage>
+				    <additionalDependencies>
+				        <additionalDependency>
+				            <artifactId>jetty-console-jsp-plugin</artifactId>
+				        </additionalDependency>
+				    </additionalDependencies>
+				</configuration>
 			</plugin>
 
 		</plugins>
