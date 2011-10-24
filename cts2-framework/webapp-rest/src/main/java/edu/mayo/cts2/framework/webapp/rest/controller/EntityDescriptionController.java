@@ -56,6 +56,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescripti
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
 
 /**
@@ -77,6 +78,9 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	
 	@Cts2Service
 	private CodeSystemVersionReadService codeSystemVersionReadService;
+	
+	@Resource
+	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
 		
 	@Resource
 	private EntityDescriptionValidator entityDescriptionValidator;
@@ -156,7 +160,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			Filter filter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
 		return this.getEntityDescriptionsOfCodeSystemVersion(
 				httpServletRequest, 
@@ -165,7 +169,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				filter, 
 				page, 
 				codeSystemName, 
-				codeSystemVersionName);
+				codeSystemVersionId);
 	}
 	
 	/**
@@ -189,9 +193,12 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			Filter filter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
 		FilterComponent filterComponent = this.processFilter(filter, this.entityDescriptionQueryService);
+		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		
 		restrictions.setCodesystem(codeSystemName);
 		restrictions.setCodesystemversion(codeSystemVersionName);
@@ -233,9 +240,12 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			Filter filter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
 		FilterComponent filterComponent = this.processFilter(filter, this.entityDescriptionQueryService);
+		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		
 		restrictions.setCodesystem(codeSystemName);
 		restrictions.setCodesystemversion(codeSystemVersionName);
@@ -352,8 +362,11 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	public Message getEntityDescriptionByName(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
+		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 
 		EntityDescriptionReadId id = new EntityDescriptionReadId(
 				getScopedEntityName(entityName, codeSystemName),
@@ -379,9 +392,12 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	public ModelAndView getEntityDescriptionByUri(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 
 		return this.doReadByUri(
 				httpServletRequest, 
