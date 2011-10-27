@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystem;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface CodeSystemMaintenanceService.
@@ -33,6 +34,7 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
  */
 public interface CodeSystemMaintenanceService
 		extends
-		MaintenanceService<CodeSystemCatalogEntry> {
-
+		BaseMaintenanceService<CodeSystemCatalogEntry,NameOrURI> {
+	
+	
 }

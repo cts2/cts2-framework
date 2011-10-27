@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface CodeSystemVersionMaintenanceService.
@@ -33,6 +34,6 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
  */
 public interface CodeSystemVersionMaintenanceService
 		extends
-		MaintenanceService<CodeSystemVersionCatalogEntry> {
+		BaseMaintenanceService<CodeSystemVersionCatalogEntry,NameOrURI> {
 
 }

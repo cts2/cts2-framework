@@ -232,6 +232,14 @@
 	</dependencies>
 
 	<build>
+	  <extensions>
+	    <extension>
+	       <groupId>org.apache.maven.wagon</groupId>
+	       <artifactId>wagon-ssh</artifactId>
+	       <version>1.0-beta-6</version>
+	     </extension>
+	   </extensions>
+   
 		<plugins>
 
 			<plugin>
@@ -286,6 +294,43 @@
 				</configuration>
 			</plugin>
 
+	
+			  <plugin>
+			       <groupId>org.codehaus.mojo</groupId>
+			       <artifactId>wagon-maven-plugin</artifactId>
+			       <version>1.0-beta-3</version>
+			      
+			       <executions>
+			         <execution>
+			           <id>upload-war-to-server</id>
+			           <phase>deploy</phase>
+			           <goals>
+			             <goal>upload-single</goal>
+			           </goals>
+			            <configuration>
+			       	 <serverId>site-upload-server</serverId>
+			         <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
+			         <toFile>cts2framework.war</toFile>
+			         <url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/downloads/</url>
+			       </configuration>
+			         </execution>
+			         
+			         <execution>
+			           <id>upload-standalone-jar-to-server</id>
+			           <phase>deploy</phase>
+			           <goals>
+			             <goal>upload-single</goal>
+			           </goals>
+			           		       <configuration>
+			       	 <serverId>site-upload-server</serverId>
+			         <fromFile>${project.build.directory}/${project.build.finalName}-jetty-console.war</fromFile>
+			         <toFile>cts2framework-standalone.jar</toFile>
+			         <url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/downloads/</url>
+			       </configuration>
+			         </execution>
+			         
+			       </executions>
+			  </plugin>
 		</plugins>
 	</build>
 

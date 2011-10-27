@@ -137,7 +137,6 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				entity);
 		
 		this.entityDescriptionMaintenanceService.createResource(
-					changeseturi, 
 					entity);
 	}
 

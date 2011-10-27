@@ -234,7 +234,6 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 			
 		this.conceptDomainMaintenanceService.createResource(
-				changeseturi, 
 				conceptDomain);
 	}
 	

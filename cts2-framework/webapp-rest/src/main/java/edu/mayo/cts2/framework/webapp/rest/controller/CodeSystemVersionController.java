@@ -118,7 +118,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
 			
-		this.codeSystemVersionMaintenanceService.createResource(changeseturi, codeSystemVersion);
+		this.codeSystemVersionMaintenanceService.createResource(codeSystemVersion);
 	}
 	
 	/**

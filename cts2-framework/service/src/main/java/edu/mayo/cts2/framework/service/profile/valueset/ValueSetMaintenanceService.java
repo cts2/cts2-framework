@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.valueset;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface ValueSetMaintenanceService.
@@ -33,6 +34,6 @@ import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
  */
 public interface ValueSetMaintenanceService
 		extends
-		MaintenanceService<ValueSetCatalogEntry> {
+		BaseMaintenanceService<ValueSetCatalogEntry,NameOrURI> {
 
 }

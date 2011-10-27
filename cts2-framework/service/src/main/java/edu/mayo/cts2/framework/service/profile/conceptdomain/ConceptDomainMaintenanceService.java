@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface ConceptDomainMaintenanceService.
@@ -33,6 +34,6 @@ import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
  */
 public interface ConceptDomainMaintenanceService
 		extends
-		MaintenanceService<ConceptDomainCatalogEntry> {
+		BaseMaintenanceService<ConceptDomainCatalogEntry,NameOrURI> {
 
 }

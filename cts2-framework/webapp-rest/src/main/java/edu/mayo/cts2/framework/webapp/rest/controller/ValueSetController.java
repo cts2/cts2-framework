@@ -237,6 +237,6 @@ public class ValueSetController extends AbstractServiceAwareController {
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 			
-		this.valueSetMaintenanceService.createResource(changeseturi, valueSet);
+		this.valueSetMaintenanceService.createResource(valueSet);
 	}
 }

@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface ValueSetDefinitionMaintenanceService.
@@ -33,6 +33,6 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
  */
 public interface ValueSetDefinitionMaintenanceService
 		extends
-		MaintenanceService<ValueSetDefinition> {
+		BaseMaintenanceService<ValueSetDefinition,String> {
 
 }

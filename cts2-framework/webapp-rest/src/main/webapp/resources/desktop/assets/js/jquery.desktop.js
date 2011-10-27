@@ -109,7 +109,7 @@ var JQD = (function($, window, document, undefined) {
         });
 
         // Relative or remote links?
-        $('a').live('click', function(ev) {
+        $('a:not(.normalLink)').live('click', function(ev) {
           var url = $(this).attr('href');
           this.blur();
 

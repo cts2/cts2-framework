@@ -27,6 +27,8 @@ import java.lang.reflect.Method;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
+import edu.mayo.cts2.framework.model.core.Changeable;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.ResourceDescriptionDirectoryEntry;
@@ -35,8 +37,10 @@ import edu.mayo.cts2.framework.model.core.TsAnyType;
 import edu.mayo.cts2.framework.model.entity.Designation;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
+import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 
 /**
  * The Class RestModelUtils.
@@ -139,6 +143,28 @@ public class ModelUtils {
 	 */
 	public static EntityDescriptionBase getEntity(EntityDescription entityDescription){
 		return (EntityDescriptionBase) entityDescription.getChoiceValue();
+	}
+	
+	public static ChangeableElementGroup getChangeableElementGroup(ChangeableResourceChoice changeableResource){
+
+		Object obj = changeableResource.getChoiceValue();
+			
+		if(obj instanceof Changeable){
+			return ((Changeable)obj).getChangeableElementGroup();
+		}
+		
+		if(obj instanceof EntityDescription){
+			EntityDescription entity = (EntityDescription)obj;
+			
+			EntityDescriptionBase base = getEntity(entity);
+			
+			if(base instanceof NamedEntityDescription){
+				return ((NamedEntityDescription)base).getChangeableElementGroup();
+			}
+			
+		}
+			
+		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
 	}
 
 	/**

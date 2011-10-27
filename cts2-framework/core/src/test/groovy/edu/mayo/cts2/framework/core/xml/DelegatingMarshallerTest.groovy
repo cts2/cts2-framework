@@ -9,7 +9,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.oxm.UnmarshallingFailureException
 
-import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
+import edu.mayo.cts2.framework.model.service.core.UpdateResourceVersionDescription
 
 class DelegatingMarshallerTest {
 	
@@ -18,6 +18,8 @@ class DelegatingMarshallerTest {
 	Resource valid = new ClassPathResource("xml/codeSystemValid.xml");
 	Resource invalid = new ClassPathResource("xml/codeSystemInvalid.xml");
 	Resource msgValid = new ClassPathResource("xml/codeSystemMsgValid.xml");
+	Resource updateNull = new ClassPathResource("xml/updateRequestNull.xml");
+	Resource updateEmpty = new ClassPathResource("xml/updateRequestEmpty.xml");
 	
 	@Test
 	void "Test Unmarshall Valid"(){
@@ -37,6 +39,27 @@ class DelegatingMarshallerTest {
 	void "Test Unmarshall Valid Msg"(){
 		def stream = msgValid.getInputStream()
 		
-		assertNotNull marshaller.unmarshal(new StreamSource(stream))
+		def o = marshaller.unmarshal(new StreamSource(stream))
+
+	}
+	
+	@Test
+	void "Test Unmarshall Update Null"(){
+		def stream = updateNull.getInputStream()
+		
+		UpdateResourceVersionDescription o = marshaller.unmarshal(new StreamSource(stream))
+		
+		assertNull o.getUpdatedAdditionalDocumentation()
+
+	}
+	
+	@Test
+	void "Test Unmarshall Update Empty"(){
+		def stream = updateEmpty.getInputStream()
+		
+		UpdateResourceVersionDescription o = marshaller.unmarshal(new StreamSource(stream))
+		
+		assertEquals 0, o.getUpdatedAdditionalDocumentation().getUriCount()
+
 	}
 }

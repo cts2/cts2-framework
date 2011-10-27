@@ -23,29 +23,21 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
+
 /**
  * The Interface MaintenanceService.
  *
  * @param <R> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface MaintenanceService<R> extends Cts2Profile {
+public interface BaseMaintenanceService<R,I> extends Cts2Profile {
 
-	/**
-	 * Creates the resource.
-	 *
-	 * @param changeSetUri the change set uri
-	 * @param resource the resource
-	 */
-	public void createResource(String changeSetUri, R resource);
+
+	public void updateChangeableMetadata(I identifier, UpdateChangeableMetadataRequest request);
 	
-	/**
-	 * Update resource.
-	 *
-	 * @param changeSetUri the change set uri
-	 * @param resource the resource
-	 */
-	public void updateResource(String changeSetUri, R resource);
+	public void updateResource(R resource);
+	
+	public void createResource(R resource);
 	
 	/**
 	 * Delete resource.
@@ -53,6 +45,6 @@ public interface MaintenanceService<R> extends Cts2Profile {
 	 * @param changeSetUri the change set uri
 	 * @param resourceName the resource name
 	 */
-	public void deleteResource(String changeSetUri, String resourceName);
+	public void deleteResource(I identifier);
 	
 }

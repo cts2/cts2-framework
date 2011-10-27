@@ -299,6 +299,6 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 			
-		this.valueSetDefinitionMaintenanceService.createResource(changeseturi, valueSetDefinition);
+		this.valueSetDefinitionMaintenanceService.createResource(valueSetDefinition);
 	}
 }

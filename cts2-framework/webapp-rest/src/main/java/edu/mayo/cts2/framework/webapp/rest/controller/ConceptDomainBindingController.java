@@ -110,7 +110,6 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingName) {
 			
 		this.conceptDomainBindingMaintenanceService.createResource(
-				changeseturi,
 				conceptDomainBinding);
 	}
 	

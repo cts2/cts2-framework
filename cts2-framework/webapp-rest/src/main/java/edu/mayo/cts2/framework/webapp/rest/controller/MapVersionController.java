@@ -116,7 +116,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 			
-		this.mapVersionMaintenanceService.createResource(changeseturi, mapVersion);
+		this.mapVersionMaintenanceService.createResource(mapVersion);
 	}
 
 	/**

@@ -219,7 +219,7 @@ public class StatementController extends AbstractServiceAwareController {
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_STATEMENTID) String statementName) {
 			
-		this.statementMaintenanceService.createResource(changeseturi, statement);
+		this.statementMaintenanceService.createResource(statement);
 	}
 	
 	/**

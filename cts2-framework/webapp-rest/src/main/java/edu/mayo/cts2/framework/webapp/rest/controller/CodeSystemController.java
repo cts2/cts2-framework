@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
@@ -68,7 +70,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private CodeSystemMaintenanceService codeSystemMaintenanceService;
-	
+
 	private final static UrlTemplateBinder<CodeSystemCatalogEntry> URL_BINDER =
 			new UrlTemplateBinder<CodeSystemCatalogEntry>(){
 
@@ -102,6 +104,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 * @param page the page
 	 * @return the code systems
 	 */
+	@Secured("ROLE_ADMINISTRATOR")
 	@RequestMapping(value=PATH_CODESYSTEMS, method=RequestMethod.GET)
 	@ResponseBody
 	public CodeSystemCatalogEntryDirectory getCodeSystems(
@@ -227,8 +230,9 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			@RequestBody CodeSystemCatalogEntry codeSystem,
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
-			
-		this.codeSystemMaintenanceService.createResource(changeseturi, codeSystem);
+
+		this.codeSystemMaintenanceService.createResource(codeSystem);
+	
 	}
 	
 	/**

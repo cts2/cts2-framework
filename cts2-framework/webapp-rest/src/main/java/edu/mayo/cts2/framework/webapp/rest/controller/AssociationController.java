@@ -406,6 +406,6 @@ public class AssociationController extends AbstractServiceAwareController {
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ASSOCIATIONID) String associationName) {
 			
-		this.associationMaintenanceService.createResource(changeseturi, association);
+		this.associationMaintenanceService.createResource(association);
 	}
 }

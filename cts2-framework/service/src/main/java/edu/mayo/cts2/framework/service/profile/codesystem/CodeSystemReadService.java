@@ -25,7 +25,6 @@ package edu.mayo.cts2.framework.service.profile.codesystem;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**

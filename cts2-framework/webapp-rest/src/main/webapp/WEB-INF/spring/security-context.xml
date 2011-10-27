@@ -15,10 +15,12 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:annotation-config />
-
+	
 	<security:http>
-	    <security:http-basic></security:http-basic>
-	    <security:intercept-url pattern="/admin/**" access="ROLE_ADMINISTRATOR" />
+	    <security:intercept-url method="POST" pattern="/admin/**" access="ROLE_ADMINISTRATOR" />
+	    <security:intercept-url method="PUT" pattern="/admin/**" access="ROLE_ADMINISTRATOR" />
+	    <security:intercept-url pattern="/admin" access="ROLE_ADMINISTRATOR" />
+		<security:http-basic />
 	</security:http>
 	
 	<beans:bean id="userName" class="edu.mayo.cts2.framework.core.config.ContextConfigPropertyValueFactory">

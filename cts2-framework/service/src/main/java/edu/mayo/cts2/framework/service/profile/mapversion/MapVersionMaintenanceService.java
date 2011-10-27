@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapversion;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface MapVersionMaintenanceService.
@@ -33,6 +34,6 @@ import edu.mayo.cts2.framework.model.mapversion.MapVersion;
  */
 public interface MapVersionMaintenanceService
 		extends
-		MaintenanceService<MapVersion> {
+		BaseMaintenanceService<MapVersion,NameOrURI> {
 
 }

@@ -234,7 +234,7 @@ public class MapController extends AbstractServiceAwareController {
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_MAPID) String MapName) {
 			
-		this.mapMaintenanceService.createResource(changeseturi, map);
+		this.mapMaintenanceService.createResource(map);
 	}
 	
 	/**

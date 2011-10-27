@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile.statement;
 
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.model.statement.Statement;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
  * The Interface StatementMaintenanceService.
@@ -33,6 +33,6 @@ import edu.mayo.cts2.framework.model.statement.Statement;
  */
 public interface StatementMaintenanceService
 		extends
-		MaintenanceService<Statement> {
+		BaseMaintenanceService<Statement,String> {
 
 }

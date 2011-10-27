@@ -27,20 +27,63 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
 <body>
 <div class="abs" id="wrapper">
   <div class="abs" id="desktop">
-    <a class="abs icon" style="left:20px;top:20px;" href="#icon_dock_service_plugins">
+  
+    <a class="abs icon" style="left:20px;top:20px;" href="#icon_dock_service_information">
+      <img src="resources/desktop/assets/images/icons/service-info-icon.png" />
+      Service Information
+    </a>
+  
+    <a class="abs icon" style="left:20px;top:160px;" href="#icon_dock_service_plugins">
       <img src="resources/desktop/assets/images/icons/folder-preferences-icon.png" />
       Service Plugins
     </a>
     
-    <a class="abs icon" style="left:20px;top:160px;" href="#icon_dock_plugin_admin">
+    <a class="abs icon" style="left:20px;top:300px;" href="#icon_dock_plugin_admin">
       <img src="resources/desktop/assets/images/icons/box-config-icon.png" />
       Plugin Admin
     </a>
     
-    <a class="abs icon" style="left:20px;top:300px;" href="#icon_dock_service_admin">
+    <a class="abs icon" style="left:20px;top:440px;" href="#icon_dock_service_admin">
       <img src="resources/desktop/assets/images/icons/service-config-icon.png" />
       Service Admin
     </a>
+    
+    <div id="window_service_information" class="abs window" style="height: 350px;">
+      <div class="abs window_inner">
+        <div class="window_top">
+          <span class="float_left">
+            <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
+            Service Information
+          </span>
+          <span class="float_right">
+            <a href="#" class="window_min"></a>
+            <a href="#" class="window_resize"></a>
+            <a href="#icon_dock_service_information" class="window_close"></a>
+          </span>
+        </div>
+        
+        <div class="abs window_content">
+          <div class="window_aside">
+		
+		<h1>TODO:</h1>
+		<p>...</p>
+		<br>
+		<h1>TODO:</h1>
+		<p>...</p>
+
+          </div>
+          <div class="window_main">
+          <div>
+          
+	</div>
+          </div>
+        </div>
+        <div class="abs window_bottom">
+            
+        </div>
+      </div>
+      <span class="abs ui-resizable-handle ui-resizable-se"></span>
+    </div>  
    
     <div id="window_service_plugins" class="abs window">
       <div class="abs window_inner">
@@ -160,6 +203,8 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
       <span class="abs ui-resizable-handle ui-resizable-se"></span>
     </div>
     
+  
+    
     
     <div id="window_service_admin" class="abs window" style="height: 350px;">
       <div class="abs window_inner">
@@ -272,6 +317,14 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
       <img src="resources/desktop/assets/images/icons/icon_22_desktop.png" />
     </a>
     <ul id="dock">
+    
+      <li id="icon_dock_service_information">
+        <a href="#window_service_information">
+          <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
+          Service Information
+        </a>
+      </li>
+      
       <li id="icon_dock_service_plugins">
         <a href="#window_service_plugins">
           <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />

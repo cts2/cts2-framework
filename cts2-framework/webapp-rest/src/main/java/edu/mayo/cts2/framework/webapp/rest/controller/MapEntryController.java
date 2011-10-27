@@ -110,7 +110,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
 			
-		this.mapEntryMaintenanceService.createResource(changeseturi, mapEntry);
+		this.mapEntryMaintenanceService.createResource(mapEntry);
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
