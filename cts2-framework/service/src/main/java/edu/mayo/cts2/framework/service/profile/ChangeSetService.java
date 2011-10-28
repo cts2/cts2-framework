@@ -7,6 +7,10 @@ public interface ChangeSetService extends Cts2Profile {
 	public ChangeSet readChangeSet(String changeSetUri);
 	
 	public ChangeSet createChangeSet();
+	
+	public void rollbackChangeSet(String changeSetUri);
+	
+	public void commitChangeSet(String changeSetUri);
 
 
 }

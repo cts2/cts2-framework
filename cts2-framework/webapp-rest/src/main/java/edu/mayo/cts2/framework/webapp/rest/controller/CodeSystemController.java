@@ -45,11 +45,11 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Filter;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.QueryControl;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
@@ -231,8 +231,10 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 
-		this.codeSystemMaintenanceService.createResource(codeSystem);
-	
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setCodeSystem(codeSystem);
+		
+		this.doCreate(choice, changeseturi, this.codeSystemMaintenanceService);
 	}
 	
 	/**

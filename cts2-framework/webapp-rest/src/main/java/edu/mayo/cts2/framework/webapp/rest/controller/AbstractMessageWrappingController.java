@@ -45,15 +45,22 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
+import edu.mayo.cts2.framework.model.core.ChangeDescription;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
 import edu.mayo.cts2.framework.model.core.RESTResource;
+import edu.mayo.cts2.framework.model.core.types.ChangeType;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -366,6 +373,35 @@ public abstract class AbstractMessageWrappingController extends
 					resourceIdAsString, 
 					exceptionClass);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <R> void doCreate(
+			ChangeableResourceChoice resource, 
+			String changeSetUri, 
+			BaseMaintenanceService<R,?> service){
+		ChangeableElementGroup group = ModelUtils.getChangeableElementGroup(resource);
+
+		if(group == null){
+			group = this.createChangeableElementGroup(changeSetUri, ChangeType.CREATE);
+	
+			ModelUtils.setChangeableElementGroup(resource, group);
+		} else if(group.getChangeDescription() == null){
+			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
+		}
+		
+		service.createResource(
+				(R) resource.getChoiceValue());
+	}
+	
+	private ChangeableElementGroup createChangeableElementGroup(String changeSetUri, ChangeType changeType){
+		ChangeableElementGroup group = new ChangeableElementGroup();
+		group.setChangeDescription(new ChangeDescription());
+		group.getChangeDescription().setChangeDate(new Date());
+		group.getChangeDescription().setChangeType(changeType);
+		group.getChangeDescription().setContainingChangeSet(changeSetUri);
+		
+		return group;
 	}
 	
 	protected <R, I> ModelAndView doReadByUri(

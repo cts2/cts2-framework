@@ -146,11 +146,40 @@ public class ModelUtils {
 	}
 	
 	public static ChangeableElementGroup getChangeableElementGroup(ChangeableResourceChoice changeableResource){
+		return doWithChangeableResourceChoice(changeableResource, 
+				new ChoiceCallback<ChangeableElementGroup>(){
+
+					@Override
+					public ChangeableElementGroup doInCallback(
+							Changeable changeable) {
+						return changeable.getChangeableElementGroup();
+					}
+
+					@Override
+					public ChangeableElementGroup doInCallback(
+							NamedEntityDescription changeable) {
+						return changeable.getChangeableElementGroup();
+					}
+			
+		});
+		
+	}
+	
+	private static interface ChoiceCallback<T> {
+		
+		public T doInCallback(Changeable changeable);
+		
+		public T doInCallback(NamedEntityDescription changeable);
+	}
+	
+	private static <T> T  
+		doWithChangeableResourceChoice(
+				ChangeableResourceChoice changeableResource, ChoiceCallback<T> callback){
 
 		Object obj = changeableResource.getChoiceValue();
 			
 		if(obj instanceof Changeable){
-			return ((Changeable)obj).getChangeableElementGroup();
+			return callback.doInCallback((Changeable)obj);
 		}
 		
 		if(obj instanceof EntityDescription){
@@ -159,7 +188,7 @@ public class ModelUtils {
 			EntityDescriptionBase base = getEntity(entity);
 			
 			if(base instanceof NamedEntityDescription){
-				return ((NamedEntityDescription)base).getChangeableElementGroup();
+				return callback.doInCallback((NamedEntityDescription)base);
 			}
 			
 		}
@@ -247,5 +276,30 @@ public class ModelUtils {
 		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
+	}
+
+	public static void setChangeableElementGroup(
+			ChangeableResourceChoice changeableResource, final ChangeableElementGroup group) {
+		
+		doWithChangeableResourceChoice(changeableResource, 
+				new ChoiceCallback<Void>(){
+
+					@Override
+					public Void doInCallback(
+							Changeable changeable) {
+						changeable.setChangeableElementGroup(group);
+						
+						return null;
+					}
+
+					@Override
+					public Void doInCallback(
+							NamedEntityDescription changeable) {
+						changeable.setChangeableElementGroup(group);
+						
+						return null;
+					}
+			
+		});
 	}
 }
