@@ -4,7 +4,7 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 
-import edu.mayo.cts2.framework.filter.directory.AbstractDirectoryBuilder;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter
 import edu.mayo.cts2.framework.model.core.FilterComponent
 
 class AbstractDirectoryBuilderTest {
@@ -13,9 +13,9 @@ class AbstractDirectoryBuilderTest {
 	void testRestrict(){
 		def builder = [addStart: {} ] as AbstractDirectoryBuilder
 		
-		def filter = new FilterComponent(matchValue:"test")
+		def filter = new ResolvedFilter(matchValue:"test")
 		
-		builder = builder.restrict(filter)
+		builder = builder.restrict([filter])
 		
 		assertEquals 1, builder.filterComponents.size()
 	}
@@ -24,7 +24,7 @@ class AbstractDirectoryBuilderTest {
 	void testRestrictNullFilterValue(){
 		def builder = [addStart: {} ] as AbstractDirectoryBuilder
 		
-		def filter = new FilterComponent(matchValue:null)
+		def filter = new ResolvedFilter(matchValue:null)
 		
 		builder = builder.restrict(filter)
 		
@@ -35,7 +35,7 @@ class AbstractDirectoryBuilderTest {
 	void testRestrictBlankFilterValue(){
 		def builder = [addStart: {} ] as AbstractDirectoryBuilder
 		
-		def filter = new FilterComponent(matchValue:" ")
+		def filter = new ResolvedFilter(matchValue:" ")
 		
 		builder = builder.restrict(filter)
 		

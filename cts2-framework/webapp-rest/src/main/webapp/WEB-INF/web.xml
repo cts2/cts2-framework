@@ -29,8 +29,6 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
-
 
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -48,6 +46,16 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<filter>
+		<filter-name>urlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>urlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 	
 	<filter>
 		<filter-name>jsonpCallbackFilter</filter-name>
@@ -67,7 +75,6 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-		
 	<filter>
 		<filter-name>contentTypeFilter</filter-name>
 		<filter-class>edu.mayo.cts2.framework.webapp.rest.filter.AcceptHeaderAdjustingFilter</filter-class>

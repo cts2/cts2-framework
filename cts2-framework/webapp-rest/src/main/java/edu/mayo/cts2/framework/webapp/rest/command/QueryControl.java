@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.command;
+package edu.mayo.cts2.framework.webapp.rest.command;
 
 /**
  * The Class QueryControl.

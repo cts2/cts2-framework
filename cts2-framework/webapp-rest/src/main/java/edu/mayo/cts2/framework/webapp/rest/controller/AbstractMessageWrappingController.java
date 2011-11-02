@@ -28,11 +28,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -45,22 +42,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
-import edu.mayo.cts2.framework.model.core.ChangeDescription;
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
 import edu.mayo.cts2.framework.model.core.RESTResource;
-import edu.mayo.cts2.framework.model.core.types.ChangeType;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
-import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -70,9 +60,18 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
  */
 public abstract class AbstractMessageWrappingController extends
 		AbstractController {
-
+	
 	@Resource
 	private ServiceConfigManager serviceConfigManager;
+	
+	@Resource
+	private UrlTemplateBindingCreator urlTemplateBindingCreator;
+
+	@Resource
+	private CreateHandler createHandler;
+	
+	@Resource
+	private UpdateHandler updateHandler;
 
 	/*
 	 * (non-Javadoc)
@@ -109,7 +108,7 @@ public abstract class AbstractMessageWrappingController extends
 			R resource,
 			HttpServletRequest httpServletRequest) {
 		
-		String resourceUrl = this.bindResourceToUrlTemplate(binder, resource, urlTemplate);
+		String resourceUrl = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(binder, resource, urlTemplate);
 
 		RESTResource heading = this
 				.getHeadingWithKnownUrlRequest(httpServletRequest, resourceUrl);
@@ -181,14 +180,14 @@ public abstract class AbstractMessageWrappingController extends
 				directory.setNext(url
 						+ getParametersString(
 								httpServletRequest.getParameterMap(),
-								page.getPage() + 1, page.getMaxtoreturn()));
+								page.getPage() + 1, page.getMaxToReturn()));
 			}
 
 			if (page.getPage() > 0) {
 				directory.setPrev(url
 						+ getParametersString(
 								httpServletRequest.getParameterMap(),
-								page.getPage() - 1, page.getMaxtoreturn()));
+								page.getPage() - 1, page.getMaxToReturn()));
 			}
 		}
 
@@ -213,34 +212,8 @@ public abstract class AbstractMessageWrappingController extends
 
 	}
 	
-	private interface Binder {
-		
-		public String doBind(String attribute);
-		
-	}
+
 	
-	private String dobindResourceToUrlTemplate(
-			Binder binder,
-			String urlTemplate){
-		Set<String> variables = this.getUrlTemplateVariables(urlTemplate);
-		
-		String[] matchArray = new String[variables.size()];
-		String[] valuesArray = new String[variables.size()];
-		
-		{//scope limit
-			int i=0;
-			for(Iterator<String> itr = variables.iterator(); itr.hasNext(); i++){
-				String variable = itr.next();
-				
-				String value = binder.doBind(variable);
-				
-				valuesArray[i] = value;			
-				matchArray[i] = '{' + variable + '}';
-			}
-		}//end scope limit
-		
-		return StringUtils.replaceEach(urlTemplate, matchArray, valuesArray);
-	}
 	/*
 	protected <I extends ResourceIdentifier<?>> String bindResourceToUrlTemplate(
 			final UrlTemplateBinder<?,I> binder, 
@@ -258,44 +231,7 @@ public abstract class AbstractMessageWrappingController extends
 		}, urlTemplate);
 	}
 	*/
-	
-	protected <R> String bindResourceToUrlTemplate(
-			final UrlTemplateBinder<R> binder, 
-			final R resource,  
-			String urlTemplate){
-		
-		return this.dobindResourceToUrlTemplate(
-				new Binder(){
 
-					@Override
-					public String doBind(String attribute) {
-						return binder.getValueForPathAttribute(attribute, resource);
-					}
-			
-		}, urlTemplate);
-	}
-	
-	protected Set<String> getUrlTemplateVariables(String urlTemplate){
-		Set<String> pathParamNames = new HashSet<String>();
-
-		char[] chars = urlTemplate.toCharArray();
-		
-		for(int i=0;i<chars.length;i++){
-			char c = chars[i];
-			
-			if(c == '{'){
-				 StringBuilder sb = new StringBuilder();
-				 
-				 while(chars[++i] != '}'){
-					 sb.append(chars[i]);
-				 }
-				 
-				 pathParamNames.add(sb.toString());	 
-			}
-		}
-		
-		return pathParamNames;
-	}
 
 	protected <R> ModelAndView forward(
 			HttpServletRequest request, 
@@ -313,7 +249,7 @@ public abstract class AbstractMessageWrappingController extends
 				message);
 		} else {
 			mav = new ModelAndView(
-				"redirect:"+ this.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate));
+				"redirect:"+ this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate));
 		}
 		
 		return mav;
@@ -375,35 +311,6 @@ public abstract class AbstractMessageWrappingController extends
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected <R> void doCreate(
-			ChangeableResourceChoice resource, 
-			String changeSetUri, 
-			BaseMaintenanceService<R,?> service){
-		ChangeableElementGroup group = ModelUtils.getChangeableElementGroup(resource);
-
-		if(group == null){
-			group = this.createChangeableElementGroup(changeSetUri, ChangeType.CREATE);
-	
-			ModelUtils.setChangeableElementGroup(resource, group);
-		} else if(group.getChangeDescription() == null){
-			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
-		}
-		
-		service.createResource(
-				(R) resource.getChoiceValue());
-	}
-	
-	private ChangeableElementGroup createChangeableElementGroup(String changeSetUri, ChangeType changeType){
-		ChangeableElementGroup group = new ChangeableElementGroup();
-		group.setChangeDescription(new ChangeDescription());
-		group.getChangeDescription().setChangeDate(new Date());
-		group.getChangeDescription().setChangeType(changeType);
-		group.getChangeDescription().setContainingChangeSet(changeSetUri);
-		
-		return group;
-	}
-	
 	protected <R, I> ModelAndView doReadByUri(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
@@ -443,7 +350,7 @@ public abstract class AbstractMessageWrappingController extends
 			boolean redirect) {
 		String forwardOrRedirect = getForwardOrRedirectString(redirect);
 		
-		String url = this.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate);
+		String url = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate);
 		
 		ModelAndView mav = new ModelAndView(
 				forwardOrRedirect + ":" + url);
@@ -565,6 +472,14 @@ public abstract class AbstractMessageWrappingController extends
 		return parameterValueToString(value);
 	}
 
+	protected CreateHandler getCreateHandler() {
+		return createHandler;
+	}
+
+	protected void setCreateHandler(CreateHandler createHandler) {
+		this.createHandler = createHandler;
+	}
+
 	protected ServiceConfigManager getServiceConfigManager() {
 		return serviceConfigManager;
 	}
@@ -573,4 +488,13 @@ public abstract class AbstractMessageWrappingController extends
 			ServiceConfigManager serviceConfigManager) {
 		this.serviceConfigManager = serviceConfigManager;
 	}
+
+	protected UpdateHandler getUpdateHandler() {
+		return updateHandler;
+	}
+
+	protected void setUpdateHandler(UpdateHandler updateHandler) {
+		this.updateHandler = updateHandler;
+	}
+
 }

@@ -35,7 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
@@ -44,14 +45,14 @@ import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionMsg;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownMapVersion;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.MapVersionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class MapVersionController.
@@ -109,14 +110,39 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAPVERSION_OF_MAP_BYID, method=RequestMethod.PUT)
 	@ResponseBody
-	public void createMapVersion(
+	public void updateMapVersion(
 			HttpServletRequest httpServletRequest,
 			@RequestParam(required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 			
-		this.mapVersionMaintenanceService.createResource(mapVersion);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setMapVersion(mapVersion);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi,
+				ModelUtils.nameOrUriFromName(mapVersionName), 
+				this.mapVersionMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_MAPVERSION, method=RequestMethod.POST)
+	@ResponseBody
+	public void createMapVersion(
+			HttpServletRequest httpServletRequest,
+			@RequestParam(required=false) String changeseturi,
+			@RequestBody MapVersion mapVersion) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setMapVersion(mapVersion);
+			
+		this.getCreateHandler().create(
+				choice,
+				changeseturi,
+				PATH_MAPVERSION_OF_MAP_BYID,
+				URL_BINDER, 
+				this.mapVersionMaintenanceService);
 	}
 
 	/**
@@ -124,7 +150,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param mapName the map name
 	 * @return the map versions of map
@@ -135,12 +161,18 @@ public class MapVersionController extends AbstractServiceAwareController {
 	public MapVersionDirectory getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
 			MapVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
 		restrictions.setMap(mapName);
-		return this.getMapVersions(httpServletRequest, null, restrictions, filter, page);
+		
+		return this.getMapVersions(
+				httpServletRequest, 
+				null, 
+				restrictions,
+				restFilter,
+				page);
 	}
 	
 	/**
@@ -149,7 +181,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param mapName the map name
 	 * @return the map versions of map
@@ -161,12 +193,18 @@ public class MapVersionController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
 		restrictions.setMap(mapName);
-		return this.getMapVersions(httpServletRequest, null, restrictions, filter, page);
+		
+		return this.getMapVersions(
+				httpServletRequest,
+				null, 
+				restrictions, 
+				restFilter,
+				page);
 	}
 	
 	/**
@@ -174,7 +212,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the map versions
 	 */
@@ -184,10 +222,15 @@ public class MapVersionController extends AbstractServiceAwareController {
 	public MapVersionDirectory getMapVersions(
 			HttpServletRequest httpServletRequest,
 			MapVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		return this.getMapVersions(httpServletRequest, null, restrictions, filter, page);
+		return this.getMapVersions(
+				httpServletRequest, 
+				null, 
+				restrictions, 
+				restFilter,
+				page);
 	}
 	
 	/**
@@ -196,7 +239,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the map versions
 	 */
@@ -207,13 +250,13 @@ public class MapVersionController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.mapVersionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.mapVersionQueryService);
 		
 		DirectoryResult<MapVersionDirectoryEntry> directoryResult = 
-			this.mapVersionQueryService.getResourceSummaries(query, filterComponent, restrictions, page);
+			this.mapVersionQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, page);
 		
 		MapVersionDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -251,7 +294,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param mapId the map id
 	 * @return the map versions of map count
 	 */
@@ -262,13 +305,13 @@ public class MapVersionController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			@PathVariable(VAR_MAPID) String mapId) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.mapVersionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.mapVersionQueryService);
 		
 		int count =
-			this.mapVersionQueryService.count(query, filterComponent, restrictions);
+			this.mapVersionQueryService.count(query, createSet(filterComponent), restrictions);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -280,7 +323,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the map versions count
 	 */
@@ -291,13 +334,14 @@ public class MapVersionController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.mapVersionQueryService);
+		ResolvedFilter filterComponent = 
+				this.processFilter(restFilter, this.mapVersionQueryService);
 		
 		int count =
-			this.mapVersionQueryService.count(query, filterComponent, restrictions);
+			this.mapVersionQueryService.count(query, createSet(filterComponent), restrictions);
 		
 		this.setCount(count, httpServletResponse);
 	}

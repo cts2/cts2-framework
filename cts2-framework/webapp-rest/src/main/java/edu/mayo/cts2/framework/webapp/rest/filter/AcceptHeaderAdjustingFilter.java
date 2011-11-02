@@ -34,7 +34,7 @@ public class AcceptHeaderAdjustingFilter implements Filter {
 		}
 		
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		
+
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> params = httpRequest.getParameterMap();
 		

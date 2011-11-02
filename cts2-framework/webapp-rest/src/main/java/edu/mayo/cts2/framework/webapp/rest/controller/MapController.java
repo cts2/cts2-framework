@@ -35,7 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
@@ -44,14 +45,14 @@ import edu.mayo.cts2.framework.model.map.MapCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownMap;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class MapController.
@@ -100,7 +101,7 @@ public class MapController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the maps
 	 */
@@ -109,10 +110,10 @@ public class MapController extends AbstractServiceAwareController {
 	public MapCatalogEntryDirectory getMaps(
 			HttpServletRequest httpServletRequest,
 			MapQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		return this.getMaps(httpServletRequest, null, restrictions, filter, page);
+		return this.getMaps(httpServletRequest, null, restrictions, restFilter, page);
 	}
 	
 	/**
@@ -121,7 +122,7 @@ public class MapController extends AbstractServiceAwareController {
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the maps
 	 */
@@ -131,14 +132,14 @@ public class MapController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,	
 			@RequestBody Query query,
 			MapQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, mapQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, mapQueryService);
 
 		DirectoryResult<MapCatalogEntrySummary> directoryResult = this.mapQueryService.getResourceSummaries(
 				null,
-				filterComponent,
+				createSet(filterComponent),
 				restrictions, 
 				page);
 
@@ -176,7 +177,7 @@ public class MapController extends AbstractServiceAwareController {
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the maps count
 	 */
 	@RequestMapping(value=PATH_MAPS, method=RequestMethod.HEAD)
@@ -185,12 +186,12 @@ public class MapController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			MapQueryServiceRestrictions restrictions,
-			Filter filter) {
-		FilterComponent filterComponent = this.processFilter(filter, mapQueryService);
+			RestFilter restFilter) {
+		ResolvedFilter filterComponent = this.processFilter(restFilter, mapQueryService);
 		
 		int count = this.mapQueryService.count(
 				null,
-				filterComponent, 
+				createSet(filterComponent), 
 				restrictions);
 		
 		this.setCount(count, httpServletResponse);
@@ -226,15 +227,40 @@ public class MapController extends AbstractServiceAwareController {
 	 * @param changeseturi the changeseturi
 	 * @param MapName the map name
 	 */
-	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_MAP, method=RequestMethod.POST)
 	@ResponseBody
 	public void createMap(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapCatalogEntry map,
-			@RequestParam(required=false) String changeseturi,
-			@PathVariable(VAR_MAPID) String MapName) {
+			@RequestParam(required=false) String changeseturi) {
+		
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setMap(map);
 			
-		this.mapMaintenanceService.createResource(map);
+		this.getCreateHandler().create(
+				choice,
+				changeseturi,
+				PATH_MAP_BYID,
+				URL_BINDER, 
+				this.mapMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.PUT)
+	@ResponseBody
+	public void updateMap(
+			HttpServletRequest httpServletRequest,
+			@RequestBody MapCatalogEntry map,
+			@RequestParam(required=false) String changeseturi,
+			@PathVariable(VAR_MAPID) String mapName) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setMap(map);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				ModelUtils.nameOrUriFromName(mapName),
+				this.mapMaintenanceService);
 	}
 	
 	/**

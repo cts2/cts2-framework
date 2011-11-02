@@ -35,7 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -44,12 +45,12 @@ import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectory;
 import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
 import edu.mayo.cts2.framework.model.statement.StatementMsg;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.service.profile.statement.StatementMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class StatementController.
@@ -95,17 +96,17 @@ public class StatementController extends AbstractServiceAwareController {
 	 * Gets the statements.
 	 *
 	 * @param httpServletRequest the http servlet request
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the statements
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.GET)
 	public StatementDirectory getStatements(
 			HttpServletRequest httpServletRequest,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		return this.getStatements(httpServletRequest, null, filter, page);
+		return this.getStatements(httpServletRequest, null, restFilter, page);
 	}
 	
 	/**
@@ -113,7 +114,7 @@ public class StatementController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the statements
 	 */
@@ -122,14 +123,14 @@ public class StatementController extends AbstractServiceAwareController {
 	public StatementDirectory getStatements(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.statementQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.statementQueryService);
 
 		DirectoryResult<StatementDirectoryEntry> directoryResult = this.statementQueryService.getResourceSummaries(
 				query,
-				filterComponent, 
+				createSet(filterComponent), 
 				null,
 				page);
 
@@ -162,7 +163,7 @@ public class StatementController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the statements count
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.HEAD)
@@ -170,12 +171,13 @@ public class StatementController extends AbstractServiceAwareController {
 	public void getStatementsCount(
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
-			Filter filter) {
-		FilterComponent filterComponent = this.processFilter(filter, this.statementQueryService);
+			RestFilter restFilter) {
+		
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.statementQueryService);
 		
 		int count = this.statementQueryService.count(
 				query,
-				filterComponent,
+				createSet(filterComponent),
 				null);
 		
 		this.setCount(count, httpServletResponse);
@@ -188,19 +190,19 @@ public class StatementController extends AbstractServiceAwareController {
 	 * @param statementName the statement name
 	 * @return the statement by name
 	 */
-	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.GET)
+	@RequestMapping(value="/statementbyuri", method=RequestMethod.GET)
 	@ResponseBody
-	public Message getStatementById(
+	public Message getStatementByUri(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			@PathVariable(VAR_STATEMENTID) String statementId) {
+			@RequestParam(VAR_URI) String statementUri) {
 			
 		return this.doRead(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.statementReadService, 
 				UnknownStatement.class,
-				statementId);
+				statementUri);
 	}
 	
 	/**
@@ -216,10 +218,34 @@ public class StatementController extends AbstractServiceAwareController {
 	public void createStatement(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
-			@RequestParam(required=false) String changeseturi,
-			@PathVariable(VAR_STATEMENTID) String statementName) {
+			@RequestParam(required=false) String changeseturi) {
 			
-		this.statementMaintenanceService.createResource(statement);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setStatement(statement);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi,
+				statement.getStatementURI(),
+				this.statementMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_STATEMENT, method=RequestMethod.POST)
+	@ResponseBody
+	public void updateStatement(
+			HttpServletRequest httpServletRequest,
+			@RequestBody Statement statement,
+			@RequestParam(required=false) String changeseturi) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setStatement(statement);
+		
+		this.getCreateHandler().create(
+				choice, 
+				changeseturi,
+				PATH_STATEMENTBYID,
+				URL_BINDER, 
+				this.statementMaintenanceService);
 	}
 	
 	/**

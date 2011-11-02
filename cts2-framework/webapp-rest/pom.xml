@@ -30,6 +30,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>service</artifactId>
 			<version>0.3.2-SNAPSHOT</version>

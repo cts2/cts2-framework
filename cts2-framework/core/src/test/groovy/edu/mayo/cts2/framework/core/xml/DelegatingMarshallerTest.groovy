@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.oxm.UnmarshallingFailureException
 
+import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest
 import edu.mayo.cts2.framework.model.service.core.UpdateResourceVersionDescription
 
 class DelegatingMarshallerTest {
@@ -20,6 +21,8 @@ class DelegatingMarshallerTest {
 	Resource msgValid = new ClassPathResource("xml/codeSystemMsgValid.xml");
 	Resource updateNull = new ClassPathResource("xml/updateRequestNull.xml");
 	Resource updateEmpty = new ClassPathResource("xml/updateRequestEmpty.xml");
+	
+	Resource changeSetMetaNil = new ClassPathResource("xml/updateChangeSetMetadataNil.xml");
 	
 	@Test
 	void "Test Unmarshall Valid"(){

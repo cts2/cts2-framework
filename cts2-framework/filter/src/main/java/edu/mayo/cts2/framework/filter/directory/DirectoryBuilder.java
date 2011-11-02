@@ -23,8 +23,10 @@
  */
 package edu.mayo.cts2.framework.filter.directory;
 
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
@@ -41,7 +43,9 @@ public interface DirectoryBuilder<T> {
 	 * @param filterComponent the filter component
 	 * @return the directory builder
 	 */
-	public DirectoryBuilder<T> restrict(FilterComponent filterComponent);
+	public DirectoryBuilder<T> restrict(Set<ResolvedFilter> filterComponent);
+	
+	public DirectoryBuilder<T> restrict(ResolvedFilter filterComponent);
 	
 	/**
 	 * Restrict.

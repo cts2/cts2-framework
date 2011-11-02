@@ -34,21 +34,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectory;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class ConceptDomainBindingController.
@@ -100,25 +101,49 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 * @param codeSystemName the code system name
 	 * @param conceptDomainBindingName the concept domain binding name
 	 */
-	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING, method=RequestMethod.POST)
 	@ResponseBody
 	public void createConceptDomainBinding(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ConceptDomainBinding conceptDomainBinding,
-			@RequestParam(required=false) String changeseturi,
-			@PathVariable(VAR_CONCEPTDOMAINID) String codeSystemName,
-			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingName) {
+			@RequestParam(required=false) String changeseturi) {
 			
-		this.conceptDomainBindingMaintenanceService.createResource(
-				conceptDomainBinding);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setConceptDomainBinding(conceptDomainBinding);
+		
+		this.getCreateHandler().create(
+				choice, 
+				changeseturi,
+				PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, 
+				URL_BINDER, 
+				this.conceptDomainBindingMaintenanceService);
 	}
 	
+	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, method=RequestMethod.PUT)
+	@ResponseBody
+	public void modifyConceptDomainBinding(
+			HttpServletRequest httpServletRequest,
+			@RequestBody ConceptDomainBinding conceptDomainBinding,
+			@RequestParam(required=false) String changeseturi,
+			@PathVariable(VAR_CONCEPTDOMAINID) String codeSystemName,
+			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingUri) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setConceptDomainBinding(conceptDomainBinding);
+		
+		this.getCreateHandler().create(
+				choice, 
+				changeseturi,
+				PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, 
+				URL_BINDER, 
+				this.conceptDomainBindingMaintenanceService);
+	}
 	/**
 	 * Gets the concept domain bindings of concept domain.
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param conceptDomainName the concept domain name
 	 * @return the concept domain bindings of concept domain
@@ -129,7 +154,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	public ConceptDomainBindingDirectory getConceptDomainBindingsOfConceptDomain(
 			HttpServletRequest httpServletRequest,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 	
@@ -137,7 +162,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				httpServletRequest, 
 				null, 
 				restrictions, 
-				filter, 
+				restFilter, 
 				page, 
 				conceptDomainName);
 	}
@@ -148,25 +173,30 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param conceptDomainName the concept domain name
 	 * @return the concept domain bindings of concept domain
 	 */
 	@RequestMapping(value={
-			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.PUT)
+			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.GET)
 	@ResponseBody
 	public ConceptDomainBindingDirectory getConceptDomainBindingsOfConceptDomain(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 		
 		restrictions.setConceptdomain(conceptDomainName);
 		
-		return this.getConceptDomainBindings(httpServletRequest, query, restrictions, filter, page);
+		return this.getConceptDomainBindings(
+				httpServletRequest,
+				query,
+				restrictions,
+				restFilter,
+				page);
 	}
 	
 	/**
@@ -192,23 +222,27 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param conceptDomainName the concept domain name
 	 * @return the concept domain bindings of code system count
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.HEAD)
 	@ResponseBody
-	public void getConceptDomainBindingsOfCodeSystemCount(
+	public void getConceptDomainBindingsOfConceptDomainCount(
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 		
 		restrictions.setConceptdomain(conceptDomainName);
 		
-		this.getConceptDomainBindingsCount(httpServletResponse, query, restrictions, filter);
+		this.getConceptDomainBindingsCount(
+				httpServletResponse, 
+				query, 
+				restrictions,
+				restFilter);
 	}
 
 	/**
@@ -216,7 +250,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the concept domain bindings
 	 */
@@ -226,14 +260,14 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	public ConceptDomainBindingDirectory getConceptDomainBindings(
 			HttpServletRequest httpServletRequest,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
 		return this.getConceptDomainBindings(
 				httpServletRequest, 
 				null, 
 				restrictions, 
-				filter, 
+				restFilter, 
 				page);
 	}
 	
@@ -243,7 +277,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the concept domain bindings
 	 */
@@ -254,13 +288,13 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			HttpServletRequest httpServletRequest,
 			Query query,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.conceptDomainBindingQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainBindingQueryService);
 		
 		DirectoryResult<ConceptDomainBindingDirectoryEntry> directoryResult = 
-			this.conceptDomainBindingQueryService.getResourceSummaries(query, filterComponent, restrictions, page);
+			this.conceptDomainBindingQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, page);
 		
 		ConceptDomainBindingDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -277,7 +311,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the concept domain bindings count
 	 */
 	@RequestMapping(value={
@@ -287,11 +321,11 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			HttpServletResponse httpServletResponse,
 			Query query,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
-			Filter filter) {
+			RestFilter restFilter) {
 	
-		FilterComponent filterComponent = this.processFilter(filter, this.conceptDomainBindingQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainBindingQueryService);
 		
-		int count = this.conceptDomainBindingQueryService.count(query, filterComponent, restrictions);
+		int count = this.conceptDomainBindingQueryService.count(query, createSet(filterComponent), restrictions);
 		
 		this.setCount(count, httpServletResponse);
 	}

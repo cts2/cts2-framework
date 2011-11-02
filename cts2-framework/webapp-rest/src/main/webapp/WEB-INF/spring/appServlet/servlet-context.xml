@@ -37,6 +37,7 @@
 	<beans:bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<beans:property name="messageConverters" ref="messageConverters" />
+		<beans:property name="urlDecode" value="true"/>
 	</beans:bean>
 
 	<util:list id="messageConverters">

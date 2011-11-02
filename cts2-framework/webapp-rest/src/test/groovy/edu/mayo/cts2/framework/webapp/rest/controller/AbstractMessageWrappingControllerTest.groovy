@@ -11,8 +11,8 @@ import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory
+import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult
-import edu.mayo.cts2.framework.service.command.Page
 
 
 class AbstractMessageWrappingControllerTest {
@@ -86,49 +86,5 @@ class AbstractMessageWrappingControllerTest {
 		assertEquals 2, restResource.numEntries
 	}
 	
-	@Test
-	void "Test getUrlTemplateVariables() with one"(){
-		def params = controller.getUrlTemplateVariables("/this/{is}")
-			
-		assertEquals 1, params.size()
-		assertTrue params.contains("is")
-	}
-	
-	@Test
-	void "Test getUrlTemplateVariables() with one and slash"(){
-		def params = controller.getUrlTemplateVariables("/this/{is}/")
-			
-		assertEquals 1, params.size()
-		assertTrue params.contains("is")
-	}
-	
-	@Test
-	void "Test getUrlTemplateVariables() at beginning and end"(){
-		def params = controller.getUrlTemplateVariables("{this}/{is}/")
-			
-		assertEquals 2, params.size()
-		assertTrue params.contains("this")
-		assertTrue params.contains("is")
-	}
-	
-	@Test
-	void "Test getUrlTemplateVariables() with multiple"(){
-		def params = controller.getUrlTemplateVariables("/this/{is}/a/{test}/of/this/{method}")
-			
-		assertEquals 3, params.size()
-		assertTrue params.contains("is")
-		assertTrue params.contains("test")
-		assertTrue params.contains("method")
-	}
-	
-	@Test
-	void "bindResourceToUrlTemplate"() {
-		def binder = [
-			getValueForPathAttribute : {varName,resource -> varName + "CHANGED"}
-		] as UrlTemplateBinder
-		
-		def urlPath = controller.bindResourceToUrlTemplate(binder, new CodeSystemCatalogEntry(), "/this/{is}/a/{test}/of/this/{method}")
-	
-		assertEquals "/this/isCHANGED/a/testCHANGED/of/this/methodCHANGED", urlPath
-	}
+
 }

@@ -120,6 +120,7 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 		String location = this.namespaceLocationMap.get(namespace);
 		
 		marshaller.setSchemaLocation(namespace + " " + location);
+
 		try {
 			marshaller.afterPropertiesSet();
 		} catch (Exception e) {

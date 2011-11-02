@@ -26,7 +26,7 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,19 +40,19 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class CodeSystemController.
@@ -100,20 +100,19 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 * Gets the code systems.
 	 *
 	 * @param httpServletRequest the http servlet request
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the code systems
 	 */
-	@Secured("ROLE_ADMINISTRATOR")
 	@RequestMapping(value=PATH_CODESYSTEMS, method=RequestMethod.GET)
 	@ResponseBody
 	public CodeSystemCatalogEntryDirectory getCodeSystems(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			Filter filter,
+			RestFilter resolvedFilter,
 			Page page) {
 		
-		return this.getCodeSystems(httpServletRequest, queryControl, null, filter, page);
+		return this.getCodeSystems(httpServletRequest, queryControl, null, resolvedFilter, page);
 	}
 	
 	/**
@@ -121,7 +120,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the code systems
 	 */
@@ -131,15 +130,15 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			@RequestBody Query query,
-			Filter filter,
+			RestFilter resolvedFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, codeSystemQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, codeSystemQueryService);
 
 		DirectoryResult<CodeSystemCatalogEntrySummary> directoryResult = 
 			this.codeSystemQueryService.getResourceSummaries(
 				query,
-				filterComponent, 
+				createSet(filterComponent), 
 				null, 
 				page);
 
@@ -175,7 +174,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the code systems count
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMS, method=RequestMethod.HEAD)
@@ -183,12 +182,13 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public void getCodeSystemsCount(
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
-			Filter filter) {
-		FilterComponent filterComponent = this.processFilter(filter, this.codeSystemQueryService);
+			RestFilter restFilter) {
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.codeSystemQueryService);
 		
 		int count = this.codeSystemQueryService.count(
 				query,
-				filterComponent, null);
+				createSet(filterComponent), 
+				null);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -223,18 +223,38 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	 * @param changeseturi the changeseturi
 	 * @param codeSystemName the code system name
 	 */
-	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void createCodeSystem(
+	@RequestMapping(value=PATH_CODESYSTEM, method=RequestMethod.POST)
+	public ResponseEntity<Void> createCodeSystem(
 			HttpServletRequest httpServletRequest,
 			@RequestBody CodeSystemCatalogEntry codeSystem,
-			@RequestParam(required=false) String changeseturi,
-			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
+			@RequestParam(required=false) String changeseturi) {
 
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setCodeSystem(codeSystem);
 		
-		this.doCreate(choice, changeseturi, this.codeSystemMaintenanceService);
+		return this.getCreateHandler().create(
+				choice, 
+				changeseturi, 
+				PATH_CODESYSTEMBYID,
+				URL_BINDER,
+				this.codeSystemMaintenanceService);
+	}
+
+	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.PUT)
+	@ResponseBody
+	public void updateCodeSystem(
+			HttpServletRequest httpServletRequest,
+			@RequestBody CodeSystemCatalogEntry codeSystem,
+			@RequestParam(required=false) String changeseturi) {
+
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setCodeSystem(codeSystem);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				ModelUtils.nameOrUriFromName(codeSystem.getCodeSystemName()),
+				this.codeSystemMaintenanceService);
 	}
 	
 	/**

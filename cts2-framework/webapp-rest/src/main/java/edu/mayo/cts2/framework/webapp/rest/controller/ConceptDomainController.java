@@ -35,22 +35,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntrySummary;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomain;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class ConceptDomainController.
@@ -98,7 +99,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 * Gets the concept domains.
 	 *
 	 * @param httpServletRequest the http servlet request
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return 
 	 * @return the concept domains
@@ -107,13 +108,13 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	@ResponseBody
 	public ConceptDomainCatalogEntryDirectory getConceptDomains(
 			HttpServletRequest httpServletRequest,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
 		return this.getConceptDomains(
 				httpServletRequest,
 				null, 
-				filter, 
+				restFilter, 
 				page);
 	}
 
@@ -122,7 +123,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return 
 	 * @return the concept domains
@@ -132,16 +133,17 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	public ConceptDomainCatalogEntryDirectory getConceptDomains(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.conceptDomainQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainQueryService);
 
-		DirectoryResult<ConceptDomainCatalogEntrySummary> directoryResult = this.conceptDomainQueryService.getResourceSummaries(
-				query,
-				filterComponent, 
-				null, 
-				page);
+		DirectoryResult<ConceptDomainCatalogEntrySummary> directoryResult = 
+				this.conceptDomainQueryService.getResourceSummaries(
+					query,
+					createSet(filterComponent), 
+					null, 
+					page);
 
 		ConceptDomainCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -175,7 +177,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the concept domains count
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAINS, method=RequestMethod.HEAD)
@@ -183,12 +185,12 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	public void getConceptDomainsCount(
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
-			Filter filter) {
-		FilterComponent filterComponent = this.processFilter(filter, this.conceptDomainQueryService);
+			RestFilter restFilter) {
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainQueryService);
 		
 		int count = this.conceptDomainQueryService.count(
 				query,
-				filterComponent, 
+				createSet(filterComponent), 
 				null);
 		
 		this.setCount(count, httpServletResponse);
@@ -225,16 +227,40 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 * @param changeseturi the changeseturi
 	 * @param conceptDomainName the concept domain name
 	 */
-	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_CONCEPTDOMAIN, method=RequestMethod.POST)
 	@ResponseBody
 	public void createConceptDomain(
+			HttpServletRequest httpServletRequest,
+			@RequestBody ConceptDomainCatalogEntry conceptDomain,
+			@RequestParam(required=false) String changeseturi) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setConceptDomain(conceptDomain);
+		
+		this.getCreateHandler().create(
+				choice, 
+				changeseturi, 
+				PATH_CONCEPTDOMAIN_BYID, 
+				URL_BINDER, 
+				this.conceptDomainMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.PUT)
+	@ResponseBody
+	public void updateConceptDomain(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 			
-		this.conceptDomainMaintenanceService.createResource(
-				conceptDomain);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setConceptDomain(conceptDomain);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				ModelUtils.nameOrUriFromName(conceptDomainName), 
+				this.conceptDomainMaintenanceService);
 	}
 	
 	/**

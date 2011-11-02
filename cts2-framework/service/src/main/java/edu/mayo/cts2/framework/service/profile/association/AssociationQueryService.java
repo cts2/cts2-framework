@@ -23,13 +23,15 @@
  */
 package edu.mayo.cts2.framework.service.profile.association;
 
+import java.util.Set;
+
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
@@ -53,7 +55,7 @@ public interface AssociationQueryService extends
 	 */
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Page page,
 			EntityDescriptionReadId entity);
 
@@ -69,7 +71,7 @@ public interface AssociationQueryService extends
 	 */
 	public DirectoryResult<AssociationDirectoryEntry> getSourceOfAssociationsOfEntity(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent,
 			Page page, 
 			EntityDescriptionReadId entity);
 }

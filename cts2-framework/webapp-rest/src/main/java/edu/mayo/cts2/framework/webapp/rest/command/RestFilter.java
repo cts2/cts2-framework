@@ -21,29 +21,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.command;
+package edu.mayo.cts2.framework.webapp.rest.command;
 
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 
 /**
- * The Class Filter.
+ * The Class ResolvedFilter.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class Filter {
+public class RestFilter {
 	
 	private String matchalgorithm = ExternalCts2Constants.MATCH_CONTAINS_NAME;
 	private String filtercomponent = ExternalCts2Constants.MA_RESOURCE_SYNOPSIS_NAME;
 	private String matchvalue;
 	private TargetReferenceType referencetype = TargetReferenceType.ATTRIBUTE;
 
-	public String getMatchalgorithm() {
+	public String getMatchAlgorithmName() {
 		return matchalgorithm;
 	}
 
-	public void setMatchalgorithm(String matchalgorithm) {
-		this.matchalgorithm = matchalgorithm;
+	public void setMatchAlgorithmName(String matchAlgorithmName) {
+		this.matchalgorithm = matchAlgorithmName;
 	}
 
 	public String getMatchValue() {
@@ -54,11 +54,11 @@ public class Filter {
 		this.matchvalue = matchValue;
 	}
 
-	public void setFiltercomponent(String filtercomponent) {
-		this.filtercomponent = filtercomponent;
+	public void setFilterComponentName(String filterComponentName) {
+		this.filtercomponent = filterComponentName;
 	}
 
-	public String getFiltercomponent() {
+	public String getFilterComponentName() {
 		return filtercomponent;
 	}
 

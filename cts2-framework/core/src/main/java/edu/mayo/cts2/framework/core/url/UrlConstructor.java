@@ -170,7 +170,7 @@ public class UrlConstructor {
 	 */
 	public String createValueSetDefinitionUrl(String valueSetName, String valueSetDefinitionDocumentUri) {
 		return this.createValueSetUrl(valueSetName) + "/" +
-					URIHelperInterface.VALUESETDEFINITION + "/" + valueSetDefinitionDocumentUri;
+					URIHelperInterface.VALUESETDEFINITION_SHORT + "/" + valueSetDefinitionDocumentUri;
 	}
 	
 	/**

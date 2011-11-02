@@ -37,7 +37,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 
 /**
  * The Class MethodTimingAspect.
@@ -57,7 +57,7 @@ public class MethodTimingAspect {
 	 * @throws Throwable the throwable
 	 */
 	@Around("execution(public *"
-	        + " edu.mayo.cts2.framework.webapp.rest.controller.*.*(..,edu.mayo.cts2.framework.service.command.QueryControl,..))")
+	        + " edu.mayo.cts2.framework.webapp.rest.controller.*.*(..,edu.mayo.cts2.framework.webapp.rest.command.QueryControl,..))")
 	    public Object profile(final ProceedingJoinPoint pjp) throws Throwable {
 
 		QueryControl queryControl = null;

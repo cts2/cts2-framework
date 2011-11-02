@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,18 +41,19 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 
 /**
@@ -110,15 +112,37 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	 * @param codeSystemName the code system name
 	 * @param codeSystemVersionName the code system version name
 	 */
-	@RequestMapping(value=PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void createCodeSystemVersion(
+	@RequestMapping(value=PATH_CODESYSTEMVERSION, method=RequestMethod.POST)
+	public ResponseEntity<Void> createCodeSystemVersion(
+			@RequestParam(required=false) String changeseturi,
+			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setCodeSystemVersion(codeSystemVersion);
+		
+		return this.getCreateHandler().create(
+				choice, 
+				changeseturi, 
+				PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID,
+				URL_BINDER,
+				this.codeSystemVersionMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEMVERSION, method=RequestMethod.PUT)
+	public void updateCodeSystemVersion(
 			@RequestParam(required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
 			
-		this.codeSystemVersionMaintenanceService.createResource(codeSystemVersion);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setCodeSystemVersion(codeSystemVersion);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				ModelUtils.nameOrUriFromName(codeSystemVersionName), 
+				this.codeSystemVersionMaintenanceService);
 	}
 	
 	/**
@@ -126,7 +150,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param codeSystemId the code system id
 	 * @return the code system versions of code system
@@ -137,18 +161,18 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersionsOfCodeSystem(
 			HttpServletRequest httpServletRequest,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemId) {
 		
 		restrictions.setCodesystem(codeSystemId);
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.codeSystemVersionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
 			
 		DirectoryResult<CodeSystemVersionCatalogEntrySummary> directoryResult = 
 			this.codeSystemVersionQueryService.getResourceSummaries(
 					null, 
-					filterComponent, 
+					createSet(filterComponent), 
 					restrictions, 
 					page);
 		
@@ -187,7 +211,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	 *
 	 * @param httpServletResponse the http servlet response
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param codeSystemId the code system id
 	 * @return the code system versions of code system count
 	 */
@@ -197,14 +221,14 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	public void getCodeSystemVersionsOfCodeSystemCount(
 			HttpServletResponse httpServletResponse,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter resolvedFilter,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemId) {
 		restrictions.setCodesystem(codeSystemId);
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.codeSystemVersionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
 		
 		int count =
-			this.codeSystemVersionQueryService.count(null, filterComponent, restrictions);
+			this.codeSystemVersionQueryService.count(null, createSet(filterComponent), restrictions);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -214,7 +238,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the code system versions
 	 */
@@ -224,15 +248,15 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter resolvedFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.codeSystemVersionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
 		
 		DirectoryResult<CodeSystemVersionCatalogEntrySummary> directoryResult = 
 			this.codeSystemVersionQueryService.getResourceSummaries(
 					null, 
-					filterComponent, 
+					createSet(filterComponent), 
 					restrictions, 
 					page);
 		
@@ -250,7 +274,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	 *
 	 * @param httpServletResponse the http servlet response
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the code system versions count
 	 */
 	@RequestMapping(value={
@@ -259,12 +283,12 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	public void getCodeSystemVersionsCount(
 			HttpServletResponse httpServletResponse,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
-			Filter filter) {
+			RestFilter resolvedFilter) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.codeSystemVersionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
 		
 		int count =
-			this.codeSystemVersionQueryService.count(null, filterComponent, restrictions);
+			this.codeSystemVersionQueryService.count(null, createSet(filterComponent), restrictions);
 		
 		this.setCount(count, httpServletResponse);
 	}

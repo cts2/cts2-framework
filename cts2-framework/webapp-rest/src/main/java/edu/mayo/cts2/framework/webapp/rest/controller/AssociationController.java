@@ -41,7 +41,8 @@ import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.AssociationGraph;
 import edu.mayo.cts2.framework.model.association.AssociationMsg;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
@@ -49,9 +50,8 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationMaintenanceService;
@@ -59,6 +59,7 @@ import edu.mayo.cts2.framework.service.profile.association.AssociationQueryServi
 import edu.mayo.cts2.framework.service.profile.association.AssociationReadService;
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class AssociationController.
@@ -109,7 +110,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 * Gets the children associations of entity.
 	 *
 	 * @param httpServletRequest the http servlet request
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param codeSystemName the code system name
 	 * @param codeSystemVersionName the code system version name
@@ -121,7 +122,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	public EntityDirectory getChildrenAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
@@ -131,7 +132,7 @@ public class AssociationController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				queryControl,
 				null, 
-				filter, 
+				restFilter, 
 				page, 
 				codeSystemName, 
 				codeSystemVersionName,
@@ -143,7 +144,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param codeSystemName the code system name
 	 * @param codeSystemVersionName the code system version name
@@ -156,13 +157,13 @@ public class AssociationController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			Query query,
-			Filter filter,
+			RestFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.associationQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.associationQueryService);
 		
 		EntityDescriptionReadId name = 
 				new EntityDescriptionReadId(
@@ -172,7 +173,7 @@ public class AssociationController extends AbstractServiceAwareController {
 		DirectoryResult<EntityDirectoryEntry> directoryResult = 
 			this.associationQueryService.getChildrenAssociationsOfEntity(
 					query, 
-					filterComponent,
+					createSet(filterComponent),
 					page,
 					name);
 		
@@ -189,7 +190,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 * Gets the associations of code system version.
 	 *
 	 * @param httpServletRequest the http servlet request
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param associationRestrictions the association restrictions
 	 * @param page the page
 	 * @param codeSystemName the code system name
@@ -200,7 +201,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	@ResponseBody
 	public AssociationDirectory getAssociationsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
-			Filter filter,
+			ResolvedFilter resolvedFilter,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
@@ -221,7 +222,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param associationRestrictions the association restrictions
 	 * @param page the page
 	 * @return the associations
@@ -231,14 +232,15 @@ public class AssociationController extends AbstractServiceAwareController {
 	public AssociationDirectory getAssociations(
 			HttpServletRequest httpServletRequest,
 			Query query,
-			Filter filter,
+			RestFilter resolvedFilter,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page) {
 	
-		FilterComponent filterComponent = this.processFilter(filter, this.associationQueryService);
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.associationQueryService);
 		
 		DirectoryResult<AssociationDirectoryEntry> directoryResult = 
-			this.associationQueryService.getResourceSummaries(query, filterComponent, associationRestrictions, page);
+			this.associationQueryService.
+				getResourceSummaries(query, createSet(filterComponent), associationRestrictions, page);
 		
 		AssociationDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -253,7 +255,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 * Gets the associations.
 	 *
 	 * @param httpServletRequest the http servlet request
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param associationRestrictions the association restrictions
 	 * @param page the page
 	 * @return the associations
@@ -262,7 +264,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	@ResponseBody
 	public AssociationDirectory getAssociations(
 			HttpServletRequest httpServletRequest,
-			Filter filter,
+			RestFilter resolvedFilter,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page) {
 		
@@ -270,18 +272,20 @@ public class AssociationController extends AbstractServiceAwareController {
 				this.getAssociations(
 						httpServletRequest, 
 						null, 
-						filter,
+						resolvedFilter,
 						associationRestrictions, 
 						page);
 	}
 	
-	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.GET)
+	@RequestMapping(value=PATH_ASSOCIATION_OF_CODESYSTEMVERSION_BY_URI, method=RequestMethod.GET)
 	@ResponseBody
-	public Message getAssociationByAssociationId(
+	public Message getAssociationOfCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
 			QueryControl queryControl,
-			@PathVariable(VAR_ASSOCIATIONID) String associationId) {
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@RequestParam(VAR_URI) String associationUri) {
 	
 		return this.doRead(
 				httpServletRequest,
@@ -289,7 +293,7 @@ public class AssociationController extends AbstractServiceAwareController {
 				this.associationReadService,
 				UnknownAssociation.class,
 				//TODO:
-				new AssociationReadId(associationId, null));
+				new AssociationReadId(associationUri, null));
 	}
 
 	@RequestMapping(value=PATH_ASSOCIATIONBYURI, method=RequestMethod.GET)
@@ -356,7 +360,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param associationRestrictions the association restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param codeSystemName the code system name
 	 * @param codeSystemVersionName the code system version name
@@ -369,7 +373,7 @@ public class AssociationController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			Query query,
 			AssociationQueryServiceRestrictions associationRestrictions,
-			Filter filter,
+			ResolvedFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
@@ -379,7 +383,7 @@ public class AssociationController extends AbstractServiceAwareController {
 		
 		return this.getAssociationsOfCodeSystemVersion(
 				httpServletRequest, 
-				filter,
+				resolvedFilter,
 				associationRestrictions, 
 				page, 
 				codeSystemName,
@@ -396,16 +400,41 @@ public class AssociationController extends AbstractServiceAwareController {
 	 * @param codeSystemVersionName the code system version name
 	 * @param associationName the association name
 	 */
-	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_ASSOCIATION, method=RequestMethod.POST)
 	@ResponseBody
 	public void createAssociation(
+			HttpServletRequest httpServletRequest,
+			@RequestBody Association association,
+			@RequestParam(required=false) String changeseturi) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setAssociation(association);
+		
+		this.getCreateHandler().create(
+				choice,
+				changeseturi,
+				PATH_ASSOCIATIONBYID, 
+				URL_BINDER, 
+				this.associationMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.PUT)
+	@ResponseBody
+	public void updateAssociation(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Association association,
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
-			@PathVariable(VAR_ASSOCIATIONID) String associationName) {
+			@PathVariable(VAR_ASSOCIATIONID) String associationUri) {
 			
-		this.associationMaintenanceService.createResource(association);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setAssociation(association);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi,
+				new AssociationReadId(associationUri, codeSystemVersionName), 
+				this.associationMaintenanceService);
 	}
 }

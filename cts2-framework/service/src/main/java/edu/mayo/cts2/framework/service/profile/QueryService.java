@@ -23,7 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import edu.mayo.cts2.framework.service.command.Page;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
@@ -52,7 +55,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 	 */
 	public DirectoryResult<Summary> getResourceSummaries(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			Restrictions restrictions,
 			Page page);
 	
@@ -67,7 +70,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 	 */
 	public DirectoryResult<Resource> getResourceList(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			Restrictions restrictions,
 			Page page);
 	
@@ -81,7 +84,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 	 */
 	public int count(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Restrictions restrictions);
 	
 	/**

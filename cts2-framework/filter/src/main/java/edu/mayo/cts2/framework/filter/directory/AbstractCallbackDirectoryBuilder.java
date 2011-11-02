@@ -31,10 +31,10 @@ import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 
 /**
  * The Class AbstractCallbackDirectoryBuilder.
@@ -121,19 +121,16 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 		}
 		
 		if(this.getFilterComponents().size() == 1){
-			FilterComponent filterComponent = this.getFilterComponents().iterator().next();
-			MatchAlgorithmReference matchAlgorithm = this.getMatchAlgorithm(
-					filterComponent.getMatchAlgorithm());
+			ResolvedFilter filterComponent = this.getFilterComponents().iterator().next();
 			
 			return this.callback.execute(
 					filterComponent, 
-					matchAlgorithm, 
 					DEFAULT_SCORE_THRESHOLD,
 					this.getStart(),
 					this.getMaxToReturn());
 		}
 
-		for (final FilterComponent filter : this.getFilterComponents()) {
+		for (final ResolvedFilter filter : this.getFilterComponents()) {
 
 			if (this.resultBuffer == null) {
 				this.resultBuffer = new ArrayList<T>();
@@ -173,14 +170,12 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 		}
 		
 		if(this.getFilterComponents().size() == 1){
-			FilterComponent filterComponent = this.getFilterComponents().iterator().next();
-			MatchAlgorithmReference matchAlgorithm = this.getMatchAlgorithm(
-					filterComponent.getMatchAlgorithm());
+			ResolvedFilter filterComponent = this.getFilterComponents().iterator().next();
 			
-			return this.callback.executeCount(filterComponent, matchAlgorithm, DEFAULT_SCORE_THRESHOLD);
+			return this.callback.executeCount(filterComponent, DEFAULT_SCORE_THRESHOLD);
 		}
 		
-		for (final FilterComponent filter : this.getFilterComponents()) {
+		for (final ResolvedFilter filter : this.getFilterComponents()) {
 
 			if (this.resultBuffer == null) {
 				this.resultBuffer = new ArrayList<T>();
@@ -211,13 +206,10 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 	 * @param minScore the min score
 	 * @return the directory result
 	 */
-	protected DirectoryResult<T> doRestrict(FilterComponent filterComponent, float minScore){
-		MatchAlgorithmReference matchAlgorithm = this.getMatchAlgorithm(
-				filterComponent.getMatchAlgorithm());
+	protected DirectoryResult<T> doRestrict(ResolvedFilter filterComponent, float minScore){
 
 		return this.callback.execute(
 				filterComponent, 
-				matchAlgorithm, 
 				minScore,
 				this.getStart(),
 				this.getMaxToReturn());
@@ -263,8 +255,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 		  * @return the directory result
 		  */
  		public DirectoryResult<T> execute(
-				 FilterComponent filterComponent, 
-				 MatchAlgorithmReference matchAlgorithm, 
+				 ResolvedFilter filterComponent, 
 				 float minScore,
 				 int start,
 				 int maxResults);
@@ -278,8 +269,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 		  * @return the int
 		  */
 		 public int executeCount(
-				 FilterComponent filterComponent, 
-				 MatchAlgorithmReference matchAlgorithm, 
+				 ResolvedFilter filterComponent, 
 				 float minScore);
  		
  		/**

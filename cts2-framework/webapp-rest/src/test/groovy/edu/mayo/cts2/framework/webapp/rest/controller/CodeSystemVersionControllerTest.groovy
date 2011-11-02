@@ -10,8 +10,8 @@ import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry
 import edu.mayo.cts2.framework.model.core.Message
-import edu.mayo.cts2.framework.service.command.QueryControl
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver
 
  class CodeSystemVersionControllerTest {

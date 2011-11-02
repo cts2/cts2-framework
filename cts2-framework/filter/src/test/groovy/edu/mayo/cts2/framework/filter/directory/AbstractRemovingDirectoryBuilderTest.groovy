@@ -8,7 +8,9 @@ import edu.mayo.cts2.framework.filter.match.AttributeResolver
 import edu.mayo.cts2.framework.filter.match.Matcher
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference
+import edu.mayo.cts2.framework.model.command.ResolvedFilter
 import edu.mayo.cts2.framework.model.core.FilterComponent
+import edu.mayo.cts2.framework.model.core.ModelAttributeReference
 import edu.mayo.cts2.framework.model.core.URIAndEntityName
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType
 
@@ -20,10 +22,10 @@ class AbstractRemovingDirectoryBuilderTest {
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 		
 
-		def filter = new FilterComponent(matchValue:"test")
-		def name = new URIAndEntityName(name:"string", uri:"http://string/")
-		filter.setReferenceTarget(name);
-
+		def filter = new ResolvedFilter(matchValue:"test")
+		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
+		filter.setModelAttributeReference(name);
+		
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
 		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
 		modelRef.setContent("string")
@@ -41,9 +43,9 @@ class AbstractRemovingDirectoryBuilderTest {
 	void Test_doRestrict_score_over(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
-		def filter = new FilterComponent(matchValue:"test")
-		def name = new URIAndEntityName(name:"string", uri:"http://string/")
-		filter.setReferenceTarget(name);
+		def filter = new ResolvedFilter(matchValue:"test")
+		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
+		filter.setModelAttributeReference(name);
 
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
 		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
@@ -57,7 +59,7 @@ class AbstractRemovingDirectoryBuilderTest {
 		
 		builder.addSupportedMatchAlgorithmReference(matchAlgorithm)
 		
-		filter.setMatchAlgorithm(matchAlgorithm)
+		filter.setMatchAlgorithmReference(matchAlgorithm)
 		filter.setReferenceType(TargetReferenceType.ATTRIBUTE)
 
 		def result = builder.doRestrict(filter, 0.5)
@@ -71,9 +73,9 @@ class AbstractRemovingDirectoryBuilderTest {
 	void Test_doRestrict_score_under(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
-		def filter = new FilterComponent(matchValue:"test")
-		def name = new URIAndEntityName(name:"string", uri:"http://string/")
-		filter.setReferenceTarget(name);
+		def filter = new ResolvedFilter(matchValue:"test")
+		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
+		filter.setModelAttributeReference(name);	
 
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
 		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
@@ -87,7 +89,7 @@ class AbstractRemovingDirectoryBuilderTest {
 		
 		builder.addSupportedMatchAlgorithmReference(matchAlgorithm)
 		
-		filter.setMatchAlgorithm(matchAlgorithm)
+		filter.setMatchAlgorithmReference(matchAlgorithm)
 		filter.setReferenceType(TargetReferenceType.ATTRIBUTE)
 
 		def result = builder.doRestrict(filter, 0.5)
@@ -101,9 +103,9 @@ class AbstractRemovingDirectoryBuilderTest {
 	void Test_doRestrict_score_equals(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
-		def filter = new FilterComponent(matchValue:"test")
-		def name = new URIAndEntityName(name:"string", uri:"http://string/")
-		filter.setReferenceTarget(name);
+		def filter = new ResolvedFilter(matchValue:"test")
+		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
+		filter.setModelAttributeReference(name);
 
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
 		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
@@ -117,7 +119,7 @@ class AbstractRemovingDirectoryBuilderTest {
 		
 		builder.addSupportedMatchAlgorithmReference(matchAlgorithm)
 		
-		filter.setMatchAlgorithm(matchAlgorithm)
+		filter.setMatchAlgorithmReference(matchAlgorithm)
 		filter.setReferenceType(TargetReferenceType.ATTRIBUTE)
 
 		def result = builder.doRestrict(filter, 0.5)
@@ -161,12 +163,12 @@ class AbstractRemovingDirectoryBuilderTest {
 
 class TestAbstractRemovingDirectoryBuilder extends AbstractRemovingDirectoryBuilder<String,String> {
 
-	public TestAbstractRemovingDirectoryBuilder() {
+	TestAbstractRemovingDirectoryBuilder() {
 		super(Arrays.asList("one", "two"))
 	}
 
 	@Override
-	protected List<String> transformResults(List results) {
+	List<String> transformResults(List results) {
 		return results
 	}
 }

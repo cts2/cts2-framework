@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.mayo.cts2.framework.filter.match.StateAdjustingModelAttributeReference;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
@@ -126,7 +126,7 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	private S computeState() {
 		S state = this.initialState;
 
-		for (final FilterComponent filter : this.getFilterComponents()) {
+		for (final ResolvedFilter filter : this.getFilterComponents()) {
 			if(filter == null){
 				continue;
 			}
@@ -134,7 +134,7 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 			TargetReferenceType referenceType = filter.getReferenceType();
 			
 			MatchAlgorithmReference matchAlgorithmReference = 
-					this.getMatchAlgorithm(filter.getMatchAlgorithm(), matchAlgorithmReferences);
+					this.getMatchAlgorithm(filter.getMatchAlgorithmReference(), matchAlgorithmReferences);
 			
 			String queryString = filter.getMatchValue();
 			
@@ -145,7 +145,7 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 				case ATTRIBUTE : {
 					StateAdjustingModelAttributeReference<S> modelAttributeReference = 
 						this.getModelAttributeReference(
-								filter.getReferenceTarget(),
+								filter.getModelAttributeReference(),
 								this.stateAdjustingModelAttributeReference);
 					
 					state = modelAttributeReference.updateState(

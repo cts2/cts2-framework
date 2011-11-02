@@ -34,21 +34,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionMsg;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class ValueSetDefinitionController.
@@ -95,7 +96,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param valueSetName the value set name
 	 * @return the value set definitions of value set
@@ -106,7 +107,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	public ValueSetDefinitionDirectory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 		
@@ -114,7 +115,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				httpServletRequest, 
 				null,
 				restrictions,
-				filter,
+				restFilter,
 				page, 
 				valueSetName);
 	}
@@ -125,7 +126,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param valueSetName the value set name
 	 * @return the value set definitions of value set
@@ -137,13 +138,18 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 		
 		restrictions.setValueset(valueSetName);
 		
-		return this.getValueSetDefinitions(httpServletRequest, query, restrictions, filter, page);
+		return this.getValueSetDefinitions(
+				httpServletRequest, 
+				query, 
+				restrictions, 
+				restFilter,
+				page);
 	}
 	
 	/**
@@ -169,7 +175,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param valueSetName the value set name
 	 * @return the value set definitions of value set count
 	 */
@@ -180,12 +186,16 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 		
 		restrictions.setValueset(valueSetName);
 		
-		this.getValueSetDefinitionsCount(httpServletResponse, query, restrictions, filter);
+		this.getValueSetDefinitionsCount(
+				httpServletResponse,
+				query,
+				restrictions, 
+				restFilter);
 	}
 	
 	/**
@@ -194,7 +204,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @return the value set definitions
 	 */
@@ -205,15 +215,15 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.valueSetDefinitionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetDefinitionQueryService);
 	
 		DirectoryResult<ValueSetDefinitionDirectoryEntry> directoryResult = 
 			this.valueSetDefinitionQueryService.getResourceSummaries(
 					query, 
-					filterComponent, 
+					createSet(filterComponent), 
 					restrictions, 
 					page);
 		
@@ -232,7 +242,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the value set definitions count
 	 */
 	@RequestMapping(value={
@@ -242,14 +252,14 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
-			Filter filter) {
+			RestFilter restFilter) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.valueSetDefinitionQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetDefinitionQueryService);
 		
 		int count =
 			this.valueSetDefinitionQueryService.count(
 					query, 
-					filterComponent, 
+					createSet(filterComponent), 
 					restrictions);
 		
 		this.setCount(count, httpServletResponse);
@@ -292,13 +302,38 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 */
 	@RequestMapping(value=PATH_VALUESETDEFINITION_OF_VALUESET_BYID, method=RequestMethod.PUT)
 	@ResponseBody
-	public void createValueSetDefinition(
+	public void updateValueSetDefinition(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetDefinition valueSetDefinition,
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 			
-		this.valueSetDefinitionMaintenanceService.createResource(valueSetDefinition);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setValueSetDefinition(valueSetDefinition);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				valueSetDefinitionDocumentUri, 
+				this.valueSetDefinitionMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_VALUESETDEFINITION, method=RequestMethod.POST)
+	@ResponseBody
+	public void createValueSetDefinition(
+			HttpServletRequest httpServletRequest,
+			@RequestBody ValueSetDefinition valueSetDefinition,
+			@RequestParam(required=false) String changeseturi) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setValueSetDefinition(valueSetDefinition);
+		
+		this.getCreateHandler().create(
+				choice, 
+				changeseturi, 
+				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
+				URL_BINDER, 
+				this.valueSetDefinitionMaintenanceService);
 	}
 }

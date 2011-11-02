@@ -32,12 +32,12 @@ import edu.mayo.cts2.framework.filter.match.Matcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 
 /**
  * The Class AbstractRemovingDirectoryBuilder.
@@ -144,7 +144,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 					doProcessRestriction(restriction));
 		}
 	
-		for(final FilterComponent filter : this.getFilterComponents()){
+		for(final ResolvedFilter filter : this.getFilterComponents()){
 			
 			
 						allPossibleResults.retainAll(
@@ -160,7 +160,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 */
 	public int count() {
 	
-		for(final FilterComponent filter : this.getFilterComponents()){
+		for(final ResolvedFilter filter : this.getFilterComponents()){
 			
 			
 						allPossibleResults.retainAll(
@@ -254,11 +254,11 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @param minScore the min score
 	 * @return the sets the
 	 */
-	protected Set<F> doRestrict(FilterComponent filterComponent, float minScore){
+	protected Set<F> doRestrict(ResolvedFilter filterComponent, float minScore){
 
 		Set<F> returnSet = new HashSet<F>();
 		
-		Matcher algorithm = this.getMatchAlgorithm(filterComponent.getMatchAlgorithm());
+		Matcher algorithm = this.getMatchAlgorithm(filterComponent.getMatchAlgorithmReference());
 		
 		TargetReferenceType referenceType = filterComponent.getReferenceType();
 		
@@ -290,7 +290,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @return the candidate text
 	 */
 	protected Iterable<String> getCandidateText(
-			FilterComponent filterComponent,
+			ResolvedFilter filterComponent,
 			TargetReferenceType referenceType,
 			F candidate) {
 		Iterable<String> candidateText;
@@ -298,7 +298,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 		switch (referenceType) {
 			case PROPERTY : {
 				ResolvablePredicateReference<F> modelAttributeReference = 
-					this.getResolvablePredicateReferences(filterComponent.getReferenceTarget());
+					this.getResolvablePredicateReferences(filterComponent.getPropertyReference());
 				
 				candidateText = modelAttributeReference.getModelAttributeValue(candidate);
 				break;
@@ -306,7 +306,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 			case ATTRIBUTE : {
 				ResolvableModelAttributeReference<F> modelAttributeReference = 
 					this.getModelAttributeReference(
-							filterComponent.getReferenceTarget(),
+							filterComponent.getModelAttributeReference(),
 							this.resolvableModelAttributeReferences);
 				
 				candidateText = modelAttributeReference.getModelAttributeValue(candidate);

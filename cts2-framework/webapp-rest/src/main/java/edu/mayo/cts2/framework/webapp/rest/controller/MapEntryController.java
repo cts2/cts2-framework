@@ -33,7 +33,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
@@ -42,13 +43,13 @@ import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryMsg;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQueryService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class MapEntryController.
@@ -102,7 +103,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.PUT)
 	@ResponseBody
-	public void createMapEntry(
+	public void updateMapEntry(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapEntry mapEntry,
 			@RequestParam(required=false) String changeseturi,
@@ -110,7 +111,36 @@ public class MapEntryController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
 			
-		this.mapEntryMaintenanceService.createResource(mapEntry);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setMapEntry(mapEntry);
+		
+		MapEntryReadId id = new MapEntryReadId(
+				this.getScopedEntityName(mapsFromName), 
+				mapVersionName);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				id, 
+				this.mapEntryMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_MAPENTRY, method=RequestMethod.POST)
+	@ResponseBody
+	public void createMapEntry(
+			HttpServletRequest httpServletRequest,
+			@RequestBody MapEntry mapEntry,
+			@RequestParam(required=false) String changeseturi) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setMapEntry(mapEntry);
+
+		this.getCreateHandler().create(
+				choice,
+				changeseturi, 
+				PATH_MAPENTRY_OF_MAPVERSION_BYID, 
+				URL_BINDER, 
+				this.mapEntryMaintenanceService);
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
@@ -164,7 +194,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	 *
 	 * @param httpServletRequest the http servlet request
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param mapName the map name
 	 * @param mapVersionName the map version name
@@ -176,12 +206,12 @@ public class MapEntryController extends AbstractServiceAwareController {
 	public MapEntryDirectory getMapEntries(
 			HttpServletRequest httpServletRequest,
 			MapEntryQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 		
-		return this.getMapEntries(httpServletRequest, null, restrictions, filter, page, mapName, mapVersionName);
+		return this.getMapEntries(httpServletRequest, null, restrictions, restFilter, page, mapName, mapVersionName);
 	}
 	
 	/**
@@ -190,7 +220,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param mapName the map name
 	 * @param mapVersionName the map version name
@@ -203,15 +233,19 @@ public class MapEntryController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			MapEntryQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 
-		FilterComponent filterComponent = this.processFilter(filter, this.mapEntryQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.mapEntryQueryService);
 
 		DirectoryResult<MapEntryDirectoryEntry> directoryResult = 
-			this.mapEntryQueryService.getResourceSummaries(query, filterComponent, restrictions, page);
+			this.mapEntryQueryService.getResourceSummaries(
+					query, 
+					createSet(filterComponent), 
+					restrictions, 
+					page);
 
 		MapEntryDirectory directory = this.populateDirectory(
 				directoryResult, 

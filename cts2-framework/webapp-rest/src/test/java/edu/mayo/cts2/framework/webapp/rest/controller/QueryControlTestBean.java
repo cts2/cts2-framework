@@ -2,7 +2,7 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import org.springframework.stereotype.Controller;
 
-import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 
 @Controller
 public class QueryControlTestBean {

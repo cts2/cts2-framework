@@ -7,7 +7,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletRequest
 
-import edu.mayo.cts2.framework.service.command.Page
+import edu.mayo.cts2.framework.model.command.Page;
 
  class AbstractControllerTest {
 	

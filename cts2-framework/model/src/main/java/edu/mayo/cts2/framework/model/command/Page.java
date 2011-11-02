@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.command;
+package edu.mayo.cts2.framework.model.command;
 
 /**
  * The Class Page.
@@ -42,10 +42,10 @@ public class Page implements Cloneable {
 	public void setPage(int page) {
 		this.page = page;
 	}
-	public int getMaxtoreturn() {
+	public int getMaxToReturn() {
 		return maxtoreturn;
 	}
-	public void setMaxtoreturn(int maxtoreturn) {
+	public void setMaxToReturn(int maxtoreturn) {
 		if(maxtoreturn == 0){
 			throw new IllegalArgumentException("Cannot ask for zero results.");
 		}
@@ -59,15 +59,15 @@ public class Page implements Cloneable {
 	public Page clone() throws CloneNotSupportedException {
 		Page page = new Page();
 		page.setPage(this.getPage());
-		page.setMaxtoreturn(this.getMaxtoreturn());
+		page.setMaxToReturn(this.getMaxToReturn());
 		return page;
 	}
 	
 	public int getStart(){
-		return this.getPage() * this.getMaxtoreturn();
+		return this.getPage() * this.getMaxToReturn();
 	}
 	
 	public int getEnd(){
-		return (this.getPage() + 1) * this.getMaxtoreturn();
+		return (this.getPage() + 1) * this.getMaxToReturn();
 	}
 }

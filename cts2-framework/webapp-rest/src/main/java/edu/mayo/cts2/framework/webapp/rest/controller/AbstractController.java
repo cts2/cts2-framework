@@ -26,6 +26,8 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import java.beans.PropertyEditorSupport;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -46,19 +48,21 @@ import org.springframework.web.util.UrlPathHelper;
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
+import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
+import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 
 /**
@@ -266,7 +270,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the end
 	 */
 	protected int getEnd(Page page){
-		return ( page.getPage() + 1 ) * page.getMaxtoreturn();
+		return ( page.getPage() + 1 ) * page.getMaxToReturn();
 	}
 	
 	/**
@@ -277,7 +281,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return true, if is last page
 	 */
 	protected boolean isLastPage(Page page, int pageSize){
-		return pageSize < page.getMaxtoreturn();
+		return pageSize < page.getMaxToReturn();
 	}
 	
 	/**
@@ -287,42 +291,48 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @return the start
 	 */
 	protected int getStart(Page page){
-		return page.getPage() * page.getMaxtoreturn();
+		return page.getPage() * page.getMaxToReturn();
 	}
 
 	/**
 	 * Process filter.
 	 *
-	 * @param filter the filter
+	 * @param restFilter the filter
 	 * @param service the service
 	 * @return the filter component
 	 */
-	protected FilterComponent processFilter(Filter filter, QueryService<?,?,?> service){
-		if(filter == null ||
-				StringUtils.isBlank(filter.getMatchValue())){
+	protected ResolvedFilter processFilter(RestFilter restFilter, QueryService<?,?,?> service){
+		if(restFilter == null ||
+				StringUtils.isBlank(restFilter.getMatchValue())){
 			return null;
 		}
 		
-		String matchAlgorithmReference = filter.getMatchalgorithm();
+		String matchAlgorithmReference = restFilter.getMatchAlgorithmName();
 		
 		MatchAlgorithmReference matchRef = 
 			service.getMatchAlgorithmReference(matchAlgorithmReference);
 		
 		FilterComponent filterComponent = new FilterComponent();
 		filterComponent.setMatchAlgorithm(matchRef);
-		filterComponent.setMatchValue(filter.getMatchValue());
+		filterComponent.setMatchValue(restFilter.getMatchValue());
 		
-		String nameOrUri = filter.getFiltercomponent();
+		String nameOrUri = restFilter.getFilterComponentName();
 		
-		String name;
+		ResolvedFilter resolvedFilter = new ResolvedFilter();
 		
-		switch(filter.getReferencetype()){
+		switch(restFilter.getReferencetype()){
 			case ATTRIBUTE: {
-				name = service.getModelAttributeReference(nameOrUri).getContent();
+				ModelAttributeReference modelAttributeRef = 
+						service.getModelAttributeReference(nameOrUri);
+				
+				resolvedFilter.setModelAttributeReference(modelAttributeRef);
 				break;
 			}
 			case PROPERTY: {
-				name = service.getPropertyReference(nameOrUri).getName();
+				PredicateReference propertyRef = 
+						service.getPropertyReference(nameOrUri);
+				
+				resolvedFilter.setPropertyReference(propertyRef);
 				break;
 			}
 			case SPECIAL: {
@@ -332,15 +342,11 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 				throw new IllegalStateException();
 			}
 		}
+
+		resolvedFilter.setMatchValue(restFilter.getMatchValue());
+		resolvedFilter.setReferenceType(restFilter.getReferencetype());
 		
-		URIAndEntityName uriEntityName = new URIAndEntityName();
-		uriEntityName.setName(name);
-		
-		filterComponent.setReferenceTarget(uriEntityName);
-		
-		filterComponent.setReferenceType(filter.getReferencetype());
-		
-		return filterComponent;
+		return resolvedFilter;
 	}
 	
 	/**
@@ -406,6 +412,12 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		}
 		
 		return scopedName;
+	}
+	
+	protected <T> Set<T> createSet(T element){
+		Set<T> set = new HashSet<T>();
+		set.add(element);
+		return set;
 	}
 	
 	protected ScopedEntityName getScopedEntityName(String encodedEntityName){

@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
-import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 
 
 /**

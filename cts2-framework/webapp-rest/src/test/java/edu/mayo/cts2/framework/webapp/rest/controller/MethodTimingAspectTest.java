@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
-import edu.mayo.cts2.framework.service.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value="MethodTimingAspectTest.xml")

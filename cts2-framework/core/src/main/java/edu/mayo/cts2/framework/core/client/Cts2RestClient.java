@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.core.client;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,6 +120,10 @@ public class Cts2RestClient {
 	 */
 	public void putCts2Resource(String url, Object cts2Resource){
 		this.template.put(url, cts2Resource);
+	}
+	
+	public URI postCts2Resource(String url, Object cts2Resource){
+		return this.template.postForLocation(url, cts2Resource);
 	}
 	
 	/**

@@ -27,13 +27,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
@@ -68,7 +69,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 
 	}
 	
-	private Set<FilterComponent> filterComponents = new HashSet<FilterComponent>();
+	private Set<ResolvedFilter> filterComponents = new HashSet<ResolvedFilter>();
 	
 	private Query query;
 	
@@ -78,7 +79,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 *
 	 * @param filterComponent the filter component
 	 */
-	protected void addFilterComponent(FilterComponent filterComponent) {
+	protected void addFilterComponent(ResolvedFilter filterComponent) {
 		this.filterComponents.add(filterComponent);
 	}
 
@@ -87,7 +88,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 *
 	 * @return the filter components
 	 */
-	protected Set<FilterComponent> getFilterComponents() {
+	protected Set<ResolvedFilter> getFilterComponents() {
 		return filterComponents;
 	}
 
@@ -95,7 +96,18 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 * @see edu.mayo.cts2.rest.filter.directory.DirectoryBuilder#restrict(org.cts2.core.FilterComponent)
 	 */
 	@Override
-	public DirectoryBuilder<T> restrict(FilterComponent filterComponent) {
+	public DirectoryBuilder<T> restrict(Set<ResolvedFilter> filters) {
+		if(CollectionUtils.isNotEmpty(filters)){
+			for(ResolvedFilter filter : filters){
+				this.restrict(filter);
+			}
+		}
+		
+		return this;
+	}
+	
+	
+	public DirectoryBuilder<T> restrict(ResolvedFilter filterComponent) {
 		if(filterComponent == null ||
 				StringUtils.isBlank(filterComponent.getMatchValue())){
 			return this;
@@ -151,7 +163,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 * @param references the references
 	 * @return the model attribute reference
 	 */
-	protected <M extends ModelAttributeReference> M getModelAttributeReference(M reference, List<M> references){
+	protected <M extends ModelAttributeReference> M getModelAttributeReference(ModelAttributeReference reference, List<M> references){
 		for(M modelReference : references){
 			if(StringUtils.equals(modelReference.getContent(), reference.getContent())){
 				return modelReference;

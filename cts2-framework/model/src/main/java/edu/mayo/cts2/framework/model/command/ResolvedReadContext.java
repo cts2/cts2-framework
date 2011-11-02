@@ -1,5 +1,6 @@
-package edu.mayo.cts2.framework.service.command;
+package edu.mayo.cts2.framework.model.command;
 
+import edu.mayo.cts2.framework.model.core.LanguageReference;
 import edu.mayo.cts2.framework.model.service.core.types.ActiveOrAll;
 
 public class ResolvedReadContext {
@@ -13,14 +14,14 @@ public class ResolvedReadContext {
 	 * The spoken or written language that should be used for the results of the
 	 * inquiry, where appropriate.
 	 */
-	private String referenceLanguageName;
+	private LanguageReference languageReference;
 
 	/**
 	 * The URI of an open change set whose contents should be included in the
 	 * results of the access request. changeSetContext is only applicable in
 	 * services that support the Authoring profile
 	 */
-	private java.lang.String changeSetContextUri;
+	private String changeSetContextUri;
 
 	/**
 	 * The contextual date and time of the query. referenceTime is may only be
@@ -36,12 +37,12 @@ public class ResolvedReadContext {
 		this.active = active;
 	}
 
-	public String getReferenceLanguageName() {
-		return referenceLanguageName;
+	public LanguageReference getLanguageReference() {
+		return languageReference;
 	}
 
-	public void setReferenceLanguageName(String referenceLanguageName) {
-		this.referenceLanguageName = referenceLanguageName;
+	public void setLanguageReference(LanguageReference languageReference) {
+		this.languageReference = languageReference;
 	}
 
 	public java.lang.String getChangeSetContextUri() {

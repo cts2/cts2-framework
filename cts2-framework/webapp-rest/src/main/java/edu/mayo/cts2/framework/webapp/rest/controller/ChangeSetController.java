@@ -23,12 +23,32 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.net.URI;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.types.FinalizableState;
+import edu.mayo.cts2.framework.model.exception.Cts2RestException;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest;
+import edu.mayo.cts2.framework.model.service.core.UpdatedChangeInstructions;
+import edu.mayo.cts2.framework.model.service.core.UpdatedCreator;
+import edu.mayo.cts2.framework.model.service.core.UpdatedOfficialEffectiveDate;
+import edu.mayo.cts2.framework.model.service.core.UpdatedState;
+import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.updates.ChangeSet;
 import edu.mayo.cts2.framework.service.profile.ChangeSetService;
 
@@ -42,18 +62,90 @@ public class ChangeSetController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private ChangeSetService changeSetService;
+	
+	@Resource
+	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 
-	@RequestMapping(value="/changesets", method=RequestMethod.POST)
-	@ResponseBody
-	public ChangeSet createChangeSet() {
+	@RequestMapping(value="/changeset", method=RequestMethod.POST, params="changeseturi")
+	public ResponseEntity<Void> importChangeSet(
+			@RequestParam(required=true) URI changeseturi) {
 		
-		return this.changeSetService.createChangeSet();
+		String returnedChangeSetUri = this.changeSetService.importChangeSet(changeseturi);
+		
+		return this.getResponseEntity(returnedChangeSetUri);
 	}
 	
-	@RequestMapping(value="/changesets/{changeSetUri}", method=RequestMethod.GET)
+	@RequestMapping(value="/changeset", method=RequestMethod.POST, params="!changeseturi")
+	public ResponseEntity<Void> createChangeSet() {
+		
+		ChangeSet changeSet = this.changeSetService.createChangeSet();
+		
+		return this.getResponseEntity(changeSet.getChangeSetURI());
+	}
+	
+	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.GET)
 	@ResponseBody
 	public ChangeSet readChangeSet(@PathVariable String changeSetUri) {
 		
 		return this.changeSetService.readChangeSet(changeSetUri);
+	}
+
+	
+	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.POST)
+	@ResponseBody
+	public void updateChangeSet(@PathVariable String changeSetUri, @RequestBody UpdateChangeSetMetadataRequest request) {
+		FinalizableState currentState = this.changeSetService.readChangeSet(changeSetUri).getState();
+		
+		UpdatedChangeInstructions updatedChangeInstructions = request.getUpdatedChangeInstructions();
+		UpdatedCreator updatedCreator = request.getUpdatedCreator();
+		UpdatedOfficialEffectiveDate updatedEffectiveDate = request.getUpdatedOfficialEffectiveDate();
+		
+		UpdatedState updatedState = request.getUpdatedState();
+
+		NameOrURI creator = null;
+		OpaqueData changeInstructions = null;
+		Date officialEffectiveDate = null;
+		
+		if(updatedChangeInstructions != null){
+			changeInstructions = updatedChangeInstructions.getChangeInstructions();
+		}
+		
+		if(updatedCreator != null){
+			creator = updatedCreator.getCreator();
+		}
+		
+		if(updatedEffectiveDate != null){
+			officialEffectiveDate = updatedEffectiveDate.getOfficialEffectiveDate();
+		}
+		
+		this.changeSetService.updateChangeSetMetadata(
+				changeSetUri, 
+				creator, 
+				changeInstructions, 
+				officialEffectiveDate);
+		
+		if(updatedState != null){
+			FinalizableState newState = updatedState.getState();
+			if(currentState.equals(FinalizableState.FINAL)){
+				if(newState.equals(FinalizableState.OPEN)){
+					throw new Cts2RestException(new ChangeSetIsNotOpen());
+				}
+			}
+			if(currentState.equals(FinalizableState.OPEN)){
+				if(newState.equals(FinalizableState.FINAL)){
+					this.changeSetService.commitChangeSet(changeSetUri);
+				}
+			}
+		}
+	
+	}
+	
+	private ResponseEntity<Void> getResponseEntity(String changeSetUri){
+		String location = this.urlTemplateBindingCreator.bindResourceToUrlTemplate("/changeset/{changeSetUri}", changeSetUri);
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Location", location);
+		
+		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);
 	}
 }

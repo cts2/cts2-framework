@@ -37,23 +37,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownValueSet;
+import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
-import edu.mayo.cts2.framework.service.command.Filter;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.QueryControl;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class ValueSetController.
@@ -103,7 +104,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 	 * @param httpServletRequest the http servlet request
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @param page the page
 	 * @param codeSystems the code systems
 	 * @return the value sets
@@ -114,15 +115,15 @@ public class ValueSetController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody Query query,
 			ValueSetQueryServiceRestrictions restrictions,
-			Filter filter,
+			RestFilter restFilter,
 			Page page,
 			@RequestParam(value=PARAM_CODESYSTEM, required=false) List<String> codeSystems) {
 		
-		FilterComponent filterComponent = this.processFilter(filter, this.valueSetQueryService);
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetQueryService);
 
 		DirectoryResult<ValueSetCatalogEntrySummary> directoryResult = this.valueSetQueryService.getResourceSummaries(
 				query,
-				filterComponent, 
+				createSet(filterComponent), 
 				restrictions,
 				page);
 
@@ -160,7 +161,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 	 * @param httpServletResponse the http servlet response
 	 * @param query the query
 	 * @param restrictions the restrictions
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return the value sets count
 	 */
 	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.HEAD)
@@ -169,12 +170,12 @@ public class ValueSetController extends AbstractServiceAwareController {
 			HttpServletResponse httpServletResponse,
 			@RequestBody Query query,
 			ValueSetQueryServiceRestrictions restrictions,
-			Filter filter) {
-		FilterComponent filterComponent = this.processFilter(filter, this.valueSetQueryService);
+			RestFilter restFilter) {
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetQueryService);
 		
 		int count = this.valueSetQueryService.count(
 				query,
-				filterComponent,
+				createSet(filterComponent),
 				restrictions);
 		
 		this.setCount(count, httpServletResponse);
@@ -231,12 +232,37 @@ public class ValueSetController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.PUT)
 	@ResponseBody
-	public void createValueSet(
+	public void updateValueSet(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetCatalogEntry valueSet,
 			@RequestParam(required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 			
-		this.valueSetMaintenanceService.createResource(valueSet);
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setValueSet(valueSet);
+		
+		this.getUpdateHandler().update(
+				choice, 
+				changeseturi, 
+				ModelUtils.nameOrUriFromName(valueSetName), 
+				this.valueSetMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_VALUESET, method=RequestMethod.POST)
+	@ResponseBody
+	public void createValueSet(
+			HttpServletRequest httpServletRequest,
+			@RequestBody ValueSetCatalogEntry valueSet,
+			@RequestParam(required=false) String changeseturi) {
+			
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		choice.setValueSet(valueSet);
+		
+		this.getCreateHandler().create(
+				choice, 
+				changeseturi, 
+				PATH_VALUESETBYID, 
+				URL_BINDER, 
+				this.valueSetMaintenanceService);
 	}
 }
