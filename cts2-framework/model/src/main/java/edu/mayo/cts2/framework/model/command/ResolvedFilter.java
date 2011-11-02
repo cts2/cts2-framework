@@ -40,6 +40,7 @@ public class ResolvedFilter {
 	private ModelAttributeReference modelAttributeReference;
 	private String matchValue;
 	private TargetReferenceType referenceType = TargetReferenceType.ATTRIBUTE;
+	
 	public MatchAlgorithmReference getMatchAlgorithmReference() {
 		return matchAlgorithmReference;
 	}
@@ -54,6 +55,7 @@ public class ResolvedFilter {
 	}
 
 	public void setPropertyReference(URIAndEntityName propertyReference) {
+		this.referenceType = TargetReferenceType.PROPERTY;
 		this.propertyReference = propertyReference;
 	}
 
@@ -63,6 +65,7 @@ public class ResolvedFilter {
 
 	public void setModelAttributeReference(
 			ModelAttributeReference modelAttributeReference) {
+		this.referenceType = TargetReferenceType.ATTRIBUTE;
 		this.modelAttributeReference = modelAttributeReference;
 	}
 
@@ -77,7 +80,8 @@ public class ResolvedFilter {
 	public TargetReferenceType getReferenceType() {
 		return referenceType;
 	}
-
+	
+	@Deprecated
 	public void setReferenceType(TargetReferenceType referenceType) {
 		this.referenceType = referenceType;
 	}
