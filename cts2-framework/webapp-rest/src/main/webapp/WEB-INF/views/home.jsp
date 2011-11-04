@@ -38,6 +38,11 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
       Login as Admin
     </a>
   
+      
+   <a class="abs icon" style="left:20px;top:300px;" href="editor">
+      <img src="resources/desktop/assets/images/icons/editor-icon.png" />
+      Editor
+    </a>
     
     <div id="window_service_information" class="abs window" style="height: 350px;">
       <div class="abs window_inner">

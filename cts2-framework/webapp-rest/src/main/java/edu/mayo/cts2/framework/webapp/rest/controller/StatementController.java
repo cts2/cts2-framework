@@ -51,6 +51,7 @@ import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class StatementController.
@@ -132,7 +133,7 @@ public class StatementController extends AbstractServiceAwareController {
 				query,
 				createSet(filterComponent), 
 				null,
-				page);
+				null, page);
 
 		StatementDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -194,6 +195,7 @@ public class StatementController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getStatementByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(VAR_URI) String statementUri) {
 			
@@ -201,6 +203,7 @@ public class StatementController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.statementReadService, 
+				restReadContext,
 				UnknownStatement.class,
 				statementUri);
 	}

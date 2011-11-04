@@ -53,6 +53,7 @@ import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class MapController.
@@ -141,7 +142,7 @@ public class MapController extends AbstractServiceAwareController {
 				null,
 				createSet(filterComponent),
 				restrictions, 
-				page);
+				null, page);
 
 		MapCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -208,6 +209,7 @@ public class MapController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getMapByName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_MAPID) String mapName) {
 			
@@ -215,6 +217,7 @@ public class MapController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapReadService, 
+				restReadContext,
 				UnknownMap.class,
 				ModelUtils.nameOrUriFromName(mapName));
 	}

@@ -43,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
@@ -52,6 +53,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class AbstractMessageWrappingController.
@@ -259,11 +261,14 @@ public abstract class AbstractMessageWrappingController extends
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			ReadService<R,I> readService, 
+			RestReadContext restReadContext,
 			Class<? extends UnknownResourceReference > exceptionClazz,
 			I id) {
+		
+		ResolvedReadContext resolvedContext = this.resolveRestReadContext(restReadContext);
 			
 		//TODO:  ReadContext
-		R resource = readService.read(id, null);
+		R resource = readService.read(id, resolvedContext);
 		
 		if(resource == null){
 			throw ExceptionFactory.createUnknownResourceException(id.toString(), exceptionClazz);
@@ -274,6 +279,17 @@ public abstract class AbstractMessageWrappingController extends
 		msg = this.wrapMessage(msg, httpServletRequest);
 		
 		return msg;
+	}
+	
+	protected ResolvedReadContext resolveRestReadContext(RestReadContext context){
+		if(context == null){
+			return null;
+		}
+		
+		ResolvedReadContext resolvedContext = new ResolvedReadContext();
+		resolvedContext.setChangeSetContextUri(context.getChangesetcontext());
+		//TODO: Finish this method
+		return resolvedContext;
 	}
 	
 	protected <I> void doExists(

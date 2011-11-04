@@ -53,7 +53,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 		responseHeaders.set("Location", this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
 				template,
 				cts2Resource, 
-				urlTemplate));
+				urlTemplate) + "?changesetcontext=" +  changeSetUri);
 		
 		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);
 	}

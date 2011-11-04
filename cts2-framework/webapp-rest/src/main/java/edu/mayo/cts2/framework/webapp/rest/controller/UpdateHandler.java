@@ -35,8 +35,8 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
 		} else if(group.getChangeDescription().getChangeType() == null){
 			throw new UnspecifiedCts2RuntimeException("ChangeType must be specified.");
-		} else if(group.getChangeDescription().getChangeType() != ChangeType.METADATA ||
-				group.getChangeDescription().getChangeType() != ChangeType.UPDATE){
+		} else if(! (group.getChangeDescription().getChangeType() != ChangeType.METADATA ||
+				group.getChangeDescription().getChangeType() != ChangeType.UPDATE) ){
 			throw new UnspecifiedCts2RuntimeException("Only UPDATE or METADATA changes allowed via this URL.");
 		}
 		
@@ -60,8 +60,6 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 				break;
 			}
 		}
-
-		service.createResource(cts2Resource);
 	}
 	
 	protected UpdateChangeableMetadataRequest buildUpdateMetadataRequest(ChangeableElementGroup group){

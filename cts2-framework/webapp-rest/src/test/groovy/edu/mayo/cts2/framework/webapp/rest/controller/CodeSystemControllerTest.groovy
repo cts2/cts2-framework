@@ -45,14 +45,14 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 	
 	@Test
 	void testGetCodeSystemByNameInstanceOfMessage(){
-		def result = controller.getCodeSystemByName(httpServletRequest, new QueryControl(), "id")
+		def result = controller.getCodeSystemByName(httpServletRequest, null, new QueryControl(), "id")
 		
 		assert result instanceof Message	
 	}
 	
 	@Test
 	void testGetCodeSystemByNameHasEverything(){
-		def result = controller.getCodeSystemByName(httpServletRequest, new QueryControl(), "id")
+		def result = controller.getCodeSystemByName(httpServletRequest, null, new QueryControl(), "id")
 	
 		assertNotNull result.heading
 		assertNotNull result.heading.resourceRoot

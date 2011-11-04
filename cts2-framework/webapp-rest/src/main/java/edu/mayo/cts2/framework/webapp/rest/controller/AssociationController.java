@@ -60,6 +60,7 @@ import edu.mayo.cts2.framework.service.profile.association.AssociationReadServic
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class AssociationController.
@@ -240,7 +241,7 @@ public class AssociationController extends AbstractServiceAwareController {
 		
 		DirectoryResult<AssociationDirectoryEntry> directoryResult = 
 			this.associationQueryService.
-				getResourceSummaries(query, createSet(filterComponent), associationRestrictions, page);
+				getResourceSummaries(query, createSet(filterComponent), associationRestrictions, null, page);
 		
 		AssociationDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -282,6 +283,7 @@ public class AssociationController extends AbstractServiceAwareController {
 	public Message getAssociationOfCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
@@ -291,6 +293,7 @@ public class AssociationController extends AbstractServiceAwareController {
 				httpServletRequest,
 				MESSAGE_FACTORY, 
 				this.associationReadService,
+				restReadContext,
 				UnknownAssociation.class,
 				//TODO:
 				new AssociationReadId(associationUri, null));

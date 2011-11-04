@@ -27,6 +27,7 @@ import java.net.URI;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,8 +40,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.types.FinalizableState;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest;
@@ -50,7 +54,12 @@ import edu.mayo.cts2.framework.model.service.core.UpdatedOfficialEffectiveDate;
 import edu.mayo.cts2.framework.model.service.core.UpdatedState;
 import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.updates.ChangeSet;
-import edu.mayo.cts2.framework.service.profile.ChangeSetService;
+import edu.mayo.cts2.framework.model.updates.ChangeSetDirectory;
+import edu.mayo.cts2.framework.model.updates.ChangeSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.profile.update.ChangeSetQueryExtension;
+import edu.mayo.cts2.framework.service.profile.update.ChangeSetService;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 
 /**
  * The Class CodeSystemController.
@@ -63,8 +72,37 @@ public class ChangeSetController extends AbstractServiceAwareController {
 	@Cts2Service
 	private ChangeSetService changeSetService;
 	
+	@Cts2Service
+	private ChangeSetQueryExtension changeSetQueryExtension;
+	
 	@Resource
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
+	
+	@RequestMapping(value="/changesets", method=RequestMethod.GET)
+	@ResponseBody
+	public ChangeSetDirectory getCodeSystems(
+			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
+			RestFilter resolvedFilter,
+			Page page) {
+		
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, changeSetQueryExtension);
+
+		DirectoryResult<ChangeSetDirectoryEntry> directoryResult = 
+			this.changeSetQueryExtension.getResourceSummaries(
+				null,
+				createSet(filterComponent), 
+				null, 
+				null, page);
+
+		ChangeSetDirectory directory = this.populateDirectory(
+				directoryResult, 
+				page, 
+				httpServletRequest, 
+				ChangeSetDirectory.class);
+
+		return directory;
+	}
 
 	@RequestMapping(value="/changeset", method=RequestMethod.POST, params="changeseturi")
 	public ResponseEntity<Void> importChangeSet(
@@ -88,6 +126,13 @@ public class ChangeSetController extends AbstractServiceAwareController {
 	public ChangeSet readChangeSet(@PathVariable String changeSetUri) {
 		
 		return this.changeSetService.readChangeSet(changeSetUri);
+	}
+	
+	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.DELETE)
+	@ResponseBody
+	public void rollbackChangeSet(@PathVariable String changeSetUri) {
+		
+		this.changeSetService.rollbackChangeSet(changeSetUri);
 	}
 
 	

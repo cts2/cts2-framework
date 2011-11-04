@@ -50,6 +50,7 @@ import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomai
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class ConceptDomainBindingController.
@@ -294,7 +295,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainBindingQueryService);
 		
 		DirectoryResult<ConceptDomainBindingDirectoryEntry> directoryResult = 
-			this.conceptDomainBindingQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, page);
+			this.conceptDomainBindingQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, null, page);
 		
 		ConceptDomainBindingDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -346,6 +347,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@ResponseBody
 	public Message getConceptDomainBindingByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
 			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingUri) {
 		
@@ -353,6 +355,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.conceptDomainBindingReadService, 
+				restReadContext,
 				UnknownConceptDomainBinding.class,
 				conceptDomainBindingUri);
 	}

@@ -27,6 +27,7 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
@@ -50,6 +51,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 	 * @param query the query
 	 * @param filterComponent the filter component
 	 * @param restrictions the restrictions
+	 * @param readContext TODO
 	 * @param page the page
 	 * @return the resource summaries
 	 */
@@ -57,6 +59,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 			Query query,
 			Set<ResolvedFilter> filterComponent, 
 			Restrictions restrictions,
+			ResolvedReadContext readContext, 
 			Page page);
 	
 	/**

@@ -50,6 +50,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class ValueSetDefinitionController.
@@ -225,7 +226,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 					query, 
 					createSet(filterComponent), 
 					restrictions, 
-					page);
+					null, page);
 		
 		ValueSetDefinitionDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -280,6 +281,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@ResponseBody
 	public Message getValueSetDefinitionByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 		
@@ -287,6 +289,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.valueSetDefinitionReadService, 
+				restReadContext,
 				UnknownValueSetDefinition.class,
 				valueSetDefinitionDocumentUri);
 	}

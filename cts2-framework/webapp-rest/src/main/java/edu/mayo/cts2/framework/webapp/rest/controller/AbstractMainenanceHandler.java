@@ -4,6 +4,7 @@ import java.util.Date;
 
 import edu.mayo.cts2.framework.model.core.ChangeDescription;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.types.ChangeCommitted;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
 
 public abstract class AbstractMainenanceHandler {
@@ -14,6 +15,7 @@ public abstract class AbstractMainenanceHandler {
 		group.getChangeDescription().setChangeDate(new Date());
 		group.getChangeDescription().setChangeType(changeType);
 		group.getChangeDescription().setContainingChangeSet(changeSetUri);
+		group.getChangeDescription().setCommitted(ChangeCommitted.PENDING);
 		
 		return group;
 	}

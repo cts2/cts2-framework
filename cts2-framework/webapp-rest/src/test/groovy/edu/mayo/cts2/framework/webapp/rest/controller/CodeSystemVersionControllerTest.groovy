@@ -48,14 +48,14 @@ import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver
 	
 	@Test
 	void testGetCodeSystemVersionByNameOrOfficialResourceVersionIdInstanceOfMessage(){
-		def result = controller.getCodeSystemVersionByNameOrOfficialResourceVersionId(httpServletRequest, new QueryControl(), "csname", "csvname")
+		def result = controller.getCodeSystemVersionByNameOrOfficialResourceVersionId(httpServletRequest, null, new QueryControl(), "csname", "csvname")
 		
 		assert result instanceof Message	
 	}
 	
 	@Test
 	void testGetCodeSystemVersionByNameOrOfficialResourceVersionIdNameHasEverything(){
-		def result = controller.getCodeSystemVersionByNameOrOfficialResourceVersionId(httpServletRequest, new QueryControl(), "csname", "csvname")
+		def result = controller.getCodeSystemVersionByNameOrOfficialResourceVersionId(httpServletRequest, null, new QueryControl(), "csname", "csvname")
 	
 		assertNotNull result.heading
 		assertNotNull result.heading.resourceRoot

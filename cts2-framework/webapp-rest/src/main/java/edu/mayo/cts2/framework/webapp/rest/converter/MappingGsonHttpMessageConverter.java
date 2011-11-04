@@ -41,6 +41,8 @@ import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+
 /**
  * The Class MappingGsonHttpMessageConverter.
  *
@@ -51,6 +53,17 @@ public class MappingGsonHttpMessageConverter extends AbstractHttpMessageConverte
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 	
 	private Gson gson;
+	
+	public static void main(String[] args){
+		MappingGsonHttpMessageConverter c = new MappingGsonHttpMessageConverter();
+		
+	
+		String json = "{'codeSystemName':'TESTCS','releaseFormatList':{},'about':'testAbout','keywordList':{},'resourceTypeList':{},'additionalDocumentationList':{},'sourceAndRoleList':{},'noteList':{},'propertyList':{},'alternateIDList':{},'entryState':'ACTIVE','changeableElementGroup':{'changeDescription':{'changeType':'CREATE','committed':'COMMITTED','containingChangeSet':'urn:oid:27f128f9-8252-4776-9208-86895494673c','changeDate':'Nov 1, 2011 5:27:46 PM'}}}]";
+		
+		CodeSystemCatalogEntry csce = c.gson.fromJson(json, CodeSystemCatalogEntry.class);
+		
+		System.out.println(csce.getCodeSystemName());
+	}
 	
 	/**
 	 * Instantiates a new mapping gson http message converter.

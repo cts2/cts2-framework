@@ -52,6 +52,7 @@ import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainQueryS
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class ConceptDomainController.
@@ -143,7 +144,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 					query,
 					createSet(filterComponent), 
 					null, 
-					page);
+					null, page);
 
 		ConceptDomainCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -208,6 +209,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getConceptDomainByName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 			
@@ -215,6 +217,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.conceptDomainReadService,
+				restReadContext,
 				UnknownConceptDomain.class,
 				ModelUtils.nameOrUriFromName(conceptDomainName));
 	}

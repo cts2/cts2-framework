@@ -54,6 +54,7 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 
 /**
@@ -174,7 +175,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 					null, 
 					createSet(filterComponent), 
 					restrictions, 
-					page);
+					null, page);
 		
 		CodeSystemVersionCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -258,7 +259,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 					null, 
 					createSet(filterComponent), 
 					restrictions, 
-					page);
+					null, page);
 		
 		CodeSystemVersionCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -308,6 +309,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public Message getCodeSystemVersionByNameOrOfficialResourceVersionId(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId) {
@@ -322,6 +324,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 					httpServletRequest, 
 					MESSAGE_FACTORY, 
 					this.codeSystemVersionReadService, 
+					restReadContext,
 					UnknownCodeSystemVersion.class,
 					ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
@@ -335,6 +338,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public Message getCodeSystemVersionOfCodeSystemByTag(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
@@ -344,6 +348,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.codeSystemVersionReadService, 
+				restReadContext,
 				UnknownCodeSystemVersion.class,
 				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	}

@@ -20,9 +20,10 @@
 	    <security:intercept-url method="POST" pattern="/admin/**" access="ROLE_ADMINISTRATOR" />
 	    <security:intercept-url method="PUT" pattern="/admin/**" access="ROLE_ADMINISTRATOR" />
 	    <security:intercept-url pattern="/admin" access="ROLE_ADMINISTRATOR" />
+	    <security:intercept-url pattern="/editor" access="ROLE_ADMINISTRATOR" />
 		<security:http-basic />
 	</security:http>
-	
+
 	<beans:bean id="userName" class="edu.mayo.cts2.framework.core.config.ContextConfigPropertyValueFactory">
 		<beans:property name="propertyName">
 			<util:constant static-field="edu.mayo.cts2.framework.core.config.ConfigConstants.ADMIN_USERNAME_PROPERTY"/>

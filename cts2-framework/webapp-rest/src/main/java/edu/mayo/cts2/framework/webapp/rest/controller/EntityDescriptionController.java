@@ -57,6 +57,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescripti
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
 
@@ -239,7 +240,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 					query, 
 					createSet(filterComponent), 
 					restrictions, 
-					page);
+					null, page);
 
 		EntityDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -336,7 +337,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 						query,
 						createSet(filterComponent),
 						restrictions, 
-						page);
+						null, page);
 
 		
 		EntityDirectory directory = this.populateDirectory(
@@ -390,6 +391,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public Message getEntityDescriptionByName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
@@ -405,6 +407,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.entityDescriptionReadService, 
+				restReadContext,
 				UnknownEntity.class,
 				id);
 	}

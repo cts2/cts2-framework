@@ -50,6 +50,7 @@ import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQueryService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class MapEntryController.
@@ -147,12 +148,14 @@ public class MapEntryController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getMapEntryByMapsFromName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
 		
 		return this.getMapEntryByMapsFromName(
 				httpServletRequest, 
+				restReadContext,
 				null,
 				mapName, 
 				mapVersionName,
@@ -171,6 +174,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getMapEntryByMapsFromName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
@@ -185,6 +189,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapEntryReadService, 
+				restReadContext,
 				//TODO: This needs to be fixed
 				UnknownResourceReference.class,id);
 	}
@@ -245,7 +250,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 					query, 
 					createSet(filterComponent), 
 					restrictions, 
-					page);
+					null, page);
 
 		MapEntryDirectory directory = this.populateDirectory(
 				directoryResult, 

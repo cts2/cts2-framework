@@ -53,6 +53,7 @@ import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class MapVersionController.
@@ -256,7 +257,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.mapVersionQueryService);
 		
 		DirectoryResult<MapVersionDirectoryEntry> directoryResult = 
-			this.mapVersionQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, page);
+			this.mapVersionQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, null, page);
 		
 		MapVersionDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -361,6 +362,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getMapVersionByName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 		
@@ -368,6 +370,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.mapVersionReadService, 
+				restReadContext,
 				UnknownMapVersion.class,
 				ModelUtils.nameOrUriFromName(mapVersionName));
 	}

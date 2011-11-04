@@ -42,6 +42,7 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -53,6 +54,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class CodeSystemController.
@@ -108,11 +110,18 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	@ResponseBody
 	public CodeSystemCatalogEntryDirectory getCodeSystems(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			RestFilter resolvedFilter,
 			Page page) {
 		
-		return this.getCodeSystems(httpServletRequest, queryControl, null, resolvedFilter, page);
+		return this.getCodeSystems(
+				httpServletRequest, 
+				restReadContext, 
+				queryControl, 
+				null, 
+				resolvedFilter, 
+				page);
 	}
 	
 	/**
@@ -128,19 +137,21 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	@ResponseBody
 	public CodeSystemCatalogEntryDirectory getCodeSystems(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestBody Query query,
 			RestFilter resolvedFilter,
 			Page page) {
 		
 		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, codeSystemQueryService);
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 
 		DirectoryResult<CodeSystemCatalogEntrySummary> directoryResult = 
 			this.codeSystemQueryService.getResourceSummaries(
 				query,
 				createSet(filterComponent), 
 				null, 
-				page);
+				readContext, page);
 
 		CodeSystemCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -204,6 +215,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getCodeSystemByName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 			
@@ -211,6 +223,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
 				this.codeSystemReadService, 
+				restReadContext,
 				UnknownCodeSystem.class,
 				ModelUtils.nameOrUriFromName(codeSystemName));
 	}

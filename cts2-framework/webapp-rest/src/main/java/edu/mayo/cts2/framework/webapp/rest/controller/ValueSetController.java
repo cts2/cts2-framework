@@ -55,6 +55,7 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
  * The Class ValueSetController.
@@ -125,7 +126,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 				query,
 				createSet(filterComponent), 
 				restrictions,
-				page);
+				null, page);
 
 		ValueSetCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -192,13 +193,15 @@ public class ValueSetController extends AbstractServiceAwareController {
 	@ResponseBody
 	public Message getValueSetByName(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 			
 		return this.doRead(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				this.valueSetReadService, 
+				this.valueSetReadService,
+				restReadContext,
 				UnknownValueSet.class,
 				ModelUtils.nameOrUriFromName(valueSetName));
 	}
