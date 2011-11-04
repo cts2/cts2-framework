@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,8 +59,10 @@ import edu.mayo.cts2.framework.service.profile.association.AssociationMaintenanc
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationReadService;
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 
 /**
  * The Class AssociationController.
@@ -80,6 +83,12 @@ public class AssociationController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private AdvancedAssociationQueryService advancedAssociationQueryService;
+	
+	@Cts2Service
+	private CodeSystemVersionReadService codeSystemVersionReadService;
+	
+	@Resource
+	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;	
 	
 	private static UrlTemplateBinder<Association> URL_BINDER = new 
 			UrlTemplateBinder<Association>(){
@@ -125,7 +134,7 @@ public class AssociationController extends AbstractServiceAwareController {
 			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 		
 		return this.getChildrenAssociationsOfEntity(
@@ -135,7 +144,7 @@ public class AssociationController extends AbstractServiceAwareController {
 				restFilter, 
 				page, 
 				codeSystemName, 
-				codeSystemVersionName,
+				codeSystemVersionId,
 				entityName);
 	}
 	
@@ -160,9 +169,10 @@ public class AssociationController extends AbstractServiceAwareController {
 			RestFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
-		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.associationQueryService);
 		
 		EntityDescriptionReadId name = 
@@ -205,8 +215,9 @@ public class AssociationController extends AbstractServiceAwareController {
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
-		
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		associationRestrictions.setCodesystemversion(codeSystemVersionName);
 		
 		return 
@@ -337,11 +348,12 @@ public class AssociationController extends AbstractServiceAwareController {
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@RequestParam(required=true, defaultValue="TOP_NODE") String focus,
 			@RequestParam(required=true, defaultValue="FORWARD") GraphDirection direction,
 			@RequestParam(required=true, defaultValue="1") int depth) {
-
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		AssociationGraph directoryResult = 
 			this.advancedAssociationQueryService.getAssociationGraph(
 					new EntityDescriptionReadId(
@@ -376,9 +388,10 @@ public class AssociationController extends AbstractServiceAwareController {
 			ResolvedFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
-
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		associationRestrictions.setSourceentity(entityName);
 		
 		return this.getAssociationsOfCodeSystemVersion(
