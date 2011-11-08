@@ -37,18 +37,18 @@ import edu.mayo.cts2.framework.model.service.core.NameOrURI;
  */
 public class EntityDescriptionQueryServiceRestrictions {
 
-	private Set<EntityNameOrURI> entites = new HashSet<EntityNameOrURI>();
+	private Set<EntityNameOrURI> entities = new HashSet<EntityNameOrURI>();
 	
 	private NameOrURI codeSystemVersion;
 	
 	private TaggedCodeSystemRestriction taggedCodeSystem;
 	
-	public Set<EntityNameOrURI> getEntites() {
-		return entites;
+	public Set<EntityNameOrURI> getEntities() {
+		return entities;
 	}
 
-	public void setEntites(Set<EntityNameOrURI> entites) {
-		this.entites = entites;
+	public void setEntities(Set<EntityNameOrURI> entities) {
+		this.entities = entities;
 	}
 
 	public NameOrURI getCodeSystemVersion() {
