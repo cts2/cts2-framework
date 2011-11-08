@@ -23,22 +23,83 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.RestrictionType;
+import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
+import edu.mayo.cts2.framework.model.service.mapversion.types.MapStatus;
+
 
 /**
  * The Class MapVersionQueryServiceRestrictions.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class MapVersionQueryServiceRestrictions {
+public class MapVersionQueryServiceRestrictions extends MapQueryServiceRestrictions {
 
-	private String map;
+	private NameOrURI map;
+	
+	private EntitiesRestriction entitiesRestriction;
 
-	public String getMap() {
+	public EntitiesRestriction getEntitiesRestriction() {
+		return entitiesRestriction;
+	}
+
+	public void setEntitiesRestriction(EntitiesRestriction entitiesRestriction) {
+		this.entitiesRestriction = entitiesRestriction;
+	}
+	
+	public NameOrURI getMap() {
 		return map;
 	}
 
-	public void setMap(String map) {
+	public void setMap(NameOrURI map) {
 		this.map = map;
 	}
 
+	public static class EntitiesRestriction {
+		
+		private MapStatus mapStatus;
+		
+		private MapRole mapRole;
+		
+		private RestrictionType allOrSome;
+		
+		public MapStatus getMapStatus() {
+			return mapStatus;
+		}
+
+		public void setMapStatus(MapStatus mapStatus) {
+			this.mapStatus = mapStatus;
+		}
+
+		public MapRole getMapRole() {
+			return mapRole;
+		}
+
+		public void setMapRole(MapRole mapRole) {
+			this.mapRole = mapRole;
+		}
+
+		private Set<EntityNameOrURI> entities = new HashSet<EntityNameOrURI>();
+
+		public RestrictionType getAllOrSome() {
+			return allOrSome;
+		}
+
+		public void setAllOrSome(RestrictionType allOrSome) {
+			this.allOrSome = allOrSome;
+		}
+
+		public Set<EntityNameOrURI> getEntities() {
+			return entities;
+		}
+
+		public void setEntities(Set<EntityNameOrURI> entities) {
+			this.entities = entities;
+		}
+	}
 }

@@ -23,6 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+
 /**
  * The Class AssociationQueryServiceRestrictions.
  *
@@ -30,23 +33,73 @@ package edu.mayo.cts2.framework.service.command.restriction;
  */
 public class AssociationQueryServiceRestrictions {
 
-	private String codesystemversion;
+	private NameOrURI codeSystemVersion;
 	
-	private String sourceentity;
+	private EntityNameOrURI sourceEntity;
+	
+	private EntityNameOrURI targetEntity;
+	
+	private EntityNameOrURI sourceOrTargetEntity;
+	
+	private EntityNameOrURI targetLiteral;
 
-	public void setSourceentity(String sourceentity) {
-		this.sourceentity = sourceentity;
+	private EntityNameOrURI predicate;
+	
+	private EntityNameOrURI targetExpression;
+
+	public NameOrURI getCodeSystemVersion() {
+		return codeSystemVersion;
 	}
 
-	public String getSourceentity() {
-		return sourceentity;
+	public void setCodeSystemVersion(NameOrURI codeSystemVersion) {
+		this.codeSystemVersion = codeSystemVersion;
 	}
 
-	public String getCodesystemversion() {
-		return codesystemversion;
+	public EntityNameOrURI getSourceEntity() {
+		return sourceEntity;
 	}
 
-	public void setCodesystemversion(String codesystemversion) {
-		this.codesystemversion = codesystemversion;
+	public void setSourceEntity(EntityNameOrURI sourceEntity) {
+		this.sourceEntity = sourceEntity;
+	}
+
+	public EntityNameOrURI getTargetEntity() {
+		return targetEntity;
+	}
+
+	public void setTargetEntity(EntityNameOrURI targetEntity) {
+		this.targetEntity = targetEntity;
+	}
+
+	public EntityNameOrURI getSourceOrTargetEntity() {
+		return sourceOrTargetEntity;
+	}
+
+	public void setSourceOrTargetEntity(EntityNameOrURI sourceOrTargetEntity) {
+		this.sourceOrTargetEntity = sourceOrTargetEntity;
+	}
+
+	public EntityNameOrURI getTargetLiteral() {
+		return targetLiteral;
+	}
+
+	public void setTargetLiteral(EntityNameOrURI targetLiteral) {
+		this.targetLiteral = targetLiteral;
+	}
+
+	public EntityNameOrURI getPredicate() {
+		return predicate;
+	}
+
+	public void setPredicate(EntityNameOrURI predicate) {
+		this.predicate = predicate;
+	}
+
+	public EntityNameOrURI getTargetExpression() {
+		return targetExpression;
+	}
+
+	public void setTargetExpression(EntityNameOrURI targetExpression) {
+		this.targetExpression = targetExpression;
 	}
 }

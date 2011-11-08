@@ -53,14 +53,14 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	private List<Restriction<F>> restrictions = new ArrayList<Restriction<F>>();
 		
 	/** The match algorithm references. */
-	private List<ResolvableMatchAlgorithmReference> matchAlgorithmReferences = 
-		new ArrayList<ResolvableMatchAlgorithmReference>();
+	private Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences = 
+		new HashSet<ResolvableMatchAlgorithmReference>();
 	
-	private List<ResolvableModelAttributeReference<F>> resolvableModelAttributeReferences = 
-		new ArrayList<ResolvableModelAttributeReference<F>>();
+	private Set<ResolvableModelAttributeReference<F>> resolvableModelAttributeReferences = 
+		new HashSet<ResolvableModelAttributeReference<F>>();
 	
-	private List<ResolvablePredicateReference<F>> resolvablePredicateReferences = 
-		new ArrayList<ResolvablePredicateReference<F>>();
+	private Set<ResolvablePredicateReference<F>> resolvablePredicateReferences = 
+		new HashSet<ResolvablePredicateReference<F>>();
 	
 	private Set<F> allPossibleResults;
 	
@@ -85,9 +85,9 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 */
 	public AbstractRemovingDirectoryBuilder(
 			List<F> allPossibleResults,
-			List<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			List<ResolvableModelAttributeReference<F>> resolvableModelAttributeReferences,
-			List<ResolvablePredicateReference<F>> resolvablePredicateReferences
+			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
+			Set<ResolvableModelAttributeReference<F>> resolvableModelAttributeReferences,
+			Set<ResolvablePredicateReference<F>> resolvablePredicateReferences
 			){
 		super();
 		this.allPossibleResults = new HashSet<F>(allPossibleResults);

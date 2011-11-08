@@ -23,10 +23,16 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,12 +48,20 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectory;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectoryEntry;
+import edu.mayo.cts2.framework.model.mapversion.MapVersionList;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionMsg;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.core.types.RestrictionType;
 import edu.mayo.cts2.framework.model.service.exception.UnknownMapVersion;
+import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
+import edu.mayo.cts2.framework.model.service.mapversion.types.MapStatus;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions.CodeSystemRestriction;
+import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions.ValueSetRestriction;
 import edu.mayo.cts2.framework.service.command.restriction.MapVersionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.MapVersionQueryServiceRestrictions.EntitiesRestriction;
+import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionHistoryService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
@@ -71,6 +85,9 @@ public class MapVersionController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private MapVersionMaintenanceService mapVersionMaintenanceService;
+	
+	@Cts2Service
+	private MapVersionHistoryService mapVersionHistoryService;
 	
 	private static UrlTemplateBinder<MapVersion> URL_BINDER = new 
 			UrlTemplateBinder<MapVersion>(){
@@ -99,6 +116,63 @@ public class MapVersionController extends AbstractServiceAwareController {
 			return msg;
 		}
 	};
+	
+	@RequestMapping(value=PATH_MAPVERSION_CHANGEHISTORY, method=RequestMethod.GET)
+	@ResponseBody
+	public MapVersionList getChangeHistory(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
+			@RequestParam(required=false) Date PARAM_FROMDATE,
+			@RequestParam(required=false) Date PARAM_TODATE,
+			Page page) {
+	
+		DirectoryResult<MapVersion> result = 
+				this.mapVersionHistoryService.getChangeHistory(
+						ModelUtils.nameOrUriFromName(mapVersionName),
+						PARAM_FROMDATE,
+						PARAM_TODATE);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				MapVersionList.class);	
+	}
+	
+	@RequestMapping(value=PATH_MAPVERSION_EARLIESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public MapVersionMsg getEarliesChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
+	
+		MapVersion result = 
+				this.mapVersionHistoryService.getEarliestChangeFor(
+						ModelUtils.nameOrUriFromName(mapVersionName));
+		
+		MapVersionMsg msg = new MapVersionMsg();
+		msg.setMapVersion(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_MAPVERSION_LATESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public MapVersionMsg getLastChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
+	
+		MapVersion result = 
+				this.mapVersionHistoryService.getLastChangeFor(
+						ModelUtils.nameOrUriFromName(mapVersionName));
+	
+		MapVersionMsg msg = new MapVersionMsg();
+		msg.setMapVersion(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
 	
 	/**
 	 * Creates the map version.
@@ -166,7 +240,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 			Page page,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
-		restrictions.setMap(mapName);
+		restrictions.setMap(ModelUtils.nameOrUriFromEither(mapName));
 		
 		return this.getMapVersions(
 				httpServletRequest, 
@@ -198,7 +272,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 			Page page,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
-		restrictions.setMap(mapName);
+		restrictions.setMap(ModelUtils.nameOrUriFromEither(mapName));
 		
 		return this.getMapVersions(
 				httpServletRequest,
@@ -218,7 +292,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 * @return the map versions
 	 */
 	@RequestMapping(value={
-			PATH_MAPVERSIONS_OF_MAP}, method=RequestMethod.GET)
+			PATH_MAPVERSIONS}, method=RequestMethod.GET)
 	@ResponseBody
 	public MapVersionDirectory getMapVersions(
 			HttpServletRequest httpServletRequest,
@@ -392,5 +466,47 @@ public class MapVersionController extends AbstractServiceAwareController {
 				this.mapVersionReadService,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
+	}
+	
+	@InitBinder
+	 public void initCodeSystemRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity,
+			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> valueset,
+			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> codesystem,
+			 @RequestParam(value=PARAM_ENTITIES_MAPROLE, required=false) MapRole entitiesmaprole,
+			 @RequestParam(value=PARAM_ENTITIES_MAPSTATUS, required=false) MapStatus mapstatus,
+			 @RequestParam(value=PARAM_ALL_OR_SOME, required=false) RestrictionType allorsome,
+			 @RequestParam(value=PARAM_CODESYSTEMS_MAPROLE, required=false) MapRole codesystemsmaprole,
+			 @RequestParam(value=PARAM_VALUESETS_MAPROLE, required=false) MapRole valuesetsmaprole) {
+		
+		if(binder.getTarget() instanceof MapVersionQueryServiceRestrictions){
+			MapVersionQueryServiceRestrictions restrictions = 
+					(MapVersionQueryServiceRestrictions) binder.getTarget();
+
+			if(CollectionUtils.isNotEmpty(entity)){
+				restrictions.setEntitiesRestriction(new EntitiesRestriction());
+				restrictions.getEntitiesRestriction().setEntities(
+						ControllerUtils.idsToEntityNameOrUriSet(entity));
+				
+				restrictions.getEntitiesRestriction().setAllOrSome(allorsome);
+				restrictions.getEntitiesRestriction().setMapRole(entitiesmaprole);
+				restrictions.getEntitiesRestriction().setMapStatus(mapstatus);
+			}		
+			
+			if(CollectionUtils.isNotEmpty(valueset)){
+				restrictions.setValueSetRestriction(new ValueSetRestriction());
+				restrictions.getValueSetRestriction().setMapRole(valuesetsmaprole);
+				restrictions.getValueSetRestriction().setValueSets(
+						ControllerUtils.idsToNameOrUriSet(valueset));
+			}
+			
+			if(CollectionUtils.isNotEmpty(codesystem)){
+				restrictions.setCodeSystemRestriction(new CodeSystemRestriction());
+				restrictions.getCodeSystemRestriction().setMapRole(codesystemsmaprole);
+				restrictions.getCodeSystemRestriction().setCodeSystems(
+						ControllerUtils.idsToNameOrUriSet(codesystem));
+			}
+		}
 	}
 }

@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +41,7 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryDirectory;
+import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryList;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.core.Message;
@@ -47,6 +50,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomain;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainHistoryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
@@ -70,6 +74,9 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private ConceptDomainMaintenanceService conceptDomainMaintenanceService;
+	
+	@Cts2Service
+	private ConceptDomainHistoryService conceptDomainHistoryService;
 
 	private final static UrlTemplateBinder<ConceptDomainCatalogEntry> URL_BINDER =
 			new UrlTemplateBinder<ConceptDomainCatalogEntry>(){
@@ -95,6 +102,58 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			return msg;
 		}
 	};
+	
+	@RequestMapping(value=PATH_CONCEPTDOMAIN_CHANGEHISTORY, method=RequestMethod.GET)
+	@ResponseBody
+	public ConceptDomainCatalogEntryList getChangeHistory(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
+			@RequestParam(required=false) Date PARAM_FROMDATE,
+			@RequestParam(required=false) Date PARAM_TODATE,
+			Page page) {
+	
+		DirectoryResult<ConceptDomainCatalogEntry> result = 
+				this.conceptDomainHistoryService.getChangeHistory(
+						ModelUtils.nameOrUriFromName(conceptDomainName),
+						PARAM_FROMDATE,
+						PARAM_TODATE);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				ConceptDomainCatalogEntryList.class);	
+	}
+	
+	@RequestMapping(value=PATH_CONCEPTDOMAIN_EARLIESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public ConceptDomainCatalogEntryMsg getEarliesChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
+	
+		ConceptDomainCatalogEntry result = 
+				this.conceptDomainHistoryService.getEarliestChangeFor(ModelUtils.nameOrUriFromName(conceptDomainName));
+		
+		ConceptDomainCatalogEntryMsg msg = new ConceptDomainCatalogEntryMsg();
+		msg.setConceptDomainCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_CONCEPTDOMAIN_LATESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public ConceptDomainCatalogEntryMsg getLastChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
+	
+		ConceptDomainCatalogEntry result = 
+				this.conceptDomainHistoryService.getLastChangeFor(ModelUtils.nameOrUriFromName(conceptDomainName));
+	
+		ConceptDomainCatalogEntryMsg msg = new ConceptDomainCatalogEntryMsg();
+		msg.setConceptDomainCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
 	
 	/**
 	 * Gets the concept domains.

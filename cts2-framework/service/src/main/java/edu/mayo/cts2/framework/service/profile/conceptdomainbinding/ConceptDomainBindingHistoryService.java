@@ -32,5 +32,5 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ConceptDomainBindingHistoryService extends
-		HistoryService<ConceptDomainBinding> {
+		HistoryService<ConceptDomainBinding,String> {
 }

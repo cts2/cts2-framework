@@ -8,6 +8,7 @@
 <script type="text/javascript" src="resources/editor/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="resources/editor/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="resources/editor/js/jquery.json-2.3.min.js"></script>
+<script type="text/javascript" src="resources/editor/js/jquery.ui.selectmenu.js"></script>
 <script type="text/javascript" src="resources/editor/js/main.js"></script>
 <script type="text/javascript" src="resources/editor/js/editor.js"></script>
 
@@ -56,10 +57,13 @@ Select A Theme: <div id="switcher"></div>
 	</ul>
 	<div id="tabs-1">
 
+		<label for="changeSetDropdown">ChangeSet: </label>
 		<select id="changeSetDropdown" name="changeSetDropdown"></select>
-		
-		<input type="button" id="listCodeSystems" value="List CodeSystems" name="listCodeSystems"/>
+
+		<input type="submit" id="listCodeSystems" value="List CodeSystems" name="listCodeSystems" onclick="onListCodeSystems()"/>
 				
+		<br></br>	
+						
 		<table id="codeSystemTable" class="display">
               <thead>
                 <tr>
@@ -77,15 +81,19 @@ Select A Theme: <div id="switcher"></div>
             </table>
 	</div>
 	<div id="tabs-2">
-		<select id="codeSystemChangeSetDropdown" name="codeSystemChangeSetDropdown"></select>
+	
+		<label for="csChangeSetDropdown">ChangeSet: </label>
+		<select id="csChangeSetDropdown">
+			</select>
 			
-		<form id="themeform"  style="margin-left:200px;width:50%">
+		<form style="width:50%">
 		
 			<fieldset>
 			<legend>Create</legend>
 			<table>
 			<tr><td>Code System Name </td><td><input id="csn" name="csn" type="text"  /></td></tr>
 			<tr><td>About </td><td><input id="about" name="about" type="text"  /></td></tr>
+	
 			
 			<tr><td><input type="submit" value="Create" onclick="create();"/></td></tr>
 			

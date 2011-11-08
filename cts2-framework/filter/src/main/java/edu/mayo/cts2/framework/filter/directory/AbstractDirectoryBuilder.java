@@ -138,7 +138,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 * @param references the references
 	 * @return the match algorithm
 	 */
-	protected MatchAlgorithmReference getMatchAlgorithm(MatchAlgorithmReference reference, List<MatchAlgorithmReference> references){
+	protected MatchAlgorithmReference getMatchAlgorithm(MatchAlgorithmReference reference, Iterable<MatchAlgorithmReference> references){
 		for(MatchAlgorithmReference matchAlgorithm : references){
 			if(StringUtils.equals(matchAlgorithm.getContent(), reference.getContent())){
 				return matchAlgorithm;
@@ -163,7 +163,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 * @param references the references
 	 * @return the model attribute reference
 	 */
-	protected <M extends ModelAttributeReference> M getModelAttributeReference(ModelAttributeReference reference, List<M> references){
+	protected <M extends ModelAttributeReference> M getModelAttributeReference(ModelAttributeReference reference, Iterable<M> references){
 		for(M modelReference : references){
 			if(StringUtils.equals(modelReference.getContent(), reference.getContent())){
 				return modelReference;

@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,6 +43,7 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryDirectory;
+import edu.mayo.cts2.framework.model.map.MapCatalogEntryList;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -48,6 +51,7 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownMap;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.map.MapHistoryService;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
@@ -71,6 +75,9 @@ public class MapController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private MapMaintenanceService mapMaintenanceService;
+	
+	@Cts2Service
+	private MapHistoryService mapHistoryService;
 	
 	private static UrlTemplateBinder<MapCatalogEntry> URL_BINDER = new 
 			UrlTemplateBinder<MapCatalogEntry>(){
@@ -96,6 +103,58 @@ public class MapController extends AbstractServiceAwareController {
 			return msg;
 		}
 	};
+	
+	@RequestMapping(value=PATH_MAP_CHANGEHISTORY, method=RequestMethod.GET)
+	@ResponseBody
+	public MapCatalogEntryList getChangeHistory(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName,
+			@RequestParam(required=false) Date PARAM_FROMDATE,
+			@RequestParam(required=false) Date PARAM_TODATE,
+			Page page) {
+	
+		DirectoryResult<MapCatalogEntry> result = 
+				this.mapHistoryService.getChangeHistory(
+						ModelUtils.nameOrUriFromName(mapName),
+						PARAM_FROMDATE,
+						PARAM_TODATE);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				MapCatalogEntryList.class);	
+	}
+	
+	@RequestMapping(value=PATH_MAP_EARLIESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public MapCatalogEntryMsg getEarliesChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName) {
+	
+		MapCatalogEntry result = 
+				this.mapHistoryService.getEarliestChangeFor(ModelUtils.nameOrUriFromName(mapName));
+		
+		MapCatalogEntryMsg msg = new MapCatalogEntryMsg();
+		msg.setMap(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_MAP_LATESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public MapCatalogEntryMsg getLastChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName) {
+	
+		MapCatalogEntry result = 
+				this.mapHistoryService.getLastChangeFor(ModelUtils.nameOrUriFromName(mapName));
+	
+		MapCatalogEntryMsg msg = new MapCatalogEntryMsg();
+		msg.setMap(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
 	
 	/**
 	 * Gets the maps.

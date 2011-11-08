@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapversion;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface MapVersionHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.mapversion.MapVersion;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MapVersionHistoryService extends
-		HistoryService<MapVersion> {
+		HistoryService<MapVersion,NameOrURI> {
 }

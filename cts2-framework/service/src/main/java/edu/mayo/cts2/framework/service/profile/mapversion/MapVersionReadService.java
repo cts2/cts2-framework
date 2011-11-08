@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapversion;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
@@ -34,6 +35,11 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
  */
 public interface MapVersionReadService extends
 		ReadService<MapVersion, NameOrURI> {
+	
+	public boolean existsMapVersionForMap(NameOrURI map, String tagName, ResolvedReadContext readContext);
+	
+	public MapVersion readMapVersionForMap(NameOrURI map, String tagName, ResolvedReadContext readContext);
+
 }
 
 

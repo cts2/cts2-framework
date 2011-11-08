@@ -23,45 +23,49 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import java.util.Date;
+import java.util.Set;
 
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
+import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
+import edu.mayo.cts2.framework.model.core.PredicateReference;
 
 /**
- * The Interface HistoryService.
+ * The Interface QueryService.
  *
- * @param <R> the generic type
+ * @param <Resource> the generic type
+ * @param <Summary> the generic type
+ * @param <Restrictions> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface HistoryService<R,I> extends Cts2Profile {
+public interface BaseQueryService extends Cts2Profile {
 
-	public Date getEarliestChange();
+	/**
+	 * Gets the match algorithm reference.
+	 *
+	 * @param nameOrUri the name or uri
+	 * @return the match algorithm reference
+	 */
+	public MatchAlgorithmReference getMatchAlgorithmReference(String nameOrUri);
 	
-	public Date getLatestChange();
+	public Set<? extends MatchAlgorithmReference> getSupportedMatchAlgorithms();
 	
-	public DirectoryResult<R> getChangeHistory(I identifier, Date fromDate, Date toDate);
+	public Set<? extends ModelAttributeReference> getSupportedModelAttributes();
+	
+	public Set<? extends PredicateReference> getSupportedProperties();
 	
 	/**
-	 * Gets the earliest change for.
+	 * Gets the model attribute reference.
 	 *
-	 * @param name the name
-	 * @return the earliest change for
+	 * @param nameOrUri the name or uri
+	 * @return the model attribute reference
 	 */
-	public R getEarliestChangeFor(I identifier);
+	public ModelAttributeReference getModelAttributeReference(String nameOrUri);
 	
 	/**
-	 * Gets the last change for.
+	 * Gets the property reference.
 	 *
-	 * @param name the name
-	 * @return the last change for
+	 * @param nameOrUri the name or uri
+	 * @return the property reference
 	 */
-	public R getLastChangeFor(I identifier);
-	
-	/**
-	 * Gets the change history for.
-	 *
-	 * @param name the name
-	 * @return the change history for
-	 */
-	public DirectoryResult<R> getChangeHistoryFor(I identifier);
+	public PredicateReference getPropertyReference(String nameOrUri);
 }

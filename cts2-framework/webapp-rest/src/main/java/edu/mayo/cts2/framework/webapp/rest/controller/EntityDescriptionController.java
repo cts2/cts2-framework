@@ -232,8 +232,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
 				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		
-		restrictions.setCodesystem(codeSystemName);
-		restrictions.setCodesystemversion(codeSystemVersionName);
+		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		DirectoryResult<EntityDirectoryEntry> directoryResult = 
 			this.entityDescriptionQueryService.getResourceSummaries(
@@ -272,10 +271,12 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
-		restrictions.setCodesystem(codeSystemName);
-		restrictions.setCodesystemversion(codeSystemVersionName);
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+		
+		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		this.getEntityDescriptionsCount(
 				httpServletResponse,

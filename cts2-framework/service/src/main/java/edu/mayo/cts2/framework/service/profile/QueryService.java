@@ -28,10 +28,6 @@ import java.util.Set;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
@@ -43,7 +39,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
  * @param <Restrictions> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile {
+public interface QueryService<Resource,Summary,Restrictions> extends BaseQueryService {
 
 	/**
 	 * Gets the resource summaries.
@@ -51,7 +47,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 	 * @param query the query
 	 * @param filterComponent the filter component
 	 * @param restrictions the restrictions
-	 * @param readContext TODO
+	 * @param readContext 
 	 * @param page the page
 	 * @return the resource summaries
 	 */
@@ -75,6 +71,7 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 			Query query,
 			Set<ResolvedFilter> filterComponent, 
 			Restrictions restrictions,
+			ResolvedReadContext readContext, 
 			Page page);
 	
 	/**
@@ -90,27 +87,4 @@ public interface QueryService<Resource,Summary,Restrictions> extends Cts2Profile
 			Set<ResolvedFilter> filterComponent,
 			Restrictions restrictions);
 	
-	/**
-	 * Gets the match algorithm reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the match algorithm reference
-	 */
-	public MatchAlgorithmReference getMatchAlgorithmReference(String nameOrUri);
-	
-	/**
-	 * Gets the model attribute reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the model attribute reference
-	 */
-	public ModelAttributeReference getModelAttributeReference(String nameOrUri);
-	
-	/**
-	 * Gets the property reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the property reference
-	 */
-	public PredicateReference getPropertyReference(String nameOrUri);
 }

@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface CodeSystemVersionHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface CodeSystemVersionHistoryService extends
-		HistoryService<CodeSystemVersionCatalogEntry> {
+		HistoryService<CodeSystemVersionCatalogEntry,NameOrURI> {
 }

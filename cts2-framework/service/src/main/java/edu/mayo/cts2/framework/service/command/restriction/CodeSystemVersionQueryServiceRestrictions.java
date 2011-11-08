@@ -23,8 +23,12 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.RestrictionType;
 
 /**
  * The Class CodeSystemVersionQueryServiceRestrictions.
@@ -32,24 +36,47 @@ import java.util.List;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class CodeSystemVersionQueryServiceRestrictions {
-
-	private String codesystem;
 	
-	private List<String> entity = new ArrayList<String>();
+	private NameOrURI codeSystem;
+	
+	private EntityRestriction entityRestriction;
 
-	public void setEntity(List<String> entity) {
-		this.entity = entity;
+	public EntityRestriction getEntityRestriction() {
+		return entityRestriction;
 	}
 
-	public List<String> getEntity() {
-		return entity;
+	public NameOrURI getCodeSystem() {
+		return codeSystem;
 	}
 
-	public void setCodesystem(String codesystem) {
-		this.codesystem = codesystem;
+	public void setCodeSystem(NameOrURI codeSystem) {
+		this.codeSystem = codeSystem;
 	}
 
-	public String getCodesystem() {
-		return codesystem;
+	public void setEntityRestriction(EntityRestriction entityRestriction) {
+		this.entityRestriction = entityRestriction;
+	}
+
+	public static class EntityRestriction {
+		
+		private RestrictionType allOrSome;
+		
+		private Set<EntityNameOrURI> entities = new HashSet<EntityNameOrURI>();
+
+		public RestrictionType getAllOrSome() {
+			return allOrSome;
+		}
+
+		public void setAllOrSome(RestrictionType allOrSome) {
+			this.allOrSome = allOrSome;
+		}
+
+		public Set<EntityNameOrURI> getEntities() {
+			return entities;
+		}
+
+		public void setEntities(Set<EntityNameOrURI> entities) {
+			this.entities = entities;
+		}
 	}
 }

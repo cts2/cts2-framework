@@ -23,7 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
@@ -34,4 +37,20 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  */
 public interface EntityDescriptionReadService extends
 		ReadService<EntityDescription, EntityDescriptionReadId> {
+	
+	public EntityDescription readByCodeSystem(
+			EntityNameOrURI entityId, 
+			NameOrURI codeSystem, 
+			String tagName, 
+			ResolvedReadContext readContext);
+	
+	public boolean existsInCodeSystem(
+			EntityNameOrURI entityId, 
+			NameOrURI codeSystem, 
+			String tagName, 
+			ResolvedReadContext readContext);
+	
+	public boolean readEntityDescriptions(
+			EntityNameOrURI entityId, 
+			ResolvedReadContext readContext);
 }

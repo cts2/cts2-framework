@@ -23,10 +23,18 @@
  */
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.QueryService;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURIList;
+import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.QueryService;
 
 /**
  * The Interface EntityDescriptionQueryService.
@@ -36,4 +44,23 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 public interface EntityDescriptionQueryService extends 
 	QueryService<EntityDescription, EntityDirectoryEntry, EntityDescriptionQueryServiceRestrictions>{
 
+	public boolean isEntityInSet(
+			EntityNameOrURI entity,
+			Query query,
+			Set<ResolvedFilter> filterComponent, 
+			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext);
+	
+	public EntityReferenceList resolveAsEntityReferenceList(
+			Query query,
+			Set<ResolvedFilter> filterComponent, 
+			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext);
+	
+	public EntityNameOrURIList intersectEntityList(
+			Set<EntityNameOrURI> entities,
+			Query query,
+			Set<ResolvedFilter> filterComponent, 
+			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext);
 }

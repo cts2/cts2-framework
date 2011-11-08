@@ -23,8 +23,11 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 
 /**
@@ -34,31 +37,57 @@ import java.util.List;
  */
 public class EntityDescriptionQueryServiceRestrictions {
 
-	private String codesystem;
-	private String codesystemversion;
-	private List<String> entity = new ArrayList<String>();
+	private Set<EntityNameOrURI> entites = new HashSet<EntityNameOrURI>();
 	
-	public String getCodesystem() {
-		return codesystem;
-	}
+	private NameOrURI codeSystemVersion;
 	
-	public void setCodesystem(String codesystem) {
-		this.codesystem = codesystem;
-	}
+	private TaggedCodeSystemRestriction taggedCodeSystem;
 	
-	public String getCodesystemversion() {
-		return codesystemversion;
-	}
-	
-	public void setCodesystemversion(String codesystemversion) {
-		this.codesystemversion = codesystemversion;
+	public Set<EntityNameOrURI> getEntites() {
+		return entites;
 	}
 
-	public List<String> getEntity() {
-		return entity;
+	public void setEntites(Set<EntityNameOrURI> entites) {
+		this.entites = entites;
 	}
 
-	public void setEntity(List<String> entity) {
-		this.entity = entity;
+	public NameOrURI getCodeSystemVersion() {
+		return codeSystemVersion;
+	}
+
+	public void setCodeSystemVersion(NameOrURI codeSystemVersion) {
+		this.codeSystemVersion = codeSystemVersion;
+	}
+
+	public TaggedCodeSystemRestriction getTaggedCodeSystem() {
+		return taggedCodeSystem;
+	}
+
+	public void setTaggedCodeSystem(TaggedCodeSystemRestriction taggedCodeSystem) {
+		this.taggedCodeSystem = taggedCodeSystem;
+	}
+
+	public static class TaggedCodeSystemRestriction {
+		
+		private NameOrURI codeSystem;
+		
+		private String tag;
+
+		public NameOrURI getCodeSystem() {
+			return codeSystem;
+		}
+
+		public void setCodeSystem(NameOrURI codeSystem) {
+			this.codeSystem = codeSystem;
+		}
+
+		public String getTag() {
+			return tag;
+		}
+
+		public void setTag(String tag) {
+			this.tag = tag;
+		}
+		
 	}
 }

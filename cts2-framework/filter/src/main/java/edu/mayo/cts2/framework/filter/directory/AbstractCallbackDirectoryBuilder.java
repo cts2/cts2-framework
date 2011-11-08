@@ -24,7 +24,9 @@
 package edu.mayo.cts2.framework.filter.directory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,11 +47,11 @@ import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLazyDirectoryBuilder<T> {
 		
 	/** The match algorithm references. */
-	private List<MatchAlgorithmReference> matchAlgorithmReferences = 
-		new ArrayList<MatchAlgorithmReference>();
+	private Set<MatchAlgorithmReference> matchAlgorithmReferences = 
+		new HashSet<MatchAlgorithmReference>();
 	
-	private List<ResolvableModelAttributeReference<T>> resolvableModelAttributeReferences = 
-		new ArrayList<ResolvableModelAttributeReference<T>>();
+	private Set<ResolvableModelAttributeReference<T>> resolvableModelAttributeReferences = 
+		new HashSet<ResolvableModelAttributeReference<T>>();
 	
 	private Callback<T> callback;
 	
@@ -72,7 +74,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 	 */
 	public AbstractCallbackDirectoryBuilder(
 			Callback<T> callback,
-			List<MatchAlgorithmReference> matchAlgorithmReferences
+			Set<MatchAlgorithmReference> matchAlgorithmReferences
 			){
 		super();
 		this.callback = callback;

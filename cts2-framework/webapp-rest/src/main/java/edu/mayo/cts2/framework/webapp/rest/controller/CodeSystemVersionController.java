@@ -23,12 +23,18 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryList;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
@@ -49,6 +56,8 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions.EntityRestriction;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionHistoryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
@@ -73,6 +82,9 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	
 	@Cts2Service
 	private CodeSystemVersionMaintenanceService codeSystemVersionMaintenanceService;
+	
+	@Cts2Service
+	private CodeSystemVersionHistoryService codeSystemVersionHistoryService;
 	
 	@Resource
 	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
@@ -104,6 +116,58 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			return msg;
 		}
 	};
+	
+	@RequestMapping(value=PATH_CODESYSTEMVERSION_CHANGEHISTORY, method=RequestMethod.GET)
+	@ResponseBody
+	public CodeSystemVersionCatalogEntryList getChangeHistory(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@RequestParam(required=false) Date PARAM_FROMDATE,
+			@RequestParam(required=false) Date PARAM_TODATE,
+			Page page) {
+	
+		DirectoryResult<CodeSystemVersionCatalogEntry> result = 
+				this.codeSystemVersionHistoryService.getChangeHistory(
+						ModelUtils.nameOrUriFromName(codeSystemVersionName),
+						PARAM_FROMDATE,
+						PARAM_TODATE);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				CodeSystemVersionCatalogEntryList.class);	
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEMVERSION_EARLIESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public CodeSystemVersionCatalogEntryMsg getEarliesChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+	
+		CodeSystemVersionCatalogEntry result = 
+				this.codeSystemVersionHistoryService.getEarliestChangeFor(ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		
+		CodeSystemVersionCatalogEntryMsg msg = new CodeSystemVersionCatalogEntryMsg();
+		msg.setCodeSystemVersionCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEMVERSION_LATESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public CodeSystemVersionCatalogEntryMsg getLastChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemName) {
+	
+		CodeSystemVersionCatalogEntry result = 
+				this.codeSystemVersionHistoryService.getLastChangeFor(ModelUtils.nameOrUriFromName(codeSystemName));
+	
+		CodeSystemVersionCatalogEntryMsg msg = new CodeSystemVersionCatalogEntryMsg();
+		msg.setCodeSystemVersionCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
 	
 	/**
 	 * Creates the code system version.
@@ -164,9 +228,9 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			Page page,
-			@PathVariable(VAR_CODESYSTEMID) String codeSystemId) {
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 		
-		restrictions.setCodesystem(codeSystemId);
+		restrictions.setCodeSystem(ModelUtils.nameOrUriFromName(codeSystemName));
 		
 		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
 			
@@ -223,8 +287,8 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			HttpServletResponse httpServletResponse,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
-			@PathVariable(VAR_CODESYSTEMID) String codeSystemId) {
-		restrictions.setCodesystem(codeSystemId);
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
+		restrictions.setCodeSystem(ModelUtils.nameOrUriFromName(codeSystemName));
 		
 		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
 		
@@ -385,4 +449,26 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 		return null;
 		//TODO
 	}
+	
+	
+	@InitBinder
+	 public void initCodeSystemRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) String codesystem) {
+		
+		if(binder.getTarget() instanceof CodeSystemVersionQueryServiceRestrictions){
+			CodeSystemVersionQueryServiceRestrictions restrictions = 
+					(CodeSystemVersionQueryServiceRestrictions) binder.getTarget();
+			
+			restrictions.setCodeSystem(ModelUtils.nameOrUriFromEither(codesystem));
+			
+			if(CollectionUtils.isNotEmpty(entity)){
+				restrictions.setEntityRestriction(new EntityRestriction());
+
+				restrictions.getEntityRestriction().setEntities(
+						ControllerUtils.idsToEntityNameOrUriSet(entity));
+			}		
+		}
+	 }
 }

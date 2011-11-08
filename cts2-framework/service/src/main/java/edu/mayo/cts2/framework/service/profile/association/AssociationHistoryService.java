@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.association;
 
 import edu.mayo.cts2.framework.service.profile.HistoryService;
+import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 
 /**
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface AssociationHistoryService extends
-		HistoryService<AssociationDirectoryEntry> {
+		HistoryService<AssociationDirectoryEntry,AssociationReadId> {
 }

@@ -93,7 +93,7 @@ public class ChangeSetController extends AbstractServiceAwareController {
 				null,
 				createSet(filterComponent), 
 				null, 
-				null, page);
+				page);
 
 		ChangeSetDirectory directory = this.populateDirectory(
 				directoryResult, 

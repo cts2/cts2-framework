@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory;
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryList;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
@@ -49,6 +52,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemHistoryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
@@ -72,6 +76,9 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private CodeSystemMaintenanceService codeSystemMaintenanceService;
+	
+	@Cts2Service
+	private CodeSystemHistoryService codeSystemHistoryService;
 
 	private final static UrlTemplateBinder<CodeSystemCatalogEntry> URL_BINDER =
 			new UrlTemplateBinder<CodeSystemCatalogEntry>(){
@@ -122,6 +129,58 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				null, 
 				resolvedFilter, 
 				page);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEM_CHANGEHISTORY, method=RequestMethod.GET)
+	@ResponseBody
+	public CodeSystemCatalogEntryList getChangeHistory(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@RequestParam(required=false) Date PARAM_FROMDATE,
+			@RequestParam(required=false) Date PARAM_TODATE,
+			Page page) {
+	
+		DirectoryResult<CodeSystemCatalogEntry> result = 
+				this.codeSystemHistoryService.getChangeHistory(
+						ModelUtils.nameOrUriFromName(codeSystemName),
+						PARAM_FROMDATE,
+						PARAM_TODATE);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				CodeSystemCatalogEntryList.class);	
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEM_EARLIESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public CodeSystemCatalogEntryMsg getEarliesChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
+	
+		CodeSystemCatalogEntry result = 
+				this.codeSystemHistoryService.getEarliestChangeFor(ModelUtils.nameOrUriFromName(codeSystemName));
+		
+		CodeSystemCatalogEntryMsg msg = new CodeSystemCatalogEntryMsg();
+		msg.setCodeSystemCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEM_LATESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public CodeSystemCatalogEntryMsg getLastChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
+	
+		CodeSystemCatalogEntry result = 
+				this.codeSystemHistoryService.getLastChangeFor(ModelUtils.nameOrUriFromName(codeSystemName));
+	
+		CodeSystemCatalogEntryMsg msg = new CodeSystemCatalogEntryMsg();
+		msg.setCodeSystemCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
 	}
 	
 	/**

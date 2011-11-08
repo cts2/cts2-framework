@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.valueset;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface ValueSetHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ValueSetHistoryService extends
-		HistoryService<ValueSetCatalogEntry> {
+		HistoryService<ValueSetCatalogEntry,NameOrURI> {
 }

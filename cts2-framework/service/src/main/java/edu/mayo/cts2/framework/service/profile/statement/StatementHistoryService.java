@@ -32,5 +32,5 @@ import edu.mayo.cts2.framework.model.statement.Statement;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface StatementHistoryService extends
-		HistoryService<Statement> {
+		HistoryService<Statement,String> {
 }

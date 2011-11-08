@@ -39,6 +39,12 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CODESYSTEMBYID = "/" + CODESYSTEM + "/{"
 			+ VAR_CODESYSTEMID + "}";
 	
+	public static final String PATH_CODESYSTEM_CHANGEHISTORY = PATH_CODESYSTEMBYID + "/" + CHANGEHISTORY;
+	
+	public static final String PATH_CODESYSTEM_EARLIESTCHANGE = PATH_CODESYSTEMBYID + "/" + EARLIESTCHANGE;
+	
+	public static final String PATH_CODESYSTEM_LATESTCHANGE = PATH_CODESYSTEMBYID + "/" + LATESTCHANGE;
+	
 	public static final String PATH_CODESYSTEMBYURI = "/" + CODESYSTEM_BY_URI;
 	
 	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG = 
@@ -48,6 +54,12 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID = 
 			"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
 			+ VERSION + "/{"+ VAR_CODESYSTEMVERSIONID + "}";
+	
+	public static final String PATH_CODESYSTEMVERSION_CHANGEHISTORY = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + CHANGEHISTORY;
+	
+	public static final String PATH_CODESYSTEMVERSION_EARLIESTCHANGE = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + EARLIESTCHANGE;
+	
+	public static final String PATH_CODESYSTEMVERSION_LATESTCHANGE = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + LATESTCHANGE;
 	
 	public static final String PATH_CODESYSTEMVERSIONBYURI = "/" + CODESYSTEMVERSION_BY_URI;
 	
@@ -117,7 +129,13 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	/* Maps */
 
 	public static final String PATH_MAP_BYID = "/" + MAP + "/{" + VAR_MAPID + "}";
+	public static final String PATH_MAP_CHANGEHISTORY = PATH_MAP_BYID + "/" + CHANGEHISTORY;
+	public static final String PATH_MAP_EARLIESTCHANGE = PATH_MAP_BYID + "/" + EARLIESTCHANGE;
+	public static final String PATH_MAP_LATESTCHANGE = PATH_MAP_BYID + "/" + LATESTCHANGE;
 	public static final String PATH_MAPVERSION_OF_MAP_BYID = PATH_MAP_BYID + "/" + VERSION + "/{" + VAR_MAPVERSIONID + "}";
+	public static final String PATH_MAPVERSION_CHANGEHISTORY = PATH_MAPVERSION_OF_MAP_BYID + "/" + CHANGEHISTORY;
+	public static final String PATH_MAPVERSION_EARLIESTCHANGE = PATH_MAPVERSION_OF_MAP_BYID + "/" + EARLIESTCHANGE;
+	public static final String PATH_MAPVERSION_LATESTCHANGE = PATH_MAPVERSION_OF_MAP_BYID + "/" + LATESTCHANGE;
 	public static final String PATH_MAPS = "/" + MAPS;
 	public static final String PATH_MAP = "/" + MAP;
 	public static final String PATH_MAPVERSIONS = "/" + MAPVERSIONS;
@@ -133,6 +151,9 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CONCEPTDOMAINS = "/" + CONCEPTDOMAINS;
 	public static final String PATH_CONCEPTDOMAIN = "/" + CONCEPTDOMAIN;
 	public static final String PATH_CONCEPTDOMAIN_BYID = "/" + CONCEPTDOMAIN + "/{" + VAR_CONCEPTDOMAINID + "}";
+	public static final String PATH_CONCEPTDOMAIN_CHANGEHISTORY = PATH_CONCEPTDOMAIN_BYID + "/" + CHANGEHISTORY;
+	public static final String PATH_CONCEPTDOMAIN_EARLIESTCHANGE = PATH_CONCEPTDOMAIN_BYID + "/" + EARLIESTCHANGE;
+	public static final String PATH_CONCEPTDOMAIN_LATESTCHANGE = PATH_CONCEPTDOMAIN_BYID + "/" + LATESTCHANGE;
 	public static final String PATH_CONCEPTDOMAIN_BYURI = "/" + CONCEPTDOMAIN_BY_URI;
 	public static final String PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID = PATH_CONCEPTDOMAIN_BYID + "/" + BINDING + "/{" + VAR_CONCEPTDOMAINBINDINGID + "}"; 
 	public static final String PATH_CONCEPTDOMAINBINDING = "/" + CONCEPTDOMAINBINDING;
@@ -149,6 +170,10 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_VALUESETBYID = "/" + VALUESET + "/{"
 			+ VAR_VALUESETID + "}";
 	
+	public static final String PATH_VALUESET_CHANGEHISTORY = PATH_VALUESETBYID + "/" + CHANGEHISTORY;
+	public static final String PATH_VALUESET_EARLIESTCHANGE = PATH_VALUESETBYID + "/" + EARLIESTCHANGE;
+	public static final String PATH_VALUESET_LATESTCHANGE = PATH_VALUESETBYID + "/" + LATESTCHANGE;
+
 	public static final String PATH_VALUESET_BYURI = "/" + VALUESET_BY_URI;
 
 	public static final String PATH_ENTITIESINVALUESET = "/" + VALUESET + "/{"
@@ -259,6 +284,10 @@ interface PathKeywords {
 	public static final String SERVICE = "service";
 	public static final String URI = "uri";
 	public static final String TAG = "tag";
+	
+	public static final String CHANGEHISTORY = "changehistory";
+	public static final String EARLIESTCHANGE = "earliestchange";
+	public static final String LATESTCHANGE = "latestchange";
 }
 
 interface PathVariables {
@@ -285,9 +314,18 @@ interface PathParameters {
 	public static final String PARAM_CODESYSTEMTAG = "tag";
 	public static final String PARAM_CODESYSTEM = "codesystem";
 
-	public static final String PARAM_ENTITYID = "entityid";
+	public static final String PARAM_ENTITY = "entity";
 	public static final String PARAM_ENTITYNAMESPACE = "entitynamespace";
 	public static final String PARAM_ENTITYNAME = "entityname";
+	
+	public static final String PARAM_VALUESET = "valueset";
+	
+	public static final String PARAM_ENTITIES_MAPROLE = "entitiesmaprole";
+	public static final String PARAM_VALUESETS_MAPROLE = "valuesetsmaprole";
+	public static final String PARAM_CODESYSTEMS_MAPROLE = "codesystemsmaprole";
+	
+	public static final String PARAM_ALL_OR_SOME = "allorsome";
+	public static final String PARAM_ENTITIES_MAPSTATUS = "mapstatus";
 
 	public static final String PARAM_STATEMENTID = "statementid";
 	public static final String PARAM_STATEMENTNAME = "statementname";
@@ -295,23 +333,8 @@ interface PathParameters {
 
 	public static final String PARAM_VALUESETID = "valuesetid";
 
-	public static final String PARAM_ADDSTARTDATE = "addstartdate";
-	public static final String PARAM_ADDENDDATE = "addenddate";
-
-	public static final String PARAM_ALTERSTARTDATE = "alterstartdate";
-	public static final String PARAM_ALTERENDDATE = "alterenddate";
-
-	public static final String PARAM_EFFECTIVESTARTDATE = "effectivestartdate";
-	public static final String PARAM_EFFECTIVEENDDATE = "effectiveenddate";
-
-	public static final String PARAM_EFFECTIVEDATE = "effectivedate";
-
-	public static final String PARAM_EXPORTFORMAT = "exportformat";
-	public static final String PARAM_FIELDDELIMITER = "fielddelimiter";
-	public static final String PARAM_EOLDELIMITER = "eoldelimiter";
-	public static final String PARAM_FIELDENCLOSURE = "fieldenclosure";
-
-	public static final String PARAM_EXPORTFORMAT_OWLRDF = "exportformat=owl-rdf";
+	public static final String PARAM_FROMDATE = "fromdate";
+	public static final String PARAM_TODATE = "todate";
 
 	public static final String PARAM_SOURCEENTITYID = "sourceentity";
 	public static final String PARAM_TARGETENTITYID = "targetentity";	

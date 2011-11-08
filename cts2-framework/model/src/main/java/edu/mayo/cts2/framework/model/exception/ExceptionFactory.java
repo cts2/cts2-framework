@@ -58,7 +58,7 @@ public class ExceptionFactory {
 	 */
 	public static Cts2RestException createUnsupportedMatchAlgorithm(
 			String requestedAlgorithm, 
-			Collection<? extends NameAndMeaningReference> possibleValues) {
+			Iterable<? extends NameAndMeaningReference> possibleValues) {
 		UnsupportedMatchAlgorithm ex = new UnsupportedMatchAlgorithm();
 		ex.setSeverity(LoggingLevel.ERROR);
 		
@@ -77,7 +77,7 @@ public class ExceptionFactory {
 	 */
 	public static Cts2RestException createUnsupportedModelAttribute(
 			URIAndEntityName name,
-			List<? extends ModelAttributeReference> matchAlgorithmReferences) {
+			Iterable<? extends ModelAttributeReference> matchAlgorithmReferences) {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
@@ -96,7 +96,7 @@ public class ExceptionFactory {
 	 */
 	public static Cts2RestException createUnsupportedModelAttribute(
 			String name,
-			List<? extends ModelAttributeReference> matchAlgorithmReferences) {
+			Iterable<? extends ModelAttributeReference> matchAlgorithmReferences) {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
@@ -210,7 +210,7 @@ public class ExceptionFactory {
 	private static OpaqueData getPossibleValuesMessageFromNameAndMeaning(
 			String type, 
 			String requestedValue, 
-			Collection<? extends NameAndMeaningReference> possibleValues){
+			Iterable<? extends NameAndMeaningReference> possibleValues){
 		List<String> returnList = new ArrayList<String>();
 		
 		for(NameAndMeaningReference ref : possibleValues) {

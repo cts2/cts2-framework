@@ -27,8 +27,11 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
+import edu.mayo.cts2.framework.model.association.AssociationGraph;
+import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -56,8 +59,38 @@ public interface AssociationQueryService extends
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
 			Query query,
 			Set<ResolvedFilter> filterComponent,
-			Page page,
-			EntityDescriptionReadId entity);
+			EntityDescriptionReadId entity,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext,
+			Page page);
+	
+	public DirectoryResult<EntityDirectoryEntry> getSourceEntities(
+			Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext,		
+			Page page);
+	
+	public DirectoryResult<EntityDirectoryEntry> getTargetEntities(
+			Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext,		
+			Page page);
+	
+	public DirectoryResult<EntityDirectoryEntry> getAllSourceAndTargetEntities(
+			Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext,		
+			Page page);
+	
+	public DirectoryResult<EntityDirectoryEntry> getPredicates(
+			Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext,		
+			Page page);
 
 
 	/**
@@ -73,5 +106,11 @@ public interface AssociationQueryService extends
 			Query query,
 			Set<ResolvedFilter> filterComponent,
 			Page page, 
-			EntityDescriptionReadId entity);
+			EntityDescriptionReadId entity,
+			ResolvedReadContext readContext);
+	
+	public AssociationGraph getAssociationGraph(
+			EntityDescriptionReadId focus, 
+			GraphDirection direction,
+			long depth);
 }

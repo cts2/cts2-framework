@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface ConceptDomainHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ConceptDomainHistoryService extends
-		HistoryService<ConceptDomainCatalogEntry> {
+		HistoryService<ConceptDomainCatalogEntry,NameOrURI> {
 }

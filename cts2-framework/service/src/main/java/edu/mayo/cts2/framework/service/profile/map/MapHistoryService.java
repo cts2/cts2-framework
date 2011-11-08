@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.map;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface MapHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MapHistoryService extends
-		HistoryService<MapCatalogEntry> {
+		HistoryService<MapCatalogEntry,NameOrURI> {
 }

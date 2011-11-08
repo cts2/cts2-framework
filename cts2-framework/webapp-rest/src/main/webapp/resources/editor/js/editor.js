@@ -49,6 +49,7 @@ fnChangeSetObjectToArray = function ( )
 				newJson.aaData = new Array();
 				
 				$('#changeSetDropdown').html("");
+				$('#csChangeSetDropdown').html("");
 				
 				json = json.entryList;
 				
@@ -58,11 +59,11 @@ fnChangeSetObjectToArray = function ( )
 					newJson.aaData[i][1] = json[i].creationDate;
 					newJson.aaData[i][2] = json[i].state;
 					
-					$('#changeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html("ChangeSet: " + json[i].changeSetURI));
+					$('#changeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
+					$('#csChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
 
 				}
-				
-				
+			
 				fnCallback(newJson);
 			}
 		} );
@@ -118,6 +119,29 @@ function setResourceSynopsis(json,synopsis){
 }
 
 $(document).ready(function() {
+	
+	   $( "#codeSystemEditForm" ).dialog({
+			autoOpen: false,
+			height: 350,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+					var csn = $("#codeSystemNameText").text();
+					var about = $("#aboutText").text();
+					var des = $("#description").val();
+	
+					updateCodingScheme(csn,about,des);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//
+			}
+		});
+	   
 	changeSetTable = $('#changeSetTable').dataTable( {
 		"sDom": 'R<"H"lfr>t<"F"ip<',
 		"bJQueryUI": true,
@@ -127,9 +151,7 @@ $(document).ready(function() {
 		"sAjaxSource": 'changesets?format=json',
 		"fnServerData": fnChangeSetObjectToArray(),
 	} );
-});
 
-$(document).ready(function() {
 	codeSystemTable = $('#codeSystemTable').dataTable( {
 		"sDom": 'R<"H"lfr>t<"F"ip<',
 		"bJQueryUI": true,
@@ -139,6 +161,46 @@ $(document).ready(function() {
 		"sAjaxSource": 'codesystems?format=json',
 		"fnServerData": fnCodeSystemObjectToArray(),
 	} );
+	
+	$( "#tabs" ).tabs();
+	 
+	$('#codeSystemTable tbody tr').live('click', function () {
+			var aData = codeSystemTable.fnGetData( this );
+			
+			$(codeSystemTable.fnSettings().aoData).each(function (){
+				$(this.nTr).removeClass('row_selected');
+			});
+		
+			$('#codeSystemNameText').text(aData[0]);
+			$('#aboutText').text(aData[1]);
+			$('#description').val(aData[2]);
+
+		
+			$( "#codeSystemEditForm" ).dialog( "open" );
+		} );
+	 
+	
+	/* Click event handler */
+	$('#changeSetTable tbody tr').live('click', function () {
+		var aData = changeSetTable.fnGetData( this );
+		
+		selectedChangeSetUri = aData[0];
+
+		$(changeSetTable.fnSettings().aoData).each(function (){
+			$(this.nTr).removeClass('row_selected');
+		});
+		
+		$(this).toggleClass('row_selected');
+		
+		if(aData[2]){
+			$('#activateButton').button('disable');
+		} else {
+			$('#activateButton').button('enable');
+		}
+		
+		$('#removeButton').button('enable');
+	} );
+	
 });
 
 function create(){
@@ -155,9 +217,7 @@ function populateFormFields() {
 	$('#changeSetUri').val(currentJson.changeableElementGroup.changeDescription.containingChangeSet);
 }
 
-
-function createCodeSystem(csn,about) {
-
+function createChangeSet(callback){
 	  $.ajax( {
 			"dataType": 'jsonp', 
 			"contentType": "application/json",
@@ -169,7 +229,13 @@ function createCodeSystem(csn,about) {
 				alert(xhr.responseText);
 				alert(jsonString);
 			},
-			"success": function (json0, text0, jqXHR0) {
+			"success":callback
+	  });
+}
+
+function createCodeSystem(csn,about) {
+	
+			var createFunction = function (json0, text0, jqXHR0) {
 				changeSetTable.fnReloadAjax();
 				
 				var chgseturl = jqXHR0.getResponseHeader('Location');
@@ -188,34 +254,38 @@ function createCodeSystem(csn,about) {
 						"success": function (json, textStatus, jqXHR) {
 							currentChangeSetUri = json.changeSetURI;
 							
-							  $.ajax( {
-									"dataType": 'json', 
-									"contentType": "application/json",
-									"type": "POST", 
-									"data": '{"codeSystemName":"'+csn+'","about":"'+about+'"}',
-									"url": "codesystem?changeseturi="+currentChangeSetUri,
-									"error":function (xhr, ajaxOptions, thrownError){
-										alert(xhr.status);
-										alert(xhr.statusText);
-										alert(xhr.responseText);
-										alert(jsonString);
-									},
-									"success": function (json, textStatus, jqXHR) {
-										var codesystemurl = jqXHR.getResponseHeader('Location');
-										
-										log("POST",
-												"codesystem?changeseturi="+currentChangeSetUri,
-												"Creating the CodeSystem");
-									}
-								} );
+							doCreate('{"codeSystemName":"'+csn+'","about":"'+about+'"}',currentChangeSetUri);
+							
 						}
 					} );
-					
-	
+			};
+			
+			createChangeSet(createFunction);
+}
+
+
+function doCreate(json,changeSetUri){
+	  $.ajax( {
+			"dataType": 'json', 
+			"contentType": "application/json",
+			"type": "POST", 
+			"data": json,
+			"url": "codesystem?changeseturi="+changeSetUri,
+			"error":function (xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				alert(xhr.statusText);
+				alert(xhr.responseText);
+				alert(jsonString);
+			},
+			"success": function (json, textStatus, jqXHR) {
+				var location = jqXHR.getResponseHeader('Location');
+				
+				log("POST",
+						"codesystem?changeseturi="+currentChangeSetUri,
+						"Creating the CodeSystem");
 			}
 		} );
 }
-
 
 function updateCodingScheme(codeSystemName,about,description,changeSetUri) {
 
@@ -274,74 +344,10 @@ function updateCodingScheme(codeSystemName,about,description,changeSetUri) {
 
 }
 
-$(function() {
-	$( "#tabs" ).tabs();
-	 $("#listCodeSystems").button().click(function() {
-		 currentChangeSetUri = $("#changeSetDropdown").val();
-		 codeSystemTable.fnReloadAjax("codesystems?format=json&changesetcontext="+currentChangeSetUri);
-	 });
-	 
-	   $( "#codeSystemEditForm" ).dialog({
-			autoOpen: false,
-			height: 350,
-			width: 450,
-			modal: true,
-			buttons: {
-				"Save!": function() {
-					var csn = $("#codeSystemNameText").text();
-					var about = $("#aboutText").text();
-					var des = $("#description").val();
-	
-					updateCodingScheme(csn,about,des);
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//
-			}
-		});
-	 
-	$('#codeSystemTable tbody tr').live('click', function () {
-			var aData = codeSystemTable.fnGetData( this );
-			
-			$(codeSystemTable.fnSettings().aoData).each(function (){
-				$(this.nTr).removeClass('row_selected');
-			});
-		
-			$('#codeSystemNameText').text(aData[0]);
-			$('#aboutText').text(aData[1]);
-			$('#description').val(aData[2]);
-
-		
-			$( "#codeSystemEditForm" ).dialog( "open" );
-		} );
-	 
-	
-	/* Click event handler */
-	$('#changeSetTable tbody tr').live('click', function () {
-		var aData = changeSetTable.fnGetData( this );
-		
-		selectedChangeSetUri = aData[0];
-
-		$(changeSetTable.fnSettings().aoData).each(function (){
-			$(this.nTr).removeClass('row_selected');
-		});
-		
-		$(this).toggleClass('row_selected');
-		
-		if(aData[2]){
-			$('#activateButton').button('disable');
-		} else {
-			$('#activateButton').button('enable');
-		}
-		
-		$('#removeButton').button('enable');
-	} );
-	
-
-});
+function onListCodeSystems(){
+	 var changeSetUri = $("#changeSetDropdown").val();
+	 codeSystemTable.fnReloadAjax("codesystems?format=json&changesetcontext="+changeSetUri);
+}
 
 function log(method,url,msg){
 	var txt = method.concat(" to ",url," - ",msg,"\n");

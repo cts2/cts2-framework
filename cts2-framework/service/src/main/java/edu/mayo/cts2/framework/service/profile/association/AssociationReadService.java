@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.association;
 
 import edu.mayo.cts2.framework.model.association.Association;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 
@@ -34,4 +35,14 @@ import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadI
  */
 public interface AssociationReadService extends
 		ReadService<Association, AssociationReadId> {
+	
+	public Association readByExternalStatementId(
+			String exteralStatementId, 
+			String scopingNamespaceName, 
+			ResolvedReadContext readContext);
+	
+	public boolean existsByExternalStatementId(
+			String exteralStatementId, 
+			String scopingNamespaceName, 
+			ResolvedReadContext readContext);
 }

@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,9 +48,11 @@ import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryDirectory;
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryList;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.valueset.ValueSetHistoryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
@@ -73,6 +76,9 @@ public class ValueSetController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private ValueSetMaintenanceService valueSetMaintenanceService;
+	
+	@Cts2Service
+	private ValueSetHistoryService valueSetHistoryService;
 	
 	private final static UrlTemplateBinder<ValueSetCatalogEntry> URL_BINDER =
 			new UrlTemplateBinder<ValueSetCatalogEntry>(){
@@ -98,6 +104,60 @@ public class ValueSetController extends AbstractServiceAwareController {
 			return msg;
 		}
 	};
+	
+	@RequestMapping(value=PATH_VALUESET_CHANGEHISTORY, method=RequestMethod.GET)
+	@ResponseBody
+	public ValueSetCatalogEntryList getChangeHistory(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@RequestParam(required=false) Date PARAM_FROMDATE,
+			@RequestParam(required=false) Date PARAM_TODATE,
+			Page page) {
+	
+		DirectoryResult<ValueSetCatalogEntry> result = 
+				this.valueSetHistoryService.getChangeHistory(
+						ModelUtils.nameOrUriFromName(valueSetName),
+						PARAM_FROMDATE,
+						PARAM_TODATE);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				ValueSetCatalogEntryList.class);	
+	}
+	
+	@RequestMapping(value=PATH_VALUESET_EARLIESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public ValueSetCatalogEntryMsg getEarliesChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_VALUESETID) String valueSetName) {
+	
+		ValueSetCatalogEntry result = 
+				this.valueSetHistoryService.getEarliestChangeFor(
+						ModelUtils.nameOrUriFromName(valueSetName));
+		
+		ValueSetCatalogEntryMsg msg = new ValueSetCatalogEntryMsg();
+		msg.setValueSetCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_VALUESET_LATESTCHANGE, method=RequestMethod.GET)
+	@ResponseBody
+	public ValueSetCatalogEntryMsg getLastChange(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_VALUESETID) String valueSetName) {
+	
+		ValueSetCatalogEntry result = 
+				this.valueSetHistoryService.getLastChangeFor(
+						ModelUtils.nameOrUriFromName(valueSetName));
+	
+		ValueSetCatalogEntryMsg msg = new ValueSetCatalogEntryMsg();
+		msg.setValueSetCatalogEntry(result);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
 	
 	/**
 	 * Gets the value sets.

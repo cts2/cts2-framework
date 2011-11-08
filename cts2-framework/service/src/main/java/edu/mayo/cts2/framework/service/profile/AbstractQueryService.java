@@ -23,18 +23,11 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
-
-import com.google.common.collect.Iterables;
 
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.BaseQueryService;
 
@@ -44,41 +37,11 @@ import edu.mayo.cts2.framework.model.service.core.BaseQueryService;
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractQueryService <T extends BaseQueryService> extends AbstractService<T> 
-	implements InitializingBean {
+public abstract class AbstractQueryService <
+	T extends BaseQueryService>
+	extends AbstractService<T> 
+	implements edu.mayo.cts2.framework.service.profile.BaseQueryService {
 
-	private List<? extends MatchAlgorithmReference> matchAlgorithmReferences = new ArrayList<MatchAlgorithmReference>();
-	private List<? extends ModelAttributeReference> modelAttributeReferences = new ArrayList<ModelAttributeReference>();
-	private List<? extends PredicateReference> predicateReferences = new ArrayList<PredicateReference>();
-
-	/* (non-Javadoc)
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	public void afterPropertiesSet() throws Exception {
-		this.matchAlgorithmReferences = this.getAvailableMatchAlgorithmReferences();
-		this.modelAttributeReferences = this.getAvailableModelAttributeReferences();
-		this.predicateReferences = this.getAvailablePredicateReferences();
-	}
-	
-	protected abstract String getVersion();
-	protected abstract String getProvider();
-	protected abstract String getDescription();
-	
-	protected T getService(){
-		T service = super.getService();
-		
-		service.setSupportedMatchAlgorithm(Iterables.toArray(
-				this.matchAlgorithmReferences, MatchAlgorithmReference.class));
-		
-		service.setSupportedModelAttribute(Iterables.toArray(
-				this.modelAttributeReferences, ModelAttributeReference.class));
-		
-		service.setKnownProperty(Iterables.toArray(
-				this.predicateReferences, PredicateReference.class));
-		
-		return service;
-	}
-	
 	/**
 	 * Gets the match algorithm reference.
 	 *
@@ -86,7 +49,7 @@ public abstract class AbstractQueryService <T extends BaseQueryService> extends 
 	 * @return the match algorithm reference
 	 */
 	public MatchAlgorithmReference getMatchAlgorithmReference(String nameOrUri) {
-		return this.getReference(nameOrUri, this.matchAlgorithmReferences);
+		return this.getReference(nameOrUri, this.getSupportedMatchAlgorithms());
 	}
 	
 	/**
@@ -96,8 +59,14 @@ public abstract class AbstractQueryService <T extends BaseQueryService> extends 
 	 * @return the model attribute reference
 	 */
 	public ModelAttributeReference getModelAttributeReference(String nameOrUri) {
-		return this.getReference(nameOrUri, this.modelAttributeReferences);
+		return this.getReference(nameOrUri, this.getSupportedModelAttributes());
 	}
+	
+	protected abstract String getVersion();
+	
+	protected abstract String getProvider();
+	
+	protected abstract String getDescription();
 
 	/**
 	 * Gets the reference.
@@ -107,7 +76,7 @@ public abstract class AbstractQueryService <T extends BaseQueryService> extends 
 	 * @param list the list
 	 * @return the reference
 	 */
-	public <R extends NameAndMeaningReference> R getReference(String nameOrUri, List<R> list) {
+	public <R extends NameAndMeaningReference> R getReference(String nameOrUri, Iterable<R> list) {
 		
 		for(R ref : list){
 			if(StringUtils.equals(ref.getContent(), nameOrUri) ||
@@ -118,26 +87,4 @@ public abstract class AbstractQueryService <T extends BaseQueryService> extends 
 		
 		throw ExceptionFactory.createUnsupportedMatchAlgorithm(nameOrUri, list);
 	}
-	
-	/**
-	 * Register match algorithm references.
-	 *
-	 * @return the list<? extends match algorithm reference>
-	 */
-	protected abstract List<? extends MatchAlgorithmReference> getAvailableMatchAlgorithmReferences();
-	
-	/**
-	 * Register model attribute references.
-	 *
-	 * @return the list<? extends model attribute reference>
-	 */
-	protected abstract List<? extends ModelAttributeReference> getAvailableModelAttributeReferences();
-	
-	/**
-	 * Register predicate references.
-	 *
-	 * @return the list<? extends predicate reference>
-	 */
-	protected abstract List<? extends PredicateReference> getAvailablePredicateReferences();
-	
 }

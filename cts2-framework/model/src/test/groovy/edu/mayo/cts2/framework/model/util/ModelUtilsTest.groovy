@@ -35,4 +35,21 @@ class ModelUtilsTest {
 	  
 	  assertEquals group, ModelUtils.getChangeableElementGroup(crc)
   }
+  
+  @Test
+  void testNameOrURIFromEitherWithName() {
+	 def n_u = ModelUtils.nameOrUriFromEither("some_name")
+	 
+	 assertNull n_u.getUri()
+	 assertEquals "some_name", n_u.getName()
+  }
+  
+  @Test
+  void testNameOrURIFromEitherWithUri() {
+	 def n_u = ModelUtils.nameOrUriFromEither("urn:oid:1.2.3.4.5")
+	 
+	 assertNull n_u.getName()
+	 assertEquals "urn:oid:1.2.3.4.5", n_u.getUri()
+  }
+
 }

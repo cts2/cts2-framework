@@ -32,5 +32,5 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ValueSetDefinitionHistoryService extends
-		HistoryService<ValueSetDefinition> {
+		HistoryService<ValueSetDefinition,String> {
 }

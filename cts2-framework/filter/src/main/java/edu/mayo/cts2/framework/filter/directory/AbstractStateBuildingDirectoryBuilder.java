@@ -24,7 +24,9 @@
 package edu.mayo.cts2.framework.filter.directory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.match.StateAdjustingModelAttributeReference;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
@@ -43,11 +45,11 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends AbstractDirectoryBuilder<T> {
 	
 	/** The match algorithm references. */
-	private List<MatchAlgorithmReference> matchAlgorithmReferences = 
-		new ArrayList<MatchAlgorithmReference>();
+	private Set<MatchAlgorithmReference> matchAlgorithmReferences = 
+		new HashSet<MatchAlgorithmReference>();
 	
-	private List<StateAdjustingModelAttributeReference<S>> stateAdjustingModelAttributeReference = 
-		new ArrayList<StateAdjustingModelAttributeReference<S>>();
+	private Set<StateAdjustingModelAttributeReference<S>> stateAdjustingModelAttributeReference = 
+		new HashSet<StateAdjustingModelAttributeReference<S>>();
 
 	private Callback<S,T> callback;
 
@@ -77,8 +79,8 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	public AbstractStateBuildingDirectoryBuilder(
 			S initialState,
 			Callback<S,T> callback,
-			List<MatchAlgorithmReference> matchAlgorithmReferences,
-			List<StateAdjustingModelAttributeReference<S>> modelAttributeReferences
+			Set<MatchAlgorithmReference> matchAlgorithmReferences,
+			Set<StateAdjustingModelAttributeReference<S>> modelAttributeReferences
 			){
 		super();
 		this.initialState = initialState;

@@ -23,6 +23,11 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
+
 
 /**
  * The Class MapQueryServiceRestrictions.
@@ -31,21 +36,60 @@ package edu.mayo.cts2.framework.service.command.restriction;
  */
 public class MapQueryServiceRestrictions {
 
-	private String valueset;
-	private String codesystem;
+	private CodeSystemRestriction codeSystemRestriction;
+	private ValueSetRestriction valueSetRestriction;
+
+	public CodeSystemRestriction getCodeSystemRestriction() {
+		return codeSystemRestriction;
+	}
+
+	public void setCodeSystemRestriction(CodeSystemRestriction codeSystemRestriction) {
+		this.codeSystemRestriction = codeSystemRestriction;
+	}
+
+	public ValueSetRestriction getValueSetRestriction() {
+		return valueSetRestriction;
+	}
+
+	public void setValueSetRestriction(ValueSetRestriction valueSetRestriction) {
+		this.valueSetRestriction = valueSetRestriction;
+	}
+
+	public static class ValueSetRestriction {
+		
+		private Set<NameOrURI> valueSets;
+		private MapRole mapRole;
+
+		public Set<NameOrURI> getValueSets() {
+			return valueSets;
+		}
+		public void setValueSets(Set<NameOrURI> valueSets) {
+			this.valueSets = valueSets;
+		}
+		public MapRole getMapRole() {
+			return mapRole;
+		}
+		public void setMapRole(MapRole mapRole) {
+			this.mapRole = mapRole;
+		}
+	}
+
+	public static class CodeSystemRestriction {
+		
+		private Set<NameOrURI> codeSystems;
+		private MapRole mapRole;
 	
-	public String getValueset() {
-		return valueset;
+		public Set<NameOrURI> getCodeSystems() {
+			return codeSystems;
+		}
+		public void setCodeSystems(Set<NameOrURI> codeSystems) {
+			this.codeSystems = codeSystems;
+		}
+		public MapRole getMapRole() {
+			return mapRole;
+		}
+		public void setMapRole(MapRole mapRole) {
+			this.mapRole = mapRole;
+		}
 	}
-	public void setValueset(String valueset) {
-		this.valueset = valueset;
-	}
-	public String getCodesystem() {
-		return codesystem;
-	}
-	public void setCodesystem(String codesystem) {
-		this.codesystem = codesystem;
-	}
-	
-	
 }

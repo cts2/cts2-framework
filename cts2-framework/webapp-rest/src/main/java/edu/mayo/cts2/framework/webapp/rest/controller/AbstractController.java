@@ -61,7 +61,7 @@ import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
-import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 
@@ -301,7 +301,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 * @param service the service
 	 * @return the filter component
 	 */
-	protected ResolvedFilter processFilter(RestFilter restFilter, QueryService<?,?,?> service){
+	protected ResolvedFilter processFilter(RestFilter restFilter, BaseQueryService service){
 		if(restFilter == null ||
 				StringUtils.isBlank(restFilter.getMatchValue())){
 			return null;
@@ -344,7 +344,6 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		}
 
 		resolvedFilter.setMatchValue(restFilter.getMatchValue());
-		resolvedFilter.setReferenceType(restFilter.getReferencetype());
 		
 		return resolvedFilter;
 	}
@@ -363,7 +362,6 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	
 	@InitBinder
 	 public void initotherBinder(WebDataBinder binder) {
-
 		
 		binder.registerCustomEditor(QueryControl.class,
 			    new QueryControlTypeEditor());

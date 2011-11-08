@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,14 +54,15 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationReadService;
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 
 /**
  * The Class AssociationController.
@@ -78,9 +80,12 @@ public class AssociationController extends AbstractServiceAwareController {
 	
 	@Cts2Service
 	private AssociationQueryService associationQueryService;
-	
+
 	@Cts2Service
-	private AdvancedAssociationQueryService advancedAssociationQueryService;
+	private CodeSystemVersionReadService codeSystemVersionReadService;
+	
+	@Resource
+	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
 	
 	private static UrlTemplateBinder<Association> URL_BINDER = new 
 			UrlTemplateBinder<Association>(){
@@ -175,8 +180,10 @@ public class AssociationController extends AbstractServiceAwareController {
 			this.associationQueryService.getChildrenAssociationsOfEntity(
 					query, 
 					createSet(filterComponent),
-					page,
-					name);
+					name,
+					null,//TODO
+					null,//TODO
+					page);
 		
 		EntityDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -206,9 +213,15 @@ public class AssociationController extends AbstractServiceAwareController {
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId) {
 		
-		associationRestrictions.setCodesystemversion(codeSystemVersionName);
+		String codeSystemVersionName = 
+				codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+						this.codeSystemVersionReadService,
+						codeSystemName, 
+						versionId);
+		
+		associationRestrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		return 
 				this.getAssociations(
@@ -346,7 +359,7 @@ public class AssociationController extends AbstractServiceAwareController {
 			@RequestParam(required=true, defaultValue="1") int depth) {
 
 		AssociationGraph directoryResult = 
-			this.advancedAssociationQueryService.getAssociationGraph(
+			this.associationQueryService.getAssociationGraph(
 					new EntityDescriptionReadId(
 							this.getScopedEntityName(focus, codeSystemName), 
 							ModelUtils.nameOrUriFromName(codeSystemVersionName)),
@@ -382,7 +395,9 @@ public class AssociationController extends AbstractServiceAwareController {
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 
-		associationRestrictions.setSourceentity(entityName);
+		associationRestrictions.setSourceEntity(
+				ModelUtils.entityNameOrUriFromName(
+						this.getScopedEntityName(entityName, codeSystemName)));
 		
 		return this.getAssociationsOfCodeSystemVersion(
 				httpServletRequest, 

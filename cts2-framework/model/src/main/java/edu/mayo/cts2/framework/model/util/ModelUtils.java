@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.model.util;
 
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
@@ -39,6 +40,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 
@@ -49,6 +51,9 @@ import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
  */
 public class ModelUtils {
 	
+	//TODO: This is probably an overly simplistic check
+	private static Pattern URI_PATTERN = Pattern.compile("[a-zA-Z]+:.*");
+ 
 	/**
 	 * Instantiates a new rest model utils.
 	 */
@@ -263,10 +268,38 @@ public class ModelUtils {
 			CodeSystemVersionCatalogEntry resource) {
 		return resource.getVersionOf().getContent();
 	}
+	
+	public static boolean isValidUri(String uriCandidate){
+		return URI_PATTERN.matcher(uriCandidate).matches();	
+	}
+	
+	public static NameOrURI nameOrUriFromEither(String nameOrUri) {
+		NameOrURI n;
+		if(isValidUri(nameOrUri)){
+			n = nameOrUriFromUri(nameOrUri);
+		} else {
+			n = nameOrUriFromName(nameOrUri);
+		}
+		return n;
+	}
 
 	public static NameOrURI nameOrUriFromName(String name) {
 		NameOrURI nameOrUri = new NameOrURI();
 		nameOrUri.setName(name);
+		
+		return nameOrUri;
+	}
+	
+	public static EntityNameOrURI entityNameOrUriFromName(ScopedEntityName name) {
+		EntityNameOrURI nameOrUri = new EntityNameOrURI();
+		nameOrUri.setEntityName(name);
+		
+		return nameOrUri;
+	}
+	
+	public static EntityNameOrURI entityNameOrUriFromUri(String uri) {
+		EntityNameOrURI nameOrUri = new EntityNameOrURI();
+		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
 	}

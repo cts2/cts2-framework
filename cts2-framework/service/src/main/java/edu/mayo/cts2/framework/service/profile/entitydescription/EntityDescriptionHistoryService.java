@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Interface EntityDescriptionHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.entity.EntityDescription;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface EntityDescriptionHistoryService extends
-		HistoryService<EntityDescription> {
+		HistoryService<EntityDescription,EntityDescriptionReadId> {
 }

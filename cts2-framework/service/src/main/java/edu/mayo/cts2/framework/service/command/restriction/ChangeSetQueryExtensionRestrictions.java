@@ -21,29 +21,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.association;
+package edu.mayo.cts2.framework.service.command.restriction;
 
-import edu.mayo.cts2.framework.model.association.AssociationGraph;
-import edu.mayo.cts2.framework.model.association.types.GraphDirection;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
- * The Interface AdvancedAssociationQueryService.
+ * The Class ChangeSetQueryExtensionRestrictions.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface AdvancedAssociationQueryService {
-
-	/**
-	 * Gets the association graph.
-	 *
-	 * @param id the id
-	 * @param direction the direction
-	 * @param depth the depth
-	 * @return the association graph
-	 */
-	public AssociationGraph getAssociationGraph(
-			EntityDescriptionReadId focus, 
-			GraphDirection direction,
-			long depth);
+public class ChangeSetQueryExtensionRestrictions {
 }

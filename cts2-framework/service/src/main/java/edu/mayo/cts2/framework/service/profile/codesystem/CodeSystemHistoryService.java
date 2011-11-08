@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystem;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface CodeSystemHistoryService.
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface CodeSystemHistoryService extends
-		HistoryService<CodeSystemCatalogEntry> {
+		HistoryService<CodeSystemCatalogEntry,NameOrURI> {
 }
