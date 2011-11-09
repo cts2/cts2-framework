@@ -1,4 +1,4 @@
 target/
 .scala_dependencies
 .cache
-.settings
+.settings/
