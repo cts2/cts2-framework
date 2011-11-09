@@ -469,7 +469,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	}
 	
 	@InitBinder
-	 public void initCodeSystemRestrictionBinder(
+	public void initCodeSystemRestrictionBinder(
 			 WebDataBinder binder,
 			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity,
 			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> valueset,
@@ -509,4 +509,40 @@ public class MapVersionController extends AbstractServiceAwareController {
 			}
 		}
 	}
+
+	public MapVersionReadService getMapVersionReadService() {
+		return mapVersionReadService;
+	}
+
+	public void setMapVersionReadService(MapVersionReadService mapVersionReadService) {
+		this.mapVersionReadService = mapVersionReadService;
+	}
+
+	public MapVersionQueryService getMapVersionQueryService() {
+		return mapVersionQueryService;
+	}
+
+	public void setMapVersionQueryService(
+			MapVersionQueryService mapVersionQueryService) {
+		this.mapVersionQueryService = mapVersionQueryService;
+	}
+
+	public MapVersionMaintenanceService getMapVersionMaintenanceService() {
+		return mapVersionMaintenanceService;
+	}
+
+	public void setMapVersionMaintenanceService(
+			MapVersionMaintenanceService mapVersionMaintenanceService) {
+		this.mapVersionMaintenanceService = mapVersionMaintenanceService;
+	}
+
+	public MapVersionHistoryService getMapVersionHistoryService() {
+		return mapVersionHistoryService;
+	}
+
+	public void setMapVersionHistoryService(
+			MapVersionHistoryService mapVersionHistoryService) {
+		this.mapVersionHistoryService = mapVersionHistoryService;
+	}
+	
 }

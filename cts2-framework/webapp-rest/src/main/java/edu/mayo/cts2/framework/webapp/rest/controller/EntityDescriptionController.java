@@ -23,11 +23,17 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +57,7 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.TaggedCodeSystemRestriction;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
@@ -442,5 +449,38 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				new EntityDescriptionReadId(uri,
 						ModelUtils.nameOrUriFromName(codeSystemVersionName)),
 				redirect);
+	}
+	
+	@InitBinder
+	public void initEntityDescriptionRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) String codesystem,
+			 @RequestParam(value=PARAM_CODESYSTEMTAG, required=false) String tag,
+			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codesystemversion,
+			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity) {
+		
+		if(binder.getTarget() instanceof EntityDescriptionQueryServiceRestrictions){
+			EntityDescriptionQueryServiceRestrictions restrictions = 
+					(EntityDescriptionQueryServiceRestrictions) binder.getTarget();
+
+			if(StringUtils.isNotBlank(codesystemversion)){
+				restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromEither(codesystemversion));
+			}		
+			
+			if(CollectionUtils.isNotEmpty(entity)){
+				restrictions.setEntities(
+						ControllerUtils.idsToEntityNameOrUriSet(entity));
+			}		
+			
+			if(StringUtils.isNotBlank(codesystem)){
+
+				restrictions.setTaggedCodeSystem(new TaggedCodeSystemRestriction());
+				restrictions.getTaggedCodeSystem().setCodeSystem(ModelUtils.nameOrUriFromEither(codesystem));
+				
+				String tagName = ControllerUtils.getReference(tag, this.entityDescriptionQueryService.getSupportedTags()).getContent();
+			
+				restrictions.getTaggedCodeSystem().setTag(tagName);
+			}
+		}
 	}
 }

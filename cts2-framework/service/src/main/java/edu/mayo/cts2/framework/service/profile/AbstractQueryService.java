@@ -25,8 +25,6 @@ package edu.mayo.cts2.framework.service.profile;
 
 import org.apache.commons.lang.StringUtils;
 
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.BaseQueryService;
@@ -41,26 +39,6 @@ public abstract class AbstractQueryService <
 	T extends BaseQueryService>
 	extends AbstractService<T> 
 	implements edu.mayo.cts2.framework.service.profile.BaseQueryService {
-
-	/**
-	 * Gets the match algorithm reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the match algorithm reference
-	 */
-	public MatchAlgorithmReference getMatchAlgorithmReference(String nameOrUri) {
-		return this.getReference(nameOrUri, this.getSupportedMatchAlgorithms());
-	}
-	
-	/**
-	 * Gets the model attribute reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the model attribute reference
-	 */
-	public ModelAttributeReference getModelAttributeReference(String nameOrUri) {
-		return this.getReference(nameOrUri, this.getSupportedModelAttributes());
-	}
 	
 	protected abstract String getVersion();
 	
@@ -76,15 +54,5 @@ public abstract class AbstractQueryService <
 	 * @param list the list
 	 * @return the reference
 	 */
-	public <R extends NameAndMeaningReference> R getReference(String nameOrUri, Iterable<R> list) {
-		
-		for(R ref : list){
-			if(StringUtils.equals(ref.getContent(), nameOrUri) ||
-				StringUtils.equals(ref.getUri(), nameOrUri)){
-				return ref;
-			}
-		}
-		
-		throw ExceptionFactory.createUnsupportedMatchAlgorithm(nameOrUri, list);
-	}
+
 }

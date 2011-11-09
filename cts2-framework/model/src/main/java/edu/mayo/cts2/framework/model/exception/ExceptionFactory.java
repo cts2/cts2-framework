@@ -38,6 +38,7 @@ import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
+import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedPredicate;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -66,7 +67,17 @@ public class ExceptionFactory {
 		
 		return new Cts2RestException(ex);
 	}
-
+	
+	public static <T extends NameAndMeaningReference> Cts2RestException createUnsupportedNameOrUriException(
+			String requestedNameOrUri, 
+			Iterable<T> possibleValues) {
+		UnsupportedNameOrURI ex = new UnsupportedNameOrURI();
+		ex.setSeverity(LoggingLevel.ERROR);
+		
+		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedNameOrUri, possibleValues));
+		
+		return new Cts2RestException(ex);
+	}
 
 	/**
 	 * Creates a new Exception object.

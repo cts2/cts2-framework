@@ -293,7 +293,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	protected int getStart(Page page){
 		return page.getPage() * page.getMaxToReturn();
 	}
-
+	
 	/**
 	 * Process filter.
 	 *
@@ -310,7 +310,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		String matchAlgorithmReference = restFilter.getMatchAlgorithmName();
 		
 		MatchAlgorithmReference matchRef = 
-			service.getMatchAlgorithmReference(matchAlgorithmReference);
+			ControllerUtils.getReference(matchAlgorithmReference, service.getSupportedMatchAlgorithms());
 		
 		FilterComponent filterComponent = new FilterComponent();
 		filterComponent.setMatchAlgorithm(matchRef);
@@ -323,14 +323,14 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		switch(restFilter.getReferencetype()){
 			case ATTRIBUTE: {
 				ModelAttributeReference modelAttributeRef = 
-						service.getModelAttributeReference(nameOrUri);
+						ControllerUtils.getReference(nameOrUri, service.getSupportedModelAttributes());
 				
 				resolvedFilter.setModelAttributeReference(modelAttributeRef);
 				break;
 			}
 			case PROPERTY: {
 				PredicateReference propertyRef = 
-						service.getPropertyReference(nameOrUri);
+						ControllerUtils.getPredicateReference(nameOrUri, service.getSupportedProperties());
 				
 				resolvedFilter.setPropertyReference(propertyRef);
 				break;

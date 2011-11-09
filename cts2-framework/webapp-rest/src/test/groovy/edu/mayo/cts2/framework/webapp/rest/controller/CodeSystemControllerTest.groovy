@@ -1,22 +1,28 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import static org.junit.Assert.*
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*
+import static org.springframework.test.web.server.result.MockMvcResultActions.*
+import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup
 
 import org.junit.Before
 import org.junit.Test
+import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.test.web.server.setup.MockMvcBuilders
 
 import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.Message
+import edu.mayo.cts2.framework.model.directory.DirectoryResult
 import edu.mayo.cts2.framework.model.exception.Cts2RestException
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
-import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl
 
  class CodeSystemControllerTest {
 	
@@ -102,5 +108,4 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 		
 		assertEquals 200, response.getStatus()
 	}
-
 }

@@ -24,11 +24,15 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,10 +51,14 @@ import edu.mayo.cts2.framework.model.map.MapCatalogEntryList;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.service.core.types.RestrictionType;
 import edu.mayo.cts2.framework.model.service.exception.UnknownMap;
+import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions.CodeSystemRestriction;
+import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions.ValueSetRestriction;
 import edu.mayo.cts2.framework.service.profile.map.MapHistoryService;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
@@ -349,5 +357,35 @@ public class MapController extends AbstractServiceAwareController {
 				this.mapReadService,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
+	}
+	
+	@InitBinder
+	public void initMapRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity,
+			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> valueset,
+			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> codesystem,
+			 @RequestParam(value=PARAM_ALL_OR_SOME, required=false) RestrictionType allorsome,
+			 @RequestParam(value=PARAM_CODESYSTEMS_MAPROLE, required=false) MapRole codesystemsmaprole,
+			 @RequestParam(value=PARAM_VALUESETS_MAPROLE, required=false) MapRole valuesetsmaprole) {
+		
+		if(binder.getTarget() instanceof MapQueryServiceRestrictions){
+			MapQueryServiceRestrictions restrictions = 
+					(MapQueryServiceRestrictions) binder.getTarget();
+
+			if(CollectionUtils.isNotEmpty(valueset)){
+				restrictions.setValueSetRestriction(new ValueSetRestriction());
+				restrictions.getValueSetRestriction().setMapRole(valuesetsmaprole);
+				restrictions.getValueSetRestriction().setValueSets(
+						ControllerUtils.idsToNameOrUriSet(valueset));
+			}
+			
+			if(CollectionUtils.isNotEmpty(codesystem)){
+				restrictions.setCodeSystemRestriction(new CodeSystemRestriction());
+				restrictions.getCodeSystemRestriction().setMapRole(codesystemsmaprole);
+				restrictions.getCodeSystemRestriction().setCodeSystems(
+						ControllerUtils.idsToNameOrUriSet(codesystem));
+			}
+		}
 	}
 }

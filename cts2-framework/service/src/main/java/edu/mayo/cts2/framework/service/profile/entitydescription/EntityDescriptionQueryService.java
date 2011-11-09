@@ -28,6 +28,7 @@ import java.util.Set;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.EntityReferenceList;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
@@ -63,4 +64,6 @@ public interface EntityDescriptionQueryService extends
 			Set<ResolvedFilter> filterComponent, 
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			ResolvedReadContext readContext);
+
+	public Set<? extends VersionTagReference> getSupportedTags();
 }

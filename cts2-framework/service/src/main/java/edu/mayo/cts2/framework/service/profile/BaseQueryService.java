@@ -39,33 +39,10 @@ import edu.mayo.cts2.framework.model.core.PredicateReference;
  */
 public interface BaseQueryService extends Cts2Profile {
 
-	/**
-	 * Gets the match algorithm reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the match algorithm reference
-	 */
-	public MatchAlgorithmReference getMatchAlgorithmReference(String nameOrUri);
-	
 	public Set<? extends MatchAlgorithmReference> getSupportedMatchAlgorithms();
 	
 	public Set<? extends ModelAttributeReference> getSupportedModelAttributes();
 	
 	public Set<? extends PredicateReference> getSupportedProperties();
 	
-	/**
-	 * Gets the model attribute reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the model attribute reference
-	 */
-	public ModelAttributeReference getModelAttributeReference(String nameOrUri);
-	
-	/**
-	 * Gets the property reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @return the property reference
-	 */
-	public PredicateReference getPropertyReference(String nameOrUri);
 }
