@@ -83,7 +83,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/"
 			+ ENTITY + "/{" + VAR_ENTITYID + "}";
 	
-	public static final String PATH_ENTITYBYURI = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ENTITY_BY_URI;
+	public static final String PATH_ENTITYBYURI = "/" + ENTITY_BY_URI;
 			
 	public static final String PATH_ENTITYIDS = "/" + CODESYSTEM + "/{"
 			+ VAR_CODESYSTEMID + "}/" + ENTITYIDS;

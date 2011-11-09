@@ -23,6 +23,9 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -94,11 +97,11 @@ public class AssociationController extends AbstractServiceAwareController {
 			UrlTemplateBinder<Association>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, Association resource) {
-			if(attribute.equals(VAR_ASSOCIATIONID)){
-				return resource.getAssociationID();
-			}
-			return null;
+		public Map<String,String> getPathValues(Association resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			returnMap.put(VAR_ASSOCIATIONID,resource.getAssociationID());
+			
+			return returnMap;
 		}
 
 	};

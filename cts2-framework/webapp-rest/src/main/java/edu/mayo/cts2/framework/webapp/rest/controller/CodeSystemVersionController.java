@@ -24,7 +24,9 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,18 +92,28 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@Resource
 	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
 	
-	private static UrlTemplateBinder<CodeSystemVersionCatalogEntry> URL_BINDER = new 
+	private UrlTemplateBinder<CodeSystemVersionCatalogEntry> URL_BINDER = new 
 			UrlTemplateBinder<CodeSystemVersionCatalogEntry>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, CodeSystemVersionCatalogEntry resource) {
-			if(attribute.equals(VAR_CODESYSTEMID)){
-				return resource.getVersionOf().getContent();
-			}
-			if(attribute.equals(VAR_CODESYSTEMVERSIONID)){
-				return resource.getCodeSystemVersionName();
-			}
-			return null;
+		public Map<String,String> getPathValues(CodeSystemVersionCatalogEntry resource) {
+			Assert.notNull(resource.getVersionOf(),"'versionOf' is required.");
+			
+			Map<String,String> returnMap = new HashMap<String,String>();
+
+			String codeSystemName = resource.getVersionOf().getContent();
+			String codeSystemVersionName = resource.getCodeSystemVersionName();
+			
+			returnMap.put(VAR_CODESYSTEMID, codeSystemName);
+			
+			String versionId = 
+					codeSystemVersionNameResolver.getVersionIdFromCodeSystemVersionName(
+							codeSystemVersionReadService, 
+							codeSystemVersionName);
+							
+			returnMap.put(VAR_CODESYSTEMVERSIONID, versionId);
+			
+			return returnMap;
 		}
 
 	};
@@ -417,7 +430,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	}
 	
-	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI, method=RequestMethod.GET)
+	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI + "/**", method=RequestMethod.GET)
 	public ModelAndView getCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
@@ -471,4 +484,49 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			}		
 		}
 	 }
+
+	public CodeSystemVersionReadService getCodeSystemVersionReadService() {
+		return codeSystemVersionReadService;
+	}
+
+	public void setCodeSystemVersionReadService(
+			CodeSystemVersionReadService codeSystemVersionReadService) {
+		this.codeSystemVersionReadService = codeSystemVersionReadService;
+	}
+
+	public CodeSystemVersionQueryService getCodeSystemVersionQueryService() {
+		return codeSystemVersionQueryService;
+	}
+
+	public void setCodeSystemVersionQueryService(
+			CodeSystemVersionQueryService codeSystemVersionQueryService) {
+		this.codeSystemVersionQueryService = codeSystemVersionQueryService;
+	}
+
+	public CodeSystemVersionMaintenanceService getCodeSystemVersionMaintenanceService() {
+		return codeSystemVersionMaintenanceService;
+	}
+
+	public void setCodeSystemVersionMaintenanceService(
+			CodeSystemVersionMaintenanceService codeSystemVersionMaintenanceService) {
+		this.codeSystemVersionMaintenanceService = codeSystemVersionMaintenanceService;
+	}
+
+	public CodeSystemVersionHistoryService getCodeSystemVersionHistoryService() {
+		return codeSystemVersionHistoryService;
+	}
+
+	public void setCodeSystemVersionHistoryService(
+			CodeSystemVersionHistoryService codeSystemVersionHistoryService) {
+		this.codeSystemVersionHistoryService = codeSystemVersionHistoryService;
+	}
+
+	public CodeSystemVersionNameResolver getCodeSystemVersionNameResolver() {
+		return codeSystemVersionNameResolver;
+	}
+
+	public void setCodeSystemVersionNameResolver(
+			CodeSystemVersionNameResolver codeSystemVersionNameResolver) {
+		this.codeSystemVersionNameResolver = codeSystemVersionNameResolver;
+	}
 }

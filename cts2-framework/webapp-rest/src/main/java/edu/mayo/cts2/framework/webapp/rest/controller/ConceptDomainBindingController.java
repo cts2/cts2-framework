@@ -23,6 +23,9 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,10 +76,9 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			new UrlTemplateBinder<ConceptDomainBinding>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, ConceptDomainBinding resource) {
-			if(attribute.equals(VAR_VALUESETID)){
-				//TODO:
-			}
+		public Map<String,String> getPathValues(ConceptDomainBinding resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			//TODO
 			return null;
 		}
 

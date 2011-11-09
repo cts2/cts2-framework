@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -73,7 +75,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 			UrlTemplateBinder<MapEntry>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, MapEntry resource) {
+		public Map<String,String> getPathValues(MapEntry resource) {
 			//TODO
 			return null;
 		}

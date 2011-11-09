@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,7 +76,7 @@ public class StatementController extends AbstractServiceAwareController {
 			new UrlTemplateBinder<Statement>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, Statement resource) {
+		public Map<String,String> getPathValues(Statement resource) {
 			//TODO:
 			return null;
 		}

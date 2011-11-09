@@ -350,7 +350,7 @@ public abstract class AbstractMessageWrappingController extends
 			return this.forward(httpServletRequest, msg, resource, urlBinder, byNameTemaplate, redirect);
 		} else {
 
-			return this.forward(httpServletRequest, urlBinder, byNameTemaplate, resource, redirect);
+			return this.forward(httpServletRequest, urlBinder, byNameTemaplate, resource, byUriTemplate, redirect);
 		}
 	}
 	
@@ -363,10 +363,15 @@ public abstract class AbstractMessageWrappingController extends
 			UrlTemplateBinder<R> urlBinder,
 			String urlTemplate, 
 			R resource,
+			String byUriTemplate,
 			boolean redirect) {
 		String forwardOrRedirect = getForwardOrRedirectString(redirect);
 		
 		String url = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate);
+		
+		String extraUrlPath = StringUtils.substringAfter(httpServletRequest.getRequestURI(), byUriTemplate);
+		
+		url = url + extraUrlPath;
 		
 		ModelAndView mav = new ModelAndView(
 				forwardOrRedirect + ":" + url);

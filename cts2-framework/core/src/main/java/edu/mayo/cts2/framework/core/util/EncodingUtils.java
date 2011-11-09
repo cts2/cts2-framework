@@ -42,7 +42,7 @@ public class EncodingUtils {
 	 * @return the string
 	 */
 	public static String encodeScopedEntityName(ScopedEntityName name){
-		return encodeColon(name.getName()) + SCOPED_ENTITY_NAME_SEPERATOR + encodeColon(name.getNamespace());
+		return encodeColon(name.getNamespace()) + SCOPED_ENTITY_NAME_SEPERATOR + encodeColon(name.getName());
 	}
 	
 	/**

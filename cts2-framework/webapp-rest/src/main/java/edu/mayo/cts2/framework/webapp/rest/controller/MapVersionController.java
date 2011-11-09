@@ -24,7 +24,9 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,14 +95,12 @@ public class MapVersionController extends AbstractServiceAwareController {
 			UrlTemplateBinder<MapVersion>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, MapVersion resource) {
-			if(attribute.equals(VAR_MAPVERSIONID)){
-				return resource.getMapVersionName();
-			}
-			if(attribute.equals(VAR_MAPID)){
-				return resource.getVersionOf().getContent();
-			}
-			return null;
+		public Map<String,String> getPathValues(MapVersion resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			returnMap.put(VAR_MAPVERSIONID,resource.getMapVersionName());
+			returnMap.put(VAR_MAPID,resource.getVersionOf().getContent());
+			
+			return returnMap;
 		}
 
 	};

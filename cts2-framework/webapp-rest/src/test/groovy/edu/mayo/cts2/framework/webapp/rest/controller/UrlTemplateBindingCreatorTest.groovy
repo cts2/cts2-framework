@@ -10,45 +10,25 @@ class UrlTemplateBindingCreatorTest {
 
 	UrlTemplateBindingCreator binder = new UrlTemplateBindingCreator()
 	
-	@Test
-	void "Test getUrlTemplateVariables() with one"(){
-		def params = binder.getUrlTemplateVariables("/this/{is}")
-			
-		assertEquals 1, params.size()
-		assertTrue params.contains("is")
-	}
-	
-	@Test
-	void "Test getUrlTemplateVariables() with one and slash"(){
-		def params = binder.getUrlTemplateVariables("/this/{is}/")
-			
-		assertEquals 1, params.size()
-		assertTrue params.contains("is")
-	}
 	
 	@Test
 	void "Test getUrlTemplateVariables() at beginning and end"(){
-		def params = binder.getUrlTemplateVariables("{this}/{is}/")
+		def url = binder.bindResourceToUrlTemplate("{this}/{is}/", "first","second")
 			
-		assertEquals 2, params.size()
-		assertTrue params.contains("this")
-		assertTrue params.contains("is")
+		assertEquals "first/second/", url
+		
 	}
 	
 	@Test
 	void "Test getUrlTemplateVariables() with multiple"(){
-		def params = binder.getUrlTemplateVariables("/this/{is}/a/{test}/of/this/{method}")
-			
-		assertEquals 3, params.size()
-		assertTrue params.contains("is")
-		assertTrue params.contains("test")
-		assertTrue params.contains("method")
+		def url = binder.bindResourceToUrlTemplate("/this/{is}/a/{test}/of/this/{method}", "first","second","third")
+		
 	}
 	
 	@Test
 	void "bindResourceToUrlTemplate"() {
 		def urlBinder = [
-			getValueForPathAttribute : {varName,resource -> varName + "CHANGED"}
+			getPathValues : {["is":"isCHANGED","test":"testCHANGED","method":"methodCHANGED"]}
 		] as UrlTemplateBinder
 		
 		def urlPath = binder.bindResourceToUrlTemplate(urlBinder, new CodeSystemCatalogEntry(), "/this/{is}/a/{test}/of/this/{method}")

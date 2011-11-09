@@ -24,6 +24,8 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,11 +84,11 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			new UrlTemplateBinder<ConceptDomainCatalogEntry>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, ConceptDomainCatalogEntry resource) {
-			if(attribute.equals(VAR_CONCEPTDOMAINID)){
-				return resource.getConceptDomainName();
-			}
-			return null;
+		public Map<String,String> getPathValues(ConceptDomainCatalogEntry resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			returnMap.put(VAR_CONCEPTDOMAINID,resource.getConceptDomainName());
+			
+			return returnMap;
 		}
 
 	};

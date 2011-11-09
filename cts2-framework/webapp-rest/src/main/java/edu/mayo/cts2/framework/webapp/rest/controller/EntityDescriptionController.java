@@ -23,7 +23,9 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,7 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
@@ -94,17 +97,27 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@Resource
 	private EntityDescriptionValidator entityDescriptionValidator;
 	
-	private final static UrlTemplateBinder<EntityDescription> URL_BINDER =
+	private final UrlTemplateBinder<EntityDescription> URL_BINDER =
 			new UrlTemplateBinder<EntityDescription>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, EntityDescription resource) {
-			if(attribute.equals(VAR_ENTITYID)){
-				ScopedEntityName id = ModelUtils.getEntity(resource).getEntityID();
-				
-				return EncodingUtils.encodeScopedEntityName(id);
-			}
-			return null;
+		public Map<String,String> getPathValues(EntityDescription resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			
+			EntityDescriptionBase base = ModelUtils.getEntity(resource);
+			
+			String codeSystemName = base.getDescribingCodeSystemVersion().getCodeSystem().getContent();
+			
+			returnMap.put(VAR_CODESYSTEMID, codeSystemName);
+			
+			returnMap.put(VAR_CODESYSTEMVERSIONID, 
+					codeSystemVersionNameResolver.getVersionIdFromCodeSystemVersionName(
+							codeSystemVersionReadService, base.getDescribingCodeSystemVersion().getCodeSystem().getContent()));
+			
+			ScopedEntityName id = base.getEntityID();
+			returnMap.put(VAR_ENTITYID, EncodingUtils.encodeScopedEntityName(id));
+
+			return returnMap;
 		}
 
 	};
@@ -428,26 +441,19 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 * @return the entity description by uri
 	 */
 	@RequestMapping(value=PATH_ENTITYBYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public ModelAndView getEntityDescriptionByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
-				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
-
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				PATH_ENTITYBYID, 
 				PATH_ENTITYBYURI, 
+				PATH_ENTITYBYID, 
 				URL_BINDER, 
 				this.entityDescriptionReadService, 
-				new EntityDescriptionReadId(uri,
-						ModelUtils.nameOrUriFromName(codeSystemVersionName)),
+				new EntityDescriptionReadId(uri,null),
 				redirect);
 	}
 	
@@ -482,5 +488,59 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				restrictions.getTaggedCodeSystem().setTag(tagName);
 			}
 		}
+	}
+
+	public EntityDescriptionQueryService getEntityDescriptionQueryService() {
+		return entityDescriptionQueryService;
+	}
+
+	public void setEntityDescriptionQueryService(
+			EntityDescriptionQueryService entityDescriptionQueryService) {
+		this.entityDescriptionQueryService = entityDescriptionQueryService;
+	}
+
+	public EntityDescriptionReadService getEntityDescriptionReadService() {
+		return entityDescriptionReadService;
+	}
+
+	public void setEntityDescriptionReadService(
+			EntityDescriptionReadService entityDescriptionReadService) {
+		this.entityDescriptionReadService = entityDescriptionReadService;
+	}
+
+	public EntityDescriptionMaintenanceService getEntityDescriptionMaintenanceService() {
+		return entityDescriptionMaintenanceService;
+	}
+
+	public void setEntityDescriptionMaintenanceService(
+			EntityDescriptionMaintenanceService entityDescriptionMaintenanceService) {
+		this.entityDescriptionMaintenanceService = entityDescriptionMaintenanceService;
+	}
+
+	public CodeSystemVersionReadService getCodeSystemVersionReadService() {
+		return codeSystemVersionReadService;
+	}
+
+	public void setCodeSystemVersionReadService(
+			CodeSystemVersionReadService codeSystemVersionReadService) {
+		this.codeSystemVersionReadService = codeSystemVersionReadService;
+	}
+
+	public CodeSystemVersionNameResolver getCodeSystemVersionNameResolver() {
+		return codeSystemVersionNameResolver;
+	}
+
+	public void setCodeSystemVersionNameResolver(
+			CodeSystemVersionNameResolver codeSystemVersionNameResolver) {
+		this.codeSystemVersionNameResolver = codeSystemVersionNameResolver;
+	}
+
+	public EntityDescriptionValidator getEntityDescriptionValidator() {
+		return entityDescriptionValidator;
+	}
+
+	public void setEntityDescriptionValidator(
+			EntityDescriptionValidator entityDescriptionValidator) {
+		this.entityDescriptionValidator = entityDescriptionValidator;
 	}
 }

@@ -24,7 +24,9 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,10 +93,10 @@ public class MapController extends AbstractServiceAwareController {
 			UrlTemplateBinder<MapCatalogEntry>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, MapCatalogEntry resource) {
-			if(attribute.equals(VAR_MAPID)){
-				return resource.getMapName();
-			}
+		public Map<String,String> getPathValues(MapCatalogEntry resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			returnMap.put(VAR_MAPID ,resource.getMapName());
+			
 			return null;
 		}
 

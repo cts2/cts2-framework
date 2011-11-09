@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,7 +75,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			new UrlTemplateBinder<ValueSetDefinition>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, ValueSetDefinition resource) {
+		public Map<String,String> getPathValues(ValueSetDefinition resource) {
 			//TODO:
 			return null;
 		}

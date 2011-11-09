@@ -24,6 +24,8 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,11 +86,11 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			new UrlTemplateBinder<CodeSystemCatalogEntry>(){
 
 		@Override
-		public String getValueForPathAttribute(String attribute, CodeSystemCatalogEntry resource) {
-			if(attribute.equals(VAR_CODESYSTEMID)){
-				return resource.getCodeSystemName();
-			}
-			return null;
+		public Map<String,String> getPathValues(CodeSystemCatalogEntry resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			returnMap.put(VAR_CODESYSTEMID, resource.getCodeSystemName());
+			
+			return returnMap;
 		}
 
 	};
