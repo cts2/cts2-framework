@@ -368,4 +368,39 @@ public class CodeSystemController extends AbstractServiceAwareController {
 		return null;
 		//
 	}
+
+	public CodeSystemReadService getCodeSystemReadService() {
+		return codeSystemReadService;
+	}
+
+	public void setCodeSystemReadService(CodeSystemReadService codeSystemReadService) {
+		this.codeSystemReadService = codeSystemReadService;
+	}
+
+	public CodeSystemQueryService getCodeSystemQueryService() {
+		return codeSystemQueryService;
+	}
+
+	public void setCodeSystemQueryService(
+			CodeSystemQueryService codeSystemQueryService) {
+		this.codeSystemQueryService = codeSystemQueryService;
+	}
+
+	public CodeSystemMaintenanceService getCodeSystemMaintenanceService() {
+		return codeSystemMaintenanceService;
+	}
+
+	public void setCodeSystemMaintenanceService(
+			CodeSystemMaintenanceService codeSystemMaintenanceService) {
+		this.codeSystemMaintenanceService = codeSystemMaintenanceService;
+	}
+
+	public CodeSystemHistoryService getCodeSystemHistoryService() {
+		return codeSystemHistoryService;
+	}
+
+	public void setCodeSystemHistoryService(
+			CodeSystemHistoryService codeSystemHistoryService) {
+		this.codeSystemHistoryService = codeSystemHistoryService;
+	}
 }

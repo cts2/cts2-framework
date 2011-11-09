@@ -450,18 +450,17 @@ public class MapVersionController extends AbstractServiceAwareController {
 	}
 	
 	@RequestMapping(value=PATH_MAPVERSION_BYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public ModelAndView getMapVersionByUri(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			@PathVariable(VAR_URI) String uri,
+			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				PATH_MAP_BYURI, 
-				PATH_MAP_BYID, 
+				PATH_MAPVERSION_BYURI, 
+				PATH_MAPVERSION_OF_MAP_BYID, 
 				URL_BINDER, 
 				this.mapVersionReadService,
 				ModelUtils.nameOrUriFromUri(uri),

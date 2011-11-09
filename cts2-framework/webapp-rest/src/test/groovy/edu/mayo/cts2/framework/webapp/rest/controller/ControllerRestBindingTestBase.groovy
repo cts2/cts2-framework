@@ -23,75 +23,63 @@ import edu.mayo.cts2.framework.model.mapversion.MapVersion
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService
 
-class MapVersionControllerRestBindingTest extends ControllerRestBindingTestBase {
+@RunWith(SpringJUnit4ClassRunner)
+@ContextConfiguration(
+	loader=TestGenericWebXmlContextLoader,
+	locations=["file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml","classpath:test-web-context.xml"])
+abstract class ControllerRestBindingTestBase {
 
 	@Resource
 	WebApplicationContext context
 	
-	@Resource
-	MapVersionController controller
+	def serverContext = [
+		getServerRootWithAppName: { "http://test/webapp" }
+	] as ServerContext
 
-	@Override
-	public getByUriUrl() {
-		"/mapversionbyuri"
+	def serviceConfigManager = [
+		getServerContext: { serverContext }
+	] as ServiceConfigManager
+	
+	@Before
+	void setup(){
+		getController().setServiceConfigManager(serviceConfigManager)
 	}
 	
-	@Override
-	public getByNameUrl() {
-		"/map/mapname/version/mvn"
-	}
+	abstract getByUriUrl()
+	abstract getByNameUrl()
+	abstract getUriToTest()
+	abstract getController()
 
-	@Override
-	public getUriToTest() {
-		"http://some/uri/to/test.org"
-	}
 	
-	@Override
-	public getController() {
-		def mapversion = new MapVersion(mapVersionName:"mvn",versionOf:new MapReference(content:"mapname"))
-		
-		def rs = [
-			read:{id,readcontext -> mapversion }
-		] as MapVersionReadService;
-	
-		controller.setMapVersionReadService(rs);
-		
-		controller
-	}
-
-
 	@Test
-	void testGetMapVersions(){
-		
-		def qs = [
-			getResourceSummaries:{
-				query,filter,restrictions,readcontext,page -> 
-				new DirectoryResult([],true,true)}
-		] as MapVersionQueryService;
-	
-		controller.setMapVersionQueryService(qs);
-		
+	void testGetByUriWithForward(){
+
 		MockMvcBuilders
 			.webApplicationContextSetup(context).build()
-			.perform(get("/mapversions").param("format","xml"))
+			.perform(get(getByUriUrl()).param("uri",getUriToTest()).param("redirect","false"))
 			.andExpect(response().status().isOk())
+			.andExpect(response().forwardedUrl(UriResolutionController.FORWARDING_URL))
+			.andExpect(model().hasAttributes(UriResolutionController.ATTRIBUTE_NAME))
+
 	}
 	
 	@Test
-	void testGetMapVersionsOfMap(){
-		
-		def qs = [
-			getResourceSummaries:{
-				query,filter,restrictions,readcontext,page ->
-				new DirectoryResult([],true,true)}
-		] as MapVersionQueryService;
-	
-		controller.setMapVersionQueryService(qs);
-		
+	void testGetByUriWithRedirect(){
+
 		MockMvcBuilders
 			.webApplicationContextSetup(context).build()
-			.perform(get("/map/mname/versions"))
+			.perform(get(getByUriUrl()).param("uri",getUriToTest()).param("redirect","true"))
 			.andExpect(response().status().isOk())
+			.andExpect(response().redirectedUrl(getByNameUrl()))
 	}
+
+}
+
+class TestGenericWebXmlContextLoader extends GenericWebXmlContextLoader {
+	
+	public TestGenericWebXmlContextLoader() {
+	super("src/main/webapp/WEB-INF", false);
+	}
+	
 }
 
