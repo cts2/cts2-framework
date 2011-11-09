@@ -48,6 +48,7 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.service.association.AdvancedAssociationQueryService;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
@@ -81,11 +82,13 @@ public class AssociationController extends AbstractServiceAwareController {
 	@Cts2Service
 	private AssociationQueryService associationQueryService;
 
-	@Cts2Service
-	private CodeSystemVersionReadService codeSystemVersionReadService;
-	
 	@Resource
 	private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
+
+	private AdvancedAssociationQueryService advancedAssociationQueryService;
+	
+	@Cts2Service
+	private CodeSystemVersionReadService codeSystemVersionReadService;
 	
 	private static UrlTemplateBinder<Association> URL_BINDER = new 
 			UrlTemplateBinder<Association>(){
@@ -131,7 +134,7 @@ public class AssociationController extends AbstractServiceAwareController {
 			RestFilter restFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 		
 		return this.getChildrenAssociationsOfEntity(
@@ -141,7 +144,7 @@ public class AssociationController extends AbstractServiceAwareController {
 				restFilter, 
 				page, 
 				codeSystemName, 
-				codeSystemVersionName,
+				codeSystemVersionId,
 				entityName);
 	}
 	
@@ -166,9 +169,10 @@ public class AssociationController extends AbstractServiceAwareController {
 			RestFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
-		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.associationQueryService);
 		
 		EntityDescriptionReadId name = 
@@ -353,11 +357,12 @@ public class AssociationController extends AbstractServiceAwareController {
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@RequestParam(required=true, defaultValue="TOP_NODE") String focus,
 			@RequestParam(required=true, defaultValue="FORWARD") GraphDirection direction,
 			@RequestParam(required=true, defaultValue="1") int depth) {
-
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
 		AssociationGraph directoryResult = 
 			this.associationQueryService.getAssociationGraph(
 					new EntityDescriptionReadId(
@@ -392,9 +397,12 @@ public class AssociationController extends AbstractServiceAwareController {
 			ResolvedFilter resolvedFilter,
 			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+		
 		associationRestrictions.setSourceEntity(
 				ModelUtils.entityNameOrUriFromName(
 						this.getScopedEntityName(entityName, codeSystemName)));
