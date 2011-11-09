@@ -11,6 +11,9 @@
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>webapp-rest</artifactId>
 	<packaging>war</packaging>
+	
+	<name>CTS2 Development Framework REST WebApp</name>
+	<description>REST Web Bindings for The CTS2 Development Framework.</description>
 
 	<properties>
 		<org.springframework.roo-version>1.0.2.RELEASE</org.springframework.roo-version>
@@ -250,6 +253,13 @@
 	</dependencies>
 
 	<build>
+	 <resources>
+        <resource>
+          <directory>src/main/resources</directory>
+          <filtering>true</filtering>
+        </resource>
+      </resources>   
+      
 	  <extensions>
 	    <extension>
 	       <groupId>org.apache.maven.wagon</groupId>

@@ -12,7 +12,7 @@
 
 	<bean class="edu.mayo.cts2.framework.core.config.ConfigInitializer"
 		factory-method="instance" />
-		
+	
 		<!-- Scans within the base package of the application for @Components to 
 		configure as beans -->
 	<context:component-scan base-package="edu.mayo.cts2.framework.model" />

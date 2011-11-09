@@ -97,7 +97,7 @@ public class MapController extends AbstractServiceAwareController {
 			Map<String,String> returnMap = new HashMap<String,String>();
 			returnMap.put(VAR_MAPID ,resource.getMapName());
 			
-			return null;
+			return returnMap;
 		}
 
 	};
@@ -343,11 +343,10 @@ public class MapController extends AbstractServiceAwareController {
 	 * @return the map by uri
 	 */
 	@RequestMapping(value=PATH_MAP_BYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public ModelAndView getMapByUri(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			@PathVariable(VAR_URI) String uri,
+			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		return this.doReadByUri(
@@ -389,5 +388,37 @@ public class MapController extends AbstractServiceAwareController {
 						ControllerUtils.idsToNameOrUriSet(codesystem));
 			}
 		}
+	}
+
+	public MapReadService getMapReadService() {
+		return mapReadService;
+	}
+
+	public void setMapReadService(MapReadService mapReadService) {
+		this.mapReadService = mapReadService;
+	}
+
+	public MapQueryService getMapQueryService() {
+		return mapQueryService;
+	}
+
+	public void setMapQueryService(MapQueryService mapQueryService) {
+		this.mapQueryService = mapQueryService;
+	}
+
+	public MapMaintenanceService getMapMaintenanceService() {
+		return mapMaintenanceService;
+	}
+
+	public void setMapMaintenanceService(MapMaintenanceService mapMaintenanceService) {
+		this.mapMaintenanceService = mapMaintenanceService;
+	}
+
+	public MapHistoryService getMapHistoryService() {
+		return mapHistoryService;
+	}
+
+	public void setMapHistoryService(MapHistoryService mapHistoryService) {
+		this.mapHistoryService = mapHistoryService;
 	}
 }

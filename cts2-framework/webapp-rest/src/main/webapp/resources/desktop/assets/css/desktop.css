@@ -532,6 +532,15 @@ fieldset {
 	width: 100%;
 }
 
+.service-info {
+	
+	padding: 0.3em;
+}
+
+.service-info h1{
+	display: inline;
+}
+
 table {
 	
 }

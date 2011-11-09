@@ -73,6 +73,10 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
 
           </div>
           <div class="window_main">
+          
+         <h1>Service Name:</h1><p>...</p>
+        
+         
           <div>
           
 	</div>

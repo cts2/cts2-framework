@@ -378,6 +378,28 @@ public class AssociationController extends AbstractServiceAwareController {
 		return directoryResult;
 	}
 	
+	@RequestMapping(value=PATH_SOURCEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
+	@ResponseBody
+	public AssociationDirectory getSourceOfAssociationsOfEntity(
+			HttpServletRequest httpServletRequest,
+			AssociationQueryServiceRestrictions associationRestrictions,
+			ResolvedFilter resolvedFilter,
+			Page page,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@PathVariable(VAR_ENTITYID) String entityName) {
+		
+		return this.getSourceOfAssociationsOfEntity(
+				httpServletRequest, 
+				null, 
+				associationRestrictions, 
+				resolvedFilter, 
+				page, 
+				codeSystemName, 
+				codeSystemVersionId, 
+				entityName);
+	}
+	
 	/**
 	 * Gets the source of associations of entity.
 	 *
@@ -465,5 +487,59 @@ public class AssociationController extends AbstractServiceAwareController {
 				changeseturi,
 				new AssociationReadId(associationUri, codeSystemVersionName), 
 				this.associationMaintenanceService);
+	}
+
+	public AssociationReadService getAssociationReadService() {
+		return associationReadService;
+	}
+
+	public void setAssociationReadService(
+			AssociationReadService associationReadService) {
+		this.associationReadService = associationReadService;
+	}
+
+	public AssociationMaintenanceService getAssociationMaintenanceService() {
+		return associationMaintenanceService;
+	}
+
+	public void setAssociationMaintenanceService(
+			AssociationMaintenanceService associationMaintenanceService) {
+		this.associationMaintenanceService = associationMaintenanceService;
+	}
+
+	public AssociationQueryService getAssociationQueryService() {
+		return associationQueryService;
+	}
+
+	public void setAssociationQueryService(
+			AssociationQueryService associationQueryService) {
+		this.associationQueryService = associationQueryService;
+	}
+
+	public CodeSystemVersionNameResolver getCodeSystemVersionNameResolver() {
+		return codeSystemVersionNameResolver;
+	}
+
+	public void setCodeSystemVersionNameResolver(
+			CodeSystemVersionNameResolver codeSystemVersionNameResolver) {
+		this.codeSystemVersionNameResolver = codeSystemVersionNameResolver;
+	}
+
+	public AdvancedAssociationQueryService getAdvancedAssociationQueryService() {
+		return advancedAssociationQueryService;
+	}
+
+	public void setAdvancedAssociationQueryService(
+			AdvancedAssociationQueryService advancedAssociationQueryService) {
+		this.advancedAssociationQueryService = advancedAssociationQueryService;
+	}
+
+	public CodeSystemVersionReadService getCodeSystemVersionReadService() {
+		return codeSystemVersionReadService;
+	}
+
+	public void setCodeSystemVersionReadService(
+			CodeSystemVersionReadService codeSystemVersionReadService) {
+		this.codeSystemVersionReadService = codeSystemVersionReadService;
 	}
 }

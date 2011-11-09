@@ -159,6 +159,17 @@ $(document).ready(function() {
 	} );
 	
 	
+	$.ajax( {
+		"dataType": 'json', 
+		"type": "GET", 
+		"contentType": "application/json",
+		"url": "service", 
+		"success": function(json){
+			$('#serviceName').text(json.serviceName);
+			$('#serviceVersion').text(json.serviceVersion);
+			$('#serviceDescription').text(json.serviceDescription.value.content);
+		}
+	} );
 	
 	var pluginAdminTable = $('#pluginAdminTable').dataTable( {
 		//"sDom": 'R<"H"lfr>t<"F"ip<',
