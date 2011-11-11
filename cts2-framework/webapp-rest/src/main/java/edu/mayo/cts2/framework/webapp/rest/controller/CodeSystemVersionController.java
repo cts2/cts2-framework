@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -474,7 +475,9 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			CodeSystemVersionQueryServiceRestrictions restrictions = 
 					(CodeSystemVersionQueryServiceRestrictions) binder.getTarget();
 			
-			restrictions.setCodeSystem(ModelUtils.nameOrUriFromEither(codesystem));
+			if(StringUtils.isNotEmpty(codesystem)){
+				restrictions.setCodeSystem(ModelUtils.nameOrUriFromEither(codesystem));
+			}
 			
 			if(CollectionUtils.isNotEmpty(entity)){
 				restrictions.setEntityRestriction(new EntityRestriction());

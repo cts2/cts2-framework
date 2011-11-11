@@ -40,6 +40,7 @@ import org.springframework.oxm.XmlMappingException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -50,7 +51,6 @@ import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -305,23 +305,20 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 */
 	protected ResolvedFilter processFilter(RestFilter restFilter, BaseQueryService service){
 		if(restFilter == null ||
-				StringUtils.isBlank(restFilter.getMatchValue())){
+				StringUtils.isBlank(restFilter.getMatchvalue())){
 			return null;
 		}
 		
-		String matchAlgorithmReference = restFilter.getMatchAlgorithmName();
+		String matchAlgorithmReference = restFilter.getMatchalgorithm();
 		
 		MatchAlgorithmReference matchRef = 
 			ControllerUtils.getReference(matchAlgorithmReference, service.getSupportedMatchAlgorithms());
-		
-		FilterComponent filterComponent = new FilterComponent();
-		filterComponent.setMatchAlgorithm(matchRef);
-		filterComponent.setMatchValue(restFilter.getMatchValue());
-		
-		String nameOrUri = restFilter.getFilterComponentName();
-		
+			
 		ResolvedFilter resolvedFilter = new ResolvedFilter();
+		resolvedFilter.setMatchAlgorithmReference(matchRef);
 		
+		String nameOrUri = restFilter.getFiltercomponent();
+
 		switch(restFilter.getReferencetype()){
 			case ATTRIBUTE: {
 				ModelAttributeReference modelAttributeRef = 
@@ -345,10 +342,31 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 			}
 		}
 
-		resolvedFilter.setMatchValue(restFilter.getMatchValue());
+		resolvedFilter.setMatchValue(restFilter.getMatchvalue());
 		
 		return resolvedFilter;
 	}
+	
+	@InitBinder
+	 public void initPageBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_MAXTORETURN, required=false) Integer maxToReturn,
+			 @RequestParam(value=PARAM_PAGE, required=false) Integer pageNumber) {
+		
+		if(binder.getTarget() instanceof Page){
+			Page page = 
+					(Page) binder.getTarget();
+			
+			if(maxToReturn != null){
+				page.setMaxToReturn(maxToReturn);
+			}
+			
+			if(pageNumber != null){
+				page.setPage(pageNumber);
+			}
+			
+		}
+	 }
 	
 	/**
 	 * Inits the binder.

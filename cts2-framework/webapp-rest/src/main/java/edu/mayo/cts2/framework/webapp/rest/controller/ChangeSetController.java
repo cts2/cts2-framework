@@ -165,7 +165,8 @@ public class ChangeSetController extends AbstractServiceAwareController {
 		
 		this.changeSetService.updateChangeSetMetadata(
 				changeSetUri, 
-				creator, 
+				//TODO: How do we add a Source to the service?
+				null, 
 				changeInstructions, 
 				officialEffectiveDate);
 		

@@ -37,7 +37,8 @@ public class ControllerUtils {
 			if(ModelUtils.isValidUri(id)){
 				nameOrUri = ModelUtils.entityNameOrUriFromUri(id);
 			} else {
-				nameOrUri = ModelUtils.entityNameOrUriFromName(EncodingUtils.decodeEntityName(id));
+				nameOrUri = ModelUtils.entityNameOrUriFromName(
+						EncodingUtils.decodeEntityName(id));
 			}
 			returnSet.add(nameOrUri);
 		}

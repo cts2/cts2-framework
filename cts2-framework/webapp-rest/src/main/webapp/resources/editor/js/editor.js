@@ -9,7 +9,7 @@ var currentJson;
 
 var selectedChangeSetUri;
 
-function rollback() {
+function rollbackChangeSet() {
 	
 
 				  $.ajax( {
@@ -36,6 +36,34 @@ function rollback() {
 
 }
 
+function commitChangeSet() {
+	
+
+	  $.ajax( {
+			"dataType": 'json', 
+			"contentType": "application/json",
+			"type": "POST", 
+			"url": "changeset/"+selectedChangeSetUri,
+			"data": "{'updatedState':{'state':'FINAL'}}",
+			"error":function (xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				alert(xhr.statusText);
+				alert(xhr.responseText);
+				alert(jsonString);
+			},
+			"success": function (json, textStatus, jqXHR) {
+
+				log("POST",
+						"changeset/"+selectedChangeSetUri,
+						"Committing the ChangeSet");
+				
+				changeSetTable.fnReloadAjax();	
+				
+			}
+		} );
+
+}
+
 fnChangeSetObjectToArray = function ( )
 {
 	return function ( sSource, aoData, fnCallback ) {
@@ -48,8 +76,10 @@ fnChangeSetObjectToArray = function ( )
 				var newJson = new Object();
 				newJson.aaData = new Array();
 				
-				$('#changeSetDropdown').html("");
-				$('#csChangeSetDropdown').html("");
+				$('#changeSetDropdown').html("<option>CURRENT</option>");
+				$('saveAsChangeSetDropdown').html("<option>NEW</option>");
+				$('#csChangeSetDropdown').html('<option>NEW</option>');
+				$('#searchChangeSetDropdown').html('<option>CURRENT</option>');
 				
 				json = json.entryList;
 				
@@ -61,6 +91,8 @@ fnChangeSetObjectToArray = function ( )
 					
 					$('#changeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
 					$('#csChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
+					$('#searchChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
+					$('#saveAsChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
 
 				}
 			
@@ -120,10 +152,23 @@ function setResourceSynopsis(json,synopsis){
 
 $(document).ready(function() {
 	
+	   $("#saveAsChangeSetDropdown").hide();
+	   
+	   $("#pickChangeSetButton").button();
+	   
+	   $('#changeSetDropdown').change(function() {
+		   var changeSet = $('#changeSetDropdown').val();
+		   if(changeSet == 'CURRENT'){
+			   $("#saveAsChangeSetDropdown").show();
+		   } else {
+			   $("#saveAsChangeSetDropdown").hide();
+		   }
+	   });
+	
 	   $( "#codeSystemEditForm" ).dialog({
 			autoOpen: false,
-			height: 350,
-			width: 450,
+			height: 450,
+			width: 550,
 			modal: true,
 			buttons: {
 				"Save!": function() {
@@ -161,6 +206,41 @@ $(document).ready(function() {
 		"sAjaxSource": 'codesystems?format=json',
 		"fnServerData": fnCodeSystemObjectToArray(),
 	} );
+	
+	var autocompleteTable = $("#autocompleteTable").dataTable({
+		"sDom": 'R<"H"lfr>t<"F"ip<',
+		"bJQueryUI": true,
+		"bProcessing": false,
+		"bPaginate": true,
+		"bFilter": true,
+		"fnServerData": fnCodeSystemObjectToArray(),
+	});
+	
+	$('#editAutocomplete').keyup(function(){
+	    var val = $(this).val();
+	    
+	    var changeSetUri = $('#changeSetDropdown').val();
+	     
+	    var query = "codesystems?filtercomponent=resourceName&matchalgorithm=contains&format=json&matchvalue="+val;	
+	    if(changeSetUri != 'CURRENT'){
+	    	query += "&changesetcontext='"+changeSetUri+"'";
+	    }
+	    
+	    codeSystemTable.fnReloadAjax(query);
+	});
+	
+	$('#searchAutocomplete').keyup(function(){
+	    var val = $(this).val();
+	    
+	    var changeSetUri = $('#searchChangeSetDropdown').val();
+	     
+	    var query = "codesystems?filtercomponent=resourceName&matchalgorithm=contains&format=json&matchvalue="+val;	
+	    if(changeSetUri != 'CURRENT'){
+	    	query += "&changesetcontext='"+changeSetUri+"'";
+	    }
+	    
+	    autocompleteTable.fnReloadAjax(query);
+	});
 	
 	$( "#tabs" ).tabs();
 	 
@@ -206,8 +286,9 @@ $(document).ready(function() {
 function create(){
 	var csn = $("#csn").val();
 	var about = $("#about").val();
+	var changeseturi = $("#csChangeSetDropdown").val();
 	
-	createCodeSystem(csn,about);
+	createCodeSystem(csn,about,changeseturi);
 }
 
 function populateFormFields() {
@@ -233,7 +314,7 @@ function createChangeSet(callback){
 	  });
 }
 
-function createCodeSystem(csn,about) {
+function createCodeSystem(csn,about,changeseturi) {
 	
 			var createFunction = function (json0, text0, jqXHR0) {
 				changeSetTable.fnReloadAjax();
@@ -260,7 +341,11 @@ function createCodeSystem(csn,about) {
 					} );
 			};
 			
-			createChangeSet(createFunction);
+			if(changeseturi == 'NEW'){
+				createChangeSet(createFunction);
+			} else {
+				doCreate('{"codeSystemName":"'+csn+'","about":"'+about+'"}',changeseturi);
+			}
 }
 
 
@@ -344,9 +429,16 @@ function updateCodingScheme(codeSystemName,about,description,changeSetUri) {
 
 }
 
-function onListCodeSystems(){
-	 var changeSetUri = $("#changeSetDropdown").val();
-	 codeSystemTable.fnReloadAjax("codesystems?format=json&changesetcontext="+changeSetUri);
+function onListAllCodeSystems(){
+	var query = "codesystems?format=json";
+	var changeSetUri = $("#changeSetDropdown").val();
+	if(changeSetUri != 'CURRENT'){
+		query += ("&changesetcontext="+changeSetUri);
+	}
+	
+	$('#editAutocomplete').val('');
+	
+	codeSystemTable.fnReloadAjax(query);
 }
 
 function log(method,url,msg){

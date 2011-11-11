@@ -52,7 +52,8 @@ import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 public class ModelUtils {
 	
 	//TODO: This is probably an overly simplistic check
-	private static Pattern URI_PATTERN = Pattern.compile("[a-zA-Z]+:.*");
+	private static Pattern URI_PATTERN = Pattern.compile(
+			"(urn:[a-zA-Z]+:.*)|([a-zA-Z]+://.*)");
  
 	/**
 	 * Instantiates a new rest model utils.

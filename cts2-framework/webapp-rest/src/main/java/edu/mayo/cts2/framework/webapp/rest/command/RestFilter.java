@@ -37,36 +37,29 @@ public class RestFilter {
 	private String filtercomponent = ExternalCts2Constants.MA_RESOURCE_SYNOPSIS_NAME;
 	private String matchvalue;
 	private TargetReferenceType referencetype = TargetReferenceType.ATTRIBUTE;
-
-	public String getMatchAlgorithmName() {
+	
+	public String getMatchalgorithm() {
 		return matchalgorithm;
 	}
-
-	public void setMatchAlgorithmName(String matchAlgorithmName) {
-		this.matchalgorithm = matchAlgorithmName;
+	public void setMatchalgorithm(String matchalgorithm) {
+		this.matchalgorithm = matchalgorithm;
 	}
-
-	public String getMatchValue() {
-		return matchvalue;
-	}
-
-	public void setMatchvalue(String matchValue) {
-		this.matchvalue = matchValue;
-	}
-
-	public void setFilterComponentName(String filterComponentName) {
-		this.filtercomponent = filterComponentName;
-	}
-
-	public String getFilterComponentName() {
+	public String getFiltercomponent() {
 		return filtercomponent;
 	}
-
-	public void setReferencetype(TargetReferenceType referencetype) {
-		this.referencetype = referencetype;
+	public void setFiltercomponent(String filtercomponent) {
+		this.filtercomponent = filtercomponent;
 	}
-
+	public String getMatchvalue() {
+		return matchvalue;
+	}
+	public void setMatchvalue(String matchvalue) {
+		this.matchvalue = matchvalue;
+	}
 	public TargetReferenceType getReferencetype() {
 		return referencetype;
+	}
+	public void setReferencetype(TargetReferenceType referencetype) {
+		this.referencetype = referencetype;
 	}
 }

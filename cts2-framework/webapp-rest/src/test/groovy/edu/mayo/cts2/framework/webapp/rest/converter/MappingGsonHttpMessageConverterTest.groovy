@@ -1,9 +1,13 @@
 package edu.mayo.cts2.framework.webapp.rest.converter;
 
-import org.junit.Test
 import static org.junit.Assert.*
 
+import org.junit.Test
+
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
+import edu.mayo.cts2.framework.model.core.types.FinalizableState
+import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest
+import edu.mayo.cts2.framework.model.service.core.UpdatedState
 
 class MappingGsonHttpMessageConverterTest {
 	
@@ -34,6 +38,21 @@ class MappingGsonHttpMessageConverterTest {
 		
 		assertEquals returned.codeSystemName, cs.codeSystemName
 	}
+	
+	@Test
+	void TestUpdateChangeSetMetadata(){
+		
+		def csm = new UpdateChangeSetMetadataRequest(updatedState:new UpdatedState(state:FinalizableState.FINAL))
+		
+		def json = gson.toJson(csm)
+		
+		println json
+		
+		def returned = gson.fromJson(json, UpdateChangeSetMetadataRequest.class)
+		
+		assertEquals returned.updatedState.state, csm.updatedState.state
+	}
+
 
 
 }

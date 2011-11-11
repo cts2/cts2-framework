@@ -91,7 +91,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 
 			returnMap.put(VAR_VALUESETID,resource.getValueSetName());
 			
-			return null;
+			return returnMap;
 		}
 
 	};

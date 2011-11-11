@@ -181,8 +181,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
-			
-		
+
 		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 
 				mapVersionName);

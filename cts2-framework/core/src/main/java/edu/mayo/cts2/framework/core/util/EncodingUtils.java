@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.core.util;
 
+import org.springframework.util.StringUtils;
+
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 
 /**
@@ -64,9 +66,12 @@ public class EncodingUtils {
 	public static ScopedEntityName decodeEntityName(String text){
 		ScopedEntityName scopedName = new ScopedEntityName();
 		String[] name = text.split(":");
+		if(name.length == 1){
+			name = new String[]{null,text};
+		}
 		
-		scopedName.setNamespace(name[0].replaceAll(ESCAPE_CHAR, SCOPED_ENTITY_NAME_SEPERATOR));
-		scopedName.setName(name[1].replaceAll(ESCAPE_CHAR, SCOPED_ENTITY_NAME_SEPERATOR));
+		scopedName.setNamespace(StringUtils.replace(name[0], ESCAPE_CHAR, SCOPED_ENTITY_NAME_SEPERATOR));
+		scopedName.setName(StringUtils.replace(name[1], ESCAPE_CHAR, SCOPED_ENTITY_NAME_SEPERATOR));
 		
 		return scopedName;
 	}

@@ -259,7 +259,8 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 					query, 
 					createSet(filterComponent), 
 					restrictions, 
-					null, page);
+					null, 
+					page);
 
 		EntityDirectory directory = this.populateDirectory(
 				directoryResult, 

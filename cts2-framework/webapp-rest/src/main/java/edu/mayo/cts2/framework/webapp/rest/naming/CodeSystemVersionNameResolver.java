@@ -1,7 +1,6 @@
 package edu.mayo.cts2.framework.webapp.rest.naming;
 
 import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
@@ -35,7 +34,7 @@ public class CodeSystemVersionNameResolver {
 			if(csv != null){
 				versoinId = csv.getOfficialResourceVersionId();
 			} else {
-				versoinId = this.getVersioIdFromDefaultNameFormat(codeSystemVersionName);
+				versoinId = codeSystemVersionName;
 			}
 			
 			this.nameCache.put(key, versoinId);
@@ -65,7 +64,7 @@ public class CodeSystemVersionNameResolver {
 			if(csv != null){
 				name = csv.getCodeSystemVersionName();
 			} else {
-				name = this.createCodeSystemVersionName(codeSystemName, versionId);
+				name = versionId;
 			}
 			
 			this.nameCache.put(key, name);
@@ -74,6 +73,7 @@ public class CodeSystemVersionNameResolver {
 		return (String) this.nameCache.get(key);
 	}
 	
+	/*
 	protected String getVersioIdFromDefaultNameFormat(String codeSystemVersionName){
 		return StringUtils.split(codeSystemVersionName)[0];
 	}
@@ -82,6 +82,7 @@ public class CodeSystemVersionNameResolver {
 			String versionId){
 		return codeSystemName + "_" + versionId;
 	}
+	*/
 	
 	protected int getCacheKey(String... keys){
 		StringBuffer sb = new StringBuffer();

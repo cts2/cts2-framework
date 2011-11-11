@@ -121,12 +121,8 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 		
 		marshaller.setSchemaLocation(namespace + " " + location);
 
-		try {
-			marshaller.afterPropertiesSet();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} 
-
+		marshaller.setValidating(true);
+		
 		try {
 			marshaller.afterPropertiesSet();
 		} catch (Exception e) {

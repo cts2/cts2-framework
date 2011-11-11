@@ -33,20 +33,24 @@ Select A Theme: <div id="switcher"></div>
 <br /><br />
 
 <div id="codeSystemEditForm" title="Edit CodeSystem">
-	
+
 	<label id="codeSystemLNameLabel"><b>CodeSystemName:</b> <span id="codeSystemNameText"></span></label>
 	<br></br>
 	<label id="aboutLabel"><b>About:</b> <span id="aboutText"></span></label>
 	<br></br>
-<!-- 	<label id="changeSetUriLabel"><b>ChangeSet:</b> <span id="changeSetUriText"></span></label> -->
-<!-- 	<br></br> -->
 	<form>
-	<fieldset>
-		<label for="description">Description </label>
-		<input type="text" name="description" id="description" class="text ui-widget-content ui-corner-all" />
-	</fieldset>
-
+		<fieldset title="Edit">
+			<legend>Edit</legend>
+			<label for="description">Description </label>
+			<input type="text" name="description" id="description" class="text ui-widget-content ui-corner-all" />
+		</fieldset>
+		<fieldset title="ChangeSet">
+			<legend>ChangeSet</legend>
+			<label for="editChangeSet"><b>ChangeSet:</b> <span id="editChangeSetText"></span></label>
+			<input type="button" name="pickChangeSetButton" id="pickChangeSetButton" title="Choose ChangeSet"/>
+		</fieldset>
 	</form>
+
 </div>
 
 <div id="tabs">
@@ -54,15 +58,21 @@ Select A Theme: <div id="switcher"></div>
 		<li><a href="#tabs-1">Edit</a></li>
 		<li><a href="#tabs-2">Create New</a></li>
 		<li><a href="#tabs-3">Change Sets</a></li>
+		<li><a href="#tabs-4">Search</a></li>
+		
 	</ul>
 	<div id="tabs-1">
 
+		
 		<label for="changeSetDropdown">ChangeSet: </label>
 		<select id="changeSetDropdown" name="changeSetDropdown"></select>
 
-		<input type="submit" id="listCodeSystems" value="List CodeSystems" name="listCodeSystems" onclick="onListCodeSystems()"/>
+		<input type="submit" id="listCodeSystems" value="List All CodeSystems" name="listCodeSystems" onclick="onListAllCodeSystems()"/>
 				
 		<br></br>	
+		
+		<input id="editAutocomplete"/>
+		<br></br>
 						
 		<table id="codeSystemTable" class="display">
               <thead>
@@ -102,8 +112,8 @@ Select A Theme: <div id="switcher"></div>
 		</form>
 	</div>
 	<div id="tabs-3">
-		<input type="submit" value="Rollback" onclick="rollback();"/>
-		<input type="submit" value="Commit" onclick="commit();"/>
+		<input type="submit" value="Rollback" onclick="rollbackChangeSet();"/>
+		<input type="submit" value="Commit" onclick="commitChangeSet();"/>
 	   	<table id="changeSetTable" class="display">
               <thead>
                 <tr>
@@ -115,6 +125,25 @@ Select A Theme: <div id="switcher"></div>
                   </th>
                   <th>
                     Status
+                  </th>
+                </tr>
+              </thead>
+            </table>
+	</div>
+		<div id="tabs-4">
+		
+		<label for="searchChangeSetDropdown">ChangeSet: </label>
+		<select id="searchChangeSetDropdown" name="searchChangeSetDropdown"></select>
+
+		<input id="searchAutocomplete"/>
+				
+		<br></br>	
+						
+		<table id="autocompleteTable" class="display">
+              <thead>
+                <tr>
+                  <th>
+                    CodeSystem Name
                   </th>
                 </tr>
               </thead>

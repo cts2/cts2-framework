@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.Date;
 
 import edu.mayo.cts2.framework.model.core.OpaqueData;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.updates.ChangeSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
@@ -16,7 +16,7 @@ public interface ChangeSetService extends Cts2Profile {
 	
 	public void updateChangeSetMetadata(
 			String changeSetUri, 
-			NameOrURI creator, 
+			SourceReference creator, 
 			OpaqueData changeInstructions,
 			Date officialEffectiveDate);
 	
