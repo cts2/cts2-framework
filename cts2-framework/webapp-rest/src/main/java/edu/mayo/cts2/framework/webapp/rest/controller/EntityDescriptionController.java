@@ -47,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -208,6 +209,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public EntityDirectory getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -216,6 +218,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 		return this.getEntityDescriptionsOfCodeSystemVersion(
 				httpServletRequest, 
+				restReadContext,
 				null, 
 				restrictions, 
 				restFilter, 
@@ -240,6 +243,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public EntityDirectory getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -247,28 +251,21 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.entityDescriptionQueryService);
-		
-		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
-				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+		String codeSystemVersionName = this.getCodeSystemVersionNameResolver().
+					getCodeSystemVersionNameFromVersionId(
+							codeSystemVersionReadService, 
+							codeSystemName, 
+							codeSystemVersionId);
 		
 		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
-		DirectoryResult<EntityDirectoryEntry> directoryResult = 
-			this.entityDescriptionQueryService.getResourceSummaries(
-					query, 
-					createSet(filterComponent), 
-					restrictions, 
-					null, 
-					page);
-
-		EntityDirectory directory = this.populateDirectory(
-				directoryResult, 
-				page, 
+		return this.getEntityDescriptions(
 				httpServletRequest, 
-				EntityDirectory.class);
-		
-		return directory;
+				restReadContext,
+				query, 
+				restrictions, 
+				restFilter, 
+				page);
 	}
 	
 	/**
@@ -287,6 +284,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public void getEntityDescriptionsOfCodeSystemVersionCount(
 			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -301,6 +299,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 		this.getEntityDescriptionsCount(
 				httpServletResponse,
+				restReadContext,
 				query, 
 				restrictions, 
 				restFilter);
@@ -320,12 +319,14 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public EntityDirectory getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page) {
 		
 		return this.getEntityDescriptions(
 				httpServletRequest, 
+				restReadContext,
 				null, 
 				restrictions, 
 				restFilter, 
@@ -346,6 +347,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public EntityDirectory getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -353,13 +355,16 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.entityDescriptionQueryService);
 		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		DirectoryResult<EntityDirectoryEntry> directoryResult = 
 			this.entityDescriptionQueryService.
 				getResourceSummaries(
 						query,
 						createSet(filterComponent),
 						restrictions, 
-						null, page);
+						readContext, 
+						page);
 
 		
 		EntityDirectory directory = this.populateDirectory(
@@ -385,6 +390,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public void getEntityDescriptionsCount(
 			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
@@ -444,6 +450,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@RequestMapping(value=PATH_ENTITYBYURI, method=RequestMethod.GET)
 	public ModelAndView getEntityDescriptionByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		

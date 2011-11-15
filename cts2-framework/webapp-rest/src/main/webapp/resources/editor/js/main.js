@@ -22,7 +22,7 @@ $.widget("ui.form",{
 				else if($(this).is(":radio"))
 				object.radio(this);
 				else if($(this).is("select"))
-				object.selector(this);
+				//object.selector(this);
 				
 				if($(this).hasClass("date"))
 				{

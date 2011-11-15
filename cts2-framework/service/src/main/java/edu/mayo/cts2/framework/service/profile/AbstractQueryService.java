@@ -23,10 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import org.apache.commons.lang.StringUtils;
-
-import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.BaseQueryService;
 
 /**

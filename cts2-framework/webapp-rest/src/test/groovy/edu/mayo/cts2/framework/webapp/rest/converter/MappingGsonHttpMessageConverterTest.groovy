@@ -3,9 +3,13 @@ package edu.mayo.cts2.framework.webapp.rest.converter;
 import static org.junit.Assert.*
 
 import org.junit.Test
+import org.springframework.test.annotation.Repeat
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
+import edu.mayo.cts2.framework.model.core.ScopedEntityName
 import edu.mayo.cts2.framework.model.core.types.FinalizableState
+import edu.mayo.cts2.framework.model.entity.EntityDescription
+import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest
 import edu.mayo.cts2.framework.model.service.core.UpdatedState
 
@@ -52,7 +56,56 @@ class MappingGsonHttpMessageConverterTest {
 		
 		assertEquals returned.updatedState.state, csm.updatedState.state
 	}
+	
+	@Test
+	void TestNamedEntityDescriptionRoundTrip(){
+		
+		def ed = new NamedEntityDescription(entityID:new ScopedEntityName(name:"n",namespace:"ns"))
+		
+		def json = gson.toJson(ed)
+		
+		assertNotNull json
+		
+		def returned = gson.fromJson(json, NamedEntityDescription.class)
+		
+		assertEquals returned.entityID.name, "n"
+		
+		assertEquals returned.entityID.namespace, "ns"
+	}
+	
+	@Test
+	void TestEntityDescriptionRoundTrip(){
+		
+		def ed = new NamedEntityDescription(entityID:new ScopedEntityName(name:"n",namespace:"ns"))
+		
+		def des = new EntityDescription()
+		des.setNamedEntity(ed)
+		
+		def json = gson.toJson(des)
+		
+		assertNotNull json
+		
+		println json
+		
+		def returned = gson.fromJson(json, EntityDescription.class)
+		
+		assertEquals returned.getNamedEntity().entityID.name, "n"
+		
+		assertEquals returned.getNamedEntity().entityID.namespace, "ns"
+	}
+	
+	@Test
+	void TestSetChoiceValue(){
+		
+		def ed = new NamedEntityDescription(entityID:new ScopedEntityName(name:"n",namespace:"ns"))
+		
+		def des = new EntityDescription()
+		des.setNamedEntity(ed)
+		
+		converter.setChoiceValue(des);
+		
+		assertNotNull des.namedEntity;
+		assertNotNull des.choiceValue;
 
-
-
+	}
 }

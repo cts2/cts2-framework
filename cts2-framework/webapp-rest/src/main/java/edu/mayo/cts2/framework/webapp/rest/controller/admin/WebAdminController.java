@@ -65,18 +65,16 @@ public class WebAdminController {
 	@Resource
 	private ServiceConfigManager serviceConfigManager;
 
-	@RequestMapping
-	public ModelAndView getValueSetDefinitionsOfValueSet() {
-
-		ModelAndView mav = new ModelAndView("admin");
-
-		return mav;
-	}
-
-	@RequestMapping(value = "/admin/")
-	public ModelAndView getAdminView(@RequestBody PluginReference plugin) {
-		return new ModelAndView("admin");
-	}
+//	@RequestMapping(value = "/editor/")
+//	public ModelAndView getEditorView() {
+//		ModelAndView mav = new ModelAndView("editor/editor");
+//		return mav;
+//	}
+//
+//	@RequestMapping(value = "/admin/")
+//	public ModelAndView getAdminView() {
+//		return new ModelAndView("admin");
+//	}
 	
 	@RequestMapping(value = { "/admin/plugins/currentplugin/properties" }, method = RequestMethod.GET)
 	@ResponseBody

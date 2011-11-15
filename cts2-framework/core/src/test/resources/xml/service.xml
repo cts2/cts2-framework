@@ -1,0 +1,8 @@
+<!-- The following CTS2 entry is a fairly literal transformation of the information that can be found on -->
+<BaseService xmlns="http://schema.omg.org/spec/CTS2/1.0/CoreService" 
+xmlns:core="http://schema.omg.org/spec/CTS2/1.0/Core" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:cs="http://schema.omg.org/spec/CTS2/1.0/CodeSystem" 
+xsi:schemaLocation="http://schema.omg.org/spec/CTS2/1.0/CodeSystem http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/CoreService.xsd" >
+
+</BaseService>

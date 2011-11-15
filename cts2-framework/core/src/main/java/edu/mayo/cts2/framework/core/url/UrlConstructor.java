@@ -25,6 +25,8 @@ package edu.mayo.cts2.framework.core.url;
 
 import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
+import edu.mayo.cts2.framework.core.util.EncodingUtils;
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 
 /**
  * The Class UrlConstructor.
@@ -89,6 +91,10 @@ public class UrlConstructor {
 			URIHelperInterface.ENTITY + "/" + entityName;
 	}
 	
+	public String createEntityUrl(String codeSystemName, String codeSystemVersionName, ScopedEntityName entityName){
+		return this.createCodeSystemVersionUrl(codeSystemName, codeSystemVersionName) + "/" +
+			URIHelperInterface.ENTITY + "/" + EncodingUtils.encodeScopedEntityName(entityName);
+	}
 
 	/**
 	 * Creates the children url.

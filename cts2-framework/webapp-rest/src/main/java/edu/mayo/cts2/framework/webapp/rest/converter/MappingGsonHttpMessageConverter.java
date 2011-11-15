@@ -37,11 +37,13 @@ import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.entity.EntityDescription;
 
 /**
  * The Class MappingGsonHttpMessageConverter.
@@ -53,17 +55,6 @@ public class MappingGsonHttpMessageConverter extends AbstractHttpMessageConverte
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 	
 	private Gson gson;
-	
-	public static void main(String[] args){
-		MappingGsonHttpMessageConverter c = new MappingGsonHttpMessageConverter();
-		
-	
-		String json = "{'codeSystemName':'TESTCS','releaseFormatList':{},'about':'testAbout','keywordList':{},'resourceTypeList':{},'additionalDocumentationList':{},'sourceAndRoleList':{},'noteList':{},'propertyList':{},'alternateIDList':{},'entryState':'ACTIVE','changeableElementGroup':{'changeDescription':{'changeType':'CREATE','committed':'COMMITTED','containingChangeSet':'urn:oid:27f128f9-8252-4776-9208-86895494673c','changeDate':'Nov 1, 2011 5:27:46 PM'}}}]";
-		
-		CodeSystemCatalogEntry csce = c.gson.fromJson(json, CodeSystemCatalogEntry.class);
-		
-		System.out.println(csce.getCodeSystemName());
-	}
 	
 	/**
 	 * Instantiates a new mapping gson http message converter.
@@ -90,7 +81,38 @@ public class MappingGsonHttpMessageConverter extends AbstractHttpMessageConverte
 			Class<? extends Object> clazz,
 			HttpInputMessage inputMessage) throws IOException,
 			HttpMessageNotReadableException {
-		return gson.fromJson(new InputStreamReader(inputMessage.getBody()), clazz);
+		
+		Object obj = 
+				gson.fromJson(new InputStreamReader(inputMessage.getBody()), clazz);
+		
+		if(obj instanceof EntityDescription){
+			this.setChoiceValue(obj);
+		}
+		
+		return obj;
+	}
+	
+	protected void setChoiceValue(Object obj){
+		try {
+			for(Field f : obj.getClass().getDeclaredFields()){
+				f.setAccessible(true);
+				Object fieldValue = f.get(obj);
+				if(fieldValue!= null){
+					Field choiceValue = obj.getClass().getDeclaredField("_choiceValue");
+					choiceValue.setAccessible(true);
+					choiceValue.set(obj, fieldValue);
+					break;
+				}
+			}
+		} catch (SecurityException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		} catch (NoSuchFieldException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -124,6 +146,22 @@ public class MappingGsonHttpMessageConverter extends AbstractHttpMessageConverte
 	 */
 	protected Gson buildGson(){
 		GsonBuilder gson = new GsonBuilder();
+		
+		gson = gson.disableHtmlEscaping();
+		
+		gson.setExclusionStrategies(new ExclusionStrategy(){
+
+			@Override
+			public boolean shouldSkipField(FieldAttributes f) {
+				return f.getName().equals("_choiceValue");
+			}
+
+			@Override
+			public boolean shouldSkipClass(Class<?> clazz) {
+				return false;
+			}
+			
+		});
 		
 		gson.setFieldNamingStrategy(new FieldNamingStrategy(){
 

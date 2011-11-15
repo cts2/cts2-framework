@@ -15,9 +15,14 @@ import edu.mayo.cts2.framework.model.service.core.BaseService;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.profile.BaseSerivceService;
+import edu.mayo.cts2.framework.webapp.rest.controller.AbstractServiceAwareController.Cts2Service;
 
 @Controller
-public class BaseController {
+public class BaseController extends AbstractServiceAwareController{
+	
+	@Cts2Service
+	private BaseSerivceService baseServiceService;
 
 	@Value("#{buildProperties.buildversion}")
 	private String buildVersion;
@@ -28,10 +33,14 @@ public class BaseController {
 	@Value("#{buildProperties.description}")
 	private String buildDescription;
 
-	@RequestMapping(value="/service", produces="asdf", method=RequestMethod.GET)
+	@RequestMapping(value="/service", method=RequestMethod.GET)
 	@ResponseBody
 	public BaseService getServiceInfo(
 			HttpServletRequest httpServletRequest) {
+		
+		return baseServiceService.getBaseService();
+		
+		/*TODO: find a better way to do this.
 		BaseService service = new BaseService();
 		service.setServiceName(buildName);
 		service.setServiceDescription(ModelUtils.createOpaqueData(buildDescription));
@@ -44,5 +53,6 @@ public class BaseController {
 		service.setDefaultFormat(new FormatReference());
 	
 		return service;
+		*/
 	}
 }

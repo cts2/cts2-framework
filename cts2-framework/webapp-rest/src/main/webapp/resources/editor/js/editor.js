@@ -3,11 +3,23 @@ var currentCodeSystemName;
 var currentChangeSetUri;
 
 var codeSystemTable;
+var entityTable;
 var changeSetTable;
 
 var currentJson;
 
 var selectedChangeSetUri;
+
+var csViewModel;
+var viewModel;
+
+var urlPrefix = "";
+
+function createNewChangeSet() {
+	
+	$( "#createChangeSetForm" ).dialog( "open" );	
+	
+}
 
 function rollbackChangeSet() {
 	
@@ -16,7 +28,7 @@ function rollbackChangeSet() {
 						"dataType": 'json', 
 						"contentType": "application/json",
 						"type": "DELETE", 
-						"url": "changeset/"+selectedChangeSetUri,
+						"url": urlPrefix+"changeset/"+selectedChangeSetUri,
 						"error":function (xhr, ajaxOptions, thrownError){
 							alert(xhr.status);
 							alert(xhr.statusText);
@@ -43,7 +55,7 @@ function commitChangeSet() {
 			"dataType": 'json', 
 			"contentType": "application/json",
 			"type": "POST", 
-			"url": "changeset/"+selectedChangeSetUri,
+			"url": urlPrefix+"changeset/"+selectedChangeSetUri,
 			"data": "{'updatedState':{'state':'FINAL'}}",
 			"error":function (xhr, ajaxOptions, thrownError){
 				alert(xhr.status);
@@ -76,10 +88,13 @@ fnChangeSetObjectToArray = function ( )
 				var newJson = new Object();
 				newJson.aaData = new Array();
 				
-				$('#changeSetDropdown').html("<option>CURRENT</option>");
-				$('saveAsChangeSetDropdown').html("<option>NEW</option>");
-				$('#csChangeSetDropdown').html('<option>NEW</option>');
-				$('#searchChangeSetDropdown').html('<option>CURRENT</option>');
+				$("[id$=changeSetDropdown]").each(function(){
+					$(this).html('');
+				});
+				
+				$(".AddCurrentOption").each(function(){
+					$(this).html("<option>CURRENT</option>");
+				});
 				
 				json = json.entryList;
 				
@@ -87,13 +102,12 @@ fnChangeSetObjectToArray = function ( )
 					newJson.aaData[i] = new Array();
 					newJson.aaData[i][0] = json[i].changeSetURI;
 					newJson.aaData[i][1] = json[i].creationDate;
-					newJson.aaData[i][2] = json[i].state;
+					newJson.aaData[i][2] = getChangeInstructions(json[i]);
+					newJson.aaData[i][3] = json[i].state;
 					
-					$('#changeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
-					$('#csChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
-					$('#searchChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
-					$('#saveAsChangeSetDropdown').append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
-
+					$("[id$=changeSetDropdown]").each(function(){
+						$(this).append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
+					});
 				}
 			
 				fnCallback(newJson);
@@ -130,6 +144,50 @@ fnCodeSystemObjectToArray = function ( )
 	};
 };
 
+fnEntityObjectToArray = function ( )
+{
+	return function ( sSource, aoData, fnCallback ) {
+		$.ajax( {
+			"dataType": 'json', 
+			"type": "GET", 
+			"url": sSource, 
+			"data": aoData, 
+			"success": function (json) {
+				var newJson = new Object();
+				newJson.aaData = new Array();
+				
+				json = json.entryList;
+				
+				for(i in json){
+					newJson.aaData[i] = new Array();
+					newJson.aaData[i][0] = json[i].name.namespace;
+					newJson.aaData[i][1] = json[i].name.name;
+					newJson.aaData[i][2] = getKnownEntityDescription(json[i]);
+					newJson.aaData[i][3] = json[i].knownEntityDescriptionList[0].describingCodeSystemVersion.codeSystem.content;
+					newJson.aaData[i][4] = json[i].knownEntityDescriptionList[0].describingCodeSystemVersion.version.content;
+				}
+				
+				
+				fnCallback(newJson);
+			}
+		} );
+	};
+};
+
+function getChangeInstructions(json){
+	var instructions = "-- no instructions --";
+	
+	if(json.changeSetElementGroup != null){
+		var opaqueData = json.changeSetElementGroup.changeInstructions;
+		
+		if(opaqueData != null){
+			instructions = opaqueData.value.content;
+		}
+	}
+
+	return instructions;
+}
+
 function getResourceSynopsis(json){
 	var synopsis = "-- no description --";
 	
@@ -138,6 +196,75 @@ function getResourceSynopsis(json){
 	}
 
 	return synopsis;
+}
+
+function getKnownEntityDescription(json){
+	var description = "-- no description --";
+
+	if(json.knownEntityDescriptionList != null){
+		if(json.knownEntityDescriptionList[0] != null){
+			if(json.knownEntityDescriptionList[0].designation != null){
+				description = json.knownEntityDescriptionList[0].designation;
+			}
+		}
+	}
+
+	return description;
+}
+
+function createEditCodeSystemDialog(){
+	   $( "#codeSystemEditForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+	
+					var newJson = ko.mapping.toJS(csViewModel);
+					
+					updateCodingScheme(newJson.codeSystemCatalogEntry);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//$(this).dialog('destroy');
+			}
+		});
+}
+
+function createEditEntityDialog(){
+	   $( "#entityEditForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+	
+					var newJson = ko.mapping.toJS(viewModel);
+					
+					updateEntity(newJson);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//$(this).dialog('destroy');
+			}
+		});
+}
+
+function adjustArray(array,propertyName){
+	for(i in array){
+		var value = array[i];
+		array[i] = value[propertyName];
+	}
+	
+	return array;
 }
 
 function setResourceSynopsis(json,synopsis){
@@ -152,31 +279,36 @@ function setResourceSynopsis(json,synopsis){
 
 $(document).ready(function() {
 	
-	   $("#saveAsChangeSetDropdown").hide();
-	   
+	   createEditCodeSystemDialog();
+	   createEditEntityDialog();
+
 	   $("#pickChangeSetButton").button();
 	   
-	   $('#changeSetDropdown').change(function() {
-		   var changeSet = $('#changeSetDropdown').val();
-		   if(changeSet == 'CURRENT'){
-			   $("#saveAsChangeSetDropdown").show();
-		   } else {
-			   $("#saveAsChangeSetDropdown").hide();
-		   }
-	   });
-	
-	   $( "#codeSystemEditForm" ).dialog({
+		$("[id$=edit-search-changeSetDropdown]").each(function(){
+			
+			   $(this).change(function() {
+		
+				   var changeSet = $(this).val();	  
+				   
+				   eval($(this).attr("data-getAllFunctionName") + "('"+changeSet+"')");
+			   });
+		});
+
+	   
+	   $( "#createChangeSetForm" ).dialog({
 			autoOpen: false,
 			height: 450,
 			width: 550,
 			modal: true,
 			buttons: {
 				"Save!": function() {
-					var csn = $("#codeSystemNameText").text();
-					var about = $("#aboutText").text();
-					var des = $("#description").val();
-	
-					updateCodingScheme(csn,about,des);
+
+					var changeInstructions = $( "#changeInstructions" ).val();
+					createChangeSet(function(json0, text0, jqXHR0){
+						var chgseturl = jqXHR0.getResponseHeader('Location');
+						
+						updateChangeSetMetadata(chgseturl,changeInstructions, function(){ alert("success!!"); } );
+					});
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -186,14 +318,16 @@ $(document).ready(function() {
 				//
 			}
 		});
-	   
+
+
+	  
 	changeSetTable = $('#changeSetTable').dataTable( {
 		"sDom": 'R<"H"lfr>t<"F"ip<',
 		"bJQueryUI": true,
 		"bProcessing": false,
 		"bPaginate": true,
 		"bFilter": true,
-		"sAjaxSource": 'changesets?format=json',
+		"sAjaxSource": urlPrefix+'changesets?format=json',
 		"fnServerData": fnChangeSetObjectToArray(),
 	} );
 
@@ -203,8 +337,18 @@ $(document).ready(function() {
 		"bProcessing": false,
 		"bPaginate": true,
 		"bFilter": true,
-		"sAjaxSource": 'codesystems?format=json',
+		"sAjaxSource": urlPrefix+'codesystems?format=json',
 		"fnServerData": fnCodeSystemObjectToArray(),
+	} );
+	
+	entityTable = $('#entityTable').dataTable( {
+		"sDom": 'R<"H"lfr>t<"F"ip<',
+		"bJQueryUI": true,
+		"bProcessing": false,
+		"bPaginate": true,
+		"bFilter": true,
+		"sAjaxSource": urlPrefix+'codesystems?format=json',
+		"fnServerData": fnEntityObjectToArray(),
 	} );
 	
 	var autocompleteTable = $("#autocompleteTable").dataTable({
@@ -221,9 +365,9 @@ $(document).ready(function() {
 	    
 	    var changeSetUri = $('#changeSetDropdown').val();
 	     
-	    var query = "codesystems?filtercomponent=resourceName&matchalgorithm=contains&format=json&matchvalue="+val;	
+	    var query = urlPrefix+"codesystems?filtercomponent=resourceName&matchalgorithm=contains&format=json&matchvalue="+val;	
 	    if(changeSetUri != 'CURRENT'){
-	    	query += "&changesetcontext='"+changeSetUri+"'";
+	    	query += "&changesetcontext="+changeSetUri;
 	    }
 	    
 	    codeSystemTable.fnReloadAjax(query);
@@ -234,7 +378,7 @@ $(document).ready(function() {
 	    
 	    var changeSetUri = $('#searchChangeSetDropdown').val();
 	     
-	    var query = "codesystems?filtercomponent=resourceName&matchalgorithm=contains&format=json&matchvalue="+val;	
+	    var query = urlPrefix+"codesystems?filtercomponent=resourceName&matchalgorithm=contains&format=json&matchvalue="+val;	
 	    if(changeSetUri != 'CURRENT'){
 	    	query += "&changesetcontext='"+changeSetUri+"'";
 	    }
@@ -242,21 +386,127 @@ $(document).ready(function() {
 	    autocompleteTable.fnReloadAjax(query);
 	});
 	
-	$( "#tabs" ).tabs();
-	 
+	$( "#resourceTabs" ).tabs({
+		 selected: 1,     // which tab to start on when page loads
+	     select: function(e, ui) {
+	    	 var index = ui.index;
+	       
+	         return true;
+	     }
+     });
+
+	$( "#editCodeSystem" ).tabs();
+	$( "#editEntity" ).tabs();
+	
+	$('#entityTable tbody tr').live('click', function () {
+		var aData = entityTable.fnGetData( this );
+		
+		var changeSetUri = $('#ed-edit-search-changeSetDropdown').val();
+		
+		$(entityTable.fnSettings().aoData).each(function (){
+			$(this.nTr).removeClass('row_selected');
+		});
+
+		  $.ajax( {
+				"dataType": 'json', 
+				"contentType": "application/json",
+				"type": "GET", 
+				"url": urlPrefix+"codesystem/"+aData[3]+"/version/"+aData[4]+"/entity/"+aData[0]+":"+aData[1]+(changeSetUri == 'CURRENT' ? "" : "?changesetcontext="+changeSetUri),
+				"error":function (xhr, ajaxOptions, thrownError){
+					alert(xhr.status);
+					alert(xhr.statusText);
+					alert(xhr.responseText);
+					alert(jsonString);
+				},
+				"success": function (json) {
+	
+					
+					if(viewModel == null){
+
+						viewModel = ko.mapping.fromJS(json);
+
+						ko.applyBindings(viewModel, document.getElementById('entityEditForm'));
+					} else {
+						ko.mapping.fromJS(json,viewModel);
+					}
+	
+				   if(changeSetUri == 'CURRENT'){
+					   $('#ed-chooseChangeSetForEditFieldset').show();
+				   } else {
+					   $('#ed-chooseChangeSetForEditFieldset').hide();
+					   $('#ed-edit-choose-changeSetDropdown').val(changeSetUri);
+				   }
+			
+				   $( "#entityEditForm" ).dialog( "open" );
+					
+				}			
+					
+		  });
+	} );
+	
 	$('#codeSystemTable tbody tr').live('click', function () {
 			var aData = codeSystemTable.fnGetData( this );
+			
+			var changeSetUri = $('#cs-edit-search-changeSetDropdown').val();
 			
 			$(codeSystemTable.fnSettings().aoData).each(function (){
 				$(this.nTr).removeClass('row_selected');
 			});
-		
-			$('#codeSystemNameText').text(aData[0]);
-			$('#aboutText').text(aData[1]);
-			$('#description').val(aData[2]);
 
-		
-			$( "#codeSystemEditForm" ).dialog( "open" );
+			  $.ajax( {
+					"dataType": 'json', 
+					"contentType": "application/json",
+					"type": "GET", 
+					"url": urlPrefix+"codesystem/"+aData[0]+ (changeSetUri == 'CURRENT' ? "" : "?changesetcontext="+changeSetUri),
+					"error":function (xhr, ajaxOptions, thrownError){
+						alert(xhr.status);
+						alert(xhr.statusText);
+						alert(xhr.responseText);
+						alert(jsonString);
+					},
+					"success": function (json) {
+						
+						var mapping = {
+							    'keywordList': {
+							        create: function(options) {
+							            return {keyword:ko.observable(options.data)};
+							        }
+							    }
+							};
+						
+						if(csViewModel == null){
+							csViewModel = ko.mapping.fromJS(json,mapping);
+							
+							csViewModel.addDescription = function () {
+								csViewModel.codeSystemCatalogEntry.resourceSynopsis = {value:{content:ko.observable('--new-description--')}};
+						        ko.applyBindings(csViewModel, document.getElementById('codeSystemEditForm'));   
+							};
+							
+							csViewModel.addKeyword = function () {
+								csViewModel.codeSystemCatalogEntry.keywordList.push( {keyword:ko.observable('--new-keyword--')} );
+							};
+							
+							
+							ko.applyBindings(csViewModel,document.getElementById('codeSystemEditForm'));
+						} else {
+							ko.mapping.fromJS(json,csViewModel);
+						}
+					
+						
+						
+			
+					   if(changeSetUri == 'CURRENT'){
+						   $('#cs-chooseChangeSetForEditFieldset').show();
+					   } else {
+						   $('#cs-chooseChangeSetForEditFieldset').hide();
+						   $('#cs-edit-choose-changeSetDropdown').val(changeSetUri);
+					   }
+				
+					   $( "#codeSystemEditForm" ).dialog( "open" );
+						
+					}			
+						
+			  });
 		} );
 	 
 	
@@ -286,32 +536,104 @@ $(document).ready(function() {
 function create(){
 	var csn = $("#csn").val();
 	var about = $("#about").val();
-	var changeseturi = $("#csChangeSetDropdown").val();
+	var changeseturi = $("#cs-create-changeSetDropdown").val();
 	
 	createCodeSystem(csn,about,changeseturi);
 }
 
-function populateFormFields() {
-	$("#csn").val(currentJson.codeSystemName);
-	$("#about").val(currentJson.about);
-	$("#desc").val();
-	$('#changeSetUri').val(currentJson.changeableElementGroup.changeDescription.containingChangeSet);
+
+function createEntity(){
+	var name = $("#entityName").val();
+	var namespace = $("#entityNamespace").val();
+	var about = $("#entityNameAbout").val();
+	var changeseturi = $("#ed-create-changeSetDropdown").val();
+	
+	doCreateEntity(name,namespace,about,changeseturi);
 }
 
-function createChangeSet(callback){
+
+function updateChangeSetMetadata(url,changeInstructions,callback){
 	  $.ajax( {
-			"dataType": 'jsonp', 
+			"dataType": 'json', 
 			"contentType": "application/json",
+			"data": "{'updatedChangeInstructions':{'changeInstructions':{'value':{'content':'"+changeInstructions+"'}}}}",
 			"type": "POST", 
-			"url": "changeset",
+			"url": urlPrefix+"./"+url,
 			"error":function (xhr, ajaxOptions, thrownError){
 				alert(xhr.status);
 				alert(xhr.statusText);
 				alert(xhr.responseText);
-				alert(jsonString);
+				//alert(jsonString);
 			},
 			"success":callback
 	  });
+}
+
+function createChangeSet(callback){
+	  $.ajax( {
+			"dataType": 'json', 
+			"contentType": "application/json",
+			"type": "POST", 
+			"url": urlPrefix+"changeset",
+			"error":function (xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				alert(xhr.statusText);
+				alert(xhr.responseText);
+				//alert(jsonString);
+			},
+			"success":callback
+	  });
+}
+
+function doCreateEntity(name,namespace,about,changeseturi) {
+	
+	var json = {namedEntity:{
+		describingCodeSystemVersion:{
+			version:{content:"test"},
+			codeSystem:{content:"test"}
+		},
+		entityTypeList: [
+		                  {
+		                       "namespace": "ns",
+		                       "name": "class"
+		                   }
+
+		               ],
+		about: "test",
+		entityID:{name:"asdf", namespace:"asdf"}}};
+	
+	var createJson = JSON.stringify(json);
+	
+	var createFunction = function (json0, text0, jqXHR0) {
+		changeSetTable.fnReloadAjax();
+		
+		var chgseturl = jqXHR0.getResponseHeader('Location');
+
+		  $.ajax( {
+				"dataType": 'json', 
+				"contentType": "application/json",
+				"type": "GET", 
+				"url": urlPrefix+"./"+chgseturl,
+				"error":function (xhr, ajaxOptions, thrownError){
+					alert(xhr.status);
+					alert(xhr.statusText);
+					alert(xhr.responseText);
+					alert(jsonString);
+				},
+				"success": function (json, textStatus, jqXHR) {
+					currentChangeSetUri = json.changeSetURI;
+					
+					doCreate("entity",createJson,currentChangeSetUri);
+					
+				}
+			} );
+	};
+	
+	if(changeseturi == 'NEW'){
+		createChangeSet(createFunction);
+	} else {
+		doCreate("entity",createJson,changeseturi);
+	}
 }
 
 function createCodeSystem(csn,about,changeseturi) {
@@ -325,7 +647,7 @@ function createCodeSystem(csn,about,changeseturi) {
 						"dataType": 'json', 
 						"contentType": "application/json",
 						"type": "GET", 
-						"url": "./"+chgseturl,
+						"url": urlPrefix+"./"+chgseturl,
 						"error":function (xhr, ajaxOptions, thrownError){
 							alert(xhr.status);
 							alert(xhr.statusText);
@@ -335,7 +657,7 @@ function createCodeSystem(csn,about,changeseturi) {
 						"success": function (json, textStatus, jqXHR) {
 							currentChangeSetUri = json.changeSetURI;
 							
-							doCreate('{"codeSystemName":"'+csn+'","about":"'+about+'"}',currentChangeSetUri);
+							doCreate("codesystem",'{"codeSystemName":"'+csn+'","about":"'+about+'"}',currentChangeSetUri);
 							
 						}
 					} );
@@ -344,18 +666,18 @@ function createCodeSystem(csn,about,changeseturi) {
 			if(changeseturi == 'NEW'){
 				createChangeSet(createFunction);
 			} else {
-				doCreate('{"codeSystemName":"'+csn+'","about":"'+about+'"}',changeseturi);
+				doCreate("codesystem",'{"codeSystemName":"'+csn+'","about":"'+about+'"}',changeseturi);
 			}
 }
 
 
-function doCreate(json,changeSetUri){
+function doCreate(url,json,changeSetUri){
 	  $.ajax( {
 			"dataType": 'json', 
 			"contentType": "application/json",
 			"type": "POST", 
 			"data": json,
-			"url": "codesystem?changeseturi="+changeSetUri,
+			"url": urlPrefix+url+"?changeseturi="+changeSetUri,
 			"error":function (xhr, ajaxOptions, thrownError){
 				alert(xhr.status);
 				alert(xhr.statusText);
@@ -366,21 +688,30 @@ function doCreate(json,changeSetUri){
 				var location = jqXHR.getResponseHeader('Location');
 				
 				log("POST",
-						"codesystem?changeseturi="+currentChangeSetUri,
-						"Creating the CodeSystem");
+						url+"?changeseturi="+currentChangeSetUri,
+						"Creating...");
 			}
 		} );
 }
 
-function updateCodingScheme(codeSystemName,about,description,changeSetUri) {
+function updateEntity(json) {
+	
+	  var data = json.entityDescription;
 
-	  var changeSetUri = $("#changeSetDropdown").val();
+	  data.changeableElementGroup.changeDescription.changeType = "UPDATE";
+
+	  var changeSetUri = $("#ed-edit-choose-changeSetDropdown").val();
 	  
+	  data.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
+
+	  var jsonString = $.toJSON(data);
+
 	  $.ajax( {
 			"dataType": 'json', 
 			"contentType": "application/json",
-			"type": "GET", 
-			"url": "codesystem/"+codeSystemName+"?changesetcontext="+changeSetUri,
+			"type": "PUT", 
+			"url": urlPrefix+json.heading.resourceRoot,
+			"data": jsonString,
 			"error":function (xhr, ajaxOptions, thrownError){
 				alert(xhr.status);
 				alert(xhr.statusText);
@@ -388,50 +719,67 @@ function updateCodingScheme(codeSystemName,about,description,changeSetUri) {
 				alert(jsonString);
 			},
 			"success": function (json) {
-				log("GET",
-						"codesystem/"+codeSystemName+"?changesetcontext="+changeSetUri,
-						"Retrieve the CodeSystem prior to updating");
+				log("PUT",
+						"codesystem/"+data.codeSystemName,
+						"Updating the CodeSystem");
 				
-				var newjson = json.codeSystemCatalogEntry;
+				$( "#entityEditForm" ).dialog( "close" );
 				
-				newjson.changeableElementGroup.changeDescription.changeType = "UPDATE";
-				
-				setResourceSynopsis(newjson,description);
-				
-				var jsonString = $.toJSON(newjson);
-
-				  $.ajax( {
-						"dataType": 'json', 
-						"contentType": "application/json",
-						"type": "PUT", 
-						"url": "codesystem/"+newjson.codeSystemName,
-						"data": jsonString,
-						"error":function (xhr, ajaxOptions, thrownError){
-							alert(xhr.status);
-							alert(xhr.statusText);
-							alert(xhr.responseText);
-							alert(jsonString);
-						},
-						"success": function (json) {
-							log("PUT",
-									"codesystem/"+codeSystemName+"?changesetcontext="+changeSetUri,
-									"Updating the CodeSystem");
-							
-							$( "#codeSystemEditForm" ).dialog( "close" );
-							
-							codeSystemTable.fnReloadAjax("codesystems?format=json&changesetcontext="+changeSetUri);
-
-						}
-					} );
+				entityTable.fnReloadAjax(urlPrefix+"entities?format=json&changesetcontext="+changeSetUri);
 
 			}
 		} );
 
 }
 
-function onListAllCodeSystems(){
-	var query = "codesystems?format=json";
-	var changeSetUri = $("#changeSetDropdown").val();
+function updateCodingScheme(data) {
+
+	  data.changeableElementGroup.changeDescription.changeType = "UPDATE";
+
+	  var changeSetUri = $("#cs-edit-choose-changeSetDropdown").val();
+	  
+	  data.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
+	  
+	  var newArray = adjustArray(data.keywordList, "keyword");
+	  data.keywordList = newArray;
+	  
+	  var jsonString = $.toJSON(data);
+	  
+
+	  $.ajax( {
+			"dataType": 'json', 
+			"contentType": "application/json",
+			"type": "PUT", 
+			"url": urlPrefix+"codesystem/"+data.codeSystemName,
+			"data": jsonString,
+			"error":function (xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				alert(xhr.statusText);
+				alert(xhr.responseText);
+				alert(jsonString);
+			},
+			"success": function (json) {
+				log("PUT",
+						"codesystem/"+data.codeSystemName,
+						"Updating the CodeSystem");
+				
+				$( "#codeSystemEditForm" ).dialog( "close" );
+				
+				codeSystemTable.fnReloadAjax(urlPrefix+"codesystems?format=json&changesetcontext="+changeSetUri);
+
+			}
+		} );
+
+}
+
+function onClearEditSearch(){
+	$('editAutocomplete').val("");
+	onListAllCodeSystems();
+}
+
+function onListAllCodeSystems(changeSetUri){
+	var query = urlPrefix+"codesystems?format=json";
+
 	if(changeSetUri != 'CURRENT'){
 		query += ("&changesetcontext="+changeSetUri);
 	}
@@ -439,6 +787,18 @@ function onListAllCodeSystems(){
 	$('#editAutocomplete').val('');
 	
 	codeSystemTable.fnReloadAjax(query);
+}
+
+function onListAllEntities(changeSetUri){
+	var query = urlPrefix+"entities?format=json";
+
+	if(changeSetUri != 'CURRENT'){
+		query += ("&changesetcontext="+changeSetUri);
+	}
+	
+	$('#editAutocomplete').val('');
+	
+	entityTable.fnReloadAjax(query);
 }
 
 function log(method,url,msg){
