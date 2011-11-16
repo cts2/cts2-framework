@@ -397,6 +397,7 @@ $(document).ready(function() {
 
 	$( "#editCodeSystem" ).tabs();
 	$( "#editEntity" ).tabs();
+	$( "#entityEditTabs" ).tabs();
 	
 	$('#entityTable tbody tr').live('click', function () {
 		var aData = entityTable.fnGetData( this );
@@ -424,6 +425,23 @@ $(document).ready(function() {
 					if(viewModel == null){
 
 						viewModel = ko.mapping.fromJS(json);
+						
+						viewModel.addDesignation = function () {
+							viewModel.entityDescription.namedEntity.designationList.push(
+									{
+										value:{content:ko.observable('--new-description--')},
+										designationRole:ko.observable('ALTERNATIVE')
+									}			
+							);
+						};
+						viewModel.addDefinition = function () {
+							viewModel.entityDescription.namedEntity.definitionList.push(
+									{
+										value:{content:ko.observable('--new-description--')},
+										definitionRole:ko.observable('NORMATIVE')
+									}			
+							);
+						};
 
 						ko.applyBindings(viewModel, document.getElementById('entityEditForm'));
 					} else {
@@ -491,10 +509,7 @@ $(document).ready(function() {
 						} else {
 							ko.mapping.fromJS(json,csViewModel);
 						}
-					
-						
-						
-			
+	
 					   if(changeSetUri == 'CURRENT'){
 						   $('#cs-chooseChangeSetForEditFieldset').show();
 					   } else {
@@ -599,8 +614,8 @@ function doCreateEntity(name,namespace,about,changeseturi) {
 		                   }
 
 		               ],
-		about: "test",
-		entityID:{name:"asdf", namespace:"asdf"}}};
+		about: about,
+		entityID:{name:name, namespace:namespace}}};
 	
 	var createJson = JSON.stringify(json);
 	
@@ -698,11 +713,11 @@ function updateEntity(json) {
 	
 	  var data = json.entityDescription;
 
-	  data.changeableElementGroup.changeDescription.changeType = "UPDATE";
+	  data.namedEntity.changeableElementGroup.changeDescription.changeType = "UPDATE";
 
-	  var changeSetUri = $("#ed-edit-choose-changeSetDropdown").val();
+	  var changeSetUri = $("#ed-edit-search-changeSetDropdown").val();
 	  
-	  data.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
+	  data.namedEntity.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
 
 	  var jsonString = $.toJSON(data);
 
@@ -720,8 +735,8 @@ function updateEntity(json) {
 			},
 			"success": function (json) {
 				log("PUT",
-						"codesystem/"+data.codeSystemName,
-						"Updating the CodeSystem");
+						"entity/??",
+						"Updating the Entity");
 				
 				$( "#entityEditForm" ).dialog( "close" );
 				

@@ -73,7 +73,8 @@ Select A Theme: <div id="switcher"></div>
 
 	<ul>
 		<li><a href="#editCodeSystem">CodeSystems</a></li>		
-		<li><a href="#editEntity">Entities</a></li>		
+		<li><a href="#editEntity">Entities</a></li>	
+		<li><a href="#mappings">Mappings</a></li>		
 		<li><a href="#changeSetTab">Change Sets</a></li>		
 	</ul>
 	
@@ -219,8 +220,7 @@ Select A Theme: <div id="switcher"></div>
 	<ul>
 		<li><a href="#ed-tabs-1">Edit</a></li>
 		<li><a href="#ed-tabs-2">Create New</a></li>
-		<li><a href="#ed-tabs-4">Search</a></li>
-		
+		<li><a href="#ed-tabs-4">Search</a></li>	
 	</ul>
 	
 	<div id="entityEditForm" title="Edit Entity">
@@ -228,25 +228,58 @@ Select A Theme: <div id="switcher"></div>
 		<label id="entityNamespaceLabel"><b>Entity Namespace:</b> <span data-bind="text: entityDescription.namedEntity.entityID.namespace" ></span></label>
 		<br></br>
 		<label id="entityNameLabel"><b>Entity Name:</b> <span data-bind="text: entityDescription.namedEntity.entityID.name"></span></label>
-		<br></br>
-		<table>
-	        <thead>
-	            <tr>
-	                <th>Description</th>
-	            </tr>
-	        </thead>
-	        <tbody data-bind='template: { name: "designationRowTemplate" }'></tbody>
-   	 	</table>
-		<a href="#" data-bind="click: function() { addDesignation() }">Add Description</a>
-	
+		
+		<div id="entityEditTabs">
+			<ul>
+				<li><a href="#ed-designations">Designations</a></li>
+				<li><a href="#ed-definitions">Definitions</a></li>	
+			</ul>
+			<div id="ed-designations">
+				<table class="display">
+			        <thead>
+			            <tr>
+			                <th class="ui-state-default" rowspan="1" colspan="1">Description</th>
+			                <th class="ui-state-default" rowspan="1" colspan="1">Role</th>
+			            </tr>
+			        </thead>
+			        <tbody data-bind='template: { name: "designationRowTemplate", foreach: entityDescription.namedEntity.designationList }'></tbody>
+		   	 	</table>
+				<a href="#" data-bind="click: function() { addDesignation() }">Add Description</a>
+			</div>
+			<div id="ed-definitions">
+				<table class="display">
+			        <thead>
+			            <tr>
+			                <th class="ui-state-default" rowspan="1" colspan="1">Definition</th>
+			                <th class="ui-state-default" rowspan="1" colspan="1">Role</th>
+			            </tr>
+			        </thead>
+			        <tbody data-bind='template: { name: "definitionRowTemplate", foreach: entityDescription.namedEntity.definitionList }'></tbody>
+		   	 	</table>
+				<a href="#" data-bind="click: function() { addDefinition() }">Add Definition</a>
+			</div>
+		</div>
 	</div>
 	
 	<script type="text/html" id="designationRowTemplate">
-	{{if entityDescription.namedEntity.designationList.length != 0}}
-		<input type="text" name="designation" id="designation" data-bind="value: entityDescription.namedEntity.designationList[0].value.content" class="text ui-widget-content ui-corner-all" />
-		{{else}}
-		No Descriptions
-	{{/if}}
+		<tr>
+			<td>
+				<input type="text" name="designation" id="designation" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
+			</td>
+			<td>
+				<select data-bind="options: ['PREFERRED','ALTERNATIVE','HIDDEN'], selectedOptions: designationRole" >
+			</td>
+		</tr>
+	</script>
+	<script type="text/html" id="definitionRowTemplate">
+		<tr>
+			<td>
+				<input type="text" name="definition" id="designation" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
+			</td>
+			<td>
+				<select data-bind="options: ['NORMATIVE','INFORMATIVE'], selectedOptions: definitionRole" >
+			</td>
+		</tr>
 	</script>
 
 	<div id="ed-tabs-1">
@@ -310,26 +343,56 @@ Select A Theme: <div id="switcher"></div>
 			</fieldset>
 		</form>
 	</div>
+	</div>
 
-		<div id="ed-tabs-4">
-		
-		<label for="ed-search-changeSetDropdown">ChangeSet: </label>
-		<select id="ed-search-changeSetDropdown" name="ed-search-changeSetDropdown" class="AddCurrentOption"></select>
+<div id="mappings">
 
-		<input id="ed-searchAutocomplete"/>
-				
-		<br></br>	
-						
-		<table id="ed-autocompleteTable" class="display">
+	<table>
+		<tr>
+	
+		<td>
+	
+		<table id="sourceEntityTable" class="display">
               <thead>
                 <tr>
                   <th>
-                    CodeSystem Name
+                    Entity Namespace
+                  </th>
+                  <th>
+                    Entity Name
+                  </th>
+                   <th>
+                    Description
                   </th>
                 </tr>
               </thead>
             </table>
-	</div>
+		</td>
+		<td>
+		
+		</td>
+		<td>
+		<table id="targetEntityTable" class="display">
+              <thead>
+                <tr>
+                  <th>
+                    Entity Namespace
+                  </th>
+                  <th>
+                    Entity Name
+                  </th>
+                   <th>
+                    Description
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </td>  
+            
+            
+            </tr>
+            </table>
+						
 </div>
 
 </div>
