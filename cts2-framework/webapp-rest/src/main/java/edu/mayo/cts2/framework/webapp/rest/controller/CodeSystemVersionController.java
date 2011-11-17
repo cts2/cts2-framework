@@ -431,7 +431,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	}
 	
-	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI + "/**", method=RequestMethod.GET)
+	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI, method=RequestMethod.GET)
 	public ModelAndView getCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,

@@ -27,8 +27,9 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
-import edu.mayo.cts2.framework.model.association.AssociationGraph;
+import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
+import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
@@ -109,8 +110,21 @@ public interface AssociationQueryService extends
 			EntityDescriptionReadId entity,
 			ResolvedReadContext readContext);
 	
-	public AssociationGraph getAssociationGraph(
-			EntityDescriptionReadId focus, 
+	/**
+	 * Gets the Association Graph result.
+	 * 
+	 * NOTE: If the 'focusType' is "SPECIFIC_ENTITY", 'focusEntity' must be populated,
+	 * otherwise, it must be null
+	 *
+	 * @param focusType the focus type
+	 * @param focus the focus
+	 * @param direction the direction
+	 * @param depth the depth
+	 * @return the association graph
+	 */
+	public DirectoryResult<GraphNode> getAssociationGraph(
+			GraphFocus focusType,
+			EntityDescriptionReadId focusEntity, 
 			GraphDirection direction,
 			long depth);
 }

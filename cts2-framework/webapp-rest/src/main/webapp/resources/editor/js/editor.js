@@ -4,12 +4,14 @@ var currentChangeSetUri;
 
 var codeSystemTable;
 var entityTable;
+var mapTable;
 var changeSetTable;
 
 var currentJson;
 
 var selectedChangeSetUri;
 
+var mapViewModel;
 var csViewModel;
 var viewModel;
 
@@ -174,6 +176,33 @@ fnEntityObjectToArray = function ( )
 	};
 };
 
+fnMapObjectToArray = function ( )
+{
+	return function ( sSource, aoData, fnCallback ) {
+		$.ajax( {
+			"dataType": 'json', 
+			"type": "GET", 
+			"url": sSource, 
+			"data": aoData, 
+			"success": function (json) {
+				var newJson = new Object();
+				newJson.aaData = new Array();
+				
+				json = json.entryList;
+				
+				for(i in json){
+					newJson.aaData[i] = new Array();
+					newJson.aaData[i][0] = json[i].mapName;
+					newJson.aaData[i][1] = json[i].about;
+					newJson.aaData[i][2] = getResourceSynopsis(json[i]);
+				}
+
+				fnCallback(newJson);
+			}
+		} );
+	};
+};
+
 function getChangeInstructions(json){
 	var instructions = "-- no instructions --";
 	
@@ -210,6 +239,29 @@ function getKnownEntityDescription(json){
 	}
 
 	return description;
+}
+
+function createEditMapDialog(){
+	   $( "#mapEditForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+	
+					var newJson = ko.mapping.toJS(csViewModel);
+					
+					updateCodingScheme(newJson.codeSystemCatalogEntry);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//$(this).dialog('destroy');
+			}
+		});
 }
 
 function createEditCodeSystemDialog(){
@@ -277,10 +329,187 @@ function setResourceSynopsis(json,synopsis){
 	json.resourceSynopsis.value.content = synopsis;
 }
 
+function addPortlet(div,style,name,description){
+	var html =
+	$('<div class="portlet">' +
+	'<div class="portlet-header">'+name+'</div>' +
+	'<div class="portlet-content">'+description+'</div>');
+	
+	$(html).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all " + style)
+		.find( ".portlet-header" )
+		.addClass( "ui-widget-header ui-corner-all" )
+		.prepend( "<span class='ui-icon ui-icon-plusthick'></span>")
+		.end()
+		.find( ".portlet-content" ).hide();
+
+	$(html).find( ".portlet-header .ui-icon" ).click(function() {
+		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+	});
+
+	div.append($('<li>').append($(html)).append('</li>'));
+}
+
 $(document).ready(function() {
+	
+	$('#targetList, #targetDrop').sortable({
+		connectWith: ".connectedTargetSortable"
+	}).disableSelection();
+	
+	$('#sourceDrop').sortable({
+		connectWith: ".connectedSourceSortable",
+			   receive: function(event, ui) { 
+				   if ( $(this).children().length > 1 ) {
+
+					   //ui.sender: will cancel the change. Useful in the 'receive' callback.
+			            $(ui.sender).sortable('cancel');
+
+				   	}
+			   }
+	}).disableSelection();
+	
+	$('#sourceList').sortable({
+		connectWith: ".connectedSourceSortable"  
+	}).disableSelection();
+	
+	$('#mapTargetList').sortable({
+			connectWith: ".connectedSourceSortable"  
+			});
+	//end drag and drop
+	
+	$( "#collapseAll" ).button().click(function() {
+		$( ".portlet-header .ui-icon" ).each(function() {
+			$( this ).addClass( "ui-icon-plusthick" );
+			$( this ).removeClass( "ui-icon-minusthick" );
+			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
+		});
+	});
+	
+	$( "#expandAll" ).button().click(function() {
+		$( ".portlet-header .ui-icon" ).each(function() {
+			$( this ).addClass( "ui-icon-minusthick" );
+			$( this ).removeClass( "ui-icon-plusthick" );
+			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).show();
+		});
+	});
+	
+	$( "#expandAllMapTargets" ).button().click(function() {
+		$(".mapTargetPortlet").each(function(){
+			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
+				$( this ).addClass( "ui-icon-minusthick" );
+				$( this ).removeClass( "ui-icon-plusthick" );
+				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).show();
+			});
+		
+		});
+	});
+	
+	$( "#collapseAllMapTargets" ).button().click(function() {
+		$(".mapTargetPortlet").each(function(){
+			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
+				$( this ).addClass( "ui-icon-plusthick" );
+				$( this ).removeClass( "ui-icon-minusthick" );
+				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
+			});
+		
+		});
+	});
+
+	$( "#addMapTarget" ).button().click(function() {
+			var newTarget = $( '#mapTarget' ).clone();
+			newTarget.find( ".portlet-header .ui-icon" ).click(function() {
+				$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+			});
+			
+			$("#mapTargetList > #mapTarget").each(function() {
+				$(this).find( ".portlet-header .ui-icon" ).each(function() {
+					$( this ).addClass( "ui-icon-plusthick" );
+					$( this ).removeClass( "ui-icon-minusthick" );
+					$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
+				});
+			});
+			
+			$('#mapTargetList').append(newTarget);
+	});
+
+	$( '#mapTarget' ).find( ".portlet-header .ui-icon" ).click(function() {
+		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+	});
+	
+	//source mapping autocomplete
+
+		 var data = $("#mappingSourceSearch").autocomplete({
+				source: function( request, response ) {
+					$.ajax({
+						url: "http://informatics.mayo.edu/exist/cts2/rest/entities?maxtoreturn=5&format=json&matchvalue="+request.term,
+						dataType: "jsonp",
+						success: function( data ) {
+							var responseArray = [];
+							
+							$.each(data.entryList, function(index,item){
+								responseArray.push( {'label': item.name.name,
+													 'description': item.knownEntityDescriptionList[0].designation} );
+							});
+						
+							response(responseArray);
+						}
+					});
+				},
+		  minLength: 1
+		}).data("autocomplete");
+
+		data._renderMenu = function( ul, items ) {
+			$('#sourceList').empty();
+			   $.each( items, function( index, item ) {
+				   addPortlet($('#sourceList'), 'sourceEntities', item.label,item.description);
+			    });
+
+	    };
+
+
+
+		//end source mapping autocomplete
+	    
+		//target mapping autocomplete
+
+		 var data = $("#mappingTargetSearch").autocomplete({
+				source: function( request, response ) {
+					$.ajax({
+						url: "http://informatics.mayo.edu/exist/cts2/rest/entities?maxtoreturn=5&format=json&matchvalue="+request.term,
+						dataType: "jsonp",
+						success: function( data ) {
+							var responseArray = [];
+							
+							$.each(data.entryList, function(index,item){
+								responseArray.push( {'label': item.name.name,
+													 'description': item.knownEntityDescriptionList[0].designation
+													} );
+							});
+						
+							response(responseArray);
+						}
+					});
+				},
+		  minLength: 1
+		}).data("autocomplete");
+
+		data._renderMenu = function( ul, items ) {
+			$('#targetList').empty();
+			   $.each( items, function( index, item ) {
+				   addPortlet($('#targetList'), 'targetEntities', item.label, item.description);
+			    });
+
+	    };
+
+
+
+		//end target mapping autocomplete
 	
 	   createEditCodeSystemDialog();
 	   createEditEntityDialog();
+	   createEditMapDialog();
 
 	   $("#pickChangeSetButton").button();
 	   
@@ -351,6 +580,16 @@ $(document).ready(function() {
 		"fnServerData": fnEntityObjectToArray(),
 	} );
 	
+	mapTable = $('#mapTable').dataTable( {
+		"sDom": 'R<"H"lfr>t<"F"ip<',
+		"bJQueryUI": true,
+		"bProcessing": false,
+		"bPaginate": true,
+		"bFilter": true,
+		"sAjaxSource": urlPrefix+'maps?format=json',
+		"fnServerData": fnMapObjectToArray(),
+	} );
+	
 	var autocompleteTable = $("#autocompleteTable").dataTable({
 		"sDom": 'R<"H"lfr>t<"F"ip<',
 		"bJQueryUI": true,
@@ -398,6 +637,8 @@ $(document).ready(function() {
 	$( "#editCodeSystem" ).tabs();
 	$( "#editEntity" ).tabs();
 	$( "#entityEditTabs" ).tabs();
+	$( "#mappings" ).tabs();
+	$( "#mapping-tabs-map" ).tabs();
 	
 	$('#entityTable tbody tr').live('click', function () {
 		var aData = entityTable.fnGetData( this );
@@ -524,7 +765,56 @@ $(document).ready(function() {
 			  });
 		} );
 	 
+	$('#mapTable tbody tr').live('click', function () {
+		var aData = mapTable.fnGetData( this );
+		
+		var changeSetUri = $('#map-edit-search-changeSetDropdown').val();
+		
+		$(mapTable.fnSettings().aoData).each(function (){
+			$(this.nTr).removeClass('row_selected');
+		});
+
+		  $.ajax( {
+				"dataType": 'json', 
+				"contentType": "application/json",
+				"type": "GET", 
+				"url": urlPrefix+"map/"+aData[0]+ (changeSetUri == 'CURRENT' ? "" : "?changesetcontext="+changeSetUri),
+				"error":function (xhr, ajaxOptions, thrownError){
+					alert(xhr.status);
+					alert(xhr.statusText);
+					alert(xhr.responseText);
+					alert(jsonString);
+				},
+				"success": function (json) {
+					
+					if(mapViewModel == null){
+						mapViewModel = ko.mapping.fromJS(json);
+						
+						mapViewModel.addDescription = function () {
+							mapViewModel.map.resourceSynopsis = {value:{content:ko.observable('--new-description--')}};
+					        ko.applyBindings(mapViewModel, document.getElementById('mapEditForm'));   
+						};
+						
 	
+						ko.applyBindings(mapViewModel,document.getElementById('mapEditForm'));
+					} else {
+						ko.mapping.fromJS(json,mapViewModel);
+					}
+
+				   if(changeSetUri == 'CURRENT'){
+					   $('#map-chooseChangeSetForEditFieldset').show();
+				   } else {
+					   $('#map-chooseChangeSetForEditFieldset').hide();
+					   $('#map-edit-choose-changeSetDropdown').val(changeSetUri);
+				   }
+			
+				   $( "#mapEditForm" ).dialog( "open" );
+					
+				}			
+					
+		  });
+	} );
+ 	
 	/* Click event handler */
 	$('#changeSetTable tbody tr').live('click', function () {
 		var aData = changeSetTable.fnGetData( this );
@@ -548,7 +838,7 @@ $(document).ready(function() {
 	
 });
 
-function create(){
+function createCodeSystem(){
 	var csn = $("#csn").val();
 	var about = $("#about").val();
 	var changeseturi = $("#cs-create-changeSetDropdown").val();
@@ -564,6 +854,14 @@ function createEntity(){
 	var changeseturi = $("#ed-create-changeSetDropdown").val();
 	
 	doCreateEntity(name,namespace,about,changeseturi);
+}
+
+function createMap(){
+	var name = $("#mapName").val();
+	var about = $("#mapAbout").val();
+	var changeseturi = $("#map-create-changeSetDropdown").val();
+	
+	doCreateMap(name,about,changeseturi);
 }
 
 
@@ -617,6 +915,11 @@ function doCreateEntity(name,namespace,about,changeseturi) {
 		about: about,
 		entityID:{name:name, namespace:namespace}}};
 	
+	doCreate(json,"entity",changeseturi);
+}
+
+function doCreate(json,url,changeseturi) {
+	
 	var createJson = JSON.stringify(json);
 	
 	var createFunction = function (json0, text0, jqXHR0) {
@@ -638,7 +941,7 @@ function doCreateEntity(name,namespace,about,changeseturi) {
 				"success": function (json, textStatus, jqXHR) {
 					currentChangeSetUri = json.changeSetURI;
 					
-					doCreate("entity",createJson,currentChangeSetUri);
+					_doCreate(url,createJson,currentChangeSetUri);
 					
 				}
 			} );
@@ -647,46 +950,26 @@ function doCreateEntity(name,namespace,about,changeseturi) {
 	if(changeseturi == 'NEW'){
 		createChangeSet(createFunction);
 	} else {
-		doCreate("entity",createJson,changeseturi);
+		_doCreate(url,createJson,changeseturi);
 	}
 }
 
-function createCodeSystem(csn,about,changeseturi) {
+function doCreateCodeSystem(csn,about,changeseturi) {
 	
-			var createFunction = function (json0, text0, jqXHR0) {
-				changeSetTable.fnReloadAjax();
-				
-				var chgseturl = jqXHR0.getResponseHeader('Location');
+	var json = {"codeSystemName":csn,"about":about};
+	
+	doCreate(json,"codesystem",changeseturi);
+}
 
-				  $.ajax( {
-						"dataType": 'json', 
-						"contentType": "application/json",
-						"type": "GET", 
-						"url": urlPrefix+"./"+chgseturl,
-						"error":function (xhr, ajaxOptions, thrownError){
-							alert(xhr.status);
-							alert(xhr.statusText);
-							alert(xhr.responseText);
-							alert(jsonString);
-						},
-						"success": function (json, textStatus, jqXHR) {
-							currentChangeSetUri = json.changeSetURI;
-							
-							doCreate("codesystem",'{"codeSystemName":"'+csn+'","about":"'+about+'"}',currentChangeSetUri);
-							
-						}
-					} );
-			};
-			
-			if(changeseturi == 'NEW'){
-				createChangeSet(createFunction);
-			} else {
-				doCreate("codesystem",'{"codeSystemName":"'+csn+'","about":"'+about+'"}',changeseturi);
-			}
+function doCreateMap(mapname,about,changeseturi) {
+	
+	var json = {"mapName":mapname,"about":about};
+	
+	doCreate(json,"map",changeseturi);
 }
 
 
-function doCreate(url,json,changeSetUri){
+function _doCreate(url,json,changeSetUri){
 	  $.ajax( {
 			"dataType": 'json', 
 			"contentType": "application/json",
@@ -814,6 +1097,16 @@ function onListAllEntities(changeSetUri){
 	$('#editAutocomplete').val('');
 	
 	entityTable.fnReloadAjax(query);
+}
+
+function onListAllMaps(changeSetUri){
+	var query = urlPrefix+"maps?format=json";
+
+	if(changeSetUri != 'CURRENT'){
+		query += ("&changesetcontext="+changeSetUri);
+	}
+
+	mapTable.fnReloadAjax(query);
 }
 
 function log(method,url,msg){

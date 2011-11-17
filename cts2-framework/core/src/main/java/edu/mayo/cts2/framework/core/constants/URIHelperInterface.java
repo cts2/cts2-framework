@@ -45,7 +45,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_CODESYSTEM_LATESTCHANGE = PATH_CODESYSTEMBYID + "/" + LATESTCHANGE;
 	
-	public static final String PATH_CODESYSTEMBYURI = "/" + CODESYSTEM_BY_URI;
+	public static final String PATH_CODESYSTEMBYURI = "/" + CODESYSTEM_BY_URI + "/" + ALL_WILDCARD;
 	
 	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG = 
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
@@ -61,7 +61,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_CODESYSTEMVERSION_LATESTCHANGE = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + LATESTCHANGE;
 	
-	public static final String PATH_CODESYSTEMVERSIONBYURI = "/" + CODESYSTEMVERSION_BY_URI;
+	public static final String PATH_CODESYSTEMVERSIONBYURI = "/" + CODESYSTEMVERSION_BY_URI + "/" + ALL_WILDCARD;
 	
 	public static final String PATH_CODESYSTEMVERSIONS = "/" + CODESYSTEMVERSIONS;
 	
@@ -83,7 +83,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/"
 			+ ENTITY + "/{" + VAR_ENTITYID + "}";
 	
-	public static final String PATH_ENTITYBYURI = "/" + ENTITY_BY_URI;
+	public static final String PATH_ENTITYBYURI = "/" + ENTITY_BY_URI + "/" + ALL_WILDCARD;
 			
 	public static final String PATH_ENTITYIDS = "/" + CODESYSTEM + "/{"
 			+ VAR_CODESYSTEMID + "}/" + ENTITYIDS;
@@ -141,8 +141,8 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_MAPVERSIONS = "/" + MAPVERSIONS;
 	public static final String PATH_MAPVERSION = "/" + MAPVERSION;
 	public static final String PATH_MAPVERSIONS_OF_MAP = PATH_MAP_BYID + "/" + VERSIONS;
-	public static final String PATH_MAPVERSION_BYURI = "/" + MAPVERSION_BY_URI;
-	public static final String PATH_MAP_BYURI = "/" + MAP_BY_URI;
+	public static final String PATH_MAPVERSION_BYURI = "/" + MAPVERSION_BY_URI + "/" + ALL_WILDCARD;
+	public static final String PATH_MAP_BYURI = "/" + MAP_BY_URI + "/" + ALL_WILDCARD;
 	public static final String PATH_MAPENTRY =  "/" + MAPENTRY ;
 	public static final String PATH_MAPENTRY_OF_MAPVERSION_BYID = PATH_MAPVERSION_OF_MAP_BYID + "/" + ENTRY + "/{" + VAR_MAPENTRYID + "}";
 	public static final String PATH_MAPENTRIES = PATH_MAPVERSION_OF_MAP_BYID + "/" + ENTRIES;
@@ -154,7 +154,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CONCEPTDOMAIN_CHANGEHISTORY = PATH_CONCEPTDOMAIN_BYID + "/" + CHANGEHISTORY;
 	public static final String PATH_CONCEPTDOMAIN_EARLIESTCHANGE = PATH_CONCEPTDOMAIN_BYID + "/" + EARLIESTCHANGE;
 	public static final String PATH_CONCEPTDOMAIN_LATESTCHANGE = PATH_CONCEPTDOMAIN_BYID + "/" + LATESTCHANGE;
-	public static final String PATH_CONCEPTDOMAIN_BYURI = "/" + CONCEPTDOMAIN_BY_URI;
+	public static final String PATH_CONCEPTDOMAIN_BYURI = "/" + CONCEPTDOMAIN_BY_URI + "/" + ALL_WILDCARD;
 	public static final String PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID = PATH_CONCEPTDOMAIN_BYID + "/" + BINDING + "/{" + VAR_CONCEPTDOMAINBINDINGID + "}"; 
 	public static final String PATH_CONCEPTDOMAINBINDING = "/" + CONCEPTDOMAINBINDING;
 	public static final String PATH_CONCEPTDOMAINBINDINGS = "/" + CONCEPTDOMAINBINDINGS;
@@ -174,7 +174,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_VALUESET_EARLIESTCHANGE = PATH_VALUESETBYID + "/" + EARLIESTCHANGE;
 	public static final String PATH_VALUESET_LATESTCHANGE = PATH_VALUESETBYID + "/" + LATESTCHANGE;
 
-	public static final String PATH_VALUESET_BYURI = "/" + VALUESET_BY_URI;
+	public static final String PATH_VALUESET_BYURI = "/" + VALUESET_BY_URI + "/" + ALL_WILDCARD;
 
 	public static final String PATH_ENTITIESINVALUESET = "/" + VALUESET + "/{"
 			+ VAR_VALUESETID + "}/" + ENTITIES;
@@ -288,6 +288,8 @@ interface PathKeywords {
 	public static final String CHANGEHISTORY = "changehistory";
 	public static final String EARLIESTCHANGE = "earliestchange";
 	public static final String LATESTCHANGE = "latestchange";
+	
+	public static final String ALL_WILDCARD = "**";
 }
 
 interface PathVariables {

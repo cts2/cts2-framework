@@ -369,9 +369,11 @@ public abstract class AbstractMessageWrappingController extends
 		
 		String url = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate);
 		
-		String extraUrlPath = StringUtils.substringAfter(httpServletRequest.getRequestURI(), byUriTemplate);
+		String extraUrlPath = StringUtils.substringAfter(httpServletRequest.getRequestURI(), StringUtils.removeEnd(byUriTemplate, ALL_WILDCARD));
 		
-		url = url + extraUrlPath;
+		if(StringUtils.isNotBlank(extraUrlPath)){
+			url = url + "/" + extraUrlPath;
+		}
 		
 		ModelAndView mav = new ModelAndView(
 				forwardOrRedirect + ":" + url);

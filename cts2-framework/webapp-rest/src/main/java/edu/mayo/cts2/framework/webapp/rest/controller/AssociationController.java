@@ -44,7 +44,9 @@ import edu.mayo.cts2.framework.model.association.AssociationDirectory;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.AssociationGraph;
 import edu.mayo.cts2.framework.model.association.AssociationMsg;
+import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
+import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
@@ -364,18 +366,45 @@ public class AssociationController extends AbstractServiceAwareController {
 			@RequestParam(required=true, defaultValue="TOP_NODE") String focus,
 			@RequestParam(required=true, defaultValue="FORWARD") GraphDirection direction,
 			@RequestParam(required=true, defaultValue="1") int depth) {
+		
 		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
 				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
-		AssociationGraph directoryResult = 
+		
+		GraphFocus graphFocus;
+		
+		if(focus.equals(GraphFocus.TOP_NODE.toString())){
+			graphFocus = GraphFocus.TOP_NODE;
+		} else if(focus.equals(GraphFocus.BOTTOM_NODE.toString())){
+			graphFocus = GraphFocus.BOTTOM_NODE;
+		} else {
+			graphFocus = GraphFocus.SPECIFIC_ENTITY;
+		}
+		
+		DirectoryResult<GraphNode> directoryResult = 
 			this.associationQueryService.getAssociationGraph(
+					graphFocus, 
 					new EntityDescriptionReadId(
 							this.getScopedEntityName(focus, codeSystemName), 
 							ModelUtils.nameOrUriFromName(codeSystemVersionName)),
-					GraphDirection.FORWARD,
+					direction,
 					depth);
 
-		//TODO -- need to add 'next', 'prev' links, etc.
-		return directoryResult;
+		AssociationGraph graph = this.populateDirectory(
+				directoryResult, 
+				page, 
+				httpServletRequest, 
+				AssociationGraph.class);
+		
+		graph.setExpansionDirection(direction);
+		graph.setExpansionDepth((long)depth);
+		graph.setGraphFocus(graphFocus);
+		
+		//TODO: need to populate (resolve) focus entity.
+		//we can populate based on what the user has passed
+		//in, but we need to resolve the URI/name.
+		//graph.setFocusEntity(focusEntity)
+		
+		return graph;
 	}
 	
 	@RequestMapping(value=PATH_SOURCEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)

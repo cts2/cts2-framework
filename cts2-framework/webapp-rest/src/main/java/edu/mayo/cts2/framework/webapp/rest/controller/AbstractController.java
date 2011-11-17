@@ -257,12 +257,15 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	}
 	
 	protected boolean isPartialRedirect(HttpServletRequest request, String urlTemplatePath){
+		String adjustedTemplate = StringUtils.removeEnd(urlTemplatePath, ALL_WILDCARD);
+		
 		String contextPath = this.getUrlPathHelper().getContextPath(request);
 		
 		String requestUri = StringUtils.removeStart(request.getRequestURI(),contextPath);
 		
 		return ! (StringUtils.removeStart(StringUtils.removeEnd(requestUri, "/"), "/").equals(
-				StringUtils.removeStart(StringUtils.removeEnd(urlTemplatePath, "/"), "/")));
+				StringUtils.removeStart(
+						StringUtils.removeEnd(adjustedTemplate, "/"),"/")));
 	}
 	
 	/**

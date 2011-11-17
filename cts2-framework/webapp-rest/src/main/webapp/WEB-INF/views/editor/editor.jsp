@@ -1,11 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<link rel="stylesheet"  type="text/css" href="resources/editor/css/start/jquery-ui-1.8rc2.custom.css"  />
+<!-- <link rel="stylesheet"  type="text/css" href="resources/editor/css/start/jquery-ui-1.8rc2.custom.css"  /> -->
+<link rel="stylesheet"  type="text/css" href="http://jqueryui.com/themes/base/jquery.ui.all.css"  />
 <link type="text/css" rel="stylesheet" href="resources/editor/css/demo_table_jui.css" /> 
 <link type="text/css" rel="stylesheet" href="resources/editor/css/editor.css" /> 
+<link type="text/css" rel="stylesheet" href="resources/editor/css/demo.css" /> 
 <script type="text/javascript" src="resources/editor/js/jquery.js"></script>
-<script type="text/javascript" src="resources/editor/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="resources/editor/js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="resources/editor/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="resources/editor/js/jquery.json-2.3.min.js"></script>
 <!-- <script type="text/javascript" src="resources/editor/js/jquery.ui.selectmenu.js"></script> -->
@@ -187,7 +189,7 @@ Select A Theme: <div id="switcher"></div>
 			<tr><td>About </td><td><input id="about" name="about" type="text"  /></td></tr>
 	
 			
-			<tr><td><input type="submit" value="Create" onclick="create();"/></td></tr>
+			<tr><td><input type="submit" value="Create" onclick="createCodeSystem();"/></td></tr>
 			
 			</table>
 			</fieldset>
@@ -208,6 +210,12 @@ Select A Theme: <div id="switcher"></div>
                 <tr>
                   <th>
                     CodeSystem Name
+                  </th>
+                    <th>
+                    About
+                  </th>
+                   <th>
+                    Description
                   </th>
                 </tr>
               </thead>
@@ -345,55 +353,200 @@ Select A Theme: <div id="switcher"></div>
 	</div>
 	</div>
 
-<div id="mappings">
-
-	<table>
-		<tr>
+	<div id="mappings">
 	
-		<td>
-	
-		<table id="sourceEntityTable" class="display">
-              <thead>
-                <tr>
-                  <th>
-                    Entity Namespace
-                  </th>
-                  <th>
-                    Entity Name
-                  </th>
-                   <th>
-                    Description
-                  </th>
-                </tr>
-              </thead>
-            </table>
-		</td>
-		<td>
+		<ul>
+			<li><a href="#mapping-tabs-map">Map</a></li>
+			<li><a href="#mapping-tabs-mapversion">Map Version</a></li>
+			<li><a href="#mapping-tabs-maptool">Mapping Tool</a></li>
+		</ul>
 		
-		</td>
-		<td>
-		<table id="targetEntityTable" class="display">
-              <thead>
-                <tr>
-                  <th>
-                    Entity Namespace
-                  </th>
-                  <th>
-                    Entity Name
-                  </th>
-                   <th>
-                    Description
-                  </th>
-                </tr>
-              </thead>
-            </table>
-          </td>  
-            
-            
-            </tr>
-            </table>
+		<div id="mapping-tabs-map">
+
+			<ul>
+				<li><a href="#editMapTab">Edit</a></li>
+				<li><a href="#createNewMapTab">Create New</a></li>
+				
+			</ul>
+			
+			<div id="mapEditForm" title="Edit Map">
+		
+				<label id="mapNameLabel"><b>CodeSystemName:</b> <span data-bind="text: map.mapName" ></span></label>
+				<br></br>
+				<label id="mapAboutLabel"><b>About:</b> <span data-bind="text: map.about"></span></label>
+				<br></br>
+				<form id="editForm" class="ui-widget">
+				
+					<fieldset class="ui-widget-content" title="Edit">
+						<legend class="ui-widget-header ui-corner-all">Description</legend>
+						<div data-bind='template: { name: "entityDescriptionTemplate" }'> </div>
+					</fieldset>
+				</form>
+			
+			</div>
+		
+			<div id="editMapTab">
+		
+				
+				<label for="map-edit-search-changeSetDropdown">ChangeSet: </label>
+				<select id="map-edit-search-changeSetDropdown" 
+					name="map-edit-search-changeSetDropdown" 
+					data-getAllFunctionName="onListAllMaps"
+					class="AddCurrentOption"></select>
+					
+				<br></br>	
+				
+				<label for="map-editAutocomplete">Search: </label>
+				<input id="map-editAutocomplete"/>
+				<input type="submit" id="clearSearch" value="Clear Search" name="clearSearch" onclick="onClearEditSearch()"/>
+			
+				<br></br>
+								
+				<table id="mapTable" class="display">
+		              <thead>
+		                <tr>
+		                  <th>
+		                    Map Name
+		                  </th>  
+		                    <th>
+		                    About
+		                  </th>
+		                   <th>
+		                    Description
+		                  </th>      
+		                </tr>
+		              </thead>
+		            </table>
+			</div>
+			<div id="createNewMapTab">
+			
+				<label for="map-create-changeSetDropdown">ChangeSet: </label>
+				<select id="map-create-changeSetDropdown">
+					</select>
+					
+				<form style="width:50%">
+				
+					<fieldset>
+					<legend>Create</legend>
+					<table>
+					<tr><td>Map Name </td><td><input id="mapName" name="mapName" type="text"  /></td></tr>
+					<tr><td>About </td><td><input id="mapAbout" name="mapAbout" type="text"  /></td></tr>
+			
+					
+					<tr><td><input type="submit" value="Create" onclick="createMap();"/></td></tr>
+					
+					</table>
+					</fieldset>
+				</form>
+			</div>
+
+		</div>
+
+		<div id="mapping-tabs-mapversion"></div>
+		
+		<div id="mapping-tabs-maptool">
+		
+			<div style="padding: 10px 10px;">
+				<span id="mappingToolbar" class="ui-widget-header ui-corner-all">
+					Toolbar:
+					<button id="expandAll">expand all</button>
+					<button id="collapseAll">collapse all</button>
+				</span>
+			</div>
+			
+			
+			<table>
+				<tr>
+					<td align="center" style="width:25%">
+						<label for="mappingSourceSearch">Search For Mapping Source: </label>
+						<input id="mappingSourceSearch"/>
+					</td>
+					<td align="center" style="width:20%">
+<!-- 						<label>Map Target</label> -->
+					</td>
+					<td align="center" style="width:30%">
+<!-- 						<label>Map Sets</label> -->
+					</td>
+					<td align="center" style="width:25%">
+						<label for="mappingSourceSearch">Search For Mapping Targets: </label>
+						<input id="mappingTargetSearch"/>
+					</td>
+				</tr>
+				<tr>
+				<td>
+							<ul id="sourceList" class="droppable connectedSourceSortable"></ul>
+							</td>
+							<td>
+							
+								<div class="portlet dropPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+								<div class="portlet-header ui-widget-header ui-corner-all">Map Target</div>
+									<div class="portlet-content">
+
+								
+										<ul id="sourceDrop" class="droppable dropzone connectedSourceSortable"></ul>
+								
+									</div>
+								</div>
+							
+							
+							
+				            </td>
+				            <td>
+				    
+								<div style='width:auto' class="portlet dropPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+								<div class="portlet-header ui-widget-header ui-corner-all">Map Set</div>
+								<div>
+										<button id="addMapTarget">Add Map Target</button>
+										<button id="expandAllMapTargets">expand all</button>
+										<button id="collapseAllMapTargets">collapse all</button>
+										
+								</div>
+									<div style="padding: 10px 10px;">								
+											<label for="mapSetProcessingRule">Processing Rule: </label>
+											<select id="mapSetProcessingRule">
+												<option value="ALL_MATCHES">ALL_MATCHES</option>
+												<option value="FIRST_MATCH">FIRST_MATCH</option>
+											</select> 
+									</div>
+									<div>
+
+											<div id='mapTargetList' class="portlet-content">
 						
-</div>
+												<div id='mapTarget' class="portlet dropPortlet mapTargetPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+													<div class="portlet-header ui-widget-header ui-corner-all">Map Target
+														<span class='ui-icon ui-icon-minusthick'></span>
+													</div>
+													<div class="portlet-content">
+														
+														<label for="mapRuleText">Map Rule: </label>
+														<form>
+															<input type="text" name="mapRuleText" id="mapRuleText"></input>
+														</form>
+														
+							            				<ul id="targetDrop" class="droppable dropzone connectedTargetSortable"></ul>
+							            			
+							            			</div>
+							            		</div>
+					            			
+					            			</div>
+<!-- 					            		</li> -->
+			            			</div>
+			            		</div>
+			            	</td>
+			            	<td>
+			            	<ul id="targetList" class="droppable connectedTargetSortable"></ul>
+			            	</td>
+			    </tr>
+			  </table>         
+<!-- 			<div id="sourceColumn" class="column"></div> -->
+			
+<!-- 			<div id="mappingColumn" class="column"></div> -->
+			
+<!-- 			<div id="targetColumn" class="column"></div> -->
+		
+		</div>
+						
+	</div>
 
 </div>
 

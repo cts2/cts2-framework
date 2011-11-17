@@ -45,6 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
@@ -179,11 +180,18 @@ public class MapController extends AbstractServiceAwareController {
 	@ResponseBody
 	public MapCatalogEntryDirectory getMaps(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page) {
 		
-		return this.getMaps(httpServletRequest, null, restrictions, restFilter, page);
+		return this.getMaps(
+				httpServletRequest, 
+				restReadContext, 
+				null,
+				restrictions, 
+				restFilter, 
+				page);
 	}
 	
 	/**
@@ -199,19 +207,23 @@ public class MapController extends AbstractServiceAwareController {
 	@RequestMapping(value=PATH_MAPS, method=RequestMethod.POST)
 	@ResponseBody
 	public MapCatalogEntryDirectory getMaps(
-			HttpServletRequest httpServletRequest,	
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page) {
 		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		ResolvedFilter filterComponent = this.processFilter(restFilter, mapQueryService);
 
 		DirectoryResult<MapCatalogEntrySummary> directoryResult = this.mapQueryService.getResourceSummaries(
-				null,
+				query,
 				createSet(filterComponent),
 				restrictions, 
-				null, page);
+				readContext, 
+				page);
 
 		MapCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 
