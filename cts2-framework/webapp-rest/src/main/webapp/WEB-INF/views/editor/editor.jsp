@@ -32,25 +32,82 @@ $("form").form();
 
 </script>
 
+<script id='resourceDescriptionTemplate' type='text/html'>
+<div class="resourceDescriptionTemplate-edit-tabs">
+<ul>
+		<li><a href="#tab1">Overview</a></li>		
+		<li><a href="#tab2">Comments</a></li>
+		<li><a href="#tab3">Properties</a></li>
+</ul>
 
-<script id='entityDescriptionTemplate' type='text/html'>
-<label for="description">Description </label>
-{{if codeSystemCatalogEntry.resourceSynopsis != null}}
-	<input type="text" name="description" id="description" data-bind="value: csViewModel.codeSystemCatalogEntry.resourceSynopsis.value.content" class="text ui-widget-content ui-corner-all" />
+<div id="tab1">
+<fieldset class="ui-widget-content" title="Edit">
+<legend class="ui-widget-header ui-corner-all">Formal Name</legend>
+<label for="formalName">Formal Name </label>
+{{if $data.formalName != null}}
+	<input type="text" name="formalName" id="formalName" data-bind="value: formalName" class="text ui-widget-content ui-corner-all" />
 {{else}}
- 	<a href="#" data-bind="click: function() { csViewModel.addDescription() }">Add Description</a>
+ 	<a href="#" data-bind="click: function() { $root.addFormalName() }">Add Formal Name</a>
 {{/if}}
+</fieldset>
+
+<fieldset class="ui-widget-content" title="Edit">
+<legend class="ui-widget-header ui-corner-all">Description</legend>
+<label for="description">Description </label>
+{{if $data.resourceSynopsis != null}}
+	<input type="text" name="description" id="description" data-bind="value: resourceSynopsis.value.content" class="text ui-widget-content ui-corner-all" />
+{{else}}
+ 	<a href="#" data-bind="click: function() { $root.addDescription() }">Add Description</a>
+{{/if}}
+</fieldset>
+
+<fieldset class="ui-widget-content" title="Keywords">
+<legend class="ui-widget-header ui-corner-all">KeyWords</legend>
+<a href="#" data-bind="click: function() { $root.addKeyword() }">Add Keyword</a>
+<br></br>
+{{each $data.keywordList}}
+	<input name="keyword" id="keyword" type="text" data-bind="value: keyword"/>
+	<br></br>
+{{/each}}
+</fieldset>
+</div>
+
+<div id="tab2">
+<fieldset class="ui-widget-content" title="Comments">
+<legend class="ui-widget-header ui-corner-all">Comments</legend>
+<a href="#" data-bind="click: function() { $root.addComment() }">Add Comment</a>
+<br></br>
+{{each $data.noteList }}
+	<div data-bind="template: { name: 'commentTemplate', data: $value } "/>
+	<br></br>
+{{/each}}
+</fieldset>
+</div>
+
+<div id="tab3">
+<fieldset class="ui-widget-content" title="Properties">
+<legend class="ui-widget-header ui-corner-all">Properties</legend>
+<a href="#" data-bind="click: function() { $root.addProperty() }">Add Property</a>
+<br></br>
+{{each $data.propertyList}}
+	
+	<br></br>
+{{/each}}
+</fieldset>
+</div>
+
+</div>
 </script>
 
-<script id='keywordTemplate' type='text/html'>
-<input name="keyword" id="keyword" type="text" data-bind="value: keyword"/>
-<br></br>
+<script id='abstractResourceDescriptionTemplate' type='text/html'>
+	<div data-bind="template: { name: 'resourceDescriptionTemplate', data: $data }"> </div>
 </script>
 
-<script id='keywordDisplayTemplate' type='text/html'>
-  <span data-bind="text: keyword"></span>
-<br></br>
+<script id='commentTemplate' type='text/html'>
+	<select data-bind="options: ['CHANGENOTE','EDITORIALNOTE','HISTORYNOTE', 'SCOPENOTE', 'NOTE'], value: type " ></select>
+	<input type="text" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
 </script>
+
 
 </head>
 
@@ -118,25 +175,18 @@ Select A Theme: <div id="switcher"></div>
 
 		<label id="codeSystemLNameLabel"><b>CodeSystemName:</b> <span data-bind="text: codeSystemCatalogEntry.codeSystemName" ></span></label>
 		<br></br>
-		<label id="aboutLabel"><b>About:</b> <span data-bind="text: codeSystemCatalogEntry.about"></span></label>
+		<label id="csAboutLabel"><b>About:</b> <span data-bind="text: codeSystemCatalogEntry.about"></span></label>
 		<br></br>
-		<form id="editForm" class="ui-widget">
+		<form class="ui-widget">
 		
-			<fieldset class="ui-widget-content" title="Edit">
-				<legend class="ui-widget-header ui-corner-all">Description</legend>
-				<div data-bind='template: { name: "entityDescriptionTemplate" }'> </div>
-			</fieldset>
+			<div data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: codeSystemCatalogEntry, afterRender: addTabsToTemplate } "> </div>
+			
 			<fieldset id="cs-chooseChangeSetForEditFieldset" class="ui-widget-content" title="ChangeSet">
 				<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
 				<label for="cs-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
 				<select id="cs-edit-choose-changeSetDropdown" name="cs-edit-choose-changeSetDropdown"></select>
 			</fieldset>
 			
-			<fieldset class="ui-widget-content" title="Keywords">
-				<legend class="ui-widget-header ui-corner-all">KeyWords</legend>
-				<a href="#" data-bind="click: function() { viewModel.addKeyword() }">Add Keyword</a>
-				<div data-bind='template: { name: "keywordTemplate", foreach: csViewModel.codeSystemCatalogEntry.keywordList }'></div>
-			</fieldset>
 		</form>
 	
 	</div>
@@ -285,7 +335,7 @@ Select A Theme: <div id="switcher"></div>
 				<input type="text" name="definition" id="designation" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
 			</td>
 			<td>
-				<select data-bind="options: ['NORMATIVE','INFORMATIVE'], selectedOptions: definitionRole" >
+				<select data-bind="options: ['NORMATIVE','INFORMATIVE'], value: definitionRole" >
 			</td>
 		</tr>
 	</script>
@@ -368,22 +418,26 @@ Select A Theme: <div id="switcher"></div>
 				<li><a href="#createNewMapTab">Create New</a></li>
 				
 			</ul>
-			
-			<div id="mapEditForm" title="Edit Map">
 		
-				<label id="mapNameLabel"><b>CodeSystemName:</b> <span data-bind="text: map.mapName" ></span></label>
-				<br></br>
-				<label id="mapAboutLabel"><b>About:</b> <span data-bind="text: map.about"></span></label>
-				<br></br>
-				<form id="editForm" class="ui-widget">
-				
-					<fieldset class="ui-widget-content" title="Edit">
-						<legend class="ui-widget-header ui-corner-all">Description</legend>
-						<div data-bind='template: { name: "entityDescriptionTemplate" }'> </div>
-					</fieldset>
-				</form>
+	<div id="mapEditForm" title="Edit Map">
+
+		<label id="mapNameLabel"><b>Map Name:</b> <span data-bind="text: map.mapName" ></span></label>
+		<br></br>
+		<label id="aboutLabel"><b>About:</b> <span data-bind="text: map.about"></span></label>
+		<br></br>
+		<form class="ui-widget">
 			
-			</div>
+			<div data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: map  }"> </div>
+			
+			<fieldset id="map-chooseChangeSetForEditFieldset" class="ui-widget-content" title="ChangeSet">
+				<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
+				<label for="map-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
+				<select id="map-edit-choose-changeSetDropdown" name="map-edit-choose-changeSetDropdown"></select>
+			</fieldset>
+			
+		</form>
+	
+	</div>
 		
 			<div id="editMapTab">
 		

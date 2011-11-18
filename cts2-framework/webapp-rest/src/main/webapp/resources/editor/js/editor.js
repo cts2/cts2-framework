@@ -250,9 +250,9 @@ function createEditMapDialog(){
 			buttons: {
 				"Save!": function() {
 	
-					var newJson = ko.mapping.toJS(csViewModel);
+					var newJson = ko.mapping.toJS(mapViewModel);
 					
-					updateCodingScheme(newJson.codeSystemCatalogEntry);
+					updateMap(newJson);
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -557,7 +557,7 @@ $(document).ready(function() {
 		"bPaginate": true,
 		"bFilter": true,
 		"sAjaxSource": urlPrefix+'changesets?format=json',
-		"fnServerData": fnChangeSetObjectToArray(),
+		"fnServerData": fnChangeSetObjectToArray()
 	} );
 
 	codeSystemTable = $('#codeSystemTable').dataTable( {
@@ -567,7 +567,7 @@ $(document).ready(function() {
 		"bPaginate": true,
 		"bFilter": true,
 		"sAjaxSource": urlPrefix+'codesystems?format=json',
-		"fnServerData": fnCodeSystemObjectToArray(),
+		"fnServerData": fnCodeSystemObjectToArray()
 	} );
 	
 	entityTable = $('#entityTable').dataTable( {
@@ -577,7 +577,7 @@ $(document).ready(function() {
 		"bPaginate": true,
 		"bFilter": true,
 		"sAjaxSource": urlPrefix+'codesystems?format=json',
-		"fnServerData": fnEntityObjectToArray(),
+		"fnServerData": fnEntityObjectToArray()
 	} );
 	
 	mapTable = $('#mapTable').dataTable( {
@@ -587,7 +587,7 @@ $(document).ready(function() {
 		"bPaginate": true,
 		"bFilter": true,
 		"sAjaxSource": urlPrefix+'maps?format=json',
-		"fnServerData": fnMapObjectToArray(),
+		"fnServerData": fnMapObjectToArray()
 	} );
 	
 	var autocompleteTable = $("#autocompleteTable").dataTable({
@@ -596,7 +596,7 @@ $(document).ready(function() {
 		"bProcessing": false,
 		"bPaginate": true,
 		"bFilter": true,
-		"fnServerData": fnCodeSystemObjectToArray(),
+		"fnServerData": fnCodeSystemObjectToArray()
 	});
 	
 	$('#editAutocomplete').keyup(function(){
@@ -662,9 +662,6 @@ $(document).ready(function() {
 				},
 				"success": function (json) {
 	
-					
-					if(viewModel == null){
-
 						viewModel = ko.mapping.fromJS(json);
 						
 						viewModel.addDesignation = function () {
@@ -685,10 +682,7 @@ $(document).ready(function() {
 						};
 
 						ko.applyBindings(viewModel, document.getElementById('entityEditForm'));
-					} else {
-						ko.mapping.fromJS(json,viewModel);
-					}
-	
+					
 				   if(changeSetUri == 'CURRENT'){
 					   $('#ed-chooseChangeSetForEditFieldset').show();
 				   } else {
@@ -732,13 +726,27 @@ $(document).ready(function() {
 							        }
 							    }
 							};
-						
-						if(csViewModel == null){
+
 							csViewModel = ko.mapping.fromJS(json,mapping);
 							
 							csViewModel.addDescription = function () {
 								csViewModel.codeSystemCatalogEntry.resourceSynopsis = {value:{content:ko.observable('--new-description--')}};
 						        ko.applyBindings(csViewModel, document.getElementById('codeSystemEditForm'));   
+							};
+							
+							csViewModel.addFormalName = function () {
+								csViewModel.codeSystemCatalogEntry.formalName = ko.observable('--new-formal-name--');
+								ko.applyBindings(csViewModel,document.getElementById('codeSystemEditForm'));
+							};
+							
+							csViewModel.addComment = function () {
+								csViewModel.codeSystemCatalogEntry.noteList.push( 
+										{
+											type:ko.observable('NOTE'),
+											value:{content:ko.observable('--new-comment--')}
+										}
+								);
+								ko.applyBindings(csViewModel,document.getElementById('codeSystemEditForm'));
 							};
 							
 							csViewModel.addKeyword = function () {
@@ -747,9 +755,6 @@ $(document).ready(function() {
 							
 							
 							ko.applyBindings(csViewModel,document.getElementById('codeSystemEditForm'));
-						} else {
-							ko.mapping.fromJS(json,csViewModel);
-						}
 	
 					   if(changeSetUri == 'CURRENT'){
 						   $('#cs-chooseChangeSetForEditFieldset').show();
@@ -787,19 +792,41 @@ $(document).ready(function() {
 				},
 				"success": function (json) {
 					
-					if(mapViewModel == null){
-						mapViewModel = ko.mapping.fromJS(json);
+					var mapping = {
+						    'keywordList': {
+						        create: function(options) {
+						            return {keyword:ko.observable(options.data)};
+						        }
+						    }
+						};
+
+						mapViewModel = ko.mapping.fromJS(json,mapping);
 						
 						mapViewModel.addDescription = function () {
 							mapViewModel.map.resourceSynopsis = {value:{content:ko.observable('--new-description--')}};
 					        ko.applyBindings(mapViewModel, document.getElementById('mapEditForm'));   
 						};
 						
-	
+						mapViewModel.addKeyword = function () {
+							mapViewModel.map.keywordList.push( {keyword:ko.observable('--new-keyword--')} );
+						};
+						
+						mapViewModel.addComment = function () {
+							mapViewModel.map.noteList.push( 
+									{
+										type:ko.observable('NOTE'),
+										value:{content:ko.observable('--new-comment--')}
+									}
+							);
+							ko.applyBindings(mapViewModel,document.getElementById('mapEditForm'));
+						};
+						
+						mapViewModel.addFormalName = function () {
+							mapViewModel.map.formalName = ko.observable('--new-formal-name--');
+							ko.applyBindings(mapViewModel,document.getElementById('mapEditForm'));
+						};
+
 						ko.applyBindings(mapViewModel,document.getElementById('mapEditForm'));
-					} else {
-						ko.mapping.fromJS(json,mapViewModel);
-					}
 
 				   if(changeSetUri == 'CURRENT'){
 					   $('#map-chooseChangeSetForEditFieldset').show();
@@ -1030,6 +1057,45 @@ function updateEntity(json) {
 
 }
 
+function updateMap(data) {
+
+	  data.map.changeableElementGroup.changeDescription.changeType = "UPDATE";
+
+	  var changeSetUri = $("#map-edit-search-changeSetDropdown").val();
+	  
+	  data.map.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
+	  
+	  var newArray = adjustArray(data.map.keywordList, "keyword");
+	  data.map.keywordList = newArray;
+
+	  var jsonString = $.toJSON(data.map);
+
+	  $.ajax( {
+			"dataType": 'json', 
+			"contentType": "application/json",
+			"type": "PUT", 
+			"url": urlPrefix+data.heading.resourceRoot,
+			"data": jsonString,
+			"error":function (xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				alert(xhr.statusText);
+				alert(xhr.responseText);
+				alert(jsonString);
+			},
+			"success": function (json) {
+				log("PUT",
+						"map/??",
+						"Updating the Map");
+				
+				$( "#entityEditForm" ).dialog( "close" );
+				
+				mapTable.fnReloadAjax(urlPrefix+"maps?format=json&changesetcontext="+changeSetUri);
+
+			}
+		} );
+
+}
+
 function updateCodingScheme(data) {
 
 	  data.changeableElementGroup.changeDescription.changeType = "UPDATE";
@@ -1068,6 +1134,10 @@ function updateCodingScheme(data) {
 			}
 		} );
 
+}
+
+function addTabsToTemplate(elements) {
+    $('.resourceDescriptionTemplate-edit-tabs').tabs();
 }
 
 function onClearEditSearch(){
