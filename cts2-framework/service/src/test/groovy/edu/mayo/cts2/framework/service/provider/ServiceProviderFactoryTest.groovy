@@ -2,11 +2,14 @@ package edu.mayo.cts2.framework.service.provider;
 
 import static org.junit.Assert.*
 
+import java.util.Set;
+
 import org.junit.Test
 
 import edu.mayo.cts2.framework.core.config.PluginConfig
 import edu.mayo.cts2.framework.core.config.PluginManager
 import edu.mayo.cts2.framework.core.config.PluginReference
+import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile
 
 class ServiceProviderFactoryTest {
@@ -78,4 +81,9 @@ class TestServiceProvider implements ServiceProvider {
 		//
 	}
 
+	@Override
+	public Set<Option> getPluginOptions() {
+		return null;
+	}
+	
 }

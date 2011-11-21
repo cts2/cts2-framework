@@ -2,6 +2,8 @@ package edu.mayo.cts2.framework.service.provider;
 
 import static org.junit.Assert.*
 
+import java.util.Set;
+
 import javax.annotation.Resource
 
 import org.junit.Test
@@ -9,6 +11,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
 
 import edu.mayo.cts2.framework.core.config.PluginConfig
+import edu.mayo.cts2.framework.core.config.option.Option;
 
 class AbstractSpringServiceProviderTest {
 	
@@ -82,5 +85,12 @@ class TestAbstractSpringServiceProvider extends AbstractSpringServiceProvider {
 			["edu/mayo/cts2/framework/service/provider/AbstractSpringServiceProviderTest.xml"] as String[],
 			parent)
 	}
+
+	@Override
+	public Set<Option> getPluginOptions() {
+		return null;
+	}
+			
+			
 	
 }

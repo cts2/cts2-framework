@@ -427,7 +427,7 @@ Select A Theme: <div id="switcher"></div>
 		<br></br>
 		<form class="ui-widget">
 			
-			<div data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: map  }"> </div>
+			<div data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: map, afterRender: addTabsToTemplate }"> </div>
 			
 			<fieldset id="map-chooseChangeSetForEditFieldset" class="ui-widget-content" title="ChangeSet">
 				<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
@@ -496,7 +496,69 @@ Select A Theme: <div id="switcher"></div>
 
 		</div>
 
-		<div id="mapping-tabs-mapversion"></div>
+		<div id="mapping-tabs-mapversion">
+
+				<ul>
+					<li><a href="#editMapVersionTab">Edit</a></li>
+					<li><a href="#createNewMapVersionVersionTab">Create</a></li>
+				</ul>
+
+				<div id="editMapVersionTab">
+		
+				
+				<label for="mapversion-edit-search-changeSetDropdown">ChangeSet: </label>
+				<select id="mapversion--edit-search-changeSetDropdown" 
+					name="mapversion--edit-search-changeSetDropdown" 
+					data-getAllFunctionName="onListAllMapVersions"
+					class="AddCurrentOption"></select>
+					
+				<br></br>	
+				
+				<label for="mapversion-editAutocomplete">Search: </label>
+				<input id="mapversion-editAutocomplete"/>
+				<input type="submit" id="clearSearch" value="Clear Search" name="clearSearch" onclick="onClearEditSearch()"/>
+			
+				<br></br>
+								
+				<table id="mapVersionTable" class="display">
+		              <thead>
+		                <tr>
+		                  <th>
+		                    Map Version Name
+		                  </th>  
+		                    <th>
+		                    About
+		                  </th>
+		                   <th>
+		                    Description
+		                  </th>      
+		                </tr>
+		              </thead>
+		            </table>
+			</div>
+			
+				<div id="createNewMapVersionVersionTab">
+			
+				<label for="mapversion-create-changeSetDropdown">ChangeSet: </label>
+				<select id="mapversion-create-changeSetDropdown"></select>
+					
+				<form style="width:50%">
+				
+					<fieldset>
+					<legend>Create</legend>
+					<table>
+					<tr><td>Map Version Name </td><td><input id="mapVersionName" name="mapVersionName" type="text"  /></td></tr>
+					<tr><td>About </td><td><input id="mapVersionAbout" name="mapVersionAbout" type="text"  /></td></tr>
+			
+					
+					<tr><td><input type="submit" value="Create" onclick="createMapVersion();"/></td></tr>
+					
+					</table>
+					</fieldset>
+				</form>
+			</div>
+		
+		</div>
 		
 		<div id="mapping-tabs-maptool">
 		

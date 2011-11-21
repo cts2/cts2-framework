@@ -657,6 +657,7 @@ $(document).ready(function() {
 	$( "#entityEditTabs" ).tabs();
 	$( "#mappings" ).tabs();
 	$( "#mapping-tabs-map" ).tabs();
+	$( "#mapping-tabs-mapversion" ).tabs();
 	
 	$('#entityTable tbody tr').live('click', function () {
 		var aData = entityTable.fnGetData( this );
