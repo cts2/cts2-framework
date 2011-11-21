@@ -43,6 +43,7 @@ import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
+import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
@@ -240,6 +241,22 @@ public class ServiceProviderFactory implements InitializingBean,
 							delegate.destroy();
 							
 							return null;
+						}
+
+					}).get();
+				} catch (ExecutionException e) {
+					throw handleException(e);
+				} catch (InterruptedException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+			
+			public Set<Option> getPluginOptions() {
+				try {
+					return ex.submit(new Callable<Set<Option>>() {
+
+						public Set<Option> call() throws Exception {
+							return delegate.getPluginOptions();
 						}
 
 					}).get();

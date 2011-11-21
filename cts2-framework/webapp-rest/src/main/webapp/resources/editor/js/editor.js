@@ -350,31 +350,47 @@ function addPortlet(div,style,name,description){
 	div.append($('<li>').append($(html)).append('</li>'));
 }
 
+
 $(document).ready(function() {
 	
-	$('#targetList, #targetDrop').sortable({
-		connectWith: ".connectedTargetSortable"
+	$("#trashcan").droppable({
+	    accept: ".connectedSourceSortable li",
+	    hoverClass: "ui-state-hover",
+	    drop: function(ev, ui) {
+	        ui.draggable.remove();
+	    }
+	});
+
+//	$("#onlyOneAllowedError").dialog({
+//	    title: "Error!",
+//	    resizable: false,
+//	    height: 160,
+//	    modal: true,
+//	    buttons: {
+//	        "Ok" : function () {
+//	            $(this).dialog("close");
+//	        }
+//	    }
+//	}).parent().addClass("ui-state-error");
+
+	
+	$('#targetDrop').sortable({
+		connectWith: ".connectedTargetSortable:not(:has(li))"
+	}).disableSelection();
+	
+	$('#targetList').sortable({
+		connectWith: ".connectedTargetSortable:not(:has(li))"
 	}).disableSelection();
 	
 	$('#sourceDrop').sortable({
 		connectWith: ".connectedSourceSortable",
-			   receive: function(event, ui) { 
-				   if ( $(this).children().length > 1 ) {
-
-					   //ui.sender: will cancel the change. Useful in the 'receive' callback.
-			            $(ui.sender).sortable('cancel');
-
-				   	}
-			   }
 	}).disableSelection();
 	
 	$('#sourceList').sortable({
-		connectWith: ".connectedSourceSortable"  
+		connectWith: ".connectedSourceSortable:not(:has(li)), #trashcan"  
 	}).disableSelection();
 	
-	$('#mapTargetList').sortable({
-			connectWith: ".connectedSourceSortable"  
-			});
+	$('#mapTargetList').sortable();
 	//end drag and drop
 	
 	$( "#collapseAll" ).button().click(function() {
@@ -416,21 +432,20 @@ $(document).ready(function() {
 	});
 
 	$( "#addMapTarget" ).button().click(function() {
-			var newTarget = $( '#mapTarget' ).clone();
-			newTarget.find( ".portlet-header .ui-icon" ).click(function() {
+			var $newTarget = $( '#mapTarget' ).clone();
+			$newTarget.find( ".portlet-header .ui-icon" ).click(function() {
 				$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
 				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
 			});
+
+			$newTarget.find("#targetDrop").empty();
+
+			$newTarget.find('.connectedTargetSortable').sortable({
+				connectWith: ".connectedTargetSortable:not(:has(li))"
+			}).disableSelection();
 			
-			$("#mapTargetList > #mapTarget").each(function() {
-				$(this).find( ".portlet-header .ui-icon" ).each(function() {
-					$( this ).addClass( "ui-icon-plusthick" );
-					$( this ).removeClass( "ui-icon-minusthick" );
-					$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
-				});
-			});
+			$('#mapTargetList').append($newTarget);
 			
-			$('#mapTargetList').append(newTarget);
 	});
 
 	$( '#mapTarget' ).find( ".portlet-header .ui-icon" ).click(function() {
@@ -441,6 +456,9 @@ $(document).ready(function() {
 	//source mapping autocomplete
 
 		 var data = $("#mappingSourceSearch").autocomplete({
+			 	open: function(event, ui) {
+			        $('ul.ui-autocomplete').removeAttr('style').hide();
+			    },
 				source: function( request, response ) {
 					$.ajax({
 						url: "http://informatics.mayo.edu/exist/cts2/rest/entities?maxtoreturn=5&format=json&matchvalue="+request.term,

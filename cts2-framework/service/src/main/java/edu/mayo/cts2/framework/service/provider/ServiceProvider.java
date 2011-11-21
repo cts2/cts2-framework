@@ -23,7 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.provider;
 
+import java.util.Set;
+
 import edu.mayo.cts2.framework.core.config.PluginConfig;
+import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -45,4 +48,6 @@ public interface ServiceProvider {
 	public void initialize(PluginConfig config);
 	
 	public void destroy();
+	
+	public Set<Option> getPluginOptions();
 }

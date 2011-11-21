@@ -1,6 +1,6 @@
 package edu.mayo.cts2.framework.core.config.option;
 
-public abstract class AbstractOption<T> implements Option<T> {
+public abstract class AbstractOption<T> implements Option {
 	
 	private String optionName;
 	

@@ -500,7 +500,7 @@ Select A Theme: <div id="switcher"></div>
 		
 		<div id="mapping-tabs-maptool">
 		
-			<div style="padding: 10px 10px;">
+			<div style="padding: 10px 10px">
 				<span id="mappingToolbar" class="ui-widget-header ui-corner-all">
 					Toolbar:
 					<button id="expandAll">expand all</button>
@@ -515,10 +515,10 @@ Select A Theme: <div id="switcher"></div>
 						<label for="mappingSourceSearch">Search For Mapping Source: </label>
 						<input id="mappingSourceSearch"/>
 					</td>
-					<td align="center" style="width:20%">
+					<td align="center" style="width:25%">
 <!-- 						<label>Map Target</label> -->
 					</td>
-					<td align="center" style="width:30%">
+					<td align="center" style="width:25%">
 <!-- 						<label>Map Sets</label> -->
 					</td>
 					<td align="center" style="width:25%">
@@ -528,7 +528,7 @@ Select A Theme: <div id="switcher"></div>
 				</tr>
 				<tr>
 				<td>
-							<ul id="sourceList" class="droppable connectedSourceSortable"></ul>
+							<ul id="sourceList"  class="droppable connectedSourceSortable"></ul>
 							</td>
 							<td>
 							
@@ -546,6 +546,7 @@ Select A Theme: <div id="switcher"></div>
 							
 				            </td>
 				            <td>
+				           
 				    
 								<div style='width:auto' class="portlet dropPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 								<div class="portlet-header ui-widget-header ui-corner-all">Map Set</div>
@@ -564,7 +565,7 @@ Select A Theme: <div id="switcher"></div>
 									</div>
 									<div>
 
-											<div id='mapTargetList' class="portlet-content">
+											<div id='mapTargetList' style='height:300px;overflow:scroll' class="portlet-content">
 						
 												<div id='mapTarget' class="portlet dropPortlet mapTargetPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 													<div class="portlet-header ui-widget-header ui-corner-all">Map Target
@@ -597,12 +598,20 @@ Select A Theme: <div id="switcher"></div>
 <!-- 			<div id="mappingColumn" class="column"></div> -->
 			
 <!-- 			<div id="targetColumn" class="column"></div> -->
+
+			
+			<img  id="trashcan" src="resources/editor/images/trash-icon.png" alt="trash"/>
 		
 		</div>
 						
 	</div>
 
 </div>
+
+<div style="display:none" id="onlyOneAllowedError">
+    <p>Only one allowed</p>
+</div>
+
 
 <textarea class="ui-widget ui-state-default ui-corner-all" id="logmsgs" readonly="readonly" rows="5">
 </textarea> 

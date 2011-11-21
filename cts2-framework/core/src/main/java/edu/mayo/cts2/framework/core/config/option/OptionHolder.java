@@ -9,12 +9,13 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class OptionHolder {
 
-	private Map<String,Option<?>> options = 
-			new HashMap<String,Option<?>>();
+	private Map<String,Option> options = 
+			new HashMap<String,Option>();
 	
-	public OptionHolder(Set<StringOption> stringOptions){
-		if(CollectionUtils.isNotEmpty(stringOptions)){
-			for(StringOption option : stringOptions){
+	public OptionHolder(
+			Set<? extends Option> options){
+		if(CollectionUtils.isNotEmpty(options)){
+			for(Option option : options){
 				this.options.put(option.getOptionName(), option);
 			}
 		}
@@ -30,11 +31,11 @@ public class OptionHolder {
 		return option;
 	}
 	
-	public void updateOption(String optionName, Option<?> option){
+	public void updateOption(String optionName, Option option){
 		this.options.put(optionName, option);
 	}
 	
-	public Collection<Option<?>> getAllOptions(){
+	public Collection<Option> getAllOptions(){
 		return this.options.values();
 	}
 }

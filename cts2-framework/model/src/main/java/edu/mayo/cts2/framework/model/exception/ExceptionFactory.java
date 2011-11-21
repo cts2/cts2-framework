@@ -62,6 +62,7 @@ public class ExceptionFactory {
 			Iterable<? extends NameAndMeaningReference> possibleValues) {
 		UnsupportedMatchAlgorithm ex = new UnsupportedMatchAlgorithm();
 		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedAlgorithm, possibleValues));
 		
@@ -73,6 +74,7 @@ public class ExceptionFactory {
 			Iterable<T> possibleValues) {
 		UnsupportedNameOrURI ex = new UnsupportedNameOrURI();
 		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_READ_CONTEXT);
 		
 		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedNameOrUri, possibleValues));
 		
@@ -92,6 +94,7 @@ public class ExceptionFactory {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name.getUri(), matchAlgorithmReferences));
 		
@@ -111,6 +114,7 @@ public class ExceptionFactory {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name, matchAlgorithmReferences));
 		
@@ -164,6 +168,7 @@ public class ExceptionFactory {
 		ex.setMessage(ModelUtils.createOpaqueData(message));
 		
 		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
 		return new Cts2RestException(ex);
 	}
@@ -191,6 +196,7 @@ public class ExceptionFactory {
 		UnspecifiedCts2Exception ex = new UnspecifiedCts2Exception();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
 		message = message + 
 		" Request was: " + url + 
@@ -294,7 +300,7 @@ public class ExceptionFactory {
 	public static Cts2RestException createUnsupportedPredicateReference(
 			String name) {	
 		UnsupportedPredicate ex = new UnsupportedPredicate();
-		
+		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		ex.setSeverity(LoggingLevel.ERROR);
 
 		return new Cts2RestException(ex);

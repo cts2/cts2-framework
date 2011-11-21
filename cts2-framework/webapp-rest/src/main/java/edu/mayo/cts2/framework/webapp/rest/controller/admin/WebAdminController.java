@@ -42,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.core.config.PluginDescription;
 import edu.mayo.cts2.framework.core.config.PluginManager;
@@ -82,14 +81,14 @@ public class WebAdminController {
 		PluginReference activePlugin = 
 				this.pluginManager.getActivePlugin();
 
-		Collection<Option<?>> options;
+		Collection<Option> options;
 		
 		if(activePlugin != null){
 			options = this.pluginManager.getPluginSpecificConfigProperties(
 					activePlugin.getPluginName()).
 						getAllOptions();
 		} else {
-			options = new ArrayList<Option<?>>();
+			options = new ArrayList<Option>();
 		}
 		
 		return this.optionsToDtos(options);
@@ -99,7 +98,7 @@ public class WebAdminController {
 	@ResponseBody
 	public Collection<OptionDTO> getServiceContextConfigProperties() {
 		
-		Collection<Option<?>> options = this.serviceConfigManager.getContextConfigProperties().
+		Collection<Option> options = this.serviceConfigManager.getContextConfigProperties().
 				getAllOptions();
 		
 		return this.optionsToDtos(options);
@@ -175,10 +174,10 @@ public class WebAdminController {
 		return this.pluginManager.getPluginDescription(pluginName, pluginVersion);
 	}
 	
-	private Collection<OptionDTO> optionsToDtos(Collection<Option<?>> options){
+	private Collection<OptionDTO> optionsToDtos(Collection<Option> options){
 		List<OptionDTO> returnList = new ArrayList<OptionDTO>();
 		
-		for(Option<?> option : options){
+		for(Option option : options){
 			returnList.add(new OptionDTO(
 					option.getOptionName(), 
 					option.getOptionValueAsString(), 
