@@ -411,6 +411,11 @@
 			<id>clojars</id>
 			<url>http://clojars.org/repo/</url>
 		</repository>
+		
+		<repository>
+			<id>informatics-thirdparty</id>
+			<url>http://informatics.mayo.edu/maven/content/repositories/thirdparty</url>
+		</repository>
 
 	</repositories>
 

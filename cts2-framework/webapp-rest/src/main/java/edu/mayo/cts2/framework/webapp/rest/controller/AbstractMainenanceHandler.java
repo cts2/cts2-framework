@@ -11,13 +11,20 @@ public abstract class AbstractMainenanceHandler {
 
 	protected ChangeableElementGroup createChangeableElementGroup(String changeSetUri, ChangeType changeType){
 		ChangeableElementGroup group = new ChangeableElementGroup();
-		group.setChangeDescription(new ChangeDescription());
-		group.getChangeDescription().setChangeDate(new Date());
-		group.getChangeDescription().setChangeType(changeType);
-		group.getChangeDescription().setContainingChangeSet(changeSetUri);
-		group.getChangeDescription().setCommitted(ChangeCommitted.PENDING);
+		group.setChangeDescription(this.createChangeDescription(changeSetUri, changeType));
 		
 		return group;
+	}
+	
+	protected ChangeDescription createChangeDescription(String changeSetUri, ChangeType changeType){
+		ChangeDescription changeDescription = new ChangeDescription();
+
+		changeDescription.setChangeDate(new Date());
+		changeDescription.setChangeType(changeType);
+		changeDescription.setContainingChangeSet(changeSetUri);
+		changeDescription.setCommitted(ChangeCommitted.PENDING);
+		
+		return changeDescription;
 	}
 	
 }

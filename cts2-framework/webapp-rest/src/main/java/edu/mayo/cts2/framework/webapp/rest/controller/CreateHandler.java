@@ -38,7 +38,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 	
 			ModelUtils.setChangeableElementGroup(resource, group);
 		} else if(group.getChangeDescription() == null){
-			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
+			group.setChangeDescription(this.createChangeDescription(changeSetUri, ChangeType.CREATE));
 		}
 		
 		R cts2Resource = (R) resource.getChoiceValue();

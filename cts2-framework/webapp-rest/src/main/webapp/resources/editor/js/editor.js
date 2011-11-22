@@ -329,6 +329,10 @@ function setResourceSynopsis(json,synopsis){
 	json.resourceSynopsis.value.content = synopsis;
 }
 
+function resetForm(formName){
+	$('#'+formName).find(":input").val('');
+}
+
 function addPortlet(div,style,name,description){
 	var html =
 	$('<div class="portlet">' +
@@ -554,7 +558,14 @@ $(document).ready(function() {
 					createChangeSet(function(json0, text0, jqXHR0){
 						var chgseturl = jqXHR0.getResponseHeader('Location');
 						
-						updateChangeSetMetadata(chgseturl,changeInstructions, function(){ alert("success!!"); } );
+						updateChangeSetMetadata(chgseturl,changeInstructions, function(){ 
+							changeSetTable.fnReloadAjax();	
+							alert("Change Set Created"); 
+							
+							$( "#createChangeSetForm" ).dialog( "close" );
+							
+							resetForm("createChangeSetForm");
+						} );
 					});
 				},
 				Cancel: function() {

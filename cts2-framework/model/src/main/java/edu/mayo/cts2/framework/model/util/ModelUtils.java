@@ -26,6 +26,9 @@ package edu.mayo.cts2.framework.model.util;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
+import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.Changeable;
@@ -171,6 +174,26 @@ public class ModelUtils {
 		
 	}
 	
+	public static ChangeableElementGroup getChangeableElementGroup(Object changeableResource){
+		if(changeableResource instanceof Changeable){
+			return ((Changeable)changeableResource).getChangeableElementGroup();
+		}
+		
+		if(changeableResource instanceof EntityDescription){
+			EntityDescription entity = (EntityDescription)changeableResource;
+			
+			EntityDescriptionBase base = getEntity(entity);
+			
+			if(base instanceof NamedEntityDescription){
+				return ((NamedEntityDescription)base).getChangeableElementGroup();
+			}
+			
+		}
+		
+		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
+		
+	}
+	
 	private static interface ChoiceCallback<T> {
 		
 		public T doInCallback(Changeable changeable);
@@ -285,28 +308,28 @@ public class ModelUtils {
 	}
 
 	public static NameOrURI nameOrUriFromName(String name) {
-		NameOrURI nameOrUri = new NameOrURI();
+		NameOrURI nameOrUri = new ToStringNameOrURI();
 		nameOrUri.setName(name);
 		
 		return nameOrUri;
 	}
 	
 	public static EntityNameOrURI entityNameOrUriFromName(ScopedEntityName name) {
-		EntityNameOrURI nameOrUri = new EntityNameOrURI();
+		EntityNameOrURI nameOrUri = new ToStringEntityNameOrURI();
 		nameOrUri.setEntityName(name);
 		
 		return nameOrUri;
 	}
 	
 	public static EntityNameOrURI entityNameOrUriFromUri(String uri) {
-		EntityNameOrURI nameOrUri = new EntityNameOrURI();
+		EntityNameOrURI nameOrUri = new ToStringEntityNameOrURI();
 		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
 	}
 
 	public static NameOrURI nameOrUriFromUri(String uri) {
-		NameOrURI nameOrUri = new NameOrURI();
+		NameOrURI nameOrUri = new ToStringNameOrURI();
 		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
@@ -335,5 +358,39 @@ public class ModelUtils {
 					}
 			
 		});
+	}
+	
+	private static class ToStringNameOrURI extends NameOrURI implements MarshallSuperClass {
+
+		private static final long serialVersionUID = 1917212561253120049L;
+
+		public String toString(){
+			String returnString;
+			if(StringUtils.isNotBlank(this.getName())){
+				returnString = "Name: " + this.getName();
+			} else {
+				returnString = "URI: " + this.getUri();
+			}
+			
+			return returnString;
+		}
+	}
+	
+	private static class ToStringEntityNameOrURI extends EntityNameOrURI implements MarshallSuperClass {
+
+		private static final long serialVersionUID = 1917212561253120049L;
+
+		public String toString(){
+			String returnString;
+			if(this.getEntityName() != null){
+				returnString = 
+						"Namespace: " + this.getEntityName().getNamespace() +
+						"Name: " + this.getEntityName().getName();
+			} else {
+				returnString = "URI: " + this.getUri();
+			}
+			
+			return returnString;
+		}
 	}
 }
