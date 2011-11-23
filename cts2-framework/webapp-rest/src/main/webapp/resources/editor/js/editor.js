@@ -1032,7 +1032,7 @@ function _doCreate(url,json,changeSetUri){
 			"contentType": "application/json",
 			"type": "POST", 
 			"data": json,
-			"url": urlPrefix+url+"?changeseturi="+changeSetUri,
+			"url": urlPrefix+url+"?changesetcontext="+changeSetUri,
 			"error":function (xhr, ajaxOptions, thrownError){
 				alert(xhr.status);
 				alert(xhr.statusText);
@@ -1043,7 +1043,7 @@ function _doCreate(url,json,changeSetUri){
 				var location = jqXHR.getResponseHeader('Location');
 				
 				log("POST",
-						url+"?changeseturi="+currentChangeSetUri,
+						url+"?changesetcontext="+currentChangeSetUri,
 						"Creating...");
 			}
 		} );

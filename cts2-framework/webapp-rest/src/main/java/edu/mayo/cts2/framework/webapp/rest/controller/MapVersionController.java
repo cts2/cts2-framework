@@ -206,7 +206,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void createMapVersion(
 			HttpServletRequest httpServletRequest,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
@@ -220,6 +220,19 @@ public class MapVersionController extends AbstractServiceAwareController {
 				this.mapVersionMaintenanceService);
 	}
 
+	@RequestMapping(value=PATH_MAPVERSION_OF_MAP_BYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteMapVersion(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,	
+			@RequestParam String changeseturi) {
+
+			this.mapVersionMaintenanceService.
+				deleteResource(
+						ModelUtils.nameOrUriFromName(
+								mapVersionName), changeseturi);
+	}
 	/**
 	 * Gets the map versions of map.
 	 *

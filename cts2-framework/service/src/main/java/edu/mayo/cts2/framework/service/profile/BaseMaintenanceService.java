@@ -37,7 +37,7 @@ public interface BaseMaintenanceService<R,I> extends Cts2Profile {
 	
 	public void updateResource(R resource);
 	
-	public void createResource(R resource);
+	public R createResource(R resource);
 	
 	/**
 	 * Delete resource.
@@ -45,6 +45,6 @@ public interface BaseMaintenanceService<R,I> extends Cts2Profile {
 	 * @param changeSetUri the change set uri
 	 * @param resourceName the resource name
 	 */
-	public void deleteResource(I identifier);
+	public void deleteResource(I identifier, String changeSetUri);
 	
 }

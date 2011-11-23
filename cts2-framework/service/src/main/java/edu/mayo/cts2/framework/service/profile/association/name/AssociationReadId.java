@@ -23,32 +23,35 @@
  */
 package edu.mayo.cts2.framework.service.profile.association.name;
 
-
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
  * The Class AssociationId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class AssociationReadId {
+public class AssociationReadId extends NameOrURI {
 
-	private String associationUri;
-	private String codeSystemVersion;
+	private static final long serialVersionUID = 1L;
 
-	public AssociationReadId(
-			String associationUri,
-			String codeSystemVersion) {
-		
+	private NameOrURI codeSystemVersion;
+	
+	public AssociationReadId(String localName, NameOrURI codeSystemVersion) {
+		super();
+		this.setName(localName);
 		this.codeSystemVersion = codeSystemVersion;
-		this.associationUri = associationUri;
+	}
+	
+	public AssociationReadId(String uri) {
+		super();
+		this.setUri(uri);
 	}
 
-	public String getAssociationUri() {
-		return associationUri;
-	}
-
-	public String getCodeSystemVersion() {
+	public NameOrURI getCodeSystemVersion() {
 		return codeSystemVersion;
 	}
 
+	public void setCodeSystemVersion(NameOrURI codeSystemVersion) {
+		this.codeSystemVersion = codeSystemVersion;
+	}
 }

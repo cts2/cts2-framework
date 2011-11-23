@@ -193,7 +193,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMVERSION, method=RequestMethod.POST)
 	public ResponseEntity<Void> createCodeSystemVersion(
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
@@ -222,6 +222,27 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(codeSystemVersionName), 
 				this.codeSystemVersionMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteCodeSystemVersion(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId,	
+			@RequestParam String changeseturi) {
+				
+			String codeSystemVersionName = 
+						codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+								this.codeSystemVersionReadService,
+								codeSystemName, 
+								versionId);
+
+			this.codeSystemVersionMaintenanceService.
+				deleteResource(
+						ModelUtils.nameOrUriFromName(
+								codeSystemVersionName), 
+								changeseturi);
 	}
 	
 	/**

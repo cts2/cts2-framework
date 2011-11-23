@@ -173,7 +173,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@RequestMapping(value=PATH_ENTITY, method=RequestMethod.POST)
 	@ResponseBody
 	public void createEntityDescription(
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody EntityDescription entity) {
 		/*
 		this.entityDescriptionValidator.validateCreateEntityDescription(
@@ -192,6 +192,26 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				PATH_ENTITYBYID, 
 				URL_BINDER, 
 				this.entityDescriptionMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_ENTITYBYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteCodeSystemVersion(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@PathVariable(VAR_ENTITYID) String entityName,
+			@RequestParam String changeseturi) {
+		
+			String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+		
+			EntityDescriptionReadId id = new EntityDescriptionReadId(
+				getScopedEntityName(entityName, codeSystemName),
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
+
+			this.entityDescriptionMaintenanceService.
+				deleteResource(id, changeseturi);
 	}
 
 	/**

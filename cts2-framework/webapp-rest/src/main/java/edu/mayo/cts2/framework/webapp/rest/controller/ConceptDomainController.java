@@ -296,7 +296,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	public void createConceptDomain(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setConceptDomain(conceptDomain);
@@ -325,6 +325,20 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(conceptDomainName), 
 				this.conceptDomainMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteCodeSystemVersion(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
+			@RequestParam String changeseturi) {
+
+			this.conceptDomainMaintenanceService.
+				deleteResource(
+						ModelUtils.nameOrUriFromName(
+								conceptDomainName), 
+								changeseturi);
 	}
 	
 	/**

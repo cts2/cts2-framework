@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.model.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
@@ -327,6 +328,28 @@ public class ModelUtils {
 		
 		return nameOrUri;
 	}
+	
+	public static ChangeableResourceChoice createChangeableResourceChoice(Object changeable) {
+		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+		
+		for(Field field : choice.getClass().getDeclaredFields()){
+			if(field.getType().equals(changeable.getClass())
+					||
+					field.getName().equals("_choiceValue")){
+				field.setAccessible(true);
+				try {
+					field.set(choice, changeable);
+				} catch (IllegalArgumentException e) {
+					throw new IllegalStateException(e);
+				} catch (IllegalAccessException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+		}
+		
+		return choice;
+	}
+
 
 	public static NameOrURI nameOrUriFromUri(String uri) {
 		NameOrURI nameOrUri = new ToStringNameOrURI();

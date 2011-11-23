@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,13 +36,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectory;
@@ -77,7 +78,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 		@Override
 		public Map<String,String> getPathValues(ValueSetDefinition resource) {
 			//TODO:
-			return null;
+			return new HashMap<String,String>();
 		}
 
 	};
@@ -277,23 +278,24 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	 * @return the value set definition by name
 	 */
 	@RequestMapping(value={	
-			PATH_VALUESETDEFINITION_OF_VALUESET_BYID
+			PATH_VALUESETDEFINITION_BYURI
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getValueSetDefinitionByUri(
+	public ModelAndView getValueSetDefinitionByUri(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			@PathVariable(VAR_VALUESETID) String valueSetName,
-			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
-		
-		return this.doRead(
+			@RequestParam(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+	
+		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				this.valueSetDefinitionReadService, 
-				restReadContext,
-				UnknownValueSetDefinition.class,
-				valueSetDefinitionDocumentUri);
+				PATH_VALUESETDEFINITION_BYURI, 
+				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
+				URL_BINDER, 
+				this.valueSetDefinitionReadService,
+				uri, 
+				redirect);
 	}
 	
 	/**
@@ -329,7 +331,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	public void createValueSetDefinition(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetDefinition valueSetDefinition,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setValueSetDefinition(valueSetDefinition);

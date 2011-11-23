@@ -133,7 +133,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	public void createMapEntry(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapEntry mapEntry,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setMapEntry(mapEntry);
@@ -144,6 +144,24 @@ public class MapEntryController extends AbstractServiceAwareController {
 				PATH_MAPENTRY_OF_MAPVERSION_BYID, 
 				URL_BINDER, 
 				this.mapEntryMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteMap(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
+			@PathVariable(VAR_MAPENTRYID) String mapsFromName,
+			@RequestParam String changeseturi) {
+		
+		MapEntryReadId id = new MapEntryReadId(
+				this.getScopedEntityName(mapsFromName), 
+				mapVersionName);
+			
+		this.mapEntryMaintenanceService.
+			deleteResource(id, changeseturi);
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)

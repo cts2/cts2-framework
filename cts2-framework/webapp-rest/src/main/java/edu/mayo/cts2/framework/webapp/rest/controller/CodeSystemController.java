@@ -301,7 +301,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public ResponseEntity<Void> createCodeSystem(
 			HttpServletRequest httpServletRequest,
 			@RequestBody CodeSystemCatalogEntry codeSystem,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setCodeSystem(codeSystem);
@@ -329,6 +329,20 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(codeSystem.getCodeSystemName()),
 				this.codeSystemMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteCodeSystem(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@RequestParam String changeseturi) {
+
+		this.codeSystemMaintenanceService.
+			deleteResource(
+					ModelUtils.nameOrUriFromName(
+							codeSystemName), 
+							changeseturi);
 	}
 	
 	/**

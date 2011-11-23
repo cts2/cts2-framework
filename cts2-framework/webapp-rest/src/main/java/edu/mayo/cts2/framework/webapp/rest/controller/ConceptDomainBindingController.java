@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
@@ -46,7 +47,6 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMs
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingMaintenanceService;
@@ -79,7 +79,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 		public Map<String,String> getPathValues(ConceptDomainBinding resource) {
 			Map<String,String> returnMap = new HashMap<String,String>();
 			//TODO
-			return null;
+			return returnMap;
 		}
 
 	};
@@ -109,7 +109,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	public void createConceptDomainBinding(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ConceptDomainBinding conceptDomainBinding,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setConceptDomainBinding(conceptDomainBinding);
@@ -343,22 +343,23 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	 * @return the concept domain binding by name
 	 */
 	@RequestMapping(value={	
-			PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID
+			PATH_CONCEPTDOMAINBINDING_BYURI
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getConceptDomainBindingByUri(
+	public ModelAndView getConceptDomainBindingByUri(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
-			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingUri) {
+			@RequestParam(VAR_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
-		return this.doRead(
+		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
+				PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, 
+				PATH_CONCEPTDOMAINBINDING_BYURI, 
+				URL_BINDER, 
 				this.conceptDomainBindingReadService, 
-				restReadContext,
-				UnknownConceptDomainBinding.class,
-				conceptDomainBindingUri);
+				uri,
+				redirect);
 	}
 }

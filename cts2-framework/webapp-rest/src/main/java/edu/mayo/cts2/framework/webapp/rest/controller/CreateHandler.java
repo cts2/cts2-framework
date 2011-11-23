@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
-import edu.mayo.cts2.framework.model.exception.Cts2RestException;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
-import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
@@ -44,16 +43,16 @@ public class CreateHandler extends AbstractMainenanceHandler {
 		R cts2Resource = (R) resource.getChoiceValue();
 		
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw new Cts2RestException(new UnknownChangeSet());
+			throw ExceptionFactory.createUnknownChangeSetException(null);
 		}
 		
-		service.createResource(cts2Resource);
+		R returnedResource = service.createResource(cts2Resource);
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Location", this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
 				template,
-				cts2Resource, 
-				urlTemplate) + "?changesetcontext=" +  changeSetUri);
+				returnedResource, 
+				urlTemplate) + "?" + URIHelperInterface.PARAM_CHANGESETCONTEXT + "=" +  changeSetUri);
 		
 		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);
 	}

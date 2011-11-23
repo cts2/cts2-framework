@@ -106,7 +106,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ASSOCIATION + "/{" + VAR_ASSOCIATIONID + "}";
 	public static final String PATH_ASSOCIATION_OF_CODESYSTEMVERSION_BY_URI = 
 			PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ASSOCIATION_BY_URI;
-	public static final String PATH_ASSOCIATIONBYURI = "/" + ASSOCIATION_BY_URI;
+	public static final String PATH_ASSOCIATIONBYURI = "/" + ASSOCIATION_BY_URI + "/" + ALL_WILDCARD;
 	public static final String PATH_ASSOCIATIONS_OF_CODESYSTEMVERSION = 
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ASSOCIATIONS;
 	public static final String PATH_GRAPH_OF_CODESYSTEMVERSION = 
@@ -122,9 +122,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_STATEMENTBYID = "/" + STATEMENT + "/{"
 			+ VAR_STATEMENTID + "}";
 	
-	public static final String PATH_STATEMENTBYURI = "/" + STATEMENTS + "/" + URI
-			+ "/{" + VAR_URI + "}";
-
+	public static final String PATH_STATEMENTBYURI = "/" + STATEMENT_BY_URI + "/" + ALL_WILDCARD;
 	
 	/* Maps */
 
@@ -159,7 +157,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CONCEPTDOMAINBINDING = "/" + CONCEPTDOMAINBINDING;
 	public static final String PATH_CONCEPTDOMAINBINDINGS = "/" + CONCEPTDOMAINBINDINGS;
 	public static final String PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN = PATH_CONCEPTDOMAIN_BYID + "/" + VERSIONS;
-	public static final String PATH_CONCEPTDOMAINBINDING_BYURI = PATH_CONCEPTDOMAINS + "/" + URI + "/{" + VAR_URI + "}";
+	public static final String PATH_CONCEPTDOMAINBINDING_BYURI = "/" + CONCEPTDOMAINBINDING_BY_URI;
 
 
 
@@ -186,6 +184,8 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_VALUESETDEFINITION_OF_VALUESET_BYID = PATH_VALUESETBYID + "/"
 			+ VALUESETDEFINITION_SHORT + "/{" + VAR_VALUESETDEFINITIONID + "}";
+	
+	public static final String PATH_VALUESETDEFINITION_BYURI = "/" + VALUESETDEFINITION_BY_URI + "/" + ALL_WILDCARD;
 	
 	public static final String PATH_VALUESETDEFINITIONS_OF_VALUESET = PATH_VALUESETBYID
 			+ "/" + VALUESETDEFINITIONS_SHORT;
@@ -224,6 +224,7 @@ interface PathKeywords {
 
 	public static final String STATEMENTS = "statements";
 	public static final String STATEMENT = "statement";
+	public static final String STATEMENT_BY_URI = "statementbyuri";
 
 	public static final String MAPS = "maps";
 	public static final String MAP = "map";
@@ -241,6 +242,7 @@ interface PathKeywords {
 	public static final String CONCEPTDOMAIN_BY_URI = "conceptdomainbyuri";
 	public static final String CONCEPTDOMAINBINDING = "conceptdomainbinding";
 	public static final String CONCEPTDOMAINBINDINGS = "conceptdomainbindings";
+	public static final String CONCEPTDOMAINBINDING_BY_URI = "conceptdomainbindingbyuri";
 	public static final String BINDINGS = "bindings";
 	public static final String BINDING = "binding";
 	
@@ -260,6 +262,7 @@ interface PathKeywords {
 	public static final String VALUESETDEFINITION_LONG = "valuesetdefinition";
 	public static final String VALUESETDEFINITIONS_SHORT = "definitions";
 	public static final String VALUESETDEFINITIONS_LONG = "valuesetdefinitions";
+	public static final String VALUESETDEFINITION_BY_URI = "valuesetdefinitionbyuri";
 
 
 	public static final String SOURCEENTITY = "sourceentity";
@@ -350,6 +353,8 @@ interface PathParameters {
 	public static final String PARAM_MAXTORETURN = "maxtoreturn";
 	
 	public static final String PARAM_FILTERCOMPONENT = "filtercomponent";
+	
+	public static final String PARAM_CHANGESETCONTEXT = "changesetcontext";
 
 }
 

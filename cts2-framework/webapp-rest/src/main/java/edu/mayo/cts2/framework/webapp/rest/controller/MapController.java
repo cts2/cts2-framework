@@ -316,7 +316,7 @@ public class MapController extends AbstractServiceAwareController {
 	public void createMap(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapCatalogEntry map,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 		
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setMap(map);
@@ -345,6 +345,21 @@ public class MapController extends AbstractServiceAwareController {
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(mapName),
 				this.mapMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteMap(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_MAPID) String mapName,
+			@RequestParam String changeseturi) {
+			
+		this.mapMaintenanceService.
+		deleteResource(
+				ModelUtils.nameOrUriFromName(
+						mapName), 
+						changeseturi);
 	}
 	
 	/**

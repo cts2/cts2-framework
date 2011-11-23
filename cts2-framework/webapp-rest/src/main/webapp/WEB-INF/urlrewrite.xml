@@ -8,7 +8,11 @@
     	<to last="true">$1/statementbyuri?uri=$2</to>
     </rule>
     <rule>
-    	<from>^(.*)/association/(.*)$</from>
-    	<to last="true">$1/associationbyuri?uri=$2</to>
+    	<from>^(.*)/conceptdomainbinding/(.*)$</from>
+    	<to last="true">$1/conceptdomainbyuri?uri=$2</to>
+    </rule>
+    <rule>
+    	<from>^(.*)/valueset/.*/definition/(.*)$</from>
+    	<to last="true">$1/valuesetdefinitionbyuri?uri=$2</to>
     </rule>
 </urlrewrite>

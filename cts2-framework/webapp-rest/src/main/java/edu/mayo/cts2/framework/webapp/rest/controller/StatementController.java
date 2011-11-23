@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,7 +79,7 @@ public class StatementController extends AbstractServiceAwareController {
 		@Override
 		public Map<String,String> getPathValues(Statement resource) {
 			//TODO:
-			return null;
+			return new HashMap<String,String>();
 		}
 
 	};
@@ -218,12 +219,12 @@ public class StatementController extends AbstractServiceAwareController {
 	 * @param changeseturi the changeseturi
 	 * @param statementName the statement name
 	 */
-	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_STATEMENT, method=RequestMethod.POST)
 	@ResponseBody
 	public void createStatement(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setStatement(statement);
@@ -235,7 +236,7 @@ public class StatementController extends AbstractServiceAwareController {
 				this.statementMaintenanceService);
 	}
 	
-	@RequestMapping(value=PATH_STATEMENT, method=RequestMethod.POST)
+	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.PUT)
 	@ResponseBody
 	public void updateStatement(
 			HttpServletRequest httpServletRequest,
@@ -261,10 +262,9 @@ public class StatementController extends AbstractServiceAwareController {
 	 * @return the statement by uri
 	 */
 	@RequestMapping(value=PATH_STATEMENTBYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public ModelAndView getStatementByUri(
 			HttpServletRequest httpServletRequest,
-			@PathVariable(VAR_URI) String uri,
+			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		return this.doReadByUri(

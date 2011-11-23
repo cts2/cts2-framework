@@ -319,7 +319,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 	public void createValueSet(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetCatalogEntry valueSet,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setValueSet(valueSet);
@@ -330,5 +330,19 @@ public class ValueSetController extends AbstractServiceAwareController {
 				PATH_VALUESETBYID, 
 				URL_BINDER, 
 				this.valueSetMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteCodeSystem(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@RequestParam String changeseturi) {
+
+		this.valueSetMaintenanceService.
+			deleteResource(
+					ModelUtils.nameOrUriFromName(
+							valueSetName), 
+							changeseturi);
 	}
 }

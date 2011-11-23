@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
@@ -35,6 +36,7 @@ import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
+import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
@@ -205,6 +207,20 @@ public class ExceptionFactory {
 		ex.setMessage(ModelUtils.createOpaqueData(message));
 		
 		return ex;
+	}
+	
+	public static Cts2RestException createUnknownChangeSetException(String changeSetUri) {
+		UnknownChangeSet ex = new UnknownChangeSet();
+		
+		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
+		
+		String message = 
+				"No matching ChangeSet found. Requested was:" + ( StringUtils.isNotBlank(changeSetUri) ? changeSetUri : " *NONE SPECIFIED*" );
+		
+		ex.setMessage(ModelUtils.createOpaqueData(message));
+		
+		return new Cts2RestException(ex);
 	}
 	
 	/**

@@ -135,6 +135,15 @@ public class UrlConstructor {
 					codeSystemVersionName) + "/" + URIHelperInterface.ASSOCIATIONS;
 	}
 	
+	public String createAssociationOfCodeSystemVersionUrl(
+			String codeSystemName, 
+			String codeSystemVersionName,
+			String associationLocalName){
+		return this.createCodeSystemVersionUrl(codeSystemName, codeSystemVersionName) + "/" +
+				URIHelperInterface.ASSOCIATION + "/" + associationLocalName;
+	}
+	
+	
 	/**
 	 * Creates the versions of code system url.
 	 *
