@@ -97,6 +97,18 @@ public class UrlConstructor {
 	}
 
 	/**
+	 * Creates the sourceof url.
+	 *
+	 * @param codeSystemName the code system name
+	 * @param codeSystemVersionName the code system version name
+	 * @param entityName the entity name
+	 * @return the string
+	 */
+	public String createSourceUrl(String codeSystemName, String codeSystemVersionName, String entityName){
+		return this.createEntityUrl(codeSystemName, codeSystemVersionName, entityName) + "/" + URIHelperInterface.SOURCEOF;
+	}
+	
+	/**
 	 * Creates the children url.
 	 *
 	 * @param codeSystemName the code system name
