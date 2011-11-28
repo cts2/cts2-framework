@@ -294,6 +294,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
 				URL_BINDER, 
 				this.valueSetDefinitionReadService,
+				restReadContext,
 				uri, 
 				redirect);
 	}
@@ -312,7 +313,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	public void updateValueSetDefinition(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetDefinition valueSetDefinition,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
 			

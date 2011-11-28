@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -48,6 +49,7 @@ import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -111,9 +113,23 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			
 			returnMap.put(VAR_CODESYSTEMID, codeSystemName);
 			
+			ResolvedReadContext readContext = null;
+			
+			ChangeableElementGroup group = 
+					ModelUtils.getChangeableElementGroup(resource);
+			
+			if(group != null && group.getChangeDescription() != null){
+				String changeSetUri = group.getChangeDescription().getContainingChangeSet();
+				
+				readContext = new ResolvedReadContext();
+				readContext.setChangeSetContextUri(changeSetUri);
+			}
+			
 			returnMap.put(VAR_CODESYSTEMVERSIONID, 
 					codeSystemVersionNameResolver.getVersionIdFromCodeSystemVersionName(
-							codeSystemVersionReadService, base.getDescribingCodeSystemVersion().getCodeSystem().getContent()));
+							codeSystemVersionReadService, 
+							base.getDescribingCodeSystemVersion().getVersion().getContent(),
+							readContext));
 			
 			ScopedEntityName id = base.getEntityID();
 			returnMap.put(VAR_ENTITYID, EncodingUtils.encodeScopedEntityName(id));
@@ -147,13 +163,13 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	@RequestMapping(value=PATH_ENTITYBYID, method=RequestMethod.PUT)
 	@ResponseBody
 	public void updateEntityDescription(
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody EntityDescription entity,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSytemVersionName,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 		
-		this.entityDescriptionValidator.validateCreateEntityDescription(
+		this.entityDescriptionValidator.validateUpdateEntityDescription(
 				this.codeSystemVersionReadService,
 				codeSystemName, 
 				codeSytemVersionName, 
@@ -171,22 +187,14 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	}
 	
 	@RequestMapping(value=PATH_ENTITY, method=RequestMethod.POST)
-	@ResponseBody
-	public void createEntityDescription(
+	public ResponseEntity<Void> createEntityDescription(
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody EntityDescription entity) {
-		/*
-		this.entityDescriptionValidator.validateCreateEntityDescription(
-				this.codeSystemVersionReadService,
-				codeSystemName, 
-				versionId, 
-				entity);
-		*/
-		
+
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setEntityDescription(entity);
 
-		this.getCreateHandler().create(
+		return this.getCreateHandler().create(
 				choice,
 				changeseturi, 
 				PATH_ENTITYBYID, 
@@ -201,10 +209,16 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName,
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
+		
+			ResolvedReadContext readContext = new ResolvedReadContext();
+			readContext.setChangeSetContextUri(changeseturi);
 		
 			String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
-				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+				codeSystemVersionReadService, 
+				codeSystemName, 
+				codeSystemVersionId,
+				readContext);
 		
 			EntityDescriptionReadId id = new EntityDescriptionReadId(
 				getScopedEntityName(entityName, codeSystemName),
@@ -271,11 +285,14 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		String codeSystemVersionName = this.getCodeSystemVersionNameResolver().
 					getCodeSystemVersionNameFromVersionId(
 							codeSystemVersionReadService, 
 							codeSystemName, 
-							codeSystemVersionId);
+							codeSystemVersionId,
+							readContext);
 		
 		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
@@ -312,8 +329,13 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
-				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+				codeSystemVersionReadService, 
+				codeSystemName, 
+				codeSystemVersionId,
+				readContext);
 		
 		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
@@ -444,8 +466,13 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
-				codeSystemVersionReadService, codeSystemName, codeSystemVersionId);
+				codeSystemVersionReadService, 
+				codeSystemName,
+				codeSystemVersionId,
+				readContext);
 
 		EntityDescriptionReadId id = new EntityDescriptionReadId(
 				getScopedEntityName(entityName, codeSystemName),
@@ -481,6 +508,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				PATH_ENTITYBYID, 
 				URL_BINDER, 
 				this.entityDescriptionReadService, 
+				restReadContext,
 				new EntityDescriptionReadId(uri,null),
 				redirect);
 	}

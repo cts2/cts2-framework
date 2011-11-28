@@ -4,6 +4,7 @@ import org.apache.commons.collections.map.LRUMap;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 
@@ -15,7 +16,8 @@ public class CodeSystemVersionNameResolver {
 	
 	public String getVersionIdFromCodeSystemVersionName(
 			CodeSystemVersionReadService codeSystemVersionReadService,
-			String codeSystemVersionName){
+			String codeSystemVersionName,
+			ResolvedReadContext readContext){
 		
 		int key = this.getCacheKey(codeSystemVersionName);
 		
@@ -46,7 +48,8 @@ public class CodeSystemVersionNameResolver {
 	public String getCodeSystemVersionNameFromVersionId(
 			CodeSystemVersionReadService codeSystemVersionReadService,
 			String codeSystemName, 
-			String versionId){
+			String versionId,
+			ResolvedReadContext readContext){
 		
 		int key = this.getCacheKey(codeSystemName, versionId);
 		
@@ -55,9 +58,24 @@ public class CodeSystemVersionNameResolver {
 			CodeSystemVersionCatalogEntry csv = null;
 			
 			if(codeSystemVersionReadService != null){
-				csv = 
-					codeSystemVersionReadService.getCodeSystemByVersionId(
-							ModelUtils.nameOrUriFromName(codeSystemName), versionId, null);
+				try {
+					csv = 
+						codeSystemVersionReadService.getCodeSystemByVersionId(
+								ModelUtils.nameOrUriFromName(codeSystemName), 
+								versionId, 
+								readContext);
+					
+					//try without the ReadContext
+					if(csv == null){
+						csv = 
+							codeSystemVersionReadService.getCodeSystemByVersionId(
+									ModelUtils.nameOrUriFromName(codeSystemName), 
+									versionId, 
+									null);
+					}
+				} catch (UnsupportedOperationException e) {
+					//if this isn't available, we can't resolve the name from the version id.
+				}
 			}
 			
 			String name;
@@ -72,18 +90,7 @@ public class CodeSystemVersionNameResolver {
 		
 		return (String) this.nameCache.get(key);
 	}
-	
-	/*
-	protected String getVersioIdFromDefaultNameFormat(String codeSystemVersionName){
-		return StringUtils.split(codeSystemVersionName)[0];
-	}
-	
-	protected String createCodeSystemVersionName(String codeSystemName, 
-			String versionId){
-		return codeSystemName + "_" + versionId;
-	}
-	*/
-	
+
 	protected int getCacheKey(String... keys){
 		StringBuffer sb = new StringBuffer();
 		for(String key : keys){

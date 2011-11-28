@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -310,10 +311,10 @@ public class MapController extends AbstractServiceAwareController {
 	 * @param map the map
 	 * @param changeseturi the changeseturi
 	 * @param MapName the map name
+	 * @return 
 	 */
 	@RequestMapping(value=PATH_MAP, method=RequestMethod.POST)
-	@ResponseBody
-	public void createMap(
+	public ResponseEntity<Void> createMap(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapCatalogEntry map,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
@@ -321,7 +322,7 @@ public class MapController extends AbstractServiceAwareController {
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setMap(map);
 			
-		this.getCreateHandler().create(
+		return this.getCreateHandler().create(
 				choice,
 				changeseturi,
 				PATH_MAP_BYID,
@@ -334,7 +335,7 @@ public class MapController extends AbstractServiceAwareController {
 	public void updateMap(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapCatalogEntry map,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_MAPID) String mapName) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
@@ -353,7 +354,7 @@ public class MapController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 			
 		this.mapMaintenanceService.
 		deleteResource(
@@ -372,6 +373,7 @@ public class MapController extends AbstractServiceAwareController {
 	@RequestMapping(value=PATH_MAP_BYURI, method=RequestMethod.GET)
 	public ModelAndView getMapByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
@@ -383,6 +385,7 @@ public class MapController extends AbstractServiceAwareController {
 				PATH_MAP_BYID, 
 				URL_BINDER, 
 				this.mapReadService,
+				restReadContext,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -109,7 +110,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	public void updateMapEntry(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapEntry mapEntry,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
@@ -129,8 +130,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY, method=RequestMethod.POST)
-	@ResponseBody
-	public void createMapEntry(
+	public ResponseEntity<Void> createMapEntry(
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapEntry mapEntry,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
@@ -138,7 +138,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setMapEntry(mapEntry);
 
-		this.getCreateHandler().create(
+		return this.getCreateHandler().create(
 				choice,
 				changeseturi, 
 				PATH_MAPENTRY_OF_MAPVERSION_BYID, 
@@ -148,13 +148,13 @@ public class MapEntryController extends AbstractServiceAwareController {
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.DELETE)
 	@ResponseBody
-	public void deleteMap(
+	public void deleteMaEntry(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName,
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 		
 		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 

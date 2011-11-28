@@ -319,7 +319,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public void updateCodeSystem(
 			HttpServletRequest httpServletRequest,
 			@RequestBody CodeSystemCatalogEntry codeSystem,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setCodeSystem(codeSystem);
@@ -336,7 +336,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public void deleteCodeSystem(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
 		this.codeSystemMaintenanceService.
 			deleteResource(
@@ -355,7 +355,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	@RequestMapping(value=PATH_CODESYSTEMBYURI, method=RequestMethod.GET)
 	public ModelAndView getCodeSystemByUri(
 			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
@@ -367,6 +367,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				PATH_CODESYSTEMBYID, 
 				URL_BINDER, 
 				this.codeSystemReadService, 
+				restReadContext,
 				ModelUtils.nameOrUriFromUri(uri), 
 				redirect);
 	}

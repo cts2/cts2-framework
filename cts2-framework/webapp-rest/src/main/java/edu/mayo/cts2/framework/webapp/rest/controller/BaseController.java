@@ -8,15 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.mayo.cts2.framework.model.core.FormatReference;
-import edu.mayo.cts2.framework.model.core.NamespaceReference;
-import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
-import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
-import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.BaseSerivceService;
-import edu.mayo.cts2.framework.webapp.rest.controller.AbstractServiceAwareController.Cts2Service;
 
 @Controller
 public class BaseController extends AbstractServiceAwareController{

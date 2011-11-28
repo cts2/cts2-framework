@@ -266,8 +266,7 @@ public abstract class AbstractMessageWrappingController extends
 			I id) {
 		
 		ResolvedReadContext resolvedContext = this.resolveRestReadContext(restReadContext);
-			
-		//TODO:  ReadContext
+
 		R resource = readService.read(id, resolvedContext);
 		
 		if(resource == null){
@@ -334,12 +333,14 @@ public abstract class AbstractMessageWrappingController extends
 			String byNameTemaplate,
 			UrlTemplateBinder<R> urlBinder,
 			ReadService<R,I> readService,
+			RestReadContext restReadContext,
 			I identifier,
 			boolean redirect) {
 		
-		//TODO: ReadContext
+		ResolvedReadContext resolvedContext = this.resolveRestReadContext(restReadContext);
+		
 		R resource = 
-				readService.read(identifier, null);
+				readService.read(identifier, resolvedContext);
 		
 		if(! this.isPartialRedirect(httpServletRequest, byUriTemplate)){
 

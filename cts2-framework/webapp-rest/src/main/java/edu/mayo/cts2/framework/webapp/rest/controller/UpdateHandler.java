@@ -7,9 +7,8 @@ import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
-import edu.mayo.cts2.framework.model.exception.Cts2RestException;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
-import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
@@ -43,7 +42,7 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 		R cts2Resource = (R) resource.getChoiceValue();
 		
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw new Cts2RestException(new UnknownChangeSet());
+			throw ExceptionFactory.createUnknownChangeSetException(null);
 		}
 		
 		ChangeType type = group.getChangeDescription().getChangeType();

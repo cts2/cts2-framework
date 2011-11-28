@@ -24,8 +24,8 @@
 package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -63,11 +63,15 @@ public interface CodeSystemVersionReadService extends
 	 */
 	public boolean existsVersionId(NameOrURI codeSystem, String officialResourceVersionId);
 	
-	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName, ReadContext readContext);
+	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
+			NameOrURI codeSystem, 
+			String tagName, 
+			ResolvedReadContext readContext);
 	
-	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(NameOrURI codeSystem, String officialResourceVersionId, ReadContext readContext);
-
-
+	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(
+			NameOrURI codeSystem, 
+			String officialResourceVersionId, 
+			ResolvedReadContext readContext);
 }
 
 

@@ -126,6 +126,10 @@ public class Cts2RestClient {
 		return this.template.postForLocation(url, cts2Resource);
 	}
 	
+	public void deleteCts2Resource(String url){
+		this.template.delete(url);
+	}
+	
 	/**
 	 * Put cts2 resource.
 	 *

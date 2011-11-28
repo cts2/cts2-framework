@@ -187,7 +187,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void updateMapVersion(
 			HttpServletRequest httpServletRequest,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
@@ -226,7 +226,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,	
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
 			this.mapVersionMaintenanceService.
 				deleteResource(
@@ -465,6 +465,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@RequestMapping(value=PATH_MAPVERSION_BYURI, method=RequestMethod.GET)
 	public ModelAndView getMapVersionByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
@@ -476,6 +477,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 				PATH_MAPVERSION_OF_MAP_BYID, 
 				URL_BINDER, 
 				this.mapVersionReadService,
+				restReadContext,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

@@ -241,7 +241,7 @@ public class StatementController extends AbstractServiceAwareController {
 	public void updateStatement(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
-			@RequestParam(required=false) String changeseturi) {
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setStatement(statement);
@@ -264,6 +264,7 @@ public class StatementController extends AbstractServiceAwareController {
 	@RequestMapping(value=PATH_STATEMENTBYURI, method=RequestMethod.GET)
 	public ModelAndView getStatementByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
@@ -274,6 +275,7 @@ public class StatementController extends AbstractServiceAwareController {
 				PATH_STATEMENTBYURI, 
 				URL_BINDER, 
 				this.statementReadService, 
+				restReadContext,
 				uri,
 				redirect);
 	}

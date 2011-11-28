@@ -54,8 +54,10 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -107,12 +109,11 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			
 			returnMap.put(VAR_CODESYSTEMID, codeSystemName);
 			
-			String versionId = 
-					codeSystemVersionNameResolver.getVersionIdFromCodeSystemVersionName(
-							codeSystemVersionReadService, 
-							codeSystemVersionName);
+			String versionId = resource.getOfficialResourceVersionId();
+			
+			String id = versionId != null ? versionId : codeSystemVersionName;
 							
-			returnMap.put(VAR_CODESYSTEMVERSIONID, versionId);
+			returnMap.put(VAR_CODESYSTEMVERSIONID, id);
 			
 			return returnMap;
 		}
@@ -209,7 +210,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSION, method=RequestMethod.PUT)
 	public void updateCodeSystemVersion(
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
@@ -230,13 +231,17 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId,	
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
+		
+			ResolvedReadContext readContext = new ResolvedReadContext();
+			readContext.setChangeSetContextUri(changeseturi);
 				
 			String codeSystemVersionName = 
 						codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
 								this.codeSystemVersionReadService,
 								codeSystemName, 
-								versionId);
+								versionId,
+								readContext);
 
 			this.codeSystemVersionMaintenanceService.
 				deleteResource(
@@ -260,6 +265,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersionsOfCodeSystem(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			Page page,
@@ -320,6 +326,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public void getCodeSystemVersionsOfCodeSystemCount(
 			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
@@ -331,6 +338,38 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			this.codeSystemVersionQueryService.count(null, createSet(filterComponent), restrictions);
 		
 		this.setCount(count, httpServletResponse);
+	}
+	
+	@RequestMapping(value={
+			PATH_CODESYSTEMVERSIONS}, method=RequestMethod.POST)
+	@ResponseBody
+	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersions(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			Query query,
+			CodeSystemVersionQueryServiceRestrictions restrictions,
+			RestFilter resolvedFilter,
+			Page page) {
+		
+		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
+		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
+		DirectoryResult<CodeSystemVersionCatalogEntrySummary> directoryResult = 
+			this.codeSystemVersionQueryService.getResourceSummaries(
+					null, 
+					createSet(filterComponent), 
+					restrictions, 
+					readContext, 
+					page);
+		
+		CodeSystemVersionCatalogEntryDirectory directory = this.populateDirectory(
+				directoryResult, 
+				page, 
+				httpServletRequest, 
+				CodeSystemVersionCatalogEntryDirectory.class);
+		
+		return directory;
 	}
 	
 	/**
@@ -347,26 +386,18 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			Page page) {
 		
-		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
-		
-		DirectoryResult<CodeSystemVersionCatalogEntrySummary> directoryResult = 
-			this.codeSystemVersionQueryService.getResourceSummaries(
-					null, 
-					createSet(filterComponent), 
-					restrictions, 
-					null, page);
-		
-		CodeSystemVersionCatalogEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
-				page, 
+		return this.getCodeSystemVersions(
 				httpServletRequest, 
-				CodeSystemVersionCatalogEntryDirectory.class);
-		
-		return directory;
+				restReadContext, 
+				null,
+				restrictions, 
+				resolvedFilter, 
+				page);
 	}
 	
 	/**
@@ -382,6 +413,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@ResponseBody
 	public void getCodeSystemVersionsCount(
 			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter) {
 		
@@ -413,11 +445,14 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId) {
 		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		String codeSystemVersionName = 
 				codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
 						this.codeSystemVersionReadService,
 						codeSystemName, 
-						versionId);
+						versionId,
+						readContext);
 		
 		Message msg = this.doRead(
 					httpServletRequest, 
@@ -455,7 +490,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI, method=RequestMethod.GET)
 	public ModelAndView getCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
@@ -467,6 +502,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, 
 				URL_BINDER, 
 				this.codeSystemVersionReadService, 
+				restReadContext,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

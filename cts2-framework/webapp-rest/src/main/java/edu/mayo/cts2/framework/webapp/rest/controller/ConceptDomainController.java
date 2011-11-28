@@ -314,7 +314,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	public void updateConceptDomain(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
@@ -332,7 +332,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	public void deleteCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
 			this.conceptDomainMaintenanceService.
 				deleteResource(
@@ -349,20 +349,21 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 * @return the concept domain by uri
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public ModelAndView getConceptDomainByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
-			@PathVariable(VAR_URI) String uri,
+			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				PATH_CONCEPTDOMAIN_BYID, 
 				PATH_CONCEPTDOMAIN_BYURI, 
+				PATH_CONCEPTDOMAIN_BYID, 
 				URL_BINDER, 
 				this.conceptDomainReadService, 
+				restReadContext,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

@@ -359,6 +359,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				PATH_CONCEPTDOMAINBINDING_BYURI, 
 				URL_BINDER, 
 				this.conceptDomainBindingReadService, 
+				restReadContext,
 				uri,
 				redirect);
 	}

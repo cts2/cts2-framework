@@ -31,6 +31,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -270,20 +271,21 @@ public class ValueSetController extends AbstractServiceAwareController {
 	}
 	
 	@RequestMapping(value=PATH_VALUESET_BYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public ModelAndView getValueSetByUri(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			QueryControl queryControl,
-			@PathVariable(VAR_URI) String uri,
+			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				PATH_MAP_BYURI, 
-				PATH_MAP_BYID, 
+				PATH_VALUESET_BYURI, 
+				PATH_VALUESETBYID, 
 				URL_BINDER, 
 				this.valueSetReadService,
+				restReadContext,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
@@ -301,7 +303,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 	public void updateValueSet(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetCatalogEntry valueSet,
-			@RequestParam(required=false) String changeseturi,
+			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 			
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
@@ -315,8 +317,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 	}
 	
 	@RequestMapping(value=PATH_VALUESET, method=RequestMethod.POST)
-	@ResponseBody
-	public void createValueSet(
+	public ResponseEntity<Void> createValueSet(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetCatalogEntry valueSet,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
@@ -324,7 +325,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		choice.setValueSet(valueSet);
 		
-		this.getCreateHandler().create(
+		return this.getCreateHandler().create(
 				choice, 
 				changeseturi, 
 				PATH_VALUESETBYID, 
@@ -334,10 +335,10 @@ public class ValueSetController extends AbstractServiceAwareController {
 	
 	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.DELETE)
 	@ResponseBody
-	public void deleteCodeSystem(
+	public void deleteValueSet(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
-			@RequestParam String changeseturi) {
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
 		this.valueSetMaintenanceService.
 			deleteResource(
