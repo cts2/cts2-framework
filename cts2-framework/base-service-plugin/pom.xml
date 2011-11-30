@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>cts2-framework</artifactId>
 		<groupId>edu.mayo.cts2</groupId>
-		<version>0.4.0</version>
+		<version>0.4.1-SNAPSHOT</version>
 	</parent>
 	<groupId>edu.mayo.cts2.framework</groupId>
 	
@@ -220,13 +220,13 @@
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>service-plugin-assembly-descriptor</artifactId>
-			<version>0.4.0</version>
+			<version>0.4.1-SNAPSHOT</version>
 		</dependency>
 							
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>webapp-rest</artifactId>
-			<version>0.4.0</version>
+			<version>0.4.1-SNAPSHOT</version>
 			<type>war</type>
 			<scope>test</scope>
 		</dependency>
