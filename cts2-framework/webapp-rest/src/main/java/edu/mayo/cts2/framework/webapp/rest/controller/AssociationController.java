@@ -566,11 +566,8 @@ public class AssociationController extends AbstractServiceAwareController {
 			@RequestBody Association association,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 		
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setAssociation(association);
-		
 		return this.getCreateHandler().create(
-				choice,
+				association,
 				changeseturi,
 				PATH_ASSOCIATIONBYID, 
 				URL_BINDER, 
@@ -587,16 +584,12 @@ public class AssociationController extends AbstractServiceAwareController {
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ASSOCIATIONID) String associationLocalName) {
 			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setAssociation(association);
-		
 		this.getUpdateHandler().update(
-				choice, 
+				association, 
 				changeseturi,
 				new AssociationReadId(
 						associationLocalName, 
-						ModelUtils.nameOrUriFromName(codeSystemVersionName)), 
-						
+						ModelUtils.nameOrUriFromName(codeSystemVersionName)), 		
 				this.associationMaintenanceService);
 	}
 	

@@ -23,8 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
+import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
 
 /**
  * The Interface ConceptDomainBindingMaintenanceService.
@@ -33,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
  */
 public interface ConceptDomainBindingMaintenanceService
 		extends
-		BaseMaintenanceService<ConceptDomainBinding,String> {
-
+		BaseMaintenanceService<LocalIdConceptDomainBinding,ConceptDomainBindingReadId> {
+	
 }

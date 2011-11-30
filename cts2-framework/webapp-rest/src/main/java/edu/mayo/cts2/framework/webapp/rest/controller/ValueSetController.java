@@ -305,12 +305,9 @@ public class ValueSetController extends AbstractServiceAwareController {
 			@RequestBody ValueSetCatalogEntry valueSet,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setValueSet(valueSet);
-		
+	
 		this.getUpdateHandler().update(
-				choice, 
+				valueSet, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(valueSetName), 
 				this.valueSetMaintenanceService);
@@ -321,12 +318,9 @@ public class ValueSetController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetCatalogEntry valueSet,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setValueSet(valueSet);
-		
+	
 		return this.getCreateHandler().create(
-				choice, 
+				valueSet, 
 				changeseturi, 
 				PATH_VALUESETBYID, 
 				URL_BINDER, 

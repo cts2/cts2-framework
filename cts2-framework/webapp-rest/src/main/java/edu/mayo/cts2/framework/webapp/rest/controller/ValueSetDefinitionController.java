@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,10 +41,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
+import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
@@ -52,6 +56,7 @@ import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQue
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
@@ -72,24 +77,42 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@Cts2Service
 	private ValueSetDefinitionMaintenanceService valueSetDefinitionMaintenanceService;
 	
-	private final static UrlTemplateBinder<ValueSetDefinition> URL_BINDER =
-			new UrlTemplateBinder<ValueSetDefinition>(){
+	private final static UrlTemplateBinder<LocalIdValueSetDefinition> URL_BINDER =
+			new UrlTemplateBinder<LocalIdValueSetDefinition>(){
 
 		@Override
-		public Map<String,String> getPathValues(ValueSetDefinition resource) {
+		public Map<String,String> getPathValues(LocalIdValueSetDefinition resource) {
 			//TODO:
 			return new HashMap<String,String>();
 		}
 
 	};
 	
-	private final static MessageFactory<ValueSetDefinition> MESSAGE_FACTORY = 
-			new MessageFactory<ValueSetDefinition>() {
+	private final static ChangeableElementGroupHandler<LocalIdValueSetDefinition> CHANGEABLE_GROUP_HANDLER =
+			new ChangeableElementGroupHandler<LocalIdValueSetDefinition>(){
+
+				@Override
+				public void setChangeableElementGroup(
+						LocalIdValueSetDefinition resource,
+						ChangeableElementGroup group) {
+					resource.getResource().setChangeableElementGroup(group);
+				}
+				
+				@Override
+				public ChangeableElementGroup getChangeableElementGroup(
+						LocalIdValueSetDefinition resource) {
+					return resource.getResource().getChangeableElementGroup();
+				}
+	
+	};
+	
+	private final static MessageFactory<LocalIdValueSetDefinition> MESSAGE_FACTORY = 
+			new MessageFactory<LocalIdValueSetDefinition>() {
 
 		@Override
-		public Message createMessage(ValueSetDefinition resource) {
+		public Message createMessage(LocalIdValueSetDefinition resource) {
 			ValueSetDefinitionMsg msg = new ValueSetDefinitionMsg();
-			msg.setValueSetDefinition(resource);
+			msg.setValueSetDefinition(resource.getResource());
 
 			return msg;
 		}
@@ -286,6 +309,8 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			RestReadContext restReadContext,
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+		
+		ValueSetDefinitionReadId id = new ValueSetDefinitionReadId(uri);
 	
 		return this.doReadByUri(
 				httpServletRequest, 
@@ -295,8 +320,33 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				URL_BINDER, 
 				this.valueSetDefinitionReadService,
 				restReadContext,
-				uri, 
+				id, 
 				redirect);
+	}
+	
+	@RequestMapping(value={	
+			PATH_VALUESETDEFINITION_OF_VALUESET_BYID
+			},
+		method=RequestMethod.GET)
+	@ResponseBody
+	public Message getValueSetDefinitionByLocalId(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId) {
+		
+		ValueSetDefinitionReadId id = 
+				new ValueSetDefinitionReadId(
+						definitionLocalId,
+						ModelUtils.nameOrUriFromName(valueSetName));
+		
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.valueSetDefinitionReadService, 
+				restReadContext, 
+				UnknownValueSetDefinition.class, 
+				id);
 	}
 	
 	/**
@@ -315,33 +365,31 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			@RequestBody ValueSetDefinition valueSetDefinition,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
-			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionDocumentUri) {
+			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionLocalId) {
 			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setValueSetDefinition(valueSetDefinition);
-		
 		this.getUpdateHandler().update(
-				choice, 
+				new LocalIdValueSetDefinition(valueSetDefinitionLocalId, valueSetDefinition),
 				changeseturi, 
-				valueSetDefinitionDocumentUri, 
+				new ValueSetDefinitionReadId(
+						valueSetDefinitionLocalId, 
+						ModelUtils.nameOrUriFromName(valueSetName)),
+				CHANGEABLE_GROUP_HANDLER,
 				this.valueSetDefinitionMaintenanceService);
 	}
 	
-	@RequestMapping(value=PATH_VALUESETDEFINITION, method=RequestMethod.POST)
+	@RequestMapping(value=PATH_VALUESETDEFINITION_OF_VALUESET, method=RequestMethod.POST)
 	@ResponseBody
-	public void createValueSetDefinition(
+	public ResponseEntity<Void> createValueSetDefinition(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ValueSetDefinition valueSetDefinition,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setValueSetDefinition(valueSetDefinition);
-		
-		this.getCreateHandler().create(
-				choice, 
+	
+		return this.getCreateHandler().create(
+				new LocalIdValueSetDefinition(valueSetDefinition),
 				changeseturi, 
 				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
 				URL_BINDER, 
+				CHANGEABLE_GROUP_HANDLER,
 				this.valueSetDefinitionMaintenanceService);
 	}
 }

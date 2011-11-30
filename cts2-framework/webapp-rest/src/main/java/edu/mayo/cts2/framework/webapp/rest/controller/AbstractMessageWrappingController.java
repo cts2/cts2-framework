@@ -213,27 +213,6 @@ public abstract class AbstractMessageWrappingController extends
 		return this.getHeading(request.getParameterMap(), resourceUrl);
 
 	}
-	
-
-	
-	/*
-	protected <I extends ResourceIdentifier<?>> String bindResourceToUrlTemplate(
-			final UrlTemplateBinder<?,I> binder, 
-			final I identifier,  
-			String urlTemplate){
-		
-		return this.dobindResourceToUrlTemplate(
-				new Binder(){
-
-					@Override
-					public String doBind(String attribute) {
-						return binder.getValueForPathAttribute(attribute, identifier);
-					}
-			
-		}, urlTemplate);
-	}
-	*/
-
 
 	protected <R> ModelAndView forward(
 			HttpServletRequest request, 

@@ -192,7 +192,6 @@ public class ModelUtils {
 		}
 		
 		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
-		
 	}
 	
 	private static interface ChoiceCallback<T> {
@@ -356,6 +355,25 @@ public class ModelUtils {
 		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
+	}
+	
+	public static void setChangeableElementGroup(Object changeableResource, final ChangeableElementGroup group){
+		if(changeableResource instanceof Changeable){
+			((Changeable)changeableResource).setChangeableElementGroup(group);
+		}
+		
+		if(changeableResource instanceof EntityDescription){
+			EntityDescription entity = (EntityDescription)changeableResource;
+			
+			EntityDescriptionBase base = getEntity(entity);
+			
+			if(base instanceof NamedEntityDescription){
+				((NamedEntityDescription)base).setChangeableElementGroup(group);
+			}
+			
+		}
+		
+		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
 	}
 
 	public static void setChangeableElementGroup(

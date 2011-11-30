@@ -21,19 +21,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
+package edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name;
 
-import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
-import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
- * The Interface ValueSetDefinitionMaintenanceService.
+ * The Class ConceptDomainBindingReadId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ValueSetDefinitionMaintenanceService
-		extends
-		BaseMaintenanceService<LocalIdValueSetDefinition,ValueSetDefinitionReadId> {
+public class ConceptDomainBindingReadId extends NameOrURI {
 
+	private static final long serialVersionUID = 1L;
+
+	private NameOrURI conceptDomain;
+	
+	public ConceptDomainBindingReadId(String localName, NameOrURI conceptDomain) {
+		super();
+		this.setName(localName);
+		this.conceptDomain = conceptDomain;
+	}
+	
+	public ConceptDomainBindingReadId(String uri) {
+		super();
+		this.setUri(uri);
+	}
+
+	public NameOrURI getConceptDomain() {
+		return conceptDomain;
+	}
+
+	public void setConceptDomain(NameOrURI conceptDomain){
+		this.conceptDomain = conceptDomain;
+	}
 }

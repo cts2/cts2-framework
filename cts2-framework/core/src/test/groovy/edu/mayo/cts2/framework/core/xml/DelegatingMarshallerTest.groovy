@@ -12,11 +12,15 @@ import org.springframework.oxm.UnmarshallingFailureException
 import org.springframework.oxm.ValidationFailureException
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg
+import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg
+import edu.mayo.cts2.framework.model.core.ConceptDomainReference
+import edu.mayo.cts2.framework.model.core.RESTResource
+import edu.mayo.cts2.framework.model.core.ValueSetReference
+import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding
 import edu.mayo.cts2.framework.model.service.core.UpdateResourceVersionDescription
 
 class DelegatingMarshallerTest {
-	
+	 
 	DelegatingMarshaller marshaller = new DelegatingMarshaller()
 	
 	Resource valid = new ClassPathResource("xml/codeSystemValid.xml");

@@ -102,6 +102,7 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 		this.defaultMarshaller.setTargetPackages(Iterables.toArray(allPackages, String.class));
 		this.defaultMarshaller.setNamespaceToPackageMapping(namespacePackageMapping);
 		this.defaultMarshaller.setValidating(true);
+		this.defaultMarshaller.setMarshalExtendedType(false);
 	
 		this.defaultMarshaller.afterPropertiesSet();
 	}
@@ -122,6 +123,7 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 		marshaller.setSchemaLocation(namespace + " " + location);
 
 		marshaller.setValidating(true);
+		marshaller.setMarshalExtendedType(false);
 		
 		try {
 			marshaller.afterPropertiesSet();
@@ -172,6 +174,7 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 	 */
 	public Object unmarshal(Source source) throws IOException,
 			XmlMappingException {
+		this.defaultMarshaller.setMarshalExtendedType(false);
 		return this.defaultMarshaller.unmarshal(source);
 	}
 

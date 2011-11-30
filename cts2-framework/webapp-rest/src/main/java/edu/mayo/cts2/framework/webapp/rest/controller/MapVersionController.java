@@ -191,12 +191,9 @@ public class MapVersionController extends AbstractServiceAwareController {
 			@RequestBody MapVersion mapVersion,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setMapVersion(mapVersion);
-		
+	
 		this.getUpdateHandler().update(
-				choice, 
+				mapVersion, 
 				changeseturi,
 				ModelUtils.nameOrUriFromName(mapVersionName), 
 				this.mapVersionMaintenanceService);
@@ -208,12 +205,9 @@ public class MapVersionController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setMapVersion(mapVersion);
-			
+
 		this.getCreateHandler().create(
-				choice,
+				mapVersion,
 				changeseturi,
 				PATH_MAPVERSION_OF_MAP_BYID,
 				URL_BINDER, 

@@ -225,12 +225,9 @@ public class StatementController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setStatement(statement);
-		
+	
 		this.getUpdateHandler().update(
-				choice, 
+				statement, 
 				changeseturi,
 				statement.getStatementURI(),
 				this.statementMaintenanceService);
@@ -242,12 +239,9 @@ public class StatementController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setStatement(statement);
-		
+				
 		this.getCreateHandler().create(
-				choice, 
+				statement, 
 				changeseturi,
 				PATH_STATEMENTBYID,
 				URL_BINDER, 

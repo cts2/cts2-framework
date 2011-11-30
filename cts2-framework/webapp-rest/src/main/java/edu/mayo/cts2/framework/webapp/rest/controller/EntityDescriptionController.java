@@ -58,6 +58,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
 import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
@@ -99,6 +100,24 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 	@Resource
 	private EntityDescriptionValidator entityDescriptionValidator;
+	
+	private final static ChangeableElementGroupHandler<EntityDescription> CHANGEABLE_GROUP_HANDLER =
+			new ChangeableElementGroupHandler<EntityDescription>(){
+
+				@Override
+				public void setChangeableElementGroup(
+						EntityDescription resource,
+						ChangeableElementGroup group) {
+					ModelUtils.setChangeableElementGroup(resource, group);
+				}
+				
+				@Override
+				public ChangeableElementGroup getChangeableElementGroup(
+						EntityDescription resource) {
+					return ModelUtils.getChangeableElementGroup(resource);
+				}
+	
+	};
 	
 	private final UrlTemplateBinder<EntityDescription> URL_BINDER =
 			new UrlTemplateBinder<EntityDescription>(){
@@ -174,15 +193,14 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				codeSystemName, 
 				codeSytemVersionName, 
 				entity);
-		
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setEntityDescription(entity);
-		
+	
 		ScopedEntityName name = getScopedEntityName(entityName, codeSystemName);
+		
 		this.getUpdateHandler().update(
-				choice, 
+				entity, 
 				changeseturi, 
 				new EntityDescriptionReadId(name, ModelUtils.nameOrUriFromName(codeSytemVersionName)),
+				CHANGEABLE_GROUP_HANDLER,
 				this.entityDescriptionMaintenanceService);
 	}
 	
@@ -191,14 +209,12 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody EntityDescription entity) {
 
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setEntityDescription(entity);
-
 		return this.getCreateHandler().create(
-				choice,
+				entity,
 				changeseturi, 
 				PATH_ENTITYBYID, 
 				URL_BINDER, 
+				CHANGEABLE_GROUP_HANDLER,
 				this.entityDescriptionMaintenanceService);
 	}
 	

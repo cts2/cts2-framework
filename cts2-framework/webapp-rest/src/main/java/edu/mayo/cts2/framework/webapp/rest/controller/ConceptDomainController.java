@@ -298,11 +298,8 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setConceptDomain(conceptDomain);
-		
 		this.getCreateHandler().create(
-				choice, 
+				conceptDomain, 
 				changeseturi, 
 				PATH_CONCEPTDOMAIN_BYID, 
 				URL_BINDER, 
@@ -316,12 +313,9 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setConceptDomain(conceptDomain);
-		
+	
 		this.getUpdateHandler().update(
-				choice, 
+				conceptDomain, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(conceptDomainName), 
 				this.conceptDomainMaintenanceService);

@@ -196,12 +196,9 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	public ResponseEntity<Void> createCodeSystemVersion(
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setCodeSystemVersion(codeSystemVersion);
-		
+	
 		return this.getCreateHandler().create(
-				choice, 
+				codeSystemVersion, 
 				changeseturi, 
 				PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID,
 				URL_BINDER,
@@ -214,12 +211,9 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setCodeSystemVersion(codeSystemVersion);
-		
+	
 		this.getUpdateHandler().update(
-				choice, 
+				codeSystemVersion, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(codeSystemVersionName), 
 				this.codeSystemVersionMaintenanceService);

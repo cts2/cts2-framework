@@ -3,33 +3,60 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.model.core.Changeable;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
-import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.UpdateChangeableMetadataRequest;
 
 @Component
 public class UpdateHandler extends AbstractMainenanceHandler {
-	
-	@SuppressWarnings("unchecked")
-	protected <R,I> void update(
-			ChangeableResourceChoice resource, 
+
+	protected <R extends Changeable, I> void update(
+			R resource, 
 			String changeSetUri, 
 			I identifier,
 			BaseMaintenanceService<R,I> service){
-		ChangeableElementGroup group = ModelUtils.getChangeableElementGroup(resource);
+		
+		this.update(
+				resource, 
+				changeSetUri, 
+				identifier, 
+				new ChangeableElementGroupHandler<R>(){
+
+					@Override
+					public void setChangeableElementGroup(R resource,
+							ChangeableElementGroup group) {
+						resource.setChangeableElementGroup(group);
+					}
+
+					@Override
+					public ChangeableElementGroup getChangeableElementGroup(
+							R resource) {
+						return resource.getChangeableElementGroup();
+					}
+					
+				},
+				service);
+	}
+	
+	protected <R,I> void update(
+			R resource, 
+			String changeSetUri, 
+			I identifier,
+			ChangeableElementGroupHandler<R> groupHandler,
+			BaseMaintenanceService<R,I> service){
+		ChangeableElementGroup group = groupHandler.getChangeableElementGroup(resource);
 
 		if(group == null){
 	
 			group = this.createChangeableElementGroup(changeSetUri, ChangeType.UPDATE);
 	
-			ModelUtils.setChangeableElementGroup(resource, group);
+			groupHandler.setChangeableElementGroup(resource, group);
 		} else if(group.getChangeDescription() == null){
 			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
 		} else if(group.getChangeDescription().getChangeType() == null){
@@ -38,9 +65,7 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 				group.getChangeDescription().getChangeType() != ChangeType.UPDATE) ){
 			throw new UnspecifiedCts2RuntimeException("Only UPDATE or METADATA changes allowed via this URL.");
 		}
-		
-		R cts2Resource = (R) resource.getChoiceValue();
-		
+
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
 			throw ExceptionFactory.createUnknownChangeSetException(null);
 		}
@@ -49,7 +74,7 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 		
 		switch(type){
 			case UPDATE: {
-				service.updateResource(cts2Resource);
+				service.updateResource(resource);
 				break;
 			}
 			case METADATA: {

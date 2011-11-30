@@ -303,11 +303,8 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			@RequestBody CodeSystemCatalogEntry codeSystem,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setCodeSystem(codeSystem);
-		
 		return this.getCreateHandler().create(
-				choice, 
+				codeSystem, 
 				changeseturi, 
 				PATH_CODESYSTEMBYID,
 				URL_BINDER,
@@ -321,11 +318,8 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			@RequestBody CodeSystemCatalogEntry codeSystem,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setCodeSystem(codeSystem);
-		
 		this.getUpdateHandler().update(
-				choice, 
+				codeSystem, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(codeSystem.getCodeSystemName()),
 				this.codeSystemMaintenanceService);

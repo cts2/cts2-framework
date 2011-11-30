@@ -318,12 +318,9 @@ public class MapController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapCatalogEntry map,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
-		
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setMap(map);
-			
+
 		return this.getCreateHandler().create(
-				choice,
+				map,
 				changeseturi,
 				PATH_MAP_BYID,
 				URL_BINDER, 
@@ -337,12 +334,9 @@ public class MapController extends AbstractServiceAwareController {
 			@RequestBody MapCatalogEntry map,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_MAPID) String mapName) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setMap(map);
 		
 		this.getUpdateHandler().update(
-				choice, 
+				map, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(mapName),
 				this.mapMaintenanceService);

@@ -114,16 +114,13 @@ public class MapEntryController extends AbstractServiceAwareController {
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
 			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setMapEntry(mapEntry);
-		
+	
 		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 
 				mapVersionName);
 		
 		this.getUpdateHandler().update(
-				choice, 
+				mapEntry, 
 				changeseturi, 
 				id, 
 				this.mapEntryMaintenanceService);
@@ -134,12 +131,9 @@ public class MapEntryController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			@RequestBody MapEntry mapEntry,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
-			
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
-		choice.setMapEntry(mapEntry);
-
+		
 		return this.getCreateHandler().create(
-				choice,
+				mapEntry,
 				changeseturi, 
 				PATH_MAPENTRY_OF_MAPVERSION_BYID, 
 				URL_BINDER, 
