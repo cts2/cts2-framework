@@ -360,6 +360,8 @@ public class ModelUtils {
 	public static void setChangeableElementGroup(Object changeableResource, final ChangeableElementGroup group){
 		if(changeableResource instanceof Changeable){
 			((Changeable)changeableResource).setChangeableElementGroup(group);
+			
+			return;
 		}
 		
 		if(changeableResource instanceof EntityDescription){
@@ -369,6 +371,8 @@ public class ModelUtils {
 			
 			if(base instanceof NamedEntityDescription){
 				((NamedEntityDescription)base).setChangeableElementGroup(group);
+				
+				return;
 			}
 			
 		}

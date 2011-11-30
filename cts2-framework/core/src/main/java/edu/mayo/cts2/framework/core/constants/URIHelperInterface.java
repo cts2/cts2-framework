@@ -179,6 +179,8 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 
 	public static final String PATH_VALUESETS = "/" + VALUESETS;
 	
+	public static final String PATH_VALUESETDEFINITION = "/" + VALUESETDEFINITION_LONG;
+	
 	public static final String PATH_VALUESETDEFINITIONS = "/" + VALUESETDEFINITIONS_LONG;
 	
 	public static final String PATH_VALUESETDEFINITION_OF_VALUESET = PATH_VALUESETBYID + "/"

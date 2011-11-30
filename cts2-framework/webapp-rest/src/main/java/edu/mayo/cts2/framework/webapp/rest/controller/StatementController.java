@@ -48,7 +48,6 @@ import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectory;
 import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
 import edu.mayo.cts2.framework.model.statement.StatementMsg;
-import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
 import edu.mayo.cts2.framework.service.profile.statement.StatementMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;

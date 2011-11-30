@@ -377,7 +377,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				this.valueSetDefinitionMaintenanceService);
 	}
 	
-	@RequestMapping(value=PATH_VALUESETDEFINITION_OF_VALUESET, method=RequestMethod.POST)
+	@RequestMapping(value=PATH_VALUESETDEFINITION, method=RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> createValueSetDefinition(
 			HttpServletRequest httpServletRequest,
