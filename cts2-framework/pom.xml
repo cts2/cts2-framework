@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>0.3.2-SNAPSHOT</version>
+	<version>0.4.1</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
@@ -263,7 +263,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute/>
+										<execute />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
