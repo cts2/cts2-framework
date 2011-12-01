@@ -7,16 +7,16 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/groovy"/>
-        <dependent-module archiveName="service-0.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/service/service">
+        <dependent-module archiveName="service-0.4.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/service/service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="filter-0.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/filter/filter">
+        <dependent-module archiveName="filter-0.4.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/filter/filter">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="core-0.3.2-SNAPSHOT-tests.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/core/core">
+        <dependent-module archiveName="core-0.4.2-SNAPSHOT-tests.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/core/core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="model-0.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/model/model">
+        <dependent-module archiveName="model-0.4.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/model/model">
             <dependency-type>uses</dependency-type>
         </dependent-module>
 		<property name="java-output-path" value="target/classes"/>
