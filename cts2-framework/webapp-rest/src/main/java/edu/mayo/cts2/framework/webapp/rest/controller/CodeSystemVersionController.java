@@ -204,7 +204,8 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				this.codeSystemVersionMaintenanceService);
 	}
 	
-	@RequestMapping(value=PATH_CODESYSTEMVERSION, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, method=RequestMethod.PUT)
+	@ResponseBody
 	public void updateCodeSystemVersion(
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion,

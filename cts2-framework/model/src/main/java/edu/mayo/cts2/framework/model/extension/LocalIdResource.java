@@ -1,7 +1,5 @@
 package edu.mayo.cts2.framework.model.extension;
 
-import edu.mayo.cts2.framework.model.core.Changeable;
-
 public abstract class LocalIdResource<T> {
 	
 	public String localID;

@@ -119,8 +119,8 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	/* Statement */
 	public static final String PATH_STATEMENTS = "/" + STATEMENTS;
 	public static final String PATH_STATEMENT = "/" + STATEMENT;
-	public static final String PATH_STATEMENTBYID = "/" + STATEMENT + "/{"
-			+ VAR_STATEMENTID + "}";
+	public static final String PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID = 
+			PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/{" + VAR_STATEMENTID + "}";
 	
 	public static final String PATH_STATEMENTBYURI = "/" + STATEMENT_BY_URI + "/" + ALL_WILDCARD;
 	

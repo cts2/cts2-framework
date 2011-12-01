@@ -25,7 +25,6 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -162,6 +162,24 @@ public class ValueSetController extends AbstractServiceAwareController {
 		return this.wrapMessage(msg, httpServletRequest);
 	}
 	
+	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.POST)
+	@ResponseBody
+	public ValueSetCatalogEntryDirectory getValueSets(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			ValueSetQueryServiceRestrictions restrictions,
+			RestFilter restFilter,
+			Page page) {
+		
+		return this.getValueSets(
+				httpServletRequest,
+				restReadContext, 
+				null, 
+				restrictions, 
+				restFilter, 
+				page);
+	}
+	
 	/**
 	 * Gets the value sets.
 	 *
@@ -177,19 +195,21 @@ public class ValueSetController extends AbstractServiceAwareController {
 	@ResponseBody
 	public ValueSetCatalogEntryDirectory getValueSets(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page,
-			@RequestParam(value=PARAM_CODESYSTEM, required=false) List<String> codeSystems) {
+			Page page) {
 		
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetQueryService);
-
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
 		DirectoryResult<ValueSetCatalogEntrySummary> directoryResult = this.valueSetQueryService.getResourceSummaries(
 				query,
 				createSet(filterComponent), 
 				restrictions,
-				null, page);
+				readContext, 
+				page);
 
 		ValueSetCatalogEntryDirectory directory = this.populateDirectory(
 				directoryResult, 

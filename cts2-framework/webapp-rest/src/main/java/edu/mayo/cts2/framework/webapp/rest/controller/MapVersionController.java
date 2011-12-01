@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -45,6 +46,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
@@ -199,13 +201,12 @@ public class MapVersionController extends AbstractServiceAwareController {
 	}
 	
 	@RequestMapping(value=PATH_MAPVERSION, method=RequestMethod.POST)
-	@ResponseBody
-	public void createMapVersion(
+	public ResponseEntity<Void> createMapVersion(
 			HttpServletRequest httpServletRequest,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion) {
 
-		this.getCreateHandler().create(
+		return this.getCreateHandler().create(
 				mapVersion,
 				changeseturi,
 				PATH_MAPVERSION_OF_MAP_BYID,
@@ -241,6 +242,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@ResponseBody
 	public MapVersionDirectory getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -250,6 +252,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 		
 		return this.getMapVersions(
 				httpServletRequest, 
+				restReadContext,
 				null, 
 				restrictions,
 				restFilter,
@@ -272,6 +275,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@ResponseBody
 	public MapVersionDirectory getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -282,7 +286,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 		
 		return this.getMapVersions(
 				httpServletRequest,
-				null, 
+				restReadContext, 
 				restrictions, 
 				restFilter,
 				page);
@@ -302,13 +306,15 @@ public class MapVersionController extends AbstractServiceAwareController {
 	@ResponseBody
 	public MapVersionDirectory getMapVersions(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page) {
 		
 		return this.getMapVersions(
 				httpServletRequest, 
-				null, 
+				restReadContext, 
+				null,
 				restrictions, 
 				restFilter,
 				page);
@@ -325,19 +331,26 @@ public class MapVersionController extends AbstractServiceAwareController {
 	 * @return the map versions
 	 */
 	@RequestMapping(value={
-			PATH_MAPVERSIONS_OF_MAP}, method=RequestMethod.POST)
+			PATH_MAPVERSIONS}, method=RequestMethod.POST)
 	@ResponseBody
 	public MapVersionDirectory getMapVersions(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page) {
 		
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.mapVersionQueryService);
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
 		DirectoryResult<MapVersionDirectoryEntry> directoryResult = 
-			this.mapVersionQueryService.getResourceSummaries(query, createSet(filterComponent), restrictions, null, page);
+			this.mapVersionQueryService.getResourceSummaries(
+					query, 
+					createSet(filterComponent), 
+					restrictions, 
+					readContext, 
+					page);
 		
 		MapVersionDirectory directory = this.populateDirectory(
 				directoryResult, 

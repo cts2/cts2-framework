@@ -21,19 +21,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.statement;
+package edu.mayo.cts2.framework.service.profile.statement.name;
 
-import edu.mayo.cts2.framework.model.extension.LocalIdStatement;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
-import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
- * The Interface StatementMaintenanceService.
+ * The Class ConceptDomainBindingReadId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface StatementMaintenanceService
-		extends
-		BaseMaintenanceService<LocalIdStatement,StatementReadId> {
+public class StatementReadId extends NameOrURI {
 
+	private static final long serialVersionUID = 1L;
+
+	private NameOrURI codeSystemVersion;
+	
+	public StatementReadId(String localName, NameOrURI codeSystemVersion) {
+		super();
+		this.setName(localName);
+		this.codeSystemVersion = codeSystemVersion;
+	}
+	
+	public StatementReadId(String uri) {
+		super();
+		this.setUri(uri);
+	}
+
+	public NameOrURI getCodeSystemVersion() {
+		return codeSystemVersion;
+	}
+
+	public void setCodeSystemVersion(NameOrURI codeSystemVersion) {
+		this.codeSystemVersion = codeSystemVersion;
+	}
 }

@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,18 +41,23 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.extension.LocalIdStatement;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownStatement;
 import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectory;
 import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
 import edu.mayo.cts2.framework.model.statement.StatementMsg;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.statement.StatementMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
-import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
@@ -72,24 +78,58 @@ public class StatementController extends AbstractServiceAwareController {
 	@Cts2Service
 	private StatementMaintenanceService statementMaintenanceService;
 	
-	private final static UrlTemplateBinder<Statement> URL_BINDER =
-			new UrlTemplateBinder<Statement>(){
+	private final static UrlTemplateBinder<LocalIdStatement> URL_BINDER =
+			new UrlTemplateBinder<LocalIdStatement>(){
 
 		@Override
-		public Map<String,String> getPathValues(Statement resource) {
-			//TODO:
-			return new HashMap<String,String>();
+		public Map<String,String> getPathValues(LocalIdStatement resource) {
+			Map<String,String> returnMap = new HashMap<String,String>();
+			
+			CodeSystemVersionReference assertedIn = getAssertedIn(resource.getResource());
+			
+			returnMap.put(VAR_CODESYSTEMID, assertedIn.getCodeSystem().getContent());
+			returnMap.put(VAR_CODESYSTEMVERSIONID, assertedIn.getVersion().getContent());
+			returnMap.put(VAR_STATEMENTID, resource.getLocalID());
+			
+			return returnMap;
 		}
 
 	};
 	
-	private final static MessageFactory<Statement> MESSAGE_FACTORY = 
-			new MessageFactory<Statement>() {
+	private static CodeSystemVersionReference getAssertedIn(Statement resource){
+		if(resource.getAssertedIn() != null){
+			return resource.getAssertedIn();
+		} else {
+			return resource.getAssertedBy();
+		}
+	}
+	
+	private final static ChangeableElementGroupHandler<LocalIdStatement> CHANGEABLE_GROUP_HANDLER =
+			new ChangeableElementGroupHandler<LocalIdStatement>(){
+
+				@Override
+				public void setChangeableElementGroup(
+						LocalIdStatement resource,
+						ChangeableElementGroup group) {
+					resource.getResource().setChangeableElementGroup(group);
+				}
+				
+				@Override
+				public ChangeableElementGroup getChangeableElementGroup(
+						LocalIdStatement resource) {
+					return resource.getResource().getChangeableElementGroup();
+				}
+	
+	};
+	
+	
+	private final static MessageFactory<LocalIdStatement> MESSAGE_FACTORY = 
+			new MessageFactory<LocalIdStatement>() {
 
 		@Override
-		public Message createMessage(Statement resource) {
+		public Message createMessage(LocalIdStatement resource) {
 			StatementMsg msg = new StatementMsg();
-			msg.setStatement(resource);
+			msg.setStatement(resource.getResource());
 
 			return msg;
 		}
@@ -104,12 +144,19 @@ public class StatementController extends AbstractServiceAwareController {
 	 * @return the statements
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.GET)
+	@ResponseBody
 	public StatementDirectory getStatements(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			RestFilter restFilter,
 			Page page) {
 		
-		return this.getStatements(httpServletRequest, null, restFilter, page);
+		return this.getStatements(
+				httpServletRequest, 
+				restReadContext, 
+				null, 
+				restFilter, 
+				page);
 	}
 	
 	/**
@@ -125,17 +172,21 @@ public class StatementController extends AbstractServiceAwareController {
 	@ResponseBody
 	public StatementDirectory getStatements(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			RestFilter restFilter,
 			Page page) {
 		
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.statementQueryService);
+		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 
 		DirectoryResult<StatementDirectoryEntry> directoryResult = this.statementQueryService.getResourceSummaries(
 				query,
 				createSet(filterComponent), 
 				null,
-				null, page);
+				readContext, 
+				page);
 
 		StatementDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -144,21 +195,6 @@ public class StatementController extends AbstractServiceAwareController {
 				StatementDirectory.class);
 
 		return directory;
-	}
-	
-	/**
-	 * Does statement exist.
-	 *
-	 * @param httpServletResponse the http servlet response
-	 * @param statementName the statement name
-	 */
-	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.HEAD)
-	@ResponseBody
-	public void doesStatementExist(
-			HttpServletResponse httpServletResponse,
-			@PathVariable(VAR_STATEMENTID) String statementId) {
-		
-		//
 	}
 	
 	/**
@@ -173,6 +209,7 @@ public class StatementController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void getStatementsCount(
 			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			RestFilter restFilter) {
 		
@@ -185,30 +222,6 @@ public class StatementController extends AbstractServiceAwareController {
 		
 		this.setCount(count, httpServletResponse);
 	}
-
-	/**
-	 * Gets the statement by name.
-	 *
-	 * @param httpServletRequest the http servlet request
-	 * @param statementName the statement name
-	 * @return the statement by name
-	 */
-	@RequestMapping(value="/statementbyuri", method=RequestMethod.GET)
-	@ResponseBody
-	public Message getStatementByUri(
-			HttpServletRequest httpServletRequest,
-			RestReadContext restReadContext,
-			QueryControl queryControl,
-			@RequestParam(VAR_URI) String statementUri) {
-			
-		return this.doRead(
-				httpServletRequest, 
-				MESSAGE_FACTORY, 
-				this.statementReadService, 
-				restReadContext,
-				UnknownStatement.class,
-				statementUri);
-	}
 	
 	/**
 	 * Creates the statement.
@@ -217,33 +230,40 @@ public class StatementController extends AbstractServiceAwareController {
 	 * @param statement the statement
 	 * @param changeseturi the changeseturi
 	 * @param statementName the statement name
+	 * @return 
 	 */
 	@RequestMapping(value=PATH_STATEMENT, method=RequestMethod.POST)
-	@ResponseBody
-	public void createStatement(
+	public ResponseEntity<Void> createStatement(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 	
-		this.getUpdateHandler().update(
-				statement, 
-				changeseturi,
-				statement.getStatementURI(),
+		return this.getCreateHandler().create(
+				new LocalIdStatement(statement),
+				changeseturi, 
+				PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, 
+				URL_BINDER, 
+				CHANGEABLE_GROUP_HANDLER,
 				this.statementMaintenanceService);
 	}
 	
-	@RequestMapping(value=PATH_STATEMENTBYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, method=RequestMethod.PUT)
 	@ResponseBody
 	public void updateStatement(
 			HttpServletRequest httpServletRequest,
 			@RequestBody Statement statement,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_STATEMENTID) String statementLocalName,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 				
-		this.getCreateHandler().create(
-				statement, 
-				changeseturi,
-				PATH_STATEMENTBYID,
-				URL_BINDER, 
+		this.getUpdateHandler().update(
+				new LocalIdStatement(statementLocalName, statement),
+				changeseturi, 
+				new StatementReadId(
+						statementLocalName, 
+						ModelUtils.nameOrUriFromName(codeSystemVersionName)),
+				CHANGEABLE_GROUP_HANDLER,
 				this.statementMaintenanceService);
 	}
 	
@@ -261,15 +281,65 @@ public class StatementController extends AbstractServiceAwareController {
 			@RequestParam(VAR_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
+		StatementReadId id = new StatementReadId(uri);
+		
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 
-				PATH_STATEMENTBYID, 
 				PATH_STATEMENTBYURI, 
+				PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, 
 				URL_BINDER, 
 				this.statementReadService, 
 				restReadContext,
-				uri,
+				id,
 				redirect);
+	}
+	
+	@RequestMapping(value={	
+			PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID
+			},
+		method=RequestMethod.GET)
+	@ResponseBody
+	public Message getStatementOfCodeSystemVersionByLocalId(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_STATEMENTID) String statementLocalName) {
+		
+		StatementReadId id = 
+				new StatementReadId(
+						statementLocalName,
+						ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		
+		return this.doRead(
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				this.statementReadService, 
+				restReadContext, 
+				UnknownStatement.class, 
+				id);
+	}
+	
+	@RequestMapping(value={	
+			PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID
+			},
+		method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteStatement(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
+			@PathVariable(VAR_STATEMENTID) String statementLocalName,
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
+		
+		StatementReadId id = 
+				new StatementReadId(
+						statementLocalName,
+						ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		
+		this.statementMaintenanceService.
+			deleteResource(id, changeseturi);
 	}
 }

@@ -41,6 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -82,8 +83,12 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 
 		@Override
 		public Map<String,String> getPathValues(LocalIdValueSetDefinition resource) {
-			//TODO:
-			return new HashMap<String,String>();
+			Map<String,String> returnMap = new HashMap<String,String>();
+			
+			returnMap.put(VAR_VALUESETID, resource.getResource().getDefinedValueSet().getContent());
+			returnMap.put(VAR_VALUESETDEFINITIONID, resource.getLocalID());
+
+			return returnMap;
 		}
 
 	};
@@ -133,6 +138,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@ResponseBody
 	public ValueSetDefinitionDirectory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -140,6 +146,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 		
 		return this.getValueSetDefinitionsOfValueSet(
 				httpServletRequest, 
+				restReadContext,
 				null,
 				restrictions,
 				restFilter,
@@ -163,6 +170,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@ResponseBody
 	public ValueSetDefinitionDirectory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -173,6 +181,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 		
 		return this.getValueSetDefinitions(
 				httpServletRequest, 
+				restReadContext,
 				query, 
 				restrictions, 
 				restFilter,
@@ -225,6 +234,25 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				restFilter);
 	}
 	
+	@RequestMapping(value={
+			PATH_VALUESETDEFINITIONS}, method=RequestMethod.GET)
+	@ResponseBody
+	public ValueSetDefinitionDirectory getValueSetDefinitions(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			ValueSetDefinitionQueryServiceRestrictions restrictions,
+			RestFilter restFilter,
+			Page page) {
+		
+		return this.getValueSetDefinitions(
+				httpServletRequest,
+				restReadContext,
+				null,
+				restrictions,
+				restFilter,
+				page);
+	}
+	
 	/**
 	 * Gets the value set definitions.
 	 *
@@ -240,19 +268,22 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@ResponseBody
 	public ValueSetDefinitionDirectory getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page) {
 		
 		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetDefinitionQueryService);
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 	
 		DirectoryResult<ValueSetDefinitionDirectoryEntry> directoryResult = 
 			this.valueSetDefinitionQueryService.getResourceSummaries(
 					query, 
 					createSet(filterComponent), 
 					restrictions, 
-					null, page);
+					readContext, 
+					page);
 		
 		ValueSetDefinitionDirectory directory = this.populateDirectory(
 				directoryResult, 
@@ -391,5 +422,23 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				URL_BINDER, 
 				CHANGEABLE_GROUP_HANDLER,
 				this.valueSetDefinitionMaintenanceService);
+	}
+	
+	@RequestMapping(value=PATH_VALUESETDEFINITION_OF_VALUESET_BYID, method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteValueSetDefinition(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionLocalId,
+			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
+		
+		ValueSetDefinitionReadId id = 
+				new ValueSetDefinitionReadId(
+						valueSetDefinitionLocalId,
+						ModelUtils.nameOrUriFromName(valueSetName));
+			
+		this.valueSetDefinitionMaintenanceService.
+			deleteResource(id, changeseturi);
 	}
 }
