@@ -32,7 +32,7 @@ public class EntityDescriptionValidator {
 		
 		String foundCodeSytemVersionName = csvRef.getVersion().getContent();
 		
-		ChangeableElementGroup group = ModelUtils.getChangeableElementGroup(entity);
+		ChangeableElementGroup group = entity.getChangeableElementGroup();
 		String changeSetUri = group.getChangeDescription().getContainingChangeSet();
 		
 		ResolvedReadContext readContext = new ResolvedReadContext();

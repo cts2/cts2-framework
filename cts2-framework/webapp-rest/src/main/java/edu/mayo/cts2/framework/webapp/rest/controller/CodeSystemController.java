@@ -361,6 +361,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.codeSystemReadService, 
 				restReadContext,
+				UnknownCodeSystem.class,
 				ModelUtils.nameOrUriFromUri(uri), 
 				redirect);
 	}

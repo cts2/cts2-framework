@@ -27,14 +27,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-
-import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
-import edu.mayo.cts2.framework.model.core.Changeable;
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.ResourceDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
@@ -42,7 +38,6 @@ import edu.mayo.cts2.framework.model.core.TsAnyType;
 import edu.mayo.cts2.framework.model.entity.Designation;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
-import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
@@ -155,76 +150,6 @@ public class ModelUtils {
 		return (EntityDescriptionBase) entityDescription.getChoiceValue();
 	}
 	
-	public static ChangeableElementGroup getChangeableElementGroup(ChangeableResourceChoice changeableResource){
-		return doWithChangeableResourceChoice(changeableResource, 
-				new ChoiceCallback<ChangeableElementGroup>(){
-
-					@Override
-					public ChangeableElementGroup doInCallback(
-							Changeable changeable) {
-						return changeable.getChangeableElementGroup();
-					}
-
-					@Override
-					public ChangeableElementGroup doInCallback(
-							NamedEntityDescription changeable) {
-						return changeable.getChangeableElementGroup();
-					}
-			
-		});
-		
-	}
-	
-	public static ChangeableElementGroup getChangeableElementGroup(Object changeableResource){
-		if(changeableResource instanceof Changeable){
-			return ((Changeable)changeableResource).getChangeableElementGroup();
-		}
-		
-		if(changeableResource instanceof EntityDescription){
-			EntityDescription entity = (EntityDescription)changeableResource;
-			
-			EntityDescriptionBase base = getEntity(entity);
-			
-			if(base instanceof NamedEntityDescription){
-				return ((NamedEntityDescription)base).getChangeableElementGroup();
-			}
-			
-		}
-		
-		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
-	}
-	
-	private static interface ChoiceCallback<T> {
-		
-		public T doInCallback(Changeable changeable);
-		
-		public T doInCallback(NamedEntityDescription changeable);
-	}
-	
-	private static <T> T  
-		doWithChangeableResourceChoice(
-				ChangeableResourceChoice changeableResource, ChoiceCallback<T> callback){
-
-		Object obj = changeableResource.getChoiceValue();
-			
-		if(obj instanceof Changeable){
-			return callback.doInCallback((Changeable)obj);
-		}
-		
-		if(obj instanceof EntityDescription){
-			EntityDescription entity = (EntityDescription)obj;
-			
-			EntityDescriptionBase base = getEntity(entity);
-			
-			if(base instanceof NamedEntityDescription){
-				return callback.doInCallback((NamedEntityDescription)base);
-			}
-			
-		}
-			
-		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
-	}
-
 	/**
 	 * Sets the entity.
 	 *
@@ -308,27 +233,27 @@ public class ModelUtils {
 	}
 
 	public static NameOrURI nameOrUriFromName(String name) {
-		NameOrURI nameOrUri = new ToStringNameOrURI();
+		NameOrURI nameOrUri = new NameOrURI();
 		nameOrUri.setName(name);
 		
 		return nameOrUri;
 	}
 	
 	public static EntityNameOrURI entityNameOrUriFromName(ScopedEntityName name) {
-		EntityNameOrURI nameOrUri = new ToStringEntityNameOrURI();
+		EntityNameOrURI nameOrUri = new EntityNameOrURI();
 		nameOrUri.setEntityName(name);
 		
 		return nameOrUri;
 	}
 	
 	public static EntityNameOrURI entityNameOrUriFromUri(String uri) {
-		EntityNameOrURI nameOrUri = new ToStringEntityNameOrURI();
+		EntityNameOrURI nameOrUri = new EntityNameOrURI();
 		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
 	}
 	
-	public static ChangeableResourceChoice createChangeableResourceChoice(Object changeable) {
+	public static ChangeableResourceChoice createChangeableResourceChoice(IsChangeable changeable) {
 		ChangeableResourceChoice choice = new ChangeableResourceChoice();
 		
 		for(Field field : choice.getClass().getDeclaredFields()){
@@ -351,91 +276,10 @@ public class ModelUtils {
 
 
 	public static NameOrURI nameOrUriFromUri(String uri) {
-		NameOrURI nameOrUri = new ToStringNameOrURI();
+		NameOrURI nameOrUri = new NameOrURI();
 		nameOrUri.setUri(uri);
 		
 		return nameOrUri;
 	}
-	
-	public static void setChangeableElementGroup(Object changeableResource, final ChangeableElementGroup group){
-		if(changeableResource instanceof Changeable){
-			((Changeable)changeableResource).setChangeableElementGroup(group);
-			
-			return;
-		}
-		
-		if(changeableResource instanceof EntityDescription){
-			EntityDescription entity = (EntityDescription)changeableResource;
-			
-			EntityDescriptionBase base = getEntity(entity);
-			
-			if(base instanceof NamedEntityDescription){
-				((NamedEntityDescription)base).setChangeableElementGroup(group);
-				
-				return;
-			}
-			
-		}
-		
-		throw new IllegalStateException("Cannot find ChangeableElementGroup.");
-	}
 
-	public static void setChangeableElementGroup(
-			ChangeableResourceChoice changeableResource, final ChangeableElementGroup group) {
-		
-		doWithChangeableResourceChoice(changeableResource, 
-				new ChoiceCallback<Void>(){
-
-					@Override
-					public Void doInCallback(
-							Changeable changeable) {
-						changeable.setChangeableElementGroup(group);
-						
-						return null;
-					}
-
-					@Override
-					public Void doInCallback(
-							NamedEntityDescription changeable) {
-						changeable.setChangeableElementGroup(group);
-						
-						return null;
-					}
-			
-		});
-	}
-	
-	private static class ToStringNameOrURI extends NameOrURI implements MarshallSuperClass {
-
-		private static final long serialVersionUID = 1917212561253120049L;
-
-		public String toString(){
-			String returnString;
-			if(StringUtils.isNotBlank(this.getName())){
-				returnString = "Name: " + this.getName();
-			} else {
-				returnString = "URI: " + this.getUri();
-			}
-			
-			return returnString;
-		}
-	}
-	
-	private static class ToStringEntityNameOrURI extends EntityNameOrURI implements MarshallSuperClass {
-
-		private static final long serialVersionUID = 1917212561253120049L;
-
-		public String toString(){
-			String returnString;
-			if(this.getEntityName() != null){
-				returnString = 
-						"Namespace: " + this.getEntityName().getNamespace() +
-						"Name: " + this.getEntityName().getName();
-			} else {
-				returnString = "URI: " + this.getUri();
-			}
-			
-			return returnString;
-		}
-	}
 }

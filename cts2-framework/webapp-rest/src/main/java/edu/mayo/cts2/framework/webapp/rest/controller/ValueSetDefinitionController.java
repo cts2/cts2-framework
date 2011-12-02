@@ -42,7 +42,6 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
@@ -92,26 +91,8 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 		}
 
 	};
-	
-	private final static ChangeableElementGroupHandler<LocalIdValueSetDefinition> CHANGEABLE_GROUP_HANDLER =
-			new ChangeableElementGroupHandler<LocalIdValueSetDefinition>(){
 
-				@Override
-				public void setChangeableElementGroup(
-						LocalIdValueSetDefinition resource,
-						ChangeableElementGroup group) {
-					resource.getResource().setChangeableElementGroup(group);
-				}
-				
-				@Override
-				public ChangeableElementGroup getChangeableElementGroup(
-						LocalIdValueSetDefinition resource) {
-					return resource.getResource().getChangeableElementGroup();
-				}
-	
-	};
-	
-	private final static MessageFactory<LocalIdValueSetDefinition> MESSAGE_FACTORY = 
+	final static MessageFactory<LocalIdValueSetDefinition> MESSAGE_FACTORY = 
 			new MessageFactory<LocalIdValueSetDefinition>() {
 
 		@Override
@@ -351,6 +332,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				URL_BINDER, 
 				this.valueSetDefinitionReadService,
 				restReadContext,
+				UnknownValueSetDefinition.class,
 				id, 
 				redirect);
 	}
@@ -404,7 +386,6 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				new ValueSetDefinitionReadId(
 						valueSetDefinitionLocalId, 
 						ModelUtils.nameOrUriFromName(valueSetName)),
-				CHANGEABLE_GROUP_HANDLER,
 				this.valueSetDefinitionMaintenanceService);
 	}
 	
@@ -420,7 +401,6 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				changeseturi, 
 				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
 				URL_BINDER, 
-				CHANGEABLE_GROUP_HANDLER,
 				this.valueSetDefinitionMaintenanceService);
 	}
 	

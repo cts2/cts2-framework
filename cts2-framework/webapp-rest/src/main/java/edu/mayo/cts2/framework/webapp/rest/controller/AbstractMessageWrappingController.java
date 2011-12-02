@@ -45,6 +45,7 @@ import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Directory;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
 import edu.mayo.cts2.framework.model.core.RESTResource;
@@ -236,7 +237,7 @@ public abstract class AbstractMessageWrappingController extends
 		return mav;
 	}
 	
-	protected <R,I> Message doRead(
+	protected <R extends IsChangeable,I> Message doRead(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			ReadService<R,I> readService, 
@@ -305,7 +306,7 @@ public abstract class AbstractMessageWrappingController extends
 		}
 	}
 	
-	protected <R, I> ModelAndView doReadByUri(
+	protected <R extends IsChangeable, I> ModelAndView doReadByUri(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			String byUriTemplate,
@@ -313,6 +314,7 @@ public abstract class AbstractMessageWrappingController extends
 			UrlTemplateBinder<R> urlBinder,
 			ReadService<R,I> readService,
 			RestReadContext restReadContext,
+			Class<? extends UnknownResourceReference > exceptionClazz,
 			I identifier,
 			boolean redirect) {
 		
@@ -320,6 +322,12 @@ public abstract class AbstractMessageWrappingController extends
 		
 		R resource = 
 				readService.read(identifier, resolvedContext);
+		
+		if(resource == null){
+			throw ExceptionFactory.createUnknownResourceException(
+					identifier.toString(), 
+					exceptionClazz);
+		}
 		
 		if(! this.isPartialRedirect(httpServletRequest, byUriTemplate)){
 

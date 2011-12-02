@@ -3,8 +3,8 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.model.core.Changeable;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
@@ -16,47 +16,18 @@ import edu.mayo.cts2.framework.service.profile.UpdateChangeableMetadataRequest;
 @Component
 public class UpdateHandler extends AbstractMainenanceHandler {
 
-	protected <R extends Changeable, I> void update(
+	protected <R extends IsChangeable,I> void update(
 			R resource, 
 			String changeSetUri, 
 			I identifier,
 			BaseMaintenanceService<R,I> service){
-		
-		this.update(
-				resource, 
-				changeSetUri, 
-				identifier, 
-				new ChangeableElementGroupHandler<R>(){
-
-					@Override
-					public void setChangeableElementGroup(R resource,
-							ChangeableElementGroup group) {
-						resource.setChangeableElementGroup(group);
-					}
-
-					@Override
-					public ChangeableElementGroup getChangeableElementGroup(
-							R resource) {
-						return resource.getChangeableElementGroup();
-					}
-					
-				},
-				service);
-	}
-	
-	protected <R,I> void update(
-			R resource, 
-			String changeSetUri, 
-			I identifier,
-			ChangeableElementGroupHandler<R> groupHandler,
-			BaseMaintenanceService<R,I> service){
-		ChangeableElementGroup group = groupHandler.getChangeableElementGroup(resource);
+		ChangeableElementGroup group = resource.getChangeableElementGroup();
 
 		if(group == null){
 	
 			group = this.createChangeableElementGroup(changeSetUri, ChangeType.UPDATE);
 	
-			groupHandler.setChangeableElementGroup(resource, group);
+			resource.setChangeableElementGroup(group);
 		} else if(group.getChangeDescription() == null){
 			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
 		} else if(group.getChangeDescription().getChangeType() == null){

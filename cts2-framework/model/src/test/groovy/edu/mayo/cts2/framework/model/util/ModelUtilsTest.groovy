@@ -24,18 +24,7 @@ class ModelUtilsTest {
     assertEquals(util.getChoiceValue(), namedIndividual)
    
   }  
-  
-  @Test
-  void testGetChangeableElementGroup() {
-	  def crc = new ChangeableResourceChoice()
-	  
-	  def group = new ChangeableElementGroup()
-	  crc.setCodeSystem(new CodeSystemCatalogEntry(changeableElementGroup: group))
-	  
-	  
-	  assertEquals group, ModelUtils.getChangeableElementGroup(crc)
-  }
-  
+ 
   @Test
   void testNameOrURIFromEitherWithName() {
 	 def n_u = ModelUtils.nameOrUriFromEither("some_name")

@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
+import edu.mayo.cts2.framework.model.core.IsChangeable;
+
 
 /**
  * The Interface MaintenanceService.
@@ -30,7 +32,7 @@ package edu.mayo.cts2.framework.service.profile;
  * @param <R> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface BaseMaintenanceService<R,I> extends Cts2Profile {
+public interface BaseMaintenanceService<R extends IsChangeable,I> extends Cts2Profile {
 
 
 	public void updateChangeableMetadata(I identifier, UpdateChangeableMetadataRequest request);

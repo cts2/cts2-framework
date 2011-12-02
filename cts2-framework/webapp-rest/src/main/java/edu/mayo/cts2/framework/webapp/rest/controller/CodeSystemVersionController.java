@@ -497,6 +497,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				URL_BINDER, 
 				this.codeSystemVersionReadService, 
 				restReadContext,
+				UnknownCodeSystemVersion.class,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

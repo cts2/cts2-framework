@@ -28,6 +28,7 @@ import java.util.Set;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
@@ -39,7 +40,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
  * @param <Restrictions> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface QueryService<Resource,Summary,Restrictions> extends BaseQueryService {
+public interface QueryService<Resource extends IsChangeable,Summary,Restrictions> extends BaseQueryService {
 
 	/**
 	 * Gets the resource summaries.

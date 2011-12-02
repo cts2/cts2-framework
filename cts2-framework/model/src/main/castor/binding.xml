@@ -8,5 +8,17 @@
 		<elementBinding name="/IteratableChangeSet/entry">
 			<member name="changeSetEntry"/>
 		</elementBinding>
+		
+		<complexTypeBinding name="/complexType:Changeable">    
+   			<java-class>
+   				<implements>edu.mayo.cts2.framework.model.core.IsChangeable</implements>
+   			</java-class>  
+		</complexTypeBinding>
+		
+		<complexTypeBinding name="/complexType:NamedEntityDescription">    
+   			<java-class>
+   				<implements>edu.mayo.cts2.framework.model.core.IsChangeable</implements>
+   			</java-class>  
+		</complexTypeBinding>
 
 </binding>

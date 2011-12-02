@@ -484,6 +484,7 @@ public class MapVersionController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.mapVersionReadService,
 				restReadContext,
+				UnknownMapVersion.class,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

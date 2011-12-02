@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
-import edu.mayo.cts2.framework.model.core.Changeable;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
@@ -21,49 +21,21 @@ public class CreateHandler extends AbstractMainenanceHandler {
 	@Resource
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 
-	protected <R extends Changeable> ResponseEntity<Void> create(
+	
+	protected <R extends IsChangeable> ResponseEntity<Void> create(
 			R resource, 
 			String changeSetUri, 
 			String urlTemplate,
 			UrlTemplateBinder<R> template,
 			BaseMaintenanceService<R,?> service){
 		
-		return this.create(
-				resource, 
-				changeSetUri,
-				urlTemplate, 
-				template, 
-				new ChangeableElementGroupHandler<R>(){
-
-					@Override
-					public void setChangeableElementGroup(R resource,
-							ChangeableElementGroup group) {
-						resource.setChangeableElementGroup(group);
-					}
-
-					@Override
-					public ChangeableElementGroup getChangeableElementGroup(
-							R resource) {
-						return resource.getChangeableElementGroup();
-					}
-					
-				}, 
-				service);
-	}
-	protected <R> ResponseEntity<Void> create(
-			R resource, 
-			String changeSetUri, 
-			String urlTemplate,
-			UrlTemplateBinder<R> template,
-			ChangeableElementGroupHandler<R> groupHandler,
-			BaseMaintenanceService<R,?> service){
-		ChangeableElementGroup group = groupHandler.getChangeableElementGroup(resource);
+		ChangeableElementGroup group = resource.getChangeableElementGroup();
 
 		if(group == null){
 	
 			group = this.createChangeableElementGroup(changeSetUri, ChangeType.CREATE);
 	
-			groupHandler.setChangeableElementGroup(resource, group);
+			resource.setChangeableElementGroup(group);
 		} else if(group.getChangeDescription() == null){
 			group.setChangeDescription(this.createChangeDescription(changeSetUri, ChangeType.CREATE));
 		}

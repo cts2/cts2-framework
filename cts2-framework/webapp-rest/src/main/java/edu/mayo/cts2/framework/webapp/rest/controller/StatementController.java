@@ -42,7 +42,6 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -103,25 +102,6 @@ public class StatementController extends AbstractServiceAwareController {
 			return resource.getAssertedBy();
 		}
 	}
-	
-	private final static ChangeableElementGroupHandler<LocalIdStatement> CHANGEABLE_GROUP_HANDLER =
-			new ChangeableElementGroupHandler<LocalIdStatement>(){
-
-				@Override
-				public void setChangeableElementGroup(
-						LocalIdStatement resource,
-						ChangeableElementGroup group) {
-					resource.getResource().setChangeableElementGroup(group);
-				}
-				
-				@Override
-				public ChangeableElementGroup getChangeableElementGroup(
-						LocalIdStatement resource) {
-					return resource.getResource().getChangeableElementGroup();
-				}
-	
-	};
-	
 	
 	private final static MessageFactory<LocalIdStatement> MESSAGE_FACTORY = 
 			new MessageFactory<LocalIdStatement>() {
@@ -243,7 +223,6 @@ public class StatementController extends AbstractServiceAwareController {
 				changeseturi, 
 				PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, 
 				URL_BINDER, 
-				CHANGEABLE_GROUP_HANDLER,
 				this.statementMaintenanceService);
 	}
 	
@@ -263,7 +242,6 @@ public class StatementController extends AbstractServiceAwareController {
 				new StatementReadId(
 						statementLocalName, 
 						ModelUtils.nameOrUriFromName(codeSystemVersionName)),
-				CHANGEABLE_GROUP_HANDLER,
 				this.statementMaintenanceService);
 	}
 	
@@ -291,6 +269,7 @@ public class StatementController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.statementReadService, 
 				restReadContext,
+				UnknownStatement.class, 
 				id,
 				redirect);
 	}

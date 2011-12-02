@@ -98,25 +98,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 		
 	@Resource
 	private EntityDescriptionValidator entityDescriptionValidator;
-	
-	private final static ChangeableElementGroupHandler<EntityDescription> CHANGEABLE_GROUP_HANDLER =
-			new ChangeableElementGroupHandler<EntityDescription>(){
 
-				@Override
-				public void setChangeableElementGroup(
-						EntityDescription resource,
-						ChangeableElementGroup group) {
-					ModelUtils.setChangeableElementGroup(resource, group);
-				}
-				
-				@Override
-				public ChangeableElementGroup getChangeableElementGroup(
-						EntityDescription resource) {
-					return ModelUtils.getChangeableElementGroup(resource);
-				}
-	
-	};
-	
 	private final UrlTemplateBinder<EntityDescription> URL_BINDER =
 			new UrlTemplateBinder<EntityDescription>(){
 
@@ -133,7 +115,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			ResolvedReadContext readContext = null;
 			
 			ChangeableElementGroup group = 
-					ModelUtils.getChangeableElementGroup(resource);
+					resource.getChangeableElementGroup();
 			
 			if(group != null && group.getChangeDescription() != null){
 				String changeSetUri = group.getChangeDescription().getContainingChangeSet();
@@ -198,7 +180,6 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				entity, 
 				changeseturi, 
 				new EntityDescriptionReadId(name, ModelUtils.nameOrUriFromName(codeSytemVersionName)),
-				CHANGEABLE_GROUP_HANDLER,
 				this.entityDescriptionMaintenanceService);
 	}
 	
@@ -212,7 +193,6 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				changeseturi, 
 				PATH_ENTITYBYID, 
 				URL_BINDER, 
-				CHANGEABLE_GROUP_HANDLER,
 				this.entityDescriptionMaintenanceService);
 	}
 	
@@ -523,6 +503,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				URL_BINDER, 
 				this.entityDescriptionReadService, 
 				restReadContext,
+				UnknownEntity.class,
 				new EntityDescriptionReadId(uri,null),
 				redirect);
 	}

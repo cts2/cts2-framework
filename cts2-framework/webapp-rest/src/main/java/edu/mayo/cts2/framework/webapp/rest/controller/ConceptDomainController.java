@@ -357,6 +357,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.conceptDomainReadService, 
 				restReadContext,
+				UnknownConceptDomain.class,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

@@ -46,7 +46,6 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectory;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg;
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
@@ -77,25 +76,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	
 	@Cts2Service
 	private ConceptDomainBindingMaintenanceService conceptDomainBindingMaintenanceService;
-	
-	private final static ChangeableElementGroupHandler<LocalIdConceptDomainBinding> CHANGEABLE_GROUP_HANDLER =
-			new ChangeableElementGroupHandler<LocalIdConceptDomainBinding>(){
 
-				@Override
-				public void setChangeableElementGroup(
-						LocalIdConceptDomainBinding resource,
-						ChangeableElementGroup group) {
-					resource.getResource().setChangeableElementGroup(group);
-				}
-				
-				@Override
-				public ChangeableElementGroup getChangeableElementGroup(
-						LocalIdConceptDomainBinding resource) {
-					return resource.getResource().getChangeableElementGroup();
-				}
-	
-	};
-	
 	private final static UrlTemplateBinder<LocalIdConceptDomainBinding> URL_BINDER =
 			new UrlTemplateBinder<LocalIdConceptDomainBinding>(){
 
@@ -143,7 +124,6 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				changeseturi,
 				PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, 
 				URL_BINDER, 
-				CHANGEABLE_GROUP_HANDLER,
 				this.conceptDomainBindingMaintenanceService);
 	}
 	
@@ -162,7 +142,6 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				new ConceptDomainBindingReadId(
 						conceptDomainBindingLocalId, 
 						ModelUtils.nameOrUriFromName(conceptDomainName)),
-				CHANGEABLE_GROUP_HANDLER,
 				this.conceptDomainBindingMaintenanceService);
 	}
 	
@@ -420,6 +399,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				URL_BINDER, 
 				this.conceptDomainBindingReadService, 
 				restReadContext,
+				UnknownConceptDomainBinding.class, 
 				id,
 				redirect);
 	}

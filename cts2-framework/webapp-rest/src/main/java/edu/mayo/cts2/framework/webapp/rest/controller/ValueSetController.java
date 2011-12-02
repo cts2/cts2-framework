@@ -162,7 +162,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 		return this.wrapMessage(msg, httpServletRequest);
 	}
 	
-	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.POST)
+	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.GET)
 	@ResponseBody
 	public ValueSetCatalogEntryDirectory getValueSets(
 			HttpServletRequest httpServletRequest,
@@ -305,6 +305,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.valueSetReadService,
 				restReadContext,
+				UnknownValueSet.class,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

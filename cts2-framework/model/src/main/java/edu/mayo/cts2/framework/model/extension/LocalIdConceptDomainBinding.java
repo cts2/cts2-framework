@@ -13,4 +13,5 @@ public class LocalIdConceptDomainBinding extends LocalIdResource<ConceptDomainBi
 		super(conceptDomainBinding);
 		
 	}
+	
 }

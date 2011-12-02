@@ -401,6 +401,7 @@ public class AssociationController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.associationReadService,
 				restReadContext,
+				UnknownAssociation.class,
 				new AssociationReadId(uri), 
 				redirect);
 	}

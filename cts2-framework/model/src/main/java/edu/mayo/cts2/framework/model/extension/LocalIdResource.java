@@ -1,6 +1,10 @@
 package edu.mayo.cts2.framework.model.extension;
 
-public abstract class LocalIdResource<T> {
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
+import edu.mayo.cts2.framework.model.core.types.EntryState;
+
+public abstract class LocalIdResource<T extends IsChangeable> implements IsChangeable{
 	
 	public String localID;
 	
@@ -14,6 +18,26 @@ public abstract class LocalIdResource<T> {
 		super();
 		this.localID = localID;
 		Resource = resource;
+	}
+
+	@Override
+	public ChangeableElementGroup getChangeableElementGroup() {
+		return this.getResource().getChangeableElementGroup();
+	}
+
+	@Override
+	public EntryState getEntryState() {
+		return this.getResource().getEntryState();
+	}
+
+	@Override
+	public void setChangeableElementGroup(ChangeableElementGroup group) {
+		this.getResource().setChangeableElementGroup(group);
+	}
+
+	@Override
+	public void setEntryState(EntryState entryState) {
+		this.getResource().setEntryState(entryState);
 	}
 
 	public String getLocalID() {
@@ -31,6 +55,5 @@ public abstract class LocalIdResource<T> {
 	public void setResource(T resource) {
 		Resource = resource;
 	}
-	
 	
 }

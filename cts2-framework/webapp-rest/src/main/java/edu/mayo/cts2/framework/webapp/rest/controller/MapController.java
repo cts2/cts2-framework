@@ -379,6 +379,7 @@ public class MapController extends AbstractServiceAwareController {
 				URL_BINDER, 
 				this.mapReadService,
 				restReadContext,
+				UnknownMap.class,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}

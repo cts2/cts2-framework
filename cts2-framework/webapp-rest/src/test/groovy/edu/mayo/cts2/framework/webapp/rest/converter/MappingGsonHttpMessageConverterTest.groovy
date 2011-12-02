@@ -3,10 +3,10 @@ package edu.mayo.cts2.framework.webapp.rest.converter;
 import static org.junit.Assert.*
 
 import org.junit.Test
-import org.springframework.test.annotation.Repeat
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
+import edu.mayo.cts2.framework.model.core.types.EntryState
 import edu.mayo.cts2.framework.model.core.types.FinalizableState
 import edu.mayo.cts2.framework.model.entity.EntityDescription
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription

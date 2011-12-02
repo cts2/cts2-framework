@@ -18,23 +18,110 @@
 				<version>1.3.9</version>
 				<executions>
 					<execution>
+						<id>set content null</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
+	
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/*</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>private java.lang.String _content = "";</token>
+									<value>private java.lang.String _content = null;</value>
+								</replacement>
+							</replacements>
+						</configuration>
+					
+					</execution>
+					
+					<execution>
+						<id>add extends for NameOrURI</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+	
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/NameOrURI.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class NameOrURI</token>
+									<value>class NameOrURI extends edu.mayo.cts2.framework.model.service.core.AbstractNameToString </value>
+								</replacement>
+							</replacements>
+						</configuration>
+					
+					</execution>
+					
+					<execution>
+						<id>add extends for EntityNameOrURI</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+	
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/EntityNameOrURI.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class EntityNameOrURI</token>
+									<value>class EntityNameOrURI extends edu.mayo.cts2.framework.model.service.core.AbstractEntityNameToString </value>
+								</replacement>
+							</replacements>
+						</configuration>
+					
+					</execution>
+					
+					<execution>
+						<id>add extends for EntityDescription</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+	
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/EntityDescription.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class EntityDescription</token>
+									<value>class EntityDescription extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
+								</replacement>
+							</replacements>
+						</configuration>
+					
+					</execution>
+					
+					<execution>
+						<id>add extends for ChangeableResourceChoice</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+	
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/ChangeableResourceChoice.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class ChangeableResourceChoice</token>
+									<value>class ChangeableResourceChoice extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
+								</replacement>
+							</replacements>
+						</configuration>
+					
 					</execution>
 				</executions>
-				<configuration>
-					<includes>
-						<include>target/generated-sources/**/*</include>
-					</includes>
-					<replacements>
-						<replacement>
-							<token>private java.lang.String _content = "";</token>
-							<value>private java.lang.String _content = null;</value>
-						</replacement>
-					</replacements>
-				</configuration>
 			</plugin>
 
 			<plugin>
