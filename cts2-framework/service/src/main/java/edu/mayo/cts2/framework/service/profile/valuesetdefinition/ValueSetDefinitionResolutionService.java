@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile;
+package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
 import java.util.Set;
 
@@ -29,62 +29,45 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
 /**
- * The Interface QueryService.
+ * The Interface ValueSetDefinitionResolutionService.
  *
- * @param <Resource> the generic type
- * @param <Summary> the generic type
- * @param <Restrictions> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface QueryService<Resource,Summary,Restrictions> extends BaseQueryService {
+public interface ValueSetDefinitionResolutionService extends Cts2Profile {
 
-	/**
-	 * Gets the resource summaries.
-	 *
-	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
-	 * @param readContext 
-	 * @param page the page
-	 * @return the resource summaries
-	 */
-	public DirectoryResult<Summary> getResourceSummaries(
+	public DirectoryResult<ResolvedValueSetDirectoryEntry> resolveDefinitionAsDirectory(
+			ValueSetDefinitionReadId definitionId,
+			Set<NameOrURI> codeSystemVersions,
+			NameOrURI tag,
 			Query query,
 			Set<ResolvedFilter> filterComponent, 
-			Restrictions restrictions,
 			ResolvedReadContext readContext, 
 			Page page);
 	
-	/**
-	 * Gets the resource list.
-	 *
-	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
-	 * @param page the page
-	 * @return the resource list
-	 */
-	public DirectoryResult<Resource> getResourceList(
+	public DirectoryResult<EntityDirectoryEntry> resolveDefinitionAsEntityDirectory(
+			ValueSetDefinitionReadId definitionId,
+			Set<NameOrURI> codeSystemVersions,
+			NameOrURI tag,
 			Query query,
 			Set<ResolvedFilter> filterComponent, 
-			Restrictions restrictions,
+			EntityDescriptionQueryServiceRestrictions restrictions,
 			ResolvedReadContext readContext, 
 			Page page);
 	
-	/**
-	 * Count.
-	 *
-	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
-	 * @return the int
-	 */
-	public int count(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			Restrictions restrictions);
+	public ResolvedValueSet resolveDefinitionAsCompleteSet(
+			ValueSetDefinitionReadId definitionId,
+			Set<NameOrURI> codeSystemVersions,
+			NameOrURI tag,
+			ResolvedReadContext readContext);
 	
 }

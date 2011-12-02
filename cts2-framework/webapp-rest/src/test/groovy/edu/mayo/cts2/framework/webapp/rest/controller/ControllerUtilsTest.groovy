@@ -35,5 +35,19 @@ class ControllerUtilsTest {
 		assertEquals "urn:oid:134321", result.iterator().next().getUri()
 
 	}
+	
+	@Test void idsToEntityNameOrUriSetNull(){
+		def result = ControllerUtils.idsToEntityNameOrUriSet(null)
+			
+		assertEquals 0,result.size()
+	
+	}
+	
+	@Test void idsToNameOrUriSetNull(){
+		def result = ControllerUtils.idsToNameOrUriSet(null)
+			
+		assertEquals 0,result.size()
+	
+	}
 
 }

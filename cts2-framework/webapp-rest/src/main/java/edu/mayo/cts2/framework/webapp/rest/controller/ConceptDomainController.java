@@ -346,7 +346,7 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
-			@RequestParam(VAR_URI) String uri,
+			@RequestParam(PARAM_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		return this.doReadByUri(

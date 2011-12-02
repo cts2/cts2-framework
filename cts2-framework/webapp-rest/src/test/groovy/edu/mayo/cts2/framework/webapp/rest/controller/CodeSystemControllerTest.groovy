@@ -104,7 +104,7 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl
 		def codeSystemReadService = [ exists: {query,context -> true}] as CodeSystemReadService
 		
 		controller.codeSystemReadService = codeSystemReadService
-		def result = controller.doesCodeSystemExist(response, null)
+		def result = controller.doesCodeSystemExist(response, "testName")
 		
 		assertEquals 200, response.getStatus()
 	}

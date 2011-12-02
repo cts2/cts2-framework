@@ -256,7 +256,7 @@ public class StatementController extends AbstractServiceAwareController {
 	public ModelAndView getStatementByUri(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			@RequestParam(VAR_URI) String uri,
+			@RequestParam(PARAM_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		StatementReadId id = new StatementReadId(uri);

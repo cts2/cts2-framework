@@ -27,6 +27,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
@@ -223,6 +225,10 @@ public class ModelUtils {
 	}
 	
 	public static NameOrURI nameOrUriFromEither(String nameOrUri) {
+		if(StringUtils.isBlank(nameOrUri)){
+			return null;
+		}
+
 		NameOrURI n;
 		if(isValidUri(nameOrUri)){
 			n = nameOrUriFromUri(nameOrUri);
@@ -233,6 +239,10 @@ public class ModelUtils {
 	}
 
 	public static NameOrURI nameOrUriFromName(String name) {
+		if(StringUtils.isBlank(name)){
+			return null;
+		}
+		
 		NameOrURI nameOrUri = new NameOrURI();
 		nameOrUri.setName(name);
 		
@@ -240,6 +250,10 @@ public class ModelUtils {
 	}
 	
 	public static EntityNameOrURI entityNameOrUriFromName(ScopedEntityName name) {
+		if(name == null){
+			return null;
+		}
+		
 		EntityNameOrURI nameOrUri = new EntityNameOrURI();
 		nameOrUri.setEntityName(name);
 		

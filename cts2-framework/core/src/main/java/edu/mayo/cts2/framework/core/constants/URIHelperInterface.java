@@ -49,7 +49,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG = 
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
-		+ TAG + "/{"+ VAR_TAG + "}";
+		+ TAG + "/{"+ PARAM_TAG + "}";
 	
 	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID = 
 			"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
@@ -189,6 +189,19 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_VALUESETDEFINITION_OF_VALUESET_BYID = PATH_VALUESETBYID + "/"
 			+ VALUESETDEFINITION_SHORT + "/{" + VAR_VALUESETDEFINITIONID + "}";
 	
+	public static final String PATH_RESOLUTION_OF_VALUESETDEFINITION =
+			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT;
+	
+	public static final String PATH_RESOLVED_VALUESET = "/" + VALUE_SET_RESOLUTION_LONG;
+	
+	public static final String PATH_RESOLVED_VALUESETS = "/" + VALUE_SET_RESOLUTIONS_LONG;
+	
+	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID =
+			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}";
+	
+	public static final String PATH_RESOLUTIONS_OF_VALUESETDEFINITION =
+			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT;
+	
 	public static final String PATH_VALUESETDEFINITION_BYURI = "/" + VALUESETDEFINITION_BY_URI + "/" + ALL_WILDCARD;
 	
 	public static final String PATH_VALUESETDEFINITIONS_OF_VALUESET = PATH_VALUESETBYID
@@ -267,7 +280,10 @@ interface PathKeywords {
 	public static final String VALUESETDEFINITIONS_SHORT = "definitions";
 	public static final String VALUESETDEFINITIONS_LONG = "valuesetdefinitions";
 	public static final String VALUESETDEFINITION_BY_URI = "valuesetdefinitionbyuri";
-
+	public static final String VALUE_SET_RESOLUTION_SHORT = "resolution";
+	public static final String ALUE_SET_RESOLUTIONS_SHORT = "resolutions";
+	public static final String VALUE_SET_RESOLUTION_LONG = "valuesetresolution";
+	public static final String VALUE_SET_RESOLUTIONS_LONG = "valuesetresolutions";
 
 	public static final String SOURCEENTITY = "sourceentity";
 	public static final String TARGETENTITIES = "targetentities";
@@ -310,12 +326,13 @@ interface PathVariables {
 	public static final String VAR_MAPVERSIONID = "mapVersionID";
 	public static final String VAR_MAPENTRYID = "mapEntryID";
 	public static final String VAR_VALUESETDEFINITIONID = "valueSetDefinitionID";
+	public static final String VAR_RESOLVEDVALUESETID = "resolvedValueSetID";
 	public static final String VAR_SOURCEENTITYID = "sourceEntityID";
 	public static final String VAR_TARGETENTITYID = "targetEntityID";
 	public static final String VAR_CONCEPTDOMAINID = "conceptDomainID";
 	public static final String VAR_CONCEPTDOMAINBINDINGID = "conceptDomainBindingID";
-	public static final String VAR_URI = "uri";
-	public static final String VAR_TAG = "tag";
+	public static final String VAR_RESOLUTIONTYPE = "resolutiontype";
+
 }
 
 interface PathParameters {
@@ -359,6 +376,23 @@ interface PathParameters {
 	public static final String PARAM_FILTERCOMPONENT = "filtercomponent";
 	
 	public static final String PARAM_CHANGESETCONTEXT = "changesetcontext";
+	
+	public static final String PARAM_URI = "uri";
+	public static final String PARAM_TAG = "tag";
+	
+	public static final String RESOLUTION_TYPE = "resolutiontype";
+
+	public static final String RESOLUTION_TYPE_DIRECTORY = "directory";
+	public static final String RESOLUTION_TYPE_ENTITYDIRECTORY = "entitydirectory";
+	public static final String RESOLUTION_TYPE_COMPLETESET = "complete";
+	
+	public static enum ValueSetDefinitionResolutionTypes { 
+		directory,
+		entitydirectory,
+		complete 
+	}
+	
+	public static final String DEFAULT_VALUESETDEFINITION_RESOLUTION = "directory";
 
 }
 

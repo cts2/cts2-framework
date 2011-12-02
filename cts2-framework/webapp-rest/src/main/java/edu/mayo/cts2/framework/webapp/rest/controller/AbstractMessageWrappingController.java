@@ -237,7 +237,7 @@ public abstract class AbstractMessageWrappingController extends
 		return mav;
 	}
 	
-	protected <R extends IsChangeable,I> Message doRead(
+	protected <R,I> Message doRead(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			ReadService<R,I> readService, 

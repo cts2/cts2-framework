@@ -21,22 +21,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.codesystem;
+package edu.mayo.cts2.framework.service.profile.valuesetresolution.name;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 /**
- * The Interface CodeSystemMaintenanceService.
+ * The Class ConceptDomainBindingReadId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface CodeSystemMaintenanceService
-		extends
-		BaseMaintenanceService<
-			CodeSystemCatalogEntry,
-			NameOrURI> {
+public class ValueSetResolutionReadId extends NameOrURI {
+
+	private static final long serialVersionUID = 1L;
+
+	private NameOrURI valueSet;
+
+	public ValueSetResolutionReadId(String localName, NameOrURI valueSet) {
+		super();
+		this.setName(localName);
+		this.valueSet = valueSet;
+	}
 	
-	
+	public ValueSetResolutionReadId(String uri) {
+		super();
+		this.setUri(uri);
+	}
+
+	public NameOrURI getValueSet() {
+		return valueSet;
+	}
+
+	public void setValueSet(NameOrURI valueSet) {
+		this.valueSet = valueSet;
+	}
+
 }

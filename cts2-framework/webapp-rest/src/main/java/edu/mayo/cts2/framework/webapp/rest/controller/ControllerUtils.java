@@ -22,6 +22,10 @@ public class ControllerUtils {
 	public static Set<NameOrURI> idsToNameOrUriSet(Iterable<String> ids){
 		Set<NameOrURI> returnSet = new HashSet<NameOrURI>();
 		
+		if(ids == null){
+			return returnSet;
+		}
+		
 		for(String id : ids){
 			NameOrURI nameOrUri = ModelUtils.nameOrUriFromEither(id);
 			returnSet.add(nameOrUri);
@@ -31,6 +35,10 @@ public class ControllerUtils {
 	
 	public static Set<EntityNameOrURI> idsToEntityNameOrUriSet(Iterable<String> ids){
 		Set<EntityNameOrURI> returnSet = new HashSet<EntityNameOrURI>();
+		
+		if(ids == null){
+			return returnSet;
+		}
 		
 		for(String id : ids){
 			EntityNameOrURI nameOrUri;

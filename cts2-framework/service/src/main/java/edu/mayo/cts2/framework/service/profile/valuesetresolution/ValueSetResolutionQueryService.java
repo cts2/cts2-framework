@@ -21,22 +21,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.codesystem;
+package edu.mayo.cts2.framework.service.profile.valuesetresolution;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.model.extension.LocalIdValueSetResolution;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.profile.QueryService;
 
 /**
- * The Interface CodeSystemMaintenanceService.
+ * The Interface ValueSetDefinitionQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface CodeSystemMaintenanceService
-		extends
-		BaseMaintenanceService<
-			CodeSystemCatalogEntry,
-			NameOrURI> {
-	
-	
+public interface ValueSetResolutionQueryService extends 
+	QueryService<LocalIdValueSetResolution, ResolvedValueSetDirectoryEntry, Void>{
+
 }

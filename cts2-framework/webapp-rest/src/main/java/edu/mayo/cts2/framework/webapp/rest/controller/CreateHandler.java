@@ -20,7 +20,6 @@ public class CreateHandler extends AbstractMainenanceHandler {
 	
 	@Resource
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
-
 	
 	protected <R extends IsChangeable> ResponseEntity<Void> create(
 			R resource, 
@@ -45,12 +44,37 @@ public class CreateHandler extends AbstractMainenanceHandler {
 		}
 		
 		R returnedResource = service.createResource(resource);
+	
+		return this.createResponseEntity(
+				returnedResource, 
+				changeSetUri, 
+				urlTemplate, 
+				template);
+	}
+	
+	protected <R> ResponseEntity<Void> createResponseEntity(
+			R returnedResource,
+			String changeSetUri, 
+			String urlTemplate,
+			UrlTemplateBinder<R> template){
 		
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Location", this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
+		String location = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
 				template,
 				returnedResource, 
-				urlTemplate) + "?" + URIHelperInterface.PARAM_CHANGESETCONTEXT + "=" +  changeSetUri);
+				urlTemplate);
+		
+		if(StringUtils.isNotBlank(changeSetUri)){
+			location = location + ("?" + URIHelperInterface.PARAM_CHANGESETCONTEXT + "=" +  changeSetUri);
+		}
+		
+		return this.createResponseEntity(location);
+	}
+	
+	protected <R> ResponseEntity<Void> createResponseEntity(
+			String location){
+		HttpHeaders responseHeaders = new HttpHeaders();
+		
+		responseHeaders.set("Location", location);
 		
 		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);
 	}

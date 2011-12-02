@@ -24,7 +24,6 @@
 package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 
 
@@ -35,7 +34,7 @@ import edu.mayo.cts2.framework.model.service.core.ReadContext;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ReadService<R extends IsChangeable,I> extends Cts2Profile {
+public interface ReadService<R,I> extends Cts2Profile {
 
 	/**
 	 * Reads the specified CTS2 Resource

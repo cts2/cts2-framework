@@ -9,7 +9,7 @@ public abstract class AbstractEntityNameToString {
 		if(this.getEntityName() != null){
 			returnString = 
 					"Namespace: " + this.getEntityName().getNamespace() +
-					"Name: " + this.getEntityName().getName();
+					" Name: " + this.getEntityName().getName();
 		} else {
 			returnString = "URI: " + this.getUri();
 		}

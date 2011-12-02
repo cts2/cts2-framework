@@ -2,7 +2,7 @@ package edu.mayo.cts2.framework.model.extension;
 
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 
-public class LocalIdValueSetDefinition extends LocalIdResource<ValueSetDefinition> {
+public class LocalIdValueSetDefinition extends ChangeableLocalIdResource<ValueSetDefinition> {
 
 	public LocalIdValueSetDefinition(ValueSetDefinition resource) {
 		super(resource);
@@ -12,6 +12,5 @@ public class LocalIdValueSetDefinition extends LocalIdResource<ValueSetDefinitio
 			ValueSetDefinition resource) {
 		super(localID, resource);
 	}
-	
 	
 }

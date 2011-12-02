@@ -56,6 +56,7 @@ import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQue
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
@@ -77,6 +78,9 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@Cts2Service
 	private ValueSetDefinitionMaintenanceService valueSetDefinitionMaintenanceService;
 	
+	@Cts2Service
+	private ValueSetDefinitionResolutionService valueSetDefinitionResolutionService;
+
 	private final static UrlTemplateBinder<LocalIdValueSetDefinition> URL_BINDER =
 			new UrlTemplateBinder<LocalIdValueSetDefinition>(){
 
@@ -319,7 +323,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	public ModelAndView getValueSetDefinitionByUri(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			@RequestParam(VAR_URI) String uri,
+			@RequestParam(PARAM_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
 		
 		ValueSetDefinitionReadId id = new ValueSetDefinitionReadId(uri);
@@ -420,5 +424,41 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			
 		this.valueSetDefinitionMaintenanceService.
 			deleteResource(id, changeseturi);
+	}
+
+	public ValueSetDefinitionQueryService getValueSetDefinitionQueryService() {
+		return valueSetDefinitionQueryService;
+	}
+
+	public void setValueSetDefinitionQueryService(
+			ValueSetDefinitionQueryService valueSetDefinitionQueryService) {
+		this.valueSetDefinitionQueryService = valueSetDefinitionQueryService;
+	}
+
+	public ValueSetDefinitionReadService getValueSetDefinitionReadService() {
+		return valueSetDefinitionReadService;
+	}
+
+	public void setValueSetDefinitionReadService(
+			ValueSetDefinitionReadService valueSetDefinitionReadService) {
+		this.valueSetDefinitionReadService = valueSetDefinitionReadService;
+	}
+
+	public ValueSetDefinitionMaintenanceService getValueSetDefinitionMaintenanceService() {
+		return valueSetDefinitionMaintenanceService;
+	}
+
+	public void setValueSetDefinitionMaintenanceService(
+			ValueSetDefinitionMaintenanceService valueSetDefinitionMaintenanceService) {
+		this.valueSetDefinitionMaintenanceService = valueSetDefinitionMaintenanceService;
+	}
+
+	public ValueSetDefinitionResolutionService getValueSetDefinitionResolutionService() {
+		return valueSetDefinitionResolutionService;
+	}
+
+	public void setValueSetDefinitionResolutionService(
+			ValueSetDefinitionResolutionService valueSetDefinitionResolutionService) {
+		this.valueSetDefinitionResolutionService = valueSetDefinitionResolutionService;
 	}
 }

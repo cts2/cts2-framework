@@ -23,10 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
-import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
+import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.QueryService;
 
 /**
  * The Interface ValueSetDefinitionQueryService.

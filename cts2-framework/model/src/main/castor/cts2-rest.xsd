@@ -48,7 +48,10 @@
 	<xs:import namespace="http://cts2.org/schema/2010/01/Exceptions"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/Exceptions.xsd" />
 		
-	<xs:import namespace="http://cts2.org/schema/2010/01/Exceptions"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/extensions/ChangeSetQueryExtension"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/extensions/ChangeSetQueryExtension.xsd" />
+		
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/extensions/ResolvedValueSetQueryExtension"
+		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/extensions/ResolvedValueSetQueryExtension.xsd" />
 
 </schema>

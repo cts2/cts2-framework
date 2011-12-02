@@ -142,7 +142,7 @@ public class ExceptionFactory {
 		
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-		ex.setMessage(ModelUtils.createOpaqueData("Resource with Name: " + name + " not found."));
+		ex.setMessage(ModelUtils.createOpaqueData("Resource with Identifier: " + name + " not found."));
 		
 		return new Cts2RestException(ex);
 	}
