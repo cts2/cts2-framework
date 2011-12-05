@@ -16,11 +16,11 @@ import edu.mayo.cts2.framework.service.profile.UpdateChangeableMetadataRequest;
 @Component
 public class UpdateHandler extends AbstractMainenanceHandler {
 
-	protected <R extends IsChangeable,I> void update(
-			R resource, 
+	protected <T extends IsChangeable,R extends IsChangeable,I> void update(
+			T resource, 
 			String changeSetUri, 
 			I identifier,
-			BaseMaintenanceService<R,I> service){
+			BaseMaintenanceService<T,R,I> service){
 		ChangeableElementGroup group = resource.getChangeableElementGroup();
 
 		if(group == null){

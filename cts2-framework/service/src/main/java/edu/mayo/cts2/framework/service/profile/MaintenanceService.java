@@ -21,22 +21,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.codesystem;
+package edu.mayo.cts2.framework.service.profile;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.service.profile.MaintenanceService;
+import edu.mayo.cts2.framework.model.core.IsChangeable;
+
 
 /**
- * The Interface CodeSystemMaintenanceService.
+ * The Interface MaintenanceService.
  *
+ * @param <R> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface CodeSystemMaintenanceService
-		extends
-		MaintenanceService<
-			CodeSystemCatalogEntry,
-			NameOrURI> {
-	
-	
+public interface MaintenanceService< 
+	R extends IsChangeable,
+	I> extends BaseMaintenanceService<R,R,I> {
+
 }

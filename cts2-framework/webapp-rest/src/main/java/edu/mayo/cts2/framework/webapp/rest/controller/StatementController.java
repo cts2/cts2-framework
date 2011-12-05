@@ -219,7 +219,7 @@ public class StatementController extends AbstractServiceAwareController {
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 	
 		return this.getCreateHandler().create(
-				new LocalIdStatement(statement),
+				statement,
 				changeseturi, 
 				PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, 
 				URL_BINDER, 

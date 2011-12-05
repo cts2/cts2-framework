@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.association;
 
 import edu.mayo.cts2.framework.model.association.Association;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 
 /**
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadI
  */
 public interface AssociationMaintenanceService
 		extends
-		BaseMaintenanceService<Association,AssociationReadId> {
+		MaintenanceService<Association,AssociationReadId> {
 
 }

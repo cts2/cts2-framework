@@ -120,7 +120,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 				
 		return this.getCreateHandler().create(
-				new LocalIdConceptDomainBinding(conceptDomainBinding), 
+				conceptDomainBinding, 
 				changeseturi,
 				PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, 
 				URL_BINDER, 

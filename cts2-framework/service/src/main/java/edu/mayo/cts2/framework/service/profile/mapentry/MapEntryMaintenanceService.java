@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.mapentry;
 
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 
 /**
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
  */
 public interface MapEntryMaintenanceService
 		extends
-		BaseMaintenanceService<MapEntry,MapEntryReadId> {
+		MaintenanceService<MapEntry,MapEntryReadId> {
 
 }

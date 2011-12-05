@@ -25,7 +25,7 @@ package edu.mayo.cts2.framework.service.profile.map;
 
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 
 /**
  * The Interface MapMaintenanceService.
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
  */
 public interface MapMaintenanceService
 		extends
-		BaseMaintenanceService<MapCatalogEntry,NameOrURI> {
+		MaintenanceService<MapCatalogEntry,NameOrURI> {
 
 }

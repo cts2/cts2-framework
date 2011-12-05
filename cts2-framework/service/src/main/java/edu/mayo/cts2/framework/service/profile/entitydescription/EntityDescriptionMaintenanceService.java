@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.MaintenanceService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  */
 public interface EntityDescriptionMaintenanceService
 		extends
-		BaseMaintenanceService<EntityDescription,EntityDescriptionReadId> {
+		MaintenanceService<EntityDescription,EntityDescriptionReadId> {
 
 }

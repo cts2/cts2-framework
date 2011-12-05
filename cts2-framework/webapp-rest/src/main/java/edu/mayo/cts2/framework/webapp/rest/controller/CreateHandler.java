@@ -21,12 +21,12 @@ public class CreateHandler extends AbstractMainenanceHandler {
 	@Resource
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 	
-	protected <R extends IsChangeable> ResponseEntity<Void> create(
+	protected <T extends IsChangeable,R extends IsChangeable> ResponseEntity<Void> create(
 			R resource, 
 			String changeSetUri, 
 			String urlTemplate,
-			UrlTemplateBinder<R> template,
-			BaseMaintenanceService<R,?> service){
+			UrlTemplateBinder<T> template,
+			BaseMaintenanceService<T,R,?> service){
 		
 		ChangeableElementGroup group = resource.getChangeableElementGroup();
 
@@ -43,7 +43,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 			throw ExceptionFactory.createUnknownChangeSetException(null);
 		}
 		
-		R returnedResource = service.createResource(resource);
+		T returnedResource = service.createResource(resource);
 	
 		return this.createResponseEntity(
 				returnedResource, 

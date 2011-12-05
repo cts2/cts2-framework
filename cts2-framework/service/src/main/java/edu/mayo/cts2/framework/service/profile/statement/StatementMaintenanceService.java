@@ -24,7 +24,8 @@
 package edu.mayo.cts2.framework.service.profile.statement;
 
 import edu.mayo.cts2.framework.model.extension.LocalIdStatement;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.model.statement.Statement;
+import edu.mayo.cts2.framework.service.profile.LocalIdMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
 
 /**
@@ -34,6 +35,6 @@ import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
  */
 public interface StatementMaintenanceService
 		extends
-		BaseMaintenanceService<LocalIdStatement,StatementReadId> {
+		LocalIdMaintenanceService<LocalIdStatement,Statement,StatementReadId> {
 
 }

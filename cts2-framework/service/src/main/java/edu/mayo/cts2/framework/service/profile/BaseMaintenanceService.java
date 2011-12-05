@@ -32,14 +32,16 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
  * @param <R> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface BaseMaintenanceService<R extends IsChangeable,I> extends Cts2Profile {
-
+public interface BaseMaintenanceService<
+	T extends IsChangeable, 
+	R extends IsChangeable,
+	I> extends Cts2Profile {
 
 	public void updateChangeableMetadata(I identifier, UpdateChangeableMetadataRequest request);
 	
-	public void updateResource(R resource);
+	public void updateResource(T resource);
 	
-	public R createResource(R resource);
+	public T createResource(R resource);
 	
 	/**
 	 * Delete resource.

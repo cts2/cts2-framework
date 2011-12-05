@@ -6,7 +6,7 @@ import edu.mayo.cts2.framework.model.core.types.EntryState;
 
 public abstract class ChangeableLocalIdResource<T extends IsChangeable> 
 	extends LocalIdResource<T>
-	implements IsChangeable{
+	implements IsChangeable {
 
 	public ChangeableLocalIdResource(T resource) {
 		this(null,resource);

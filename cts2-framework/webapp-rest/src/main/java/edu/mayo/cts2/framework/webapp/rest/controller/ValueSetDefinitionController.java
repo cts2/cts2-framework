@@ -401,7 +401,7 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 	
 		return this.getCreateHandler().create(
-				new LocalIdValueSetDefinition(valueSetDefinition),
+				valueSetDefinition,
 				changeseturi, 
 				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
 				URL_BINDER, 

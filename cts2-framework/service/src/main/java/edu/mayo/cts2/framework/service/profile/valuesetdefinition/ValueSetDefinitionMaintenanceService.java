@@ -24,7 +24,8 @@
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
+import edu.mayo.cts2.framework.service.profile.LocalIdMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
 /**
@@ -34,6 +35,6 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
  */
 public interface ValueSetDefinitionMaintenanceService
 		extends
-		BaseMaintenanceService<LocalIdValueSetDefinition,ValueSetDefinitionReadId> {
+		LocalIdMaintenanceService<LocalIdValueSetDefinition,ValueSetDefinition,ValueSetDefinitionReadId> {
 
 }
