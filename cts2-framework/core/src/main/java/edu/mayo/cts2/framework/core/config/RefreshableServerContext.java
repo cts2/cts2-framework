@@ -83,16 +83,6 @@ public class RefreshableServerContext implements ServerContext, ConfigChangeObse
 	}
 
 	@Override
-	public void onPluginRemoved(PluginReference ref) {
-		//
-	}
-
-	@Override
-	public void onPluginAdded(PluginReference ref) {
-		//
-	}
-
-	@Override
 	public void onGlobalConfigPropertiesChange(OptionHolder newOptions) {
 		//
 	}
@@ -103,8 +93,4 @@ public class RefreshableServerContext implements ServerContext, ConfigChangeObse
 		this.serverRoot = newOptions.getStringOption(ConfigConstants.SERVER_ROOT_PROPERTY).getOptionValue();
 	}
 
-	@Override
-	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions) {
-		//
-	}
 }

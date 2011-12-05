@@ -29,7 +29,7 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.plugin.PluginClassLoader;
 
 @Component
-public class PluginManager implements InitializingBean, ConfigChangeObservable {
+public class PluginManager extends BasePluginConfigChangeObservable implements InitializingBean {
 	
 	private Log log = LogFactory.getLog(getClass());
 
@@ -46,7 +46,10 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-
+		this.initialize();
+	}
+	
+	protected void initialize(){
 		String inUsePluginName = this.getInUsePluginName();
 		
 		this.pluginConfig = 
@@ -71,7 +74,7 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 					propertiesFile);
 		}
 
-		this.serviceConfigManager.firePluginSpecificConfigPropertiesChangeEvent(
+		this.firePluginSpecificConfigPropertiesChangeEvent(
 				ConfigUtils.propertiesToOptionHolder(
 						ConfigUtils.loadProperties(
 								this.getPluginSpecificConfigPropertiesFile(pluginName))));
@@ -130,7 +133,7 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 			throw new RuntimeException(e);
 		}
 		
-		this.serviceConfigManager.firePluginRemovedEvent(
+		this.firePluginRemovedEvent(
 				new PluginReference(pluginName, pluginVersion));
 	}
 	
@@ -207,6 +210,10 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 		propsMap.put(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP, version);
 		
 		this.serviceConfigManager.updateContextConfigProperties(propsMap);
+		
+		this.initialize();
+		
+		this.firePluginActivatedEvent(new PluginReference(name, version));
 	}
 	
 	private File findPluginFile(final String pluginName, final String pluginVersion){
@@ -292,7 +299,7 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 		String pluginName = this.getPluginName(pluginProps);
 		String pluginVersion = this.getPluginVersion(pluginProps);
 		
-		this.serviceConfigManager.firePluginAddedEvent(
+		this.firePluginAddedEvent(
 				new PluginReference(pluginName, pluginVersion));
 	}
 
@@ -393,16 +400,6 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	public boolean isActivePlugin(PluginReference ref) {
 		return this.isActivePlugin(ref.getPluginName(), ref.getPluginVersion());
 	}
-	
-	@Override
-	public void registerListener(ConfigChangeObserver observer) {
-		this.serviceConfigManager.registerListener(observer);
-	}
-
-	@Override
-	public void unregisterListener(ConfigChangeObserver observer) {
-		this.serviceConfigManager.unregisterListener(observer);
-	}
 
 	private String getPluginName(Properties props){
 		return props.getProperty(ConfigConstants.PLUGIN_NAME_PROP);
@@ -419,7 +416,15 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 		
 		public T processPlugins(List<File> plugins);
 	}
-	
+
+	protected ServiceConfigManager getServiceConfigManager() {
+		return serviceConfigManager;
+	}
+
+	protected void setServiceConfigManager(ServiceConfigManager serviceConfigManager) {
+		this.serviceConfigManager = serviceConfigManager;
+	}
+
 	protected ConfigInitializer getConfigInitializer() {
 		return configInitializer;
 	}
@@ -427,5 +432,4 @@ public class PluginManager implements InitializingBean, ConfigChangeObservable {
 	protected void setConfigInitializer(ConfigInitializer configInitializer) {
 		this.configInitializer = configInitializer;
 	}
-
 }

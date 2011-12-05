@@ -25,17 +25,15 @@ package edu.mayo.cts2.framework.service.profile.valuesetresolution;
 
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ValueSetResolutionReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
 
 /**
- * The Interface ValueSetDefinitionReadService.
+ * The Interface ValueSetDefinitionQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ValueSetResolutionLoaderService extends Cts2Profile {
-	
-	public ResolvedValueSetReference load(ResolvedValueSet resolvedValueSet);
-	
-	public void delete(ValueSetResolutionReadId resolvedValueSetId);
+public interface ResolvedValueSetReadService extends Cts2Profile {
+
+	public ResolvedValueSet read(ResolvedValueSetReadId identifier);
 	
 }

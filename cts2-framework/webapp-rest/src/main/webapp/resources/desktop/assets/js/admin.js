@@ -44,7 +44,15 @@ fnPluginDescriptionObjectToArray = function ( )
 					newJson.aaData[i] = new Array();
 					newJson.aaData[i][0] = json[i].pluginName;
 					newJson.aaData[i][1] = json[i].pluginVersion;
-					newJson.aaData[i][2] = json[i].isActive;
+					
+					var isActiveText;
+					if(json[i].isActive){
+						isActiveText = '<img src="resources/desktop/assets/images/icons/ok-icon.png" alt="some_text"/>';
+					} else {
+						isActiveText = "";
+					}
+					
+					newJson.aaData[i][2] = isActiveText;
 				}
 				
 				

@@ -21,20 +21,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.core.config;
+package edu.mayo.cts2.framework.service.profile.valuesetresolution;
 
-import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
 
 /**
- * An asynchronous update interface for receiving notifications
- * about ConfigChange information as the ConfigChange is constructed.
+ * The Interface ValueSetDefinitionReadService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ConfigChangeObserver {
-
-	public void onGlobalConfigPropertiesChange(OptionHolder newOptions);
+public interface ResolvedValueSetLoaderService extends Cts2Profile {
 	
-	public void onContextConfigPropertiesChange(OptionHolder newOptions);
-
+	public ResolvedValueSetReference load(ResolvedValueSet resolvedValueSet);
+	
+	public void delete(ResolvedValueSetReadId resolvedValueSetId);
+	
 }

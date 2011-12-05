@@ -38,11 +38,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.ConfigChangeObserver;
 import edu.mayo.cts2.framework.core.config.PluginConfig;
+import edu.mayo.cts2.framework.core.config.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.config.PluginManager;
 import edu.mayo.cts2.framework.core.config.PluginReference;
-import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -54,15 +53,12 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  */
 @Component
 public class ServiceProviderFactory implements InitializingBean,
-		ConfigChangeObserver, ServiceProviderChangeObservable {
+		PluginConfigChangeObserver, ServiceProviderChangeObservable {
 
 	private final Log log = LogFactory.getLog(getClass().getName());
 
 	@Resource
 	private PluginManager pluginManager;
-	
-	@Resource
-	private ServiceConfigManager serviceConfigManager;
 
 	private ServiceProvider serviceProvider;
 
@@ -76,7 +72,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	 */
 	public void afterPropertiesSet() throws Exception {
 		this.serviceProvider = this.createServiceProvider();
-		this.serviceConfigManager.registerListener(this);
+		this.pluginManager.registerListener(this);
 	}
 
 	/**
@@ -285,6 +281,14 @@ public class ServiceProviderFactory implements InitializingBean,
 	public void unregisterListener(ServiceProviderChangeObserver observer) {
 		this.observers.remove(observer);
 	}
+	
+	@Override
+	public void onPluginActivated(PluginReference ref) {
+		if(! this.pluginManager.isActivePlugin(ref)){
+			this.refresh();
+			this.fireServiceProviderChangeEvent();
+		}
+	}
 
 	@Override
 	public void onPluginRemoved(PluginReference ref) {
@@ -297,18 +301,6 @@ public class ServiceProviderFactory implements InitializingBean,
 	@Override
 	public void onPluginAdded(PluginReference ref) {
 		//no-op
-	}
-
-	@Override
-	public void onGlobalConfigPropertiesChange(OptionHolder newOptions) {
-		this.refresh();
-		this.fireServiceProviderChangeEvent();
-	}
-
-	@Override
-	public void onContextConfigPropertiesChange(OptionHolder newOptions) {
-		this.refresh();
-		this.fireServiceProviderChangeEvent();
 	}
 
 	@Override

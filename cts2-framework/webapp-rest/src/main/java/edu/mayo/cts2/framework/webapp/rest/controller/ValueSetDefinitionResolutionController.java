@@ -47,6 +47,7 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetResolution;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -56,14 +57,16 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetMsg;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetSummary;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetLoaderService;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQueryService;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReference;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ValueSetResolutionLoaderService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ValueSetResolutionQueryService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ValueSetResolutionReadService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ValueSetResolutionReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
@@ -79,13 +82,13 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 
 	@Cts2Service
-	private ValueSetResolutionLoaderService valueSetResolutionLoaderService;
+	private ResolvedValueSetLoaderService resolvedValueSetLoaderService;
 	
 	@Cts2Service
-	private ValueSetResolutionQueryService valueSetResolutionQueryService;
+	private ResolvedValueSetReadService resolvedValueSetReadService;
 	
 	@Cts2Service
-	private ValueSetResolutionReadService valueSetResolutionReadService;
+	private ResolvedValueSetQueryService resolvedValueSetQueryService;
 	
 	@Cts2Service
 	private ValueSetDefinitionResolutionService valueSetDefinitionResolutionService;
@@ -179,7 +182,7 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 						definitionLocalId,
 						ModelUtils.nameOrUriFromName(valueSetName));
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetResolutionQueryService);
+		ResolvedFilter filterComponent = null;//this.processFilter(restFilter, this.valueSetResolutionQueryService);
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
 		Set<NameOrURI> codeSystemVersions = 
@@ -249,25 +252,96 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public Message getValueSetResolutionByLocalId(
+	public ResolvedValueSetMsg getValueSetResolutionByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
 			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId) {
 		
-		ValueSetResolutionReadId id = 
-				new ValueSetResolutionReadId(
-						definitionLocalId,
-						ModelUtils.nameOrUriFromName(valueSetName));
+		ResolvedValueSetReadId id = 
+				new ResolvedValueSetReadId(
+						resolvedValueSetLocalId,
+						ModelUtils.nameOrUriFromName(valueSetName),
+						ModelUtils.nameOrUriFromName(definitionLocalId));
 		
-		return this.doRead(
+		ResolvedValueSet resolvedValueSet = 
+				this.resolvedValueSetReadService.read(id);
+		
+		if(resolvedValueSet == null){
+			throw ExceptionFactory.createUnknownResourceException(
+					resolvedValueSetLocalId, 
+					UnknownResourceReference.class);
+		}
+		
+		ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
+		msg.setResolvedValueSet(resolvedValueSet);
+		
+		return this.wrapMessage(msg, httpServletRequest);
+	}
+	
+	@RequestMapping(value=PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION, method=RequestMethod.GET)
+	@ResponseBody
+	public ResolvedValueSetDirectory getResolvedValueSetsOfValueSetDefinition(
+			HttpServletRequest httpServletRequest,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
+			RestFilter restFilter,
+			Page page) {
+		
+		ResolvedValueSetQueryServiceRestrictions restrictions = 
+				new ResolvedValueSetQueryServiceRestrictions();
+		
+		restrictions.setValueSet(ModelUtils.nameOrUriFromName(valueSetName));
+		restrictions.setValueSetDefinition(ModelUtils.nameOrUriFromName(definitionLocalId));
+		
+		return this.getResolvedValueSets(
 				httpServletRequest, 
-				MESSAGE_FACTORY, 
-				this.valueSetResolutionReadService, 
-				restReadContext, 
-				UnknownResourceReference.class, 
-				id);
+				restrictions,
+				null,  
+				restFilter, 
+				page);
+	}
+	
+	@RequestMapping(value=PATH_RESOLVED_VALUESETS, method=RequestMethod.GET)
+	@ResponseBody
+	public ResolvedValueSetDirectory getResolvedValueSets(
+			HttpServletRequest httpServletRequest,
+			ResolvedValueSetQueryServiceRestrictions restrictions,
+			RestFilter restFilter,
+			Page page) {
+		
+		return this.getResolvedValueSets(
+				httpServletRequest, 
+				restrictions,
+				null,  
+				restFilter, 
+				page);
+	}
+	
+	@RequestMapping(value=PATH_RESOLVED_VALUESETS, method=RequestMethod.POST)
+	@ResponseBody
+	public ResolvedValueSetDirectory getResolvedValueSets(
+			HttpServletRequest httpServletRequest,
+			ResolvedValueSetQueryServiceRestrictions restrictions,
+			@RequestBody Query query,
+			RestFilter restFilter,
+			Page page) {
+		
+		ResolvedFilter filterComponent = this.processFilter(restFilter, this.resolvedValueSetQueryService);
+		
+		DirectoryResult<ResolvedValueSetDirectoryEntry> result = 
+				this.resolvedValueSetQueryService.getResourceSummaries(
+				query, 
+				createSet(filterComponent), 
+				restrictions,
+				page);
+		
+		return this.populateDirectory(
+				result, 
+				page, 
+				httpServletRequest, 
+				ResolvedValueSetDirectory.class);
 	}
 	
 	@RequestMapping(value={	
@@ -282,12 +356,13 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
 			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId) {
 		
-		ValueSetResolutionReadId id = 
-				new ValueSetResolutionReadId(
-						definitionLocalId,
-						ModelUtils.nameOrUriFromName(valueSetName));
+		ResolvedValueSetReadId id = 
+				new ResolvedValueSetReadId(
+						resolvedValueSetLocalId,
+						ModelUtils.nameOrUriFromName(valueSetName),
+						ModelUtils.nameOrUriFromName(definitionLocalId));
 		
-		this.valueSetResolutionLoaderService.delete(id);
+		this.resolvedValueSetLoaderService.delete(id);
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESET, method=RequestMethod.POST)
@@ -295,8 +370,7 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 			HttpServletRequest httpServletRequest,
 			@RequestBody ResolvedValueSet resolvedValueSet) {
 		
-		ResolvedValueSetReference id = this.valueSetResolutionLoaderService.load(resolvedValueSet);
-
+		ResolvedValueSetReference id = this.resolvedValueSetLoaderService.load(resolvedValueSet);
 
 		String localtion = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
 				URL_BINDER, 
@@ -305,6 +379,7 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 		
 		return this.getCreateHandler().createResponseEntity(localtion);
 	}
+	
 
 	public ValueSetDefinitionResolutionService getValueSetDefinitionResolutionService() {
 		return valueSetDefinitionResolutionService;

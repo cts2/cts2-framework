@@ -31,10 +31,14 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ConfigChangeObserver {
+public interface PluginConfigChangeObserver {
 
-	public void onGlobalConfigPropertiesChange(OptionHolder newOptions);
+	public void onPluginRemoved(PluginReference ref);
 	
-	public void onContextConfigPropertiesChange(OptionHolder newOptions);
-
+	public void onPluginAdded(PluginReference ref);
+	
+	public void onPluginActivated(PluginReference ref);
+	
+	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions);
+	
 }

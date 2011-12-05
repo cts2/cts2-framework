@@ -188,6 +188,11 @@ public class UrlConstructor {
 		return this.createValueSetUrl(valueSetName) + "/" + URIHelperInterface.VALUESETDEFINITIONS_SHORT;
 	}
 	
+	public String createResolvedValueSetUrl(String valueSetName, String definitionLocalId, String resolutionLocalId){
+		return this.createValueSetDefinitionUrl(valueSetName, definitionLocalId) + "/" + 
+				URIHelperInterface.VALUE_SET_RESOLUTION_SHORT + "/" + resolutionLocalId;
+	}
+	
 	/**
 	 * Creates the value set definition url.
 	 *
@@ -195,9 +200,9 @@ public class UrlConstructor {
 	 * @param valueSetDefinitionDocumentUri the value set definition document uri
 	 * @return the string
 	 */
-	public String createValueSetDefinitionUrl(String valueSetName, String valueSetDefinitionDocumentUri) {
+	public String createValueSetDefinitionUrl(String valueSetName, String definitionLocalId) {
 		return this.createValueSetUrl(valueSetName) + "/" +
-					URIHelperInterface.VALUESETDEFINITION_SHORT + "/" + valueSetDefinitionDocumentUri;
+					URIHelperInterface.VALUESETDEFINITION_SHORT + "/" + definitionLocalId;
 	}
 	
 	/**

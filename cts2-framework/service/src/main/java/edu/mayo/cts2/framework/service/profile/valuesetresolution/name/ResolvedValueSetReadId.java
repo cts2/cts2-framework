@@ -21,18 +21,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetresolution;
+package edu.mayo.cts2.framework.service.profile.valuesetresolution.name;
 
-import edu.mayo.cts2.framework.model.extension.LocalIdValueSetResolution;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
-import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
- * The Interface ValueSetDefinitionQueryService.
+ * The Class ResolvedValueSetReadId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ValueSetResolutionQueryService extends 
-	QueryService<LocalIdValueSetResolution, ResolvedValueSetDirectoryEntry, Void>{
+public class ResolvedValueSetReadId {
+
+	private String localName;
+	
+	private NameOrURI valueSet;
+	
+	private NameOrURI valueSetDefinition;
+
+	public ResolvedValueSetReadId(String localName, NameOrURI valueSet, NameOrURI valueSetDefinition) {
+		super();
+		this.localName = localName;
+		this.valueSet = valueSet;
+		this.valueSetDefinition = valueSetDefinition;
+	}
+
+	public String getLocalName() {
+		return localName;
+	}
+
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
+
+	public NameOrURI getValueSetDefinition() {
+		return valueSetDefinition;
+	}
+
+	public void setValueSetDefinition(NameOrURI valueSetDefinition) {
+		this.valueSetDefinition = valueSetDefinition;
+	}
+
+	public NameOrURI getValueSet() {
+		return valueSet;
+	}
+
+	public void setValueSet(NameOrURI valueSet) {
+		this.valueSet = valueSet;
+	}
 
 }

@@ -32,8 +32,8 @@ class TestPluginConfigSpringFactory implements FactoryBean {
 
 class TestServerContext implements ServerContext {
 	
-	def appName = "http://test.org"
-	def serverRoot = "testApp"
+	def serverRoot = "http://test.org"
+	def appName = "testApp"
 
 	@Override
 	public String getServerRoot() {

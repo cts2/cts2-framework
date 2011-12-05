@@ -64,11 +64,15 @@ class PluginManagerTest {
 	
 	@Test
 	void "Test activatePlugin"(){
-		def manager = new PluginManager();
-		
+		def manager = new PluginManager(){
+			void initialize(){
+				//
+			}	
+		};
+	
 		ServiceConfigManager scm = EasyMock.createMock(ServiceConfigManager)
 		
-		manager.serviceConfigManager = scm
+		manager.setServiceConfigManager(scm)
 		
 		EasyMock.expect(scm.updateContextConfigProperties([
 			"service.plugin.name" : "test",

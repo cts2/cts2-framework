@@ -21,38 +21,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetresolution.name;
+package edu.mayo.cts2.framework.service.profile.valuesetresolution;
 
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 
 /**
- * The Class ConceptDomainBindingReadId.
+ * The Interface ValueSetDefinitionQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ValueSetResolutionReadId extends NameOrURI {
+public interface ResolvedValueSetQueryService 
+	extends BaseQueryService {
 
-	private static final long serialVersionUID = 1L;
-
-	private NameOrURI valueSet;
-
-	public ValueSetResolutionReadId(String localName, NameOrURI valueSet) {
-		super();
-		this.setName(localName);
-		this.valueSet = valueSet;
-	}
-	
-	public ValueSetResolutionReadId(String uri) {
-		super();
-		this.setUri(uri);
-	}
-
-	public NameOrURI getValueSet() {
-		return valueSet;
-	}
-
-	public void setValueSet(NameOrURI valueSet) {
-		this.valueSet = valueSet;
-	}
-
+	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
+			Query query,
+			Set<ResolvedFilter> filterComponent, 
+			ResolvedValueSetQueryServiceRestrictions restrictions,
+			Page page);
 }

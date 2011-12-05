@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 @Component
-public class ServiceConfigManager extends BaseConfigChangeObservable 
+public class ServiceConfigManager extends BaseServiceConfigChangeObservable
 	implements InitializingBean {
 	
 	@Resource

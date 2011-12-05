@@ -21,17 +21,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetresolution;
+package edu.mayo.cts2.framework.service.command.restriction;
 
-import edu.mayo.cts2.framework.model.extension.LocalIdValueSetResolution;
-import edu.mayo.cts2.framework.service.profile.ReadService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ValueSetResolutionReadId;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+
 
 /**
- * The Interface ValueSetDefinitionReadService.
+ * The Class ResolvedValueSetQueryServiceRestrictions.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ValueSetResolutionReadService extends
-		ReadService<LocalIdValueSetResolution, ValueSetResolutionReadId> {
+public class ResolvedValueSetQueryServiceRestrictions {
+	
+	private NameOrURI valueSet;
+
+	private NameOrURI valueSetDefinition;
+
+	public NameOrURI getValueSetDefinition() {
+		return valueSetDefinition;
+	}
+
+	public void setValueSetDefinition(NameOrURI valueSetDefinition) {
+		this.valueSetDefinition = valueSetDefinition;
+	}
+
+	public NameOrURI getValueSet() {
+		return valueSet;
+	}
+
+	public void setValueSet(NameOrURI valueSet) {
+		this.valueSet = valueSet;
+	}
+	
 }
