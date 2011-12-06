@@ -342,9 +342,9 @@ function addPortlet(div,style,name,description){
 	$(html).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all " + style)
 		.find( ".portlet-header" )
 		.addClass( "ui-widget-header ui-corner-all" )
-		.prepend( "<span class='ui-icon ui-icon-plusthick'></span>")
+		.prepend( "<span class='ui-icon ui-icon-minusthick'></span>")
 		.end()
-		.find( ".portlet-content" ).hide();
+		.find( ".portlet-content" ).show();
 
 	$(html).find( ".portlet-header .ui-icon" ).click(function() {
 		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
@@ -364,19 +364,6 @@ $(document).ready(function() {
 	        ui.draggable.remove();
 	    }
 	});
-
-//	$("#onlyOneAllowedError").dialog({
-//	    title: "Error!",
-//	    resizable: false,
-//	    height: 160,
-//	    modal: true,
-//	    buttons: {
-//	        "Ok" : function () {
-//	            $(this).dialog("close");
-//	        }
-//	    }
-//	}).parent().addClass("ui-state-error");
-
 	
 	$('#targetDrop').sortable({
 		connectWith: ".connectedTargetSortable:not(:has(li))"
@@ -448,13 +435,33 @@ $(document).ready(function() {
 				connectWith: ".connectedTargetSortable:not(:has(li))"
 			}).disableSelection();
 			
-			$('#mapTargetList').append($newTarget);
+			$('#mapTargetList').append($newTarget);	
+	});
+	
+	$( "#addMapEntry" ).button().click(function() {
+			var $newEntry = $( '#mapEntry' ).clone();
+			$newEntry.find( ".portlet-header .ui-icon" ).first().click(function() {
+				$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).first().toggle();
+			});
 			
+			$newEntry.find("#targetDrop").empty();
+
+			$newEntry.find('.connectedTargetSortable').sortable({
+				connectWith: ".connectedTargetSortable:not(:has(li))"
+			}).disableSelection();
+			
+			$('#mapEntryList').append($newEntry);
 	});
 
-	$( '#mapTarget' ).find( ".portlet-header .ui-icon" ).click(function() {
+	$( '#mapTarget' ).find( ".portlet-header .ui-icon" ).first().click(function() {
 		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
-		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).first().toggle();
+	});
+	
+	$( '#mapEntry' ).find( ".portlet-header .ui-icon" ).first().click(function() {
+		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).first().toggle();
 	});
 	
 	//source mapping autocomplete
@@ -900,7 +907,7 @@ function createCodeSystem(){
 	var about = $("#about").val();
 	var changeseturi = $("#cs-create-changeSetDropdown").val();
 	
-	createCodeSystem(csn,about,changeseturi);
+	doCreateCodeSystem(csn,about,changeseturi);
 }
 
 
