@@ -284,10 +284,8 @@ public class ServiceProviderFactory implements InitializingBean,
 	
 	@Override
 	public void onPluginActivated(PluginReference ref) {
-		if(! this.pluginManager.isActivePlugin(ref)){
-			this.refresh();
-			this.fireServiceProviderChangeEvent();
-		}
+		this.refresh();
+		this.fireServiceProviderChangeEvent();
 	}
 
 	@Override
