@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.core.util;
 import org.springframework.util.StringUtils;
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 
 /**
  * The Class SdkUtils.
@@ -44,6 +45,10 @@ public class EncodingUtils {
 	 * @return the string
 	 */
 	public static String encodeScopedEntityName(ScopedEntityName name){
+		return encodeColon(name.getNamespace()) + SCOPED_ENTITY_NAME_SEPERATOR + encodeColon(name.getName());
+	}
+	
+	public static String encodeScopedEntityName(URIAndEntityName name){
 		return encodeColon(name.getNamespace()) + SCOPED_ENTITY_NAME_SEPERATOR + encodeColon(name.getName());
 	}
 	

@@ -74,6 +74,8 @@ public class CreateHandler extends AbstractMainenanceHandler {
 			String location){
 		HttpHeaders responseHeaders = new HttpHeaders();
 		
+		location = StringUtils.removeStart(location, "/");
+		
 		responseHeaders.set("Location", location);
 		
 		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);

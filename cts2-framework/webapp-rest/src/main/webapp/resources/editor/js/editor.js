@@ -23,6 +23,9 @@ var tab = 0;
 
 var mappingFromCsvEntitiesHref;
 var mappingToCsvEntitiesHref;
+var currentMappingMapVersion;
+
+var openChangesets = [];
 
 function createNewChangeSet() {
 	
@@ -113,19 +116,28 @@ fnChangeSetObjectToArray = function ( )
 					newJson.aaData[i][1] = json[i].creationDate;
 					newJson.aaData[i][2] = getChangeInstructions(json[i]);
 					newJson.aaData[i][3] = json[i].state;
-					
-					$("[id$=changeSetDropdown]").each(function(){
-						if(json[i].state == 'OPEN'){
-							$(this).append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
-						}
-					});
+
+					if(json[i].state == 'OPEN'){
+						openChangesets.push(json[i]);
+					}
+
 				}
+				
+				$("[id$=changeSetDropdown]").each(function(){
+					populateChangeSetDropdown( $(this) );
+				});
 			
 				fnCallback(newJson);
 			}
 		} );
 	};
 };
+
+function populateChangeSetDropdown($dropdown){
+	for(i in openChangesets){
+		$dropdown.append( $('<option></option>').val(openChangesets[i].changeSetURI).html(openChangesets[i].changeSetURI));
+	}
+}
 
 fnCodeSystemObjectToArray = function ( )
 {
@@ -461,30 +473,22 @@ function addPortlet(div,style,name,description){
 $(document).ready(function() {
 	
 	$("#trashcan").droppable({
-	    accept: ".connectedSourceSortable li",
+	    accept: ".connectedSourceSortable li, .connectedTargetSortable li",
 	    hoverClass: "ui-state-hover",
 	    drop: function(ev, ui) {
 	        ui.draggable.remove();
 	    }
 	});
-	
-	$('#targetDrop').sortable({
-		connectWith: ".connectedTargetSortable:not(:has(li))"
-	}).disableSelection();
-	
+
+
 	$('#targetList').sortable({
-		connectWith: ".connectedTargetSortable:not(:has(li))"
-	}).disableSelection();
-	
-	$('#sourceDrop').sortable({
-		connectWith: ".connectedSourceSortable",
+		connectWith: ".connectedTargetSortable:not(:has(li)), #trashcan"
 	}).disableSelection();
 	
 	$('#sourceList').sortable({
 		connectWith: ".connectedSourceSortable:not(:has(li)), #trashcan"  
 	}).disableSelection();
 	
-	$('#mapTargetList').sortable();
 	//end drag and drop
 	
 	$.getJSON('maps?format=json', function(data) {
@@ -517,6 +521,8 @@ $(document).ready(function() {
 			  	
 			  	mappingToCsvEntitiesHref = data.mapVersion.fromCodeSystemVersion.version.href + "/entities";
 			  	mappingFromCsvEntitiesHref = data.mapVersion.toCodeSystemVersion.version.href + "/entities";
+			  	
+			  	currentMappingMapVersion = data.mapVersion;
 			  },
 			  failure: function(data){ 
 				  alert( "failed" ); 
@@ -531,41 +537,9 @@ $(document).ready(function() {
 			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).show();
 		});
 	});
-	
-	$( "#expandAllMapTargets" ).button().click(function() {
-		$(".mapTargetPortlet").each(function(){
-			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
-				$( this ).addClass( "ui-icon-minusthick" );
-				$( this ).removeClass( "ui-icon-plusthick" );
-				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).show();
-			});
-		
-		});
-	});
-	
-	$( "#collapseAllMapTargets" ).button().click(function() {
-		$(".mapTargetPortlet").each(function(){
-			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
-				$( this ).addClass( "ui-icon-plusthick" );
-				$( this ).removeClass( "ui-icon-minusthick" );
-				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
-			});
-		
-		});
-	});
 
 	$( "#addMapTarget" ).button().click(function() {
-			var $newTarget = $( '#mapTarget' ).clone();
-			$newTarget.find( ".portlet-header .ui-icon" ).click(function() {
-				$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
-				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
-			});
-
-			$newTarget.find("#targetDrop").empty();
-
-			$newTarget.find('.connectedTargetSortable').sortable({
-				connectWith: ".connectedTargetSortable:not(:has(li))"
-			}).disableSelection();
+			var $newTarget = cloneMapTarget();
 			
 			$('#mapTargetList').append($newTarget);	
 	});
@@ -599,6 +573,7 @@ $(document).ready(function() {
 			  success: function(data){ 
 			  	$('#mapVersionToCsvName').val(data.codeSystemVersionCatalogEntry.codeSystemVersionName);
 			  	$('#mapVersionToCsvAbout').val(data.codeSystemVersionCatalogEntry.about);
+
 			  },
 			  failure: function(data){ 
 				  alert( "failed" ); 
@@ -607,17 +582,7 @@ $(document).ready(function() {
 	});
 	
 	$( "#addMapEntry" ).button().click(function() {
-			var $newEntry = $( '#mapEntry' ).clone();
-			$newEntry.find( ".portlet-header .ui-icon" ).first().click(function() {
-				$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
-				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).first().toggle();
-			});
-			
-			$newEntry.find("#targetDrop").empty();
-
-			$newEntry.find('.connectedTargetSortable').sortable({
-				connectWith: ".connectedTargetSortable:not(:has(li))"
-			}).disableSelection();
+			var $newEntry = cloneMapEntry();
 			
 			$('#mapEntryList').append($newEntry);
 	});
@@ -697,7 +662,6 @@ $(document).ready(function() {
 			   $.each( items, function( index, item ) {
 				   addPortlet($('#targetList'), 'targetEntities', item.label, item.description);
 			    });
-
 	    };
 
 
@@ -1185,6 +1149,7 @@ function createMap(){
 	doCreateMap(name,about,changeseturi);
 }
 
+
 function createMapVersion(){
 	var name = $("#mapVersionName").val();
 	var about = $("#mapVersionAbout").val();
@@ -1273,7 +1238,7 @@ function doCreateEntity(name,namespace,about,changeseturi) {
 	doCreate(json,"entity",changeseturi);
 }
 
-function doCreate(json,url,changeseturi) {
+function doCreate(json,url,changeseturi,oncreate) {
 	
 	var createJson = JSON.stringify(json);
 	
@@ -1296,7 +1261,7 @@ function doCreate(json,url,changeseturi) {
 				"success": function (json, textStatus, jqXHR) {
 					currentChangeSetUri = json.changeSetURI;
 					
-					_doCreate(url,createJson,currentChangeSetUri);
+					_doCreate(url,createJson,currentChangeSetUri,oncreate);
 					
 				}
 			} );
@@ -1305,7 +1270,7 @@ function doCreate(json,url,changeseturi) {
 	if(changeseturi == 'NEW'){
 		createChangeSet(createFunction);
 	} else {
-		_doCreate(url,createJson,changeseturi);
+		_doCreate(url,createJson,changeseturi,oncreate);
 	}
 }
 
@@ -1348,7 +1313,7 @@ function doCreateMapVersion(
 }
 
 
-function _doCreate(url,json,changeSetUri){
+function _doCreate(url,json,changeSetUri,oncreate){
 	  $.ajax( {
 			"dataType": 'json', 
 			"contentType": "application/json",
@@ -1363,6 +1328,8 @@ function _doCreate(url,json,changeSetUri){
 			},
 			"success": function (json, textStatus, jqXHR) {
 				var location = jqXHR.getResponseHeader('Location');
+				
+				oncreate(location);
 				
 				log("POST",
 						url+"?changesetcontext="+currentChangeSetUri,
@@ -1443,6 +1410,35 @@ function updateMap(data) {
 				
 				mapTable.fnReloadAjax(urlPrefix+"maps?format=json&changesetcontext="+changeSetUri);
 
+			}
+		} );
+
+}
+
+function updateMapEntry(data,changeSetUri) {
+
+	  data.entry.changeableElementGroup.changeDescription.changeType = "UPDATE";
+
+	  data.entry.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
+	  
+	  var jsonString = $.toJSON(data.entry);
+
+	  $.ajax( {
+			"dataType": 'json', 
+			"contentType": "application/json",
+			"type": "PUT", 
+			"url": urlPrefix+data.heading.resourceRoot,
+			"data": jsonString,
+			"error":function (xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				alert(xhr.statusText);
+				alert(xhr.responseText);
+				alert(jsonString);
+			},
+			"success": function (json) {
+				log("PUT",
+						"map/??",
+						"Updating the Map");
 			}
 		} );
 
@@ -1531,6 +1527,130 @@ function onListAllEntities(changeSetUri){
 	$('#editAutocomplete').val('');
 	
 	entityTable.fnReloadAjax(query);
+}
+
+function cloneMapEntry(){
+	var $newEntry = $( '#mapEntry' ).clone();
+	$newEntry.removeAttr("id");
+
+	$newEntry.find( ".portlet-header .ui-icon" ).first().click(function() {
+		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).first().toggle();
+	});
+	
+	$newEntry.find('.sourceDrop').sortable({
+		connectWith: ".connectedSourceSortable"
+	}).disableSelection();
+	
+	$newEntry.find('.mapTargetList').sortable();
+	
+	$newEntry.find('.saveMapEntry').button().click(function() {
+		var model = $newEntry.data('model');
+
+		var changeSetUri = $newEntry.find('.changeSetDropdown').val();
+
+		if(model.heading){
+			var json = ko.mapping.toJS(model);
+			
+			updateMapEntry(json,changeSetUri);
+		} else {
+			var json = ko.mapping.toJS(model.entry);
+			
+			doCreate(json,
+					"mapentry",
+					changeSetUri, 
+					function(location){
+						  $.ajax( {
+								"dataType": 'json', 
+								"contentType": "application/json",
+								"type": "GET", 
+								"url": urlPrefix+location,
+								"success": function (newJson) {
+									var newModel = ko.mapping.fromJS(newJson);
+									
+									$newEntry.data('model', newModel);
+									
+									ko.applyBindings(newModel, $($newEntry).get(0) );
+								}
+							} );
+					}
+			);
+		}
+	});
+	
+	var $changeSetDropdown = $newEntry.find('.changeSetDropdown');
+	populateChangeSetDropdown( $changeSetDropdown );
+	
+	$newEntry.find( ".addMapTarget" ).button().click(function() {
+		var $newTarget = cloneMapTarget();
+		
+		$newEntry.find('.mapTargetList').append($newTarget);	
+	});
+	
+	$newEntry.find( ".expandAllMapTargets" ).button().click(function() {
+		$(".mapTargetPortlet").each(function(){
+			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
+				$( this ).addClass( "ui-icon-minusthick" );
+				$( this ).removeClass( "ui-icon-plusthick" );
+				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).show();
+			});
+		
+		});
+	});
+	
+	$newEntry.find( ".collapseAllMapTargets" ).button().click(function() {
+		$(".mapTargetPortlet").each(function(){
+			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
+				$( this ).addClass( "ui-icon-plusthick" );
+				$( this ).removeClass( "ui-icon-minusthick" );
+				$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
+			});
+		
+		});
+	});
+	
+
+	var json = {
+		entry: {
+			mapFrom: {
+				name:"asd",
+				namespace:"asdf",
+				uri:"asdf",
+				href:"asdf"
+			},
+			assertedBy: {
+				map: currentMappingMapVersion.versionOf,
+				mapVersion:{
+					content:currentMappingMapVersion.mapVersionName
+				}
+			},
+			processingRule:ko.observable("ALL_MATCHES")
+		}
+	};
+	
+	var model = ko.mapping.fromJS(json);
+	
+	ko.applyBindings(model, $($newEntry).get(0) );
+
+	$newEntry.data('model', model);
+	
+	return $newEntry;
+}
+
+function cloneMapTarget(){
+	var $newTarget = $( '#mapTarget' ).clone();
+	$newTarget.removeAttr("id");
+	
+	$newTarget.find( ".portlet-header .ui-icon" ).click(function() {
+		$( this ).toggleClass( "ui-icon-plusthick" ).toggleClass( "ui-icon-minusthick" );
+		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+	});
+
+	$newTarget.find('.targetDrop').sortable({
+		connectWith: ".connectedTargetSortable"
+	}).disableSelection();
+	
+	return $newTarget;	
 }
 
 function onListAllMaps(changeSetUri){

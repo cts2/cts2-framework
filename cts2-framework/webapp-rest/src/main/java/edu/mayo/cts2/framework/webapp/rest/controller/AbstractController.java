@@ -55,6 +55,7 @@ import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
@@ -467,6 +468,14 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	
 	protected ScopedEntityName getScopedEntityName(String encodedEntityName){
 		return EncodingUtils.decodeEntityName(encodedEntityName);
+	}
+	
+	protected String getScopedEntityName(ScopedEntityName scopedEntityName){
+		return EncodingUtils.encodeScopedEntityName(scopedEntityName);
+	}
+	
+	protected String getScopedEntityName(URIAndEntityName uriAndEntityName){
+		return EncodingUtils.encodeScopedEntityName(uriAndEntityName);
 	}
 
 	protected UrlPathHelper getUrlPathHelper() {

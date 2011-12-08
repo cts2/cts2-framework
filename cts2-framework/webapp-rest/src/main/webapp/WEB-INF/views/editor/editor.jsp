@@ -684,7 +684,7 @@
 							for="mappingSourceSearch">Search For Mapping Source: </label><span id="sourceMappingName"></span><br></br> <input
 							id="mappingSourceSearch" /></td>
 
-						<td align="center" style="width: 50%">
+						<td style="width: 50%">
 							<div style="padding: 10px 10px">
 								<span
 									class="toolbar ui-widget-header ui-corner-all"> Toolbar:
@@ -702,9 +702,61 @@
 						</td>
 
 						<td align="center">
-							<ul id="mapEntryList" style="height:600px">
+							<ul id="mapEntryList" style="height:500px; overflow: auto">
 							<li>
-							<div id="mapEntry"
+	
+							</li>
+							</ul>
+						</td>
+						
+						<td>
+							<ul id="targetList" style="display: inline" class="droppable connectedTargetSortable"></ul>
+						</td>
+					</tr>
+				</table>
+
+				<img id="trashcan" src="resources/editor/images/trash-icon.png"
+					alt="trash" />
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<textarea class="ui-widget ui-state-default ui-corner-all" id="logmsgs"
+		readonly="readonly" rows="5">
+</textarea>
+
+	<script type="text/javascript"
+		src="http://jqueryui.com/themeroller/themeswitchertool/">
+		
+	</script>
+
+<!-- 	Hidden divs for cloning -->
+	<div style="display:none">
+		
+		
+		<div id='mapTarget'
+			class="portlet dropPortlet mapTargetPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+			<div
+				class="portlet-header ui-widget-header ui-corner-all">
+				Map Target <span class='ui-icon ui-icon-minusthick'></span>
+			</div>
+			<div class="portlet-content">
+	
+				<label>Map Rule: </label>
+				<form>
+					<input type="text" class="mapRuleText"></input>
+				</form>
+	
+				<ul
+					class="targetDrop droppable dropzone connectedTargetSortable"></ul>
+			</div>
+		</div>
+		
+				<div id="mapEntry"
 								class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 								<div class="portlet-header ui-widget-header ui-corner-all">Map
 									Entry <span class='ui-icon ui-icon-minusthick'></span></div>
@@ -721,59 +773,41 @@
 													<div class="portlet-content">
 
 
-														<ul id="sourceDrop"
-															class="droppable dropzone connectedSourceSortable"></ul>
+														<ul
+															class="sourceDrop droppable dropzone connectedSourceSortable"></ul>
 
 													</div>
 												</div>
 
 											</td>
 											<td>
+															
 
+															
 												<div style='width: auto'
 													class="portlet dropPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 													<div class="portlet-header ui-widget-header ui-corner-all">Map
 														Set</div>
 													<div>
-														<button id="addMapTarget">Add Map Target</button>
-														<button id="expandAllMapTargets">expand all</button>
-														<button id="collapseAllMapTargets">collapse all</button>
+														<button class="addMapTarget">Add Map Target</button>
+														<button class="expandAllMapTargets">expand all</button>
+														<button class="collapseAllMapTargets">collapse all</button>
 
 													</div>
 													<div style="padding: 10px 10px;">
-														<label for="mapSetProcessingRule">Processing Rule:
-														</label> <select id="mapSetProcessingRule">
-															<option value="ALL_MATCHES">ALL_MATCHES</option>
-															<option value="FIRST_MATCH">FIRST_MATCH</option>
+														<label>Processing Rule:
+														</label> 
+															<select class="mapSetProcessingRule" data-bind="options: ['ALL_MATCHES','FIRST_MATCH'], value: entry.processingRule ">
 														</select>
 													</div>
 													<div>
 
-														<div id='mapTargetList'
-															style='height: 300px; overflow: scroll'
-															class="portlet-content">
-
-															<div id='mapTarget'
-																class="portlet dropPortlet mapTargetPortlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-																<div
-																	class="portlet-header ui-widget-header ui-corner-all">
-																	Map Target <span class='ui-icon ui-icon-minusthick'></span>
-																</div>
-																<div class="portlet-content">
-
-																	<label for="mapRuleText">Map Rule: </label>
-																	<form>
-																		<input type="text" name="mapRuleText" id="mapRuleText"></input>
-																	</form>
-
-																	<ul id="targetDrop"
-																		class="droppable dropzone connectedTargetSortable"></ul>
-
-																</div>
-															</div>
+														<div
+															style='height: 200px; overflow: auto'
+															class="mapTargetList portlet-content">
 
 														</div>
-														<!-- 					            		</li> -->
+			
 													</div>
 												</div>
 											</td>
@@ -781,46 +815,12 @@
 										</tr>
 									</table>
 								</div>
+								
+								<button class="saveMapEntry">Save Map Entry</button>
+									<label>ChangeSet:
+									</label> <select class="changeSetDropdown"></select>
 							</div>
-							</li>
-							</ul>
-						</td>
-						
-						<td>
-							<ul id="targetList" style="display: inline" class="droppable connectedTargetSortable"></ul>
-						</td>
-					</tr>
-				</table>
-				<!-- 			<div id="sourceColumn" class="column"></div> -->
-
-				<!-- 			<div id="mappingColumn" class="column"></div> -->
-
-				<!-- 			<div id="targetColumn" class="column"></div> -->
-
-
-				<img id="trashcan" src="resources/editor/images/trash-icon.png"
-					alt="trash" />
-
-			</div>
-
-		</div>
-
+							
 	</div>
-
-	<div style="display: none" id="onlyOneAllowedError">
-		<p>Only one allowed</p>
-	</div>
-
-
-	<textarea class="ui-widget ui-state-default ui-corner-all" id="logmsgs"
-		readonly="readonly" rows="5">
-</textarea>
-
-	<script type="text/javascript"
-		src="http://jqueryui.com/themeroller/themeswitchertool/">
-		
-	</script>
-
-
 </body>
 </html>
