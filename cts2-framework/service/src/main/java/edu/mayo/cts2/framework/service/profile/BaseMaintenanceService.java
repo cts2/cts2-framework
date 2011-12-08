@@ -24,12 +24,15 @@
 package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.core.IsChangeable;
+import edu.mayo.cts2.framework.model.exception.changeset.ChangeSetIsNotOpenException;
 
 
 /**
  * The Interface MaintenanceService.
  *
+ * @param <T> the generic type
  * @param <R> the generic type
+ * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface BaseMaintenanceService<
@@ -37,17 +40,36 @@ public interface BaseMaintenanceService<
 	R extends IsChangeable,
 	I> extends Cts2Profile {
 
+	/**
+	 * Update changeable metadata.
+	 *
+	 * @param identifier the identifier
+	 * @param request the request
+	 */
 	public void updateChangeableMetadata(I identifier, UpdateChangeableMetadataRequest request);
 	
+	/**
+	 * Update resource.
+	 *
+	 * @param resource the resource
+	 */
 	public void updateResource(T resource);
 	
+	/**
+	 * Creates the resource.
+	 *
+	 * @param resource the resource
+	 * @return the t
+	 *
+	 * @throws ChangeSetIsNotOpenException The requested ChangeSet is not open
+	 */
 	public T createResource(R resource);
 	
 	/**
 	 * Delete resource.
 	 *
+	 * @param identifier the identifier
 	 * @param changeSetUri the change set uri
-	 * @param resourceName the resource name
 	 */
 	public void deleteResource(I identifier, String changeSetUri);
 	

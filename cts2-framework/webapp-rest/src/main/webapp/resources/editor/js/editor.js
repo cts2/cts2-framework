@@ -5,6 +5,7 @@ var currentChangeSetUri;
 var codeSystemTable;
 var entityTable;
 var mapTable;
+var mapVersionTable;
 var changeSetTable;
 
 var currentJson;
@@ -12,10 +13,16 @@ var currentJson;
 var selectedChangeSetUri;
 
 var mapViewModel;
+var mapVersionViewModel;
 var csViewModel;
 var viewModel;
 
 var urlPrefix = "";
+
+var tab = 0;
+
+var mappingFromCsvEntitiesHref;
+var mappingToCsvEntitiesHref;
 
 function createNewChangeSet() {
 	
@@ -108,7 +115,9 @@ fnChangeSetObjectToArray = function ( )
 					newJson.aaData[i][3] = json[i].state;
 					
 					$("[id$=changeSetDropdown]").each(function(){
-						$(this).append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
+						if(json[i].state == 'OPEN'){
+							$(this).append( $('<option></option>').val(json[i].changeSetURI).html(json[i].changeSetURI));
+						}
 					});
 				}
 			
@@ -203,6 +212,35 @@ fnMapObjectToArray = function ( )
 	};
 };
 
+fnMapVersionObjectToArray = function ( )
+{
+	return function ( sSource, aoData, fnCallback ) {
+		$.ajax( {
+			"dataType": 'json', 
+			"type": "GET", 
+			"url": sSource, 
+			"data": aoData, 
+			"success": function (json) {
+				var newJson = new Object();
+				newJson.aaData = new Array();
+				
+				json = json.entryList;
+				
+				for(i in json){
+					newJson.aaData[i] = new Array();
+					newJson.aaData[i][0] = json[i].mapVersionName;
+					newJson.aaData[i][1] = json[i].about;
+					newJson.aaData[i][2] = getResourceSynopsis(json[i]);
+					newJson.aaData[i][3] = json[i].versionOf.content;
+				}
+
+				fnCallback(newJson);
+			}
+		} );
+	};
+};
+
+
 function getChangeInstructions(json){
 	var instructions = "-- no instructions --";
 	
@@ -264,6 +302,52 @@ function createEditMapDialog(){
 		});
 }
 
+function createEditMapVersionDialog(){
+	   $( "#mapVersionEditForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+	
+					var newJson = ko.mapping.toJS(mapVersionViewModel);
+					
+					updateMapVersion(newJson);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//$(this).dialog('destroy');
+			}
+		});
+}
+
+function createEditMapVersionDialog(){
+	   $( "#mapVersionEditForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+	
+					var newJson = ko.mapping.toJS(mapVersionViewModel);
+					
+					updateMapVersion(newJson);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//$(this).dialog('destroy');
+			}
+		});
+}
+
 function createEditCodeSystemDialog(){
 	   $( "#codeSystemEditForm" ).dialog({
 			autoOpen: false,
@@ -306,6 +390,25 @@ function createEditEntityDialog(){
 			},
 			close: function() {
 				//$(this).dialog('destroy');
+			}
+		});
+}
+
+function createLoadMapVersionFormDialog(){
+	   $( "#loadMapVersionForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+					//
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
 			}
 		});
 }
@@ -384,11 +487,40 @@ $(document).ready(function() {
 	$('#mapTargetList').sortable();
 	//end drag and drop
 	
+	$.getJSON('maps?format=json', function(data) {
+		$.each(data.entryList,function(index){
+			var txt = data.entryList[index].mapName;
+			var option = $('<option>'+txt+'</option>').val(txt);
+			
+			$('#mapversion-versionof-dropdown').append(option);
+		});
+	});
+
 	$( "#collapseAll" ).button().click(function() {
 		$( ".portlet-header .ui-icon" ).each(function() {
 			$( this ).addClass( "ui-icon-plusthick" );
 			$( this ).removeClass( "ui-icon-minusthick" );
 			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).hide();
+		});
+	});
+	
+	$( "#loadMapVersion" ).button().click(function() {
+		var url = $( '#loadMapVersionUrl' ).val();
+		
+		$.ajax({
+			  "url": url+( (url.indexOf("?") >= 0) ? "&" : "?" )+"format=json",
+			  "type": "GET", 
+			  "dataType": 'jsonp',
+			  success: function(data){ 
+			  	$('#sourceMappingName').text(data.mapVersion.fromCodeSystemVersion.version.content);
+			  	$('#targetMappingName').text(data.mapVersion.toCodeSystemVersion.version.content);
+			  	
+			  	mappingToCsvEntitiesHref = data.mapVersion.fromCodeSystemVersion.version.href + "/entities";
+			  	mappingFromCsvEntitiesHref = data.mapVersion.toCodeSystemVersion.version.href + "/entities";
+			  },
+			  failure: function(data){ 
+				  alert( "failed" ); 
+			  }
 		});
 	});
 	
@@ -438,6 +570,42 @@ $(document).ready(function() {
 			$('#mapTargetList').append($newTarget);	
 	});
 	
+	$( "#mapVersionFromUrlButton" ).button().click(function(event) {
+			event.preventDefault(); 
+			var url = $( '#mapVersionFromUrl' ).val();
+			
+			$.ajax({
+				  "url": url+"?format=json",
+				  "type": "GET", 
+				  "dataType": 'jsonp',
+				  success: function(data){ 
+				  	$('#mapVersionFromCsvName').val(data.codeSystemVersionCatalogEntry.codeSystemVersionName);
+				  	$('#mapVersionFromCsvAbout').val(data.codeSystemVersionCatalogEntry.about);
+				  },
+				  failure: function(data){ 
+					  alert( "failed" ); 
+				  }
+			});
+	});
+	
+	$( "#mapVersionToUrlButton" ).button().click(function(event) {
+		event.preventDefault(); 
+		var url = $( '#mapVersionToUrl' ).val();
+		
+		$.ajax({
+			  "url": url+"?format=json",
+			  "type": "GET", 
+			  "dataType": 'jsonp',
+			  success: function(data){ 
+			  	$('#mapVersionToCsvName').val(data.codeSystemVersionCatalogEntry.codeSystemVersionName);
+			  	$('#mapVersionToCsvAbout').val(data.codeSystemVersionCatalogEntry.about);
+			  },
+			  failure: function(data){ 
+				  alert( "failed" ); 
+			  }
+		});
+	});
+	
 	$( "#addMapEntry" ).button().click(function() {
 			var $newEntry = $( '#mapEntry' ).clone();
 			$newEntry.find( ".portlet-header .ui-icon" ).first().click(function() {
@@ -472,7 +640,7 @@ $(document).ready(function() {
 			    },
 				source: function( request, response ) {
 					$.ajax({
-						url: "http://informatics.mayo.edu/exist/cts2/rest/entities?maxtoreturn=5&format=json&matchvalue="+request.term,
+						url: mappingFromCsvEntitiesHref+"?maxtoreturn=5&format=json&matchvalue="+request.term,
 						dataType: "jsonp",
 						success: function( data ) {
 							var responseArray = [];
@@ -506,7 +674,7 @@ $(document).ready(function() {
 		 var data = $("#mappingTargetSearch").autocomplete({
 				source: function( request, response ) {
 					$.ajax({
-						url: "http://informatics.mayo.edu/exist/cts2/rest/entities?maxtoreturn=5&format=json&matchvalue="+request.term,
+						url: mappingToCsvEntitiesHref+"?maxtoreturn=5&format=json&matchvalue="+request.term,
 						dataType: "jsonp",
 						success: function( data ) {
 							var responseArray = [];
@@ -539,6 +707,8 @@ $(document).ready(function() {
 	   createEditCodeSystemDialog();
 	   createEditEntityDialog();
 	   createEditMapDialog();
+	   createEditMapVersionDialog();
+	   createLoadMapVersionFormDialog();
 
 	   $("#pickChangeSetButton").button();
 	   
@@ -626,6 +796,16 @@ $(document).ready(function() {
 		"fnServerData": fnMapObjectToArray()
 	} );
 	
+	mapVersionTable = $('#mapVersionTable').dataTable( {
+		"sDom": 'R<"H"lfr>t<"F"ip<',
+		"bJQueryUI": true,
+		"bProcessing": false,
+		"bPaginate": true,
+		"bFilter": true,
+		"sAjaxSource": urlPrefix+'mapversions?format=json',
+		"fnServerData": fnMapVersionObjectToArray()
+	} );
+	
 	var autocompleteTable = $("#autocompleteTable").dataTable({
 		"sDom": 'R<"H"lfr>t<"F"ip<',
 		"bJQueryUI": true,
@@ -662,7 +842,7 @@ $(document).ready(function() {
 	});
 	
 	$( "#resourceTabs" ).tabs({
-		 selected: 1,     // which tab to start on when page loads
+		 selected: 0,     // which tab to start on when page loads
 	     select: function(e, ui) {
 	    	 var index = ui.index;
 	       
@@ -676,6 +856,8 @@ $(document).ready(function() {
 	$( "#mappings" ).tabs();
 	$( "#mapping-tabs-map" ).tabs();
 	$( "#mapping-tabs-mapversion" ).tabs();
+	
+	$('.resourceDescriptionTemplate-edit-tabs').tabs();
 	
 	$('#entityTable tbody tr').live('click', function () {
 		var aData = entityTable.fnGetData( this );
@@ -788,6 +970,7 @@ $(document).ready(function() {
 							
 							csViewModel.addKeyword = function () {
 								csViewModel.codeSystemCatalogEntry.keywordList.push( {keyword:ko.observable('--new-keyword--')} );
+								ko.applyBindings(csViewModel, document.getElementById('codeSystemEditForm'));   
 							};
 							
 							
@@ -846,6 +1029,7 @@ $(document).ready(function() {
 						
 						mapViewModel.addKeyword = function () {
 							mapViewModel.map.keywordList.push( {keyword:ko.observable('--new-keyword--')} );
+							ko.applyBindings(mapViewModel, document.getElementById('mapEditForm'));   
 						};
 						
 						mapViewModel.addComment = function () {
@@ -878,6 +1062,79 @@ $(document).ready(function() {
 					
 		  });
 	} );
+	
+	$('#mapVersionTable tbody tr').live('click', function () {
+		var aData = mapVersionTable.fnGetData( this );
+		
+		var changeSetUri = $('#mapversion-edit-search-changeSetDropdown').val();
+		
+		$(mapVersionTable.fnSettings().aoData).each(function (){
+			$(this.nTr).removeClass('row_selected');
+		});
+
+		  $.ajax( {
+				"dataType": 'json', 
+				"contentType": "application/json",
+				"type": "GET", 
+				"url": urlPrefix+"map/"+aData[3]+"/version/"+aData[0]+(changeSetUri == 'CURRENT' ? "" : "?changesetcontext="+changeSetUri),
+				"error":function (xhr, ajaxOptions, thrownError){
+					alert(xhr.status);
+					alert(xhr.statusText);
+					alert(xhr.responseText);
+					alert(jsonString);
+				},
+				"success": function (json) {
+					
+					var mapping = {
+						    'keywordList': {
+						        create: function(options) {
+						            return {keyword:ko.observable(options.data)};
+						        }
+						    }
+						};
+
+						mapVersionViewModel = ko.mapping.fromJS(json,mapping);
+						
+						mapVersionViewModel.addDescription = function () {
+							mapVersionViewModel.mapVersion.resourceSynopsis = {value:{content:ko.observable('--new-description--')}};
+					        ko.applyBindings(mapVersionViewModel, document.getElementById('mapVersionEditForm'));   
+						};
+						
+						mapVersionViewModel.addKeyword = function () {
+							mapVersionViewModel.mapVersion.keywordList.push( {keyword:ko.observable('--new-keyword--')} );
+							ko.applyBindings(mapVersionViewModel, document.getElementById('mapVersionEditForm'));   
+						};
+						
+						mapVersionViewModel.addComment = function () {
+							mapVersionViewModel.mapVersion.noteList.push( 
+									{
+										type:ko.observable('NOTE'),
+										value:{content:ko.observable('--new-comment--')}
+									}
+							);
+							ko.applyBindings(mapVersionViewModel,document.getElementById('mapVersionEditForm'));
+						};
+						
+						mapVersionViewModel.addFormalName = function () {
+							mapVersionViewModel.mapVersion.formalName = ko.observable('--new-formal-name--');
+							ko.applyBindings(mapVersionViewModel,document.getElementById('mapVersionEditForm'));
+						};
+
+						ko.applyBindings(mapVersionViewModel,document.getElementById('mapVersionEditForm'));
+
+				   if(changeSetUri == 'CURRENT'){
+					   $('#mapversion-chooseChangeSetForEditFieldset').show();
+				   } else {
+					   $('#mapversion-chooseChangeSetForEditFieldset').hide();
+					   $('#mapversion-edit-choose-changeSetDropdown').val(changeSetUri);
+				   }
+			
+				   $( "#mapVersionEditForm" ).dialog( "open" );
+					
+				}			
+					
+		  });
+	} );
  	
 	/* Click event handler */
 	$('#changeSetTable tbody tr').live('click', function () {
@@ -899,7 +1156,7 @@ $(document).ready(function() {
 		
 		$('#removeButton').button('enable');
 	} );
-	
+
 });
 
 function createCodeSystem(){
@@ -926,6 +1183,40 @@ function createMap(){
 	var changeseturi = $("#map-create-changeSetDropdown").val();
 	
 	doCreateMap(name,about,changeseturi);
+}
+
+function createMapVersion(){
+	var name = $("#mapVersionName").val();
+	var about = $("#mapVersionAbout").val();
+	var changeseturi = $("#mapversion-create-changeSetDropdown").val();
+	
+	var versionof = $('#mapversion-versionof-dropdown').val();
+	
+	var toCsvName = $('#mapVersionToCsvName').val();
+	var toCsvAbout = $('#mapVersionToCsvAbout').val();
+	var toCsvHref = $('#mapVersionToUrl').val();
+	
+	var fromCsvName = $('#mapVersionFromCsvName').val();
+	var fromCsvAbout = $('#mapVersionFromCsvAbout').val();
+	var fromCsvHref = $('#mapVersionFromUrl').val();
+	
+	var fromRef = {
+			version:{
+				content:fromCsvName,
+				uri:fromCsvAbout,
+				href:fromCsvHref
+			}
+	};
+	
+	var toRef = {
+			version:{
+				content:toCsvName,
+				uri:toCsvAbout,
+				href:toCsvHref
+			}
+	};
+	
+	doCreateMapVersion(name,"CTS2 Development Framework Editor",about,versionof,fromRef,toRef,changeseturi);
 }
 
 
@@ -1030,6 +1321,30 @@ function doCreateMap(mapname,about,changeseturi) {
 	var json = {"mapName":mapname,"about":about};
 	
 	doCreate(json,"map",changeseturi);
+}
+
+function doCreateMapVersion(
+		mapversionname,
+		sourcedescription,
+		about,
+		versionof,
+		fromRef,
+		toRef,
+		changeseturi) {
+	
+	var json = {
+			"mapVersionName":mapversionname,
+			"about":about,
+			"documentURI":about+"#"+mapversionname,
+			"sourceAndNotation": {
+				"sourceAndNotationDescription":sourcedescription
+			},
+			"versionOf":{ content:versionof },
+			"fromCodeSystemVersion":fromRef,
+			"toCodeSystemVersion":toRef
+		};
+	
+	doCreate(json,"mapversion",changeseturi);
 }
 
 
@@ -1174,7 +1489,19 @@ function updateCodingScheme(data) {
 }
 
 function addTabsToTemplate(elements) {
-    $('.resourceDescriptionTemplate-edit-tabs').tabs();
+	//var selected = $('.resourceDescriptionTemplate-edit-tabs').tabs('option', 'selected');
+	
+	//$tabs = $('.resourceDescriptionTemplate-edit-tabs').tabs('destroy').tabs();
+
+	$tabs = $(elements[1]).closest('.resourceDescriptionTemplate-edit-tabs').tabs('destroy').tabs();
+
+	$tabs.bind('tabsselect', function(event, ui) {
+	    tab = ui.index;
+
+	});
+	
+	$tabs.tabs('select',tab);
+
 }
 
 function onClearEditSearch(){
@@ -1207,13 +1534,21 @@ function onListAllEntities(changeSetUri){
 }
 
 function onListAllMaps(changeSetUri){
-	var query = urlPrefix+"maps?format=json";
+	_onListAll("maps",mapTable,changeSetUri);
+}
+
+function onListAllMapVersions(changeSetUri){
+	_onListAll("mapversions",mapVersionTable,changeSetUri);
+}
+
+function _onListAll(url,table,changeSetUri){
+	var query = urlPrefix+url+"?format=json";
 
 	if(changeSetUri != 'CURRENT'){
 		query += ("&changesetcontext="+changeSetUri);
 	}
 
-	mapTable.fnReloadAjax(query);
+	table.fnReloadAjax(query);
 }
 
 function log(method,url,msg){

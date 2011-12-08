@@ -12,7 +12,7 @@ import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 @Component
@@ -27,7 +27,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 			String urlTemplate,
 			UrlTemplateBinder<T> template,
 			BaseMaintenanceService<T,R,?> service){
-		
+
 		ChangeableElementGroup group = resource.getChangeableElementGroup();
 
 		if(group == null){
@@ -40,11 +40,11 @@ public class CreateHandler extends AbstractMainenanceHandler {
 		}
 
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw ExceptionFactory.createUnknownChangeSetException(null);
+			throw new UnknownChangeSetException(null);
 		}
 		
 		T returnedResource = service.createResource(resource);
-	
+		
 		return this.createResponseEntity(
 				returnedResource, 
 				changeSetUri, 

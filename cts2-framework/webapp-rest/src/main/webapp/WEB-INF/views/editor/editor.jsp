@@ -40,12 +40,7 @@
 </script>
 
 <script id='resourceDescriptionTemplate' type='text/html'>
-<div class="resourceDescriptionTemplate-edit-tabs">
-<ul>
-		<li><a href="#tab1">Overview</a></li>		
-		<li><a href="#tab2">Comments</a></li>
-		<li><a href="#tab3">Properties</a></li>
-</ul>
+
 
 <div id="tab1">
 <fieldset class="ui-widget-content" title="Edit">
@@ -62,7 +57,7 @@
 <legend class="ui-widget-header ui-corner-all">Description</legend>
 <label for="description">Description </label>
 {{if $data.resourceSynopsis != null}}
-	<input type="text" name="description" id="description" data-bind="value: resourceSynopsis.value.content" class="text ui-widget-content ui-corner-all" />
+	<textarea name="description" id="description" data-bind="value: resourceSynopsis.value.content" class="text ui-widget-content ui-corner-all" />
 {{else}}
  	<a href="#" data-bind="click: function() { $root.addDescription() }">Add Description</a>
 {{/if}}
@@ -103,16 +98,15 @@
 </fieldset>
 </div>
 
-</div>
 </script>
 
 <script id='abstractResourceDescriptionTemplate' type='text/html'>
-	<div data-bind="template: { name: 'resourceDescriptionTemplate', data: $data }"> </div>
+	<span data-bind="template: { name: 'resourceDescriptionTemplate', data: $data }"> </span>
 </script>
 
 <script id='commentTemplate' type='text/html'>
 	<select data-bind="options: ['CHANGENOTE','EDITORIALNOTE','HISTORYNOTE', 'SCOPENOTE', 'NOTE'], value: type " ></select>
-	<input type="text" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
+	<textarea data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
 </script>
 
 
@@ -139,7 +133,7 @@
 
 	</div>
 
-	<div id="resourceTabs">
+	<div id="resourceTabs" class='verticalTabs'>
 
 		<ul>
 			<li><a href="#editCodeSystem">CodeSystems</a></li>
@@ -180,19 +174,29 @@
 					data-bind="text: codeSystemCatalogEntry.codeSystemName"></span></label> <br></br>
 				<label id="csAboutLabel"><b>About:</b> <span
 					data-bind="text: codeSystemCatalogEntry.about"></span></label> <br></br>
+					
+					
+				<fieldset id="cs-chooseChangeSetForEditFieldset"
+					class="ui-widget-content" title="ChangeSet">
+					<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
+					<label for="cs-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
+					<select id="cs-edit-choose-changeSetDropdown"
+						name="cs-edit-choose-changeSetDropdown"></select>
+				</fieldset>
+					
 				<form class="ui-widget">
 
-					<div
-						data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: codeSystemCatalogEntry, afterRender: addTabsToTemplate } ">
+					<div id="cstest-tabs" class="resourceDescriptionTemplate-edit-tabs">
+						<ul>
+								<li><a href="#tab1">Overview</a></li>		
+								<li><a href="#tab2">Comments</a></li>
+								<li><a href="#tab3">Properties</a></li>
+						</ul>	
+						<span
+							data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: codeSystemCatalogEntry, afterRender: addTabsToTemplate } ">
+						</span>
 					</div>
 
-					<fieldset id="cs-chooseChangeSetForEditFieldset"
-						class="ui-widget-content" title="ChangeSet">
-						<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
-						<label for="cs-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
-						<select id="cs-edit-choose-changeSetDropdown"
-							name="cs-edit-choose-changeSetDropdown"></select>
-					</fieldset>
 
 				</form>
 
@@ -429,9 +433,17 @@
 						id="aboutLabel"><b>About:</b> <span
 						data-bind="text: map.about"></span></label> <br></br>
 					<form class="ui-widget">
+					
+						<div class="resourceDescriptionTemplate-edit-tabs">
+							<ul>
+									<li><a href="#tab1">Overview</a></li>		
+									<li><a href="#tab2">Comments</a></li>
+									<li><a href="#tab3">Properties</a></li>
+							</ul>	
 
-						<div
-							data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: map, afterRender: addTabsToTemplate }">
+							<span
+								data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: map, afterRender: addTabsToTemplate }">
+							</span>
 						</div>
 
 						<fieldset id="map-chooseChangeSetForEditFieldset"
@@ -446,6 +458,8 @@
 
 				</div>
 
+				
+				
 				<div id="editMapTab">
 
 
@@ -508,13 +522,55 @@
 					<li><a href="#editMapVersionTab">Edit</a></li>
 					<li><a href="#createNewMapVersionVersionTab">Create</a></li>
 				</ul>
+				
+				
+				<div id="mapVersionEditForm" title="Edit Map Version">
+
+					<label id="mapVersionNameLabel"><b>Map Version Name:</b> <span
+						data-bind="text: mapVersion.mapVersionName"></span></label> <br></br> <label
+						id="aboutLabel"><b>About:</b> <span
+						data-bind="text: mapVersion.about"></span></label> <br></br>
+					<form class="ui-widget">
+		
+						<div class="resourceDescriptionTemplate-edit-tabs">
+						<ul>
+								<li><a href="#tab1">Overview</a></li>		
+								<li><a href="#tab2">Comments</a></li>
+								<li><a href="#tab3">Properties</a></li>
+								<li><a href="#tab4">To</a></li>
+								<li><a href="#tab5">From</a></li>
+						</ul>				
+						<span data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: mapVersion, afterRender: addTabsToTemplate }"></span>
+						
+							<div id="tab4">
+								<fieldset class="ui-widget-content" title="To">
+									
+								</fieldset>
+							</div>
+							<div id="tab5">
+								<fieldset class="ui-widget-content" title="From"></fieldset>
+							</div>
+		
+		
+							<fieldset id="mapversion-chooseChangeSetForEditFieldset"
+								class="ui-widget-content" title="ChangeSet">
+								<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
+								<label for="mapversion-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
+								<select id="mapversion-edit-choose-changeSetDropdown"
+									name="mapversion-edit-choose-changeSetDropdown"></select>
+							</fieldset>
+						</div>
+
+					</form>
+
+				</div>
 
 				<div id="editMapVersionTab">
 
 
 					<label for="mapversion-edit-search-changeSetDropdown">ChangeSet:
-					</label> <select id="mapversion--edit-search-changeSetDropdown"
-						name="mapversion--edit-search-changeSetDropdown"
+					</label> <select id="mapversion-edit-search-changeSetDropdown"
+						name="mapversion-edit-search-changeSetDropdown"
 						data-getAllFunctionName="onListAllMapVersions"
 						class="AddCurrentOption"></select> <br></br> <label
 						for="mapversion-editAutocomplete">Search: </label> <input
@@ -528,6 +584,7 @@
 								<th>Map Version Name</th>
 								<th>About</th>
 								<th>Description</th>
+								<th>Version Of</th>
 							</tr>
 						</thead>
 					</table>
@@ -553,14 +610,53 @@
 									<td><input id="mapVersionAbout" name="mapVersionAbout"
 										type="text" /></td>
 								</tr>
-
-
 								<tr>
-									<td><input type="submit" value="Create"
-										onclick="createMapVersion();" /></td>
+									<td>Version Of</td>
+									<td><select id="mapversion-versionof-dropdown"></select></td>
 								</tr>
 
+
 							</table>
+							
+							<fieldset
+								class="ui-widget-content" title="From">
+								<legend>From</legend>
+								<input name="mapVersionFromUrl" id="mapVersionFromUrl" class='urlInput' type="text"/>
+											<button id="mapVersionFromUrlButton">Load From</button>
+											<br />
+											<label for="mapVersionFromCsvName"><b>MapVersion From CSV Name:</b></label>
+											<input name="mapVersionFromCsvName" 
+												id="mapVersionFromCsvName" 
+												type="text"/>
+											<br/>
+											<label for="mapVersionFromCsvAbout"><b>MapVersion From CSV About:</b></label>
+											<input name="mapVersionFromCsvAbout" 
+												id="mapVersionFromCsvAbout" 
+												type="text"/>
+							</fieldset>
+							
+							<fieldset
+								class="ui-widget-content" title="To">
+								<legend>To</legend>
+								<input name="mapVersionToUrl" id="mapVersionToUrl" class='urlInput' type="text"/>
+											<button id="mapVersionToUrlButton">Load From</button>
+											<br />
+											<label for="mapVersionToCsvName"><b>MapVersion To CSV Name:</b></label>
+											<input name="mapVersionToCsvName" 
+												id="mapVersionToCsvName" 
+												type="text"/>
+											<br/>
+											<label for="mapVersionToCsvAbout"><b>MapVersion To CSV About:</b></label>
+											<input name="mapVersionToCsvAbout" 
+												id="mapVersionToCsvAbout" 
+												type="text"/>
+							</fieldset>
+							
+							<br/>
+							
+							<input type="submit" value="Create"
+										onclick="createMapVersion();" />
+										
 						</fieldset>
 					</form>
 				</div>
@@ -570,10 +666,14 @@
 			<div id="mapping-tabs-maptool">
 
 				<div style="padding: 10px 10px">
-					<span class="toolbar ui-widget-header ui-corner-all">
+					<span style="width:100%" class="toolbar ui-widget-header ui-corner-all">
 						Toolbar:
 						<button id="expandAll">expand all</button>
 						<button id="collapseAll">collapse all</button>
+						<span style="float:right">
+							<button id="loadMapVersion">Load Map Version</button>
+							<input size="125" name="loadMapVersionUrl" id="loadMapVersionUrl" type="text"/>
+						</span>
 					</span>
 				</div>
 
@@ -581,7 +681,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td align="center" style="width: 25%"><label
-							for="mappingSourceSearch">Search For Mapping Source: </label><br></br> <input
+							for="mappingSourceSearch">Search For Mapping Source: </label><span id="sourceMappingName"></span><br></br> <input
 							id="mappingSourceSearch" /></td>
 
 						<td align="center" style="width: 50%">
@@ -593,7 +693,7 @@
 							</div>
 						</td>
 						<td align="center" style="width: 25%"><label
-							for="mappingSourceSearch">Search For Mapping Targets: </label><br></br> <input
+							for="mappingSourceSearch">Search For Mapping Targets: </label><span id="targetMappingName"></span><br></br> <input
 							id="mappingTargetSearch" /></td>
 					</tr>
 					<tr>
@@ -602,7 +702,7 @@
 						</td>
 
 						<td align="center">
-							<ul id="mapEntryList">
+							<ul id="mapEntryList" style="height:600px">
 							<li>
 							<div id="mapEntry"
 								class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">

@@ -58,11 +58,26 @@ public class PropertiesFileExceptionCodeMapper implements Cts2RestExceptionCodeM
 		Assert.notNull(properties, "Error codes mapping file must be supplied.");
 	}
 	
+	@Deprecated
+	public int getErrorCode(Cts2RestException exception) {
+		String exceptionName = exception.getCts2Exception().getClass().getSimpleName();
+		
+		String code = this.properties.getProperty(exceptionName);
+		
+		if(code == null){
+			log.warn("No mapped error code for: " + exceptionName + ". Defaulting to: " + DEFAULT_ERROR_CODE);
+			
+			return DEFAULT_ERROR_CODE;
+		}
+		
+		return Integer.parseInt(code);
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper#getErrorCode(edu.mayo.cts2.framework.model.exception.Cts2RestException)
 	 */
-	public int getErrorCode(Cts2RestException exception) {
-		String exceptionName = exception.getCts2Exception().getClass().getSimpleName();
+	public int getErrorCode(Exception exception) {
+		String exceptionName = exception.getClass().getSimpleName();
 		
 		String code = this.properties.getProperty(exceptionName);
 		

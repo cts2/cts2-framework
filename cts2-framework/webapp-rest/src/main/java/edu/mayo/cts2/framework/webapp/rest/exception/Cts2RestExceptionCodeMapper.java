@@ -25,6 +25,8 @@ package edu.mayo.cts2.framework.webapp.rest.exception;
 
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 
+
+
 /**
  * The Interface Cts2RestExceptionCodeMapper.
  *
@@ -38,5 +40,8 @@ public interface Cts2RestExceptionCodeMapper {
 	 * @param exception the exception
 	 * @return the error code
 	 */
+	public int getErrorCode(Exception exception);
+	
+	@Deprecated
 	public int getErrorCode(Cts2RestException exception);
 }

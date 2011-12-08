@@ -59,8 +59,12 @@ import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
+import edu.mayo.cts2.framework.model.exception.changeset.ChangeSetIsNotOpenException;
+import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
+import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
+import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
@@ -108,6 +112,26 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 		response.setStatus(status);
 		
 		return ex.getCts2Exception();
+	}
+	
+	@ExceptionHandler(ChangeSetIsNotOpenException.class)
+	@ResponseBody
+	public ChangeSetIsNotOpen handleException(HttpServletResponse response, ChangeSetIsNotOpenException ex) {
+		int status = this.cts2RestExceptionCodeMapper.getErrorCode(ex);
+		
+		response.setStatus(status);
+		
+		return ExceptionFactory.createChangeSetIsNotOpenException(ex);
+	}
+	
+	@ExceptionHandler(UnknownChangeSetException.class)
+	@ResponseBody
+	public UnknownChangeSet handleException(HttpServletResponse response, UnknownChangeSetException ex) {
+		int status = this.cts2RestExceptionCodeMapper.getErrorCode(ex);
+		
+		response.setStatus(status);
+		
+		return ExceptionFactory.createUnknownChangeSetException(ex);
 	}
 	
 	/**

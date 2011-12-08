@@ -8,8 +8,8 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
+import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.UpdateChangeableMetadataRequest;
 
@@ -38,7 +38,7 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 		}
 
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw ExceptionFactory.createUnknownChangeSetException(null);
+			throw new UnknownChangeSetException(null);
 		}
 		
 		ChangeType type = group.getChangeDescription().getChangeType();

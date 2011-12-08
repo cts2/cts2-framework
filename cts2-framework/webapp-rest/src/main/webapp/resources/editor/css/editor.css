@@ -80,8 +80,11 @@ ul {
 }
 
 .toolbar {
-	padding: 10px 4px;
+	/*padding: 10px 4px;*/
+	display: block;
 }
 
-
+.urlInput {
+	width:75%
+}
 

@@ -27,14 +27,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.exception.changeset.ChangeSetIsNotOpenException;
+import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
+import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
 import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
@@ -209,18 +211,26 @@ public class ExceptionFactory {
 		return ex;
 	}
 	
-	public static Cts2RestException createUnknownChangeSetException(String changeSetUri) {
+	public static ChangeSetIsNotOpen createChangeSetIsNotOpenException(ChangeSetIsNotOpenException changeSetIsNotOpen) {
+		ChangeSetIsNotOpen ex = new ChangeSetIsNotOpen();
+		
+		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
+
+		ex.setMessage(ModelUtils.createOpaqueData(changeSetIsNotOpen.getMessage()));
+		
+		return ex;
+	}
+	
+	public static UnknownChangeSet createUnknownChangeSetException(UnknownChangeSetException unknownChangeSet) {
 		UnknownChangeSet ex = new UnknownChangeSet();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
-		String message = 
-				"No matching ChangeSet found. Requested was:" + ( StringUtils.isNotBlank(changeSetUri) ? changeSetUri : " *NONE SPECIFIED*" );
+		ex.setMessage(ModelUtils.createOpaqueData(unknownChangeSet.getMessage()));
 		
-		ex.setMessage(ModelUtils.createOpaqueData(message));
-		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 	
 	/**
