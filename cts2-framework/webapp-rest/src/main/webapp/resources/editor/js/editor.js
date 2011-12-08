@@ -467,6 +467,8 @@ function addPortlet(div,style,name,description){
 	});
 
 	div.append($('<li>').append($(html)).append('</li>'));
+	
+	return $(html);
 }
 
 
@@ -537,13 +539,13 @@ $(document).ready(function() {
 			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).show();
 		});
 	});
-
+/*
 	$( "#addMapTarget" ).button().click(function() {
 			var $newTarget = cloneMapTarget();
 			
 			$('#mapTargetList').append($newTarget);	
 	});
-	
+*/	
 	$( "#mapVersionFromUrlButton" ).button().click(function(event) {
 			event.preventDefault(); 
 			var url = $( '#mapVersionFromUrl' ).val();
@@ -611,7 +613,9 @@ $(document).ready(function() {
 							var responseArray = [];
 							
 							$.each(data.entryList, function(index,item){
-								responseArray.push( {'label': item.name.name,
+								responseArray.push( {'name': item.name.name,
+													 'namespace': item.name.namespace,
+													 'about': item.about,
 													 'description': item.knownEntityDescriptionList[0].designation} );
 							});
 						
@@ -625,7 +629,8 @@ $(document).ready(function() {
 		data._renderMenu = function( ul, items ) {
 			$('#sourceList').empty();
 			   $.each( items, function( index, item ) {
-				   addPortlet($('#sourceList'), 'sourceEntities', item.label,item.description);
+				   var $portlet = addPortlet($('#sourceList'), 'sourceEntities', item.name,item.description);
+				   $portlet.data("item",item);
 			    });
 
 	    };
@@ -645,9 +650,10 @@ $(document).ready(function() {
 							var responseArray = [];
 							
 							$.each(data.entryList, function(index,item){
-								responseArray.push( {'label': item.name.name,
-													 'description': item.knownEntityDescriptionList[0].designation
-													} );
+								responseArray.push( {'name': item.name.name,
+									 'namespace': item.name.namespace,
+									 'about': item.about,
+									 'description': item.knownEntityDescriptionList[0].designation} );
 							});
 						
 							response(responseArray);
@@ -660,7 +666,8 @@ $(document).ready(function() {
 		data._renderMenu = function( ul, items ) {
 			$('#targetList').empty();
 			   $.each( items, function( index, item ) {
-				   addPortlet($('#targetList'), 'targetEntities', item.label, item.description);
+				   var $portlet = addPortlet($('#targetList'), 'targetEntities', item.name, item.description);
+				   $portlet.data("item",item);
 			    });
 	    };
 
@@ -1485,10 +1492,6 @@ function updateCodingScheme(data) {
 }
 
 function addTabsToTemplate(elements) {
-	//var selected = $('.resourceDescriptionTemplate-edit-tabs').tabs('option', 'selected');
-	
-	//$tabs = $('.resourceDescriptionTemplate-edit-tabs').tabs('destroy').tabs();
-
 	$tabs = $(elements[1]).closest('.resourceDescriptionTemplate-edit-tabs').tabs('destroy').tabs();
 
 	$tabs.bind('tabsselect', function(event, ui) {
@@ -1538,10 +1541,6 @@ function cloneMapEntry(){
 		$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).first().toggle();
 	});
 	
-	$newEntry.find('.sourceDrop').sortable({
-		connectWith: ".connectedSourceSortable"
-	}).disableSelection();
-	
 	$newEntry.find('.mapTargetList').sortable();
 	
 	$newEntry.find('.saveMapEntry').button().click(function() {
@@ -1581,12 +1580,6 @@ function cloneMapEntry(){
 	var $changeSetDropdown = $newEntry.find('.changeSetDropdown');
 	populateChangeSetDropdown( $changeSetDropdown );
 	
-	$newEntry.find( ".addMapTarget" ).button().click(function() {
-		var $newTarget = cloneMapTarget();
-		
-		$newEntry.find('.mapTargetList').append($newTarget);	
-	});
-	
 	$newEntry.find( ".expandAllMapTargets" ).button().click(function() {
 		$(".mapTargetPortlet").each(function(){
 			$(this).find($( ".portlet-header .ui-icon" )).each(function() {
@@ -1612,23 +1605,43 @@ function cloneMapEntry(){
 
 	var json = {
 		entry: {
-			mapFrom: {
-				name:"asd",
-				namespace:"asdf",
-				uri:"asdf",
-				href:"asdf"
-			},
 			assertedBy: {
 				map: currentMappingMapVersion.versionOf,
 				mapVersion:{
 					content:currentMappingMapVersion.mapVersionName
 				}
 			},
-			processingRule:ko.observable("ALL_MATCHES")
+			processingRule:"ALL_MATCHES",
+			mapSetList:[
+			     {
+			            processingRule:"ALL_MATCHES",
+			 			entryOrder:"1",
+			 			mapTargetList:[]
+			     }
+			]
 		}
 	};
 	
 	var model = ko.mapping.fromJS(json);
+	
+	$newEntry.find( ".addMapTarget" ).button().click(function() {
+		var $newTarget = cloneMapTarget(model);
+		
+		$newEntry.find('.mapTargetList').append($newTarget);	
+	});
+	
+	$newEntry.find('.sourceDrop').sortable({
+		connectWith: ".connectedSourceSortable",
+		receive: function(event, ui) {
+			var data = ui.item.find(".portlet").data("item");
+			
+			model.entry.mapFrom = {
+					name:data.name,
+					namespace:data.namespace,
+					uri:data.about
+			};
+		}
+	}).disableSelection();
 	
 	ko.applyBindings(model, $($newEntry).get(0) );
 
@@ -1637,7 +1650,9 @@ function cloneMapEntry(){
 	return $newEntry;
 }
 
-function cloneMapTarget(){
+function cloneMapTarget(model){
+
+	
 	var $newTarget = $( '#mapTarget' ).clone();
 	$newTarget.removeAttr("id");
 	
@@ -1647,7 +1662,23 @@ function cloneMapTarget(){
 	});
 
 	$newTarget.find('.targetDrop').sortable({
-		connectWith: ".connectedTargetSortable"
+		connectWith: ".connectedTargetSortable",
+		receive: function(event, ui) {
+			var data = ui.item.find(".portlet").data("item");
+			
+			var mapTarget = {
+					name:data.name,
+					namespace:data.namespace,
+					uri:data.about,
+			};
+			
+			model.entry.mapSetList()[0].mapTargetList.push(
+				{ 
+					entryOrder:"1",
+					mapTo:mapTarget 
+				}
+			);
+		}
 	}).disableSelection();
 	
 	return $newTarget;	

@@ -701,7 +701,7 @@
 							<ul id="sourceList" style="display: inline" class="droppable connectedSourceSortable"></ul>
 						</td>
 
-						<td align="center">
+						<td>
 							<ul id="mapEntryList" style="height:500px; overflow: auto">
 							<li>
 	
@@ -773,9 +773,10 @@
 													<div class="portlet-content">
 
 
-														<ul
+														<ul 
 															class="sourceDrop droppable dropzone connectedSourceSortable"></ul>
 
+		   													
 													</div>
 												</div>
 
@@ -802,7 +803,7 @@
 													</div>
 													<div>
 
-														<div
+														<div 
 															style='height: 200px; overflow: auto'
 															class="mapTargetList portlet-content">
 
@@ -816,9 +817,11 @@
 									</table>
 								</div>
 								
+								<span style="width:100%" class="toolbar ui-widget-header ui-corner-all">
 								<button class="saveMapEntry">Save Map Entry</button>
 									<label>ChangeSet:
 									</label> <select class="changeSetDropdown"></select>
+								</span>
 							</div>
 							
 	</div>
