@@ -113,11 +113,10 @@
 </head>
 
 <body>
-	Select A Theme:
-	<div id="switcher"></div>
-	<br />
-	<br />
-
+	
+	<div>
+		<img src="resources/images/dflogo-very-small.png"/>
+	</div>
 
 	<div id="createChangeSetForm" title="Create ChangeSet">
 
@@ -125,9 +124,9 @@
 			<fieldset class="ui-widget-content" title="Keywords">
 				<legend class="ui-widget-header ui-corner-all">Change
 					Instructions</legend>
-				<label for="keyword">Change Instructions </label> <input type="text"
-					name="changeInstructions" id="changeInstructions"
-					class="text ui-widget-content ui-corner-all" />
+				<label for="keyword">Change Instructions </label> 
+					<textarea name="changeInstructions" id="changeInstructions"
+					class="text ui-widget-content ui-corner-all" ></textarea>
 			</fieldset>
 		</form>
 
@@ -181,6 +180,7 @@
 					<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
 					<label for="cs-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
 					<select id="cs-edit-choose-changeSetDropdown"
+						class="changeSetDropdown"
 						name="cs-edit-choose-changeSetDropdown"></select>
 				</fieldset>
 					
@@ -209,7 +209,7 @@
 					id="cs-edit-search-changeSetDropdown"
 					name="cs-edit-search-changeSetDropdown"
 					data-getAllFunctionName="onListAllCodeSystems"
-					class="AddCurrentOption"></select> <br></br> <label
+					class="AddCurrentOption changeSetDropdown"></select> <br></br> <label
 					for="cs-editAutocomplete">Search: </label> <input
 					id="cs-editAutocomplete" /> <input type="submit" id="clearSearch"
 					value="Clear Search" name="clearSearch"
@@ -228,6 +228,7 @@
 			<div id="cs-tabs-2">
 
 				<label for="cs-create-changeSetDropdown">ChangeSet: </label> <select
+					class="changeSetDropdown"
 					id="cs-create-changeSetDropdown">
 				</select>
 
@@ -260,7 +261,7 @@
 
 				<label for="cs-search-changeSetDropdown">ChangeSet: </label> <select
 					id="cs-search-changeSetDropdown" name="cs-search-changeSetDropdown"
-					class="AddCurrentOption"></select> <input
+					class="AddCurrentOption changeSetDropdown"></select> <input
 					id="cs-searchAutocomplete" /> <br></br>
 
 				<table id="cs-autocompleteTable" class="display">
@@ -354,7 +355,7 @@
 					id="ed-edit-search-changeSetDropdown"
 					name="ed-edit-search-changeSetDropdown"
 					data-getAllFunctionName="onListAllEntities"
-					class="AddCurrentOption"></select> <br></br> <label
+					class="AddCurrentOption changeSetDropdown"></select> <br></br> <label
 					for="ed-editAutocomplete">Search: </label> <input
 					id="ed-editAutocomplete" /> <input type="submit"
 					id="ed-clearSearch" value="Clear Search" name="ed-clearSearch"
@@ -375,6 +376,7 @@
 			<div id="ed-tabs-2">
 
 				<label for="ed-create-changeSetDropdown">ChangeSet: </label> <select
+					class="changeSetDropdown"
 					id="ed-create-changeSetDropdown">
 				</select>
 
@@ -396,6 +398,12 @@
 								<td>About</td>
 								<td><input id="entityNameAbout" name="entityNameAbout"
 									type="text" /></td>
+							</tr>
+							<tr>
+								<td>Code System Version</td>
+								<td><select id="entityCsvSelect" name="entityCsvSelect">
+									</select>
+								</td>
 							</tr>
 
 
@@ -451,6 +459,7 @@
 							<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
 							<label for="map-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
 							<select id="map-edit-choose-changeSetDropdown"
+								class="changeSetDropdown"
 								name="map-edit-choose-changeSetDropdown"></select>
 						</fieldset>
 
@@ -466,7 +475,7 @@
 					<label for="map-edit-search-changeSetDropdown">ChangeSet: </label>
 					<select id="map-edit-search-changeSetDropdown"
 						name="map-edit-search-changeSetDropdown"
-						data-getAllFunctionName="onListAllMaps" class="AddCurrentOption"></select>
+						data-getAllFunctionName="onListAllMaps" class="AddCurrentOption changeSetDropdown"></select>
 
 					<br></br> <label for="map-editAutocomplete">Search: </label> <input
 						id="map-editAutocomplete" /> <input type="submit" id="clearSearch"
@@ -486,6 +495,7 @@
 				<div id="createNewMapTab">
 
 					<label for="map-create-changeSetDropdown">ChangeSet: </label> <select
+						class="changeSetDropdown"
 						id="map-create-changeSetDropdown">
 					</select>
 
@@ -556,7 +566,7 @@
 								class="ui-widget-content" title="ChangeSet">
 								<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
 								<label for="mapversion-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
-								<select id="mapversion-edit-choose-changeSetDropdown"
+								<select id="mapversion-edit-choose-changeSetDropdown" class="changeSetDropdown"
 									name="mapversion-edit-choose-changeSetDropdown"></select>
 							</fieldset>
 						</div>
@@ -572,7 +582,7 @@
 					</label> <select id="mapversion-edit-search-changeSetDropdown"
 						name="mapversion-edit-search-changeSetDropdown"
 						data-getAllFunctionName="onListAllMapVersions"
-						class="AddCurrentOption"></select> <br></br> <label
+						class="AddCurrentOption changeSetDropdown"></select> <br></br> <label
 						for="mapversion-editAutocomplete">Search: </label> <input
 						id="mapversion-editAutocomplete" /> <input type="submit"
 						id="clearSearch" value="Clear Search" name="clearSearch"
@@ -593,7 +603,7 @@
 				<div id="createNewMapVersionVersionTab">
 
 					<label for="mapversion-create-changeSetDropdown">ChangeSet:
-					</label> <select id="mapversion-create-changeSetDropdown"></select>
+					</label> <select id="mapversion-create-changeSetDropdown" class="changeSetDropdown"></select>
 
 					<form style="width: 50%">
 
@@ -612,7 +622,7 @@
 								</tr>
 								<tr>
 									<td>Version Of</td>
-									<td><select id="mapversion-versionof-dropdown"></select></td>
+									<td><select id="mapversion-versionof-dropdown" class="mapDropDown"></select></td>
 								</tr>
 
 
@@ -665,17 +675,17 @@
 
 			<div id="mapping-tabs-maptool">
 
-				<div style="padding: 10px 10px">
-					<span style="width:100%" class="toolbar ui-widget-header ui-corner-all">
-						Toolbar:
-						<button id="expandAll">expand all</button>
-						<button id="collapseAll">collapse all</button>
-						<span style="float:right">
-							<button id="loadMapVersion">Load Map Version</button>
-							<input size="125" name="loadMapVersionUrl" id="loadMapVersionUrl" type="text"/>
-						</span>
-					</span>
-				</div>
+<!-- 				<div style="padding: 10px 10px"> -->
+<!-- 					<span style="width:100%" class="toolbar ui-widget-header ui-corner-all"> -->
+<!-- 						Toolbar: -->
+<!-- 						<button id="expandAll">expand all</button> -->
+<!-- 						<button id="collapseAll">collapse all</button> -->
+<!-- 						<span style="float:right"> -->
+<!-- 							<button id="loadMapVersion">Load Map Version</button> -->
+<!-- 							<input size="125" name="loadMapVersionUrl" id="loadMapVersionUrl" type="text"/> -->
+<!-- 						</span> -->
+<!-- 					</span> -->
+<!-- 				</div> -->
 
 
 				<table style="width: 100%">
@@ -689,6 +699,14 @@
 								<span
 									class="toolbar ui-widget-header ui-corner-all"> Toolbar:
 									<button id="addMapEntry">Add Map Entry</button>
+									<span id="exandContractButtonSet">
+										<button id="expandAll">expand all</button>
+										<button id="collapseAll">collapse all</button>
+									</span>
+			 						<span style="float:right"> 
+										<button id="loadMapVersion">Load Map Version</button>
+									</span>
+								
 								</span>
 							</div>
 						</td>
@@ -755,6 +773,22 @@
 					class="targetDrop droppable dropzone connectedTargetSortable"></ul>
 			</div>
 		</div>
+		
+				<div id="loadMapVersionForm" title="Load Map Version">
+
+	
+					<form class="ui-widget">
+						<fieldset>
+							<label for="map-edit-choose-changeSetDropdown"><b>Map Version:</b></label>
+							<select id="mapEntryMapVersionDropdown" 
+								name="mapEntryMapVersionDropdown"></select>
+						</fieldset>
+					
+
+					</form>
+
+				</div>
+		
 		
 				<div id="mapEntry"
 								class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -825,5 +859,7 @@
 							</div>
 							
 	</div>
+	
+	<div id="switcher"></div>
 </body>
 </html>

@@ -88,3 +88,11 @@ ul {
 	width:75%
 }
 
+.ui-tabs .ui-tabs-panel {
+	padding: .5em .5em;
+}
+
+.ui-autocomplete-loading {
+  background: url("images/loading.gif") right center no-repeat;
+}
+
