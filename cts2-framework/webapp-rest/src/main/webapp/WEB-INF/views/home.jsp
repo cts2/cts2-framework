@@ -62,20 +62,20 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
           <div class="window_aside">
 	
 	
-			<h1>TODO:</h1>
-		<p>...</p>
-		<br>
-		<h1>TODO:</h1>
-		<p>...</p>
+			<h1></h1>
+			<p></p>
+			<br>
+			<h1></h1>
+			<p></p>
 
           </div>
           <div class="window_main service-info">
           
-          <h1>Service Name: </h1><span id="serviceName">asdfasdf</span>
-          <br>
-          <h1>Service Version: </h1><span id="serviceVersion">asdfasdf</span>
-          <br>
-          <h1>Service Description: </h1><span id="serviceDescription">asdfasdf</span>
+<!--           <h1>Service Name: </h1><span id="serviceName"></span> -->
+<!--           <br> -->
+<!--           <h1>Service Version: </h1><span id="serviceVersion"></span> -->
+<!--           <br> -->
+<!--           <h1>Service Description: </h1><span id="serviceDescription"></span> -->
           <br>
 
           </div>

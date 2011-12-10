@@ -65,16 +65,16 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
         <div class="abs window_content">
           <div class="window_aside">
 		
-		<h1>TODO:</h1>
-		<p>...</p>
-		<br>
-		<h1>TODO:</h1>
-		<p>...</p>
+			<h1></h1>
+			<p></p>
+			<br>
+			<h1></h1>
+			<p></p>
 
           </div>
           <div class="window_main">
           
-         <h1>Service Name:</h1><p>...</p>
+<!--          <h1>Service Name:</h1><p></p> -->
         
          
           <div>

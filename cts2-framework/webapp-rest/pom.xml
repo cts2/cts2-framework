@@ -313,7 +313,7 @@
 			        </execution>
 			    </executions>
 			    <configuration>
-				    <backgroundImage>${basedir}/src/main/webapp/resources/images/dflogo-large.png</backgroundImage>
+				    <backgroundImage>${basedir}/src/main/webapp/resources/images/dflogo-small-server.png</backgroundImage>
 				    <additionalDependencies>
 				        <additionalDependency>
 				            <artifactId>jetty-console-jsp-plugin</artifactId>
