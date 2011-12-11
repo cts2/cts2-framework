@@ -31,8 +31,11 @@ import java.lang.reflect.Field;
 
 import javax.annotation.Resource;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -99,6 +102,10 @@ public class AbstractServiceAwareController extends
 								.getType();
 
 						Cts2Profile service = serviceProvider.getService(clazz);
+						
+						if(service == null){
+							service = this.proxyNullService(clazz);
+						}
 
 						field.setAccessible(true);
 
@@ -113,6 +120,24 @@ public class AbstractServiceAwareController extends
 					}
 				}
 			}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends Cts2Profile> T proxyNullService(Class<T> serviceClass){
+		
+		ProxyFactory factory =
+				new ProxyFactory(serviceClass, nullServiceMethodInterceptor);
+		
+		return (T) factory.getProxy();
+	}
+	
+	protected MethodInterceptor nullServiceMethodInterceptor = new MethodInterceptor() {
+
+		@Override
+		public Object invoke(MethodInvocation invocation) throws Throwable {
+			throw new UnsupportedOperationException("This service is not implemented.");
+		}
+		
+	};
 
 	@Override
 	public void onServiceProviderChange() {

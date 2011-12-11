@@ -415,6 +415,8 @@ function createLoadMapVersionFormDialog(){
 					  "type": "GET", 
 					  "dataType": 'json',
 					  success: function(data){ 
+						  $('#mapEntryMapVersionDropdown').html('');
+						  
 						  $.each(data.entryList, function(i){
 							  var href = data.entryList[i].href;
 							  var $option = "<option data-href='"+href+"'>"+data.entryList[i].mapVersionName+"</option>";
@@ -1475,7 +1477,7 @@ function updateMapVersion(data) {
 
 	  data.mapVersion.changeableElementGroup.changeDescription.changeType = "UPDATE";
 
-	  var changeSetUri = $("#mapversion-edit-search-changeSetDropdown").val();
+	  var changeSetUri = $("#mapversion-edit-choose-changeSetDropdown").val();
 	  
 	  data.mapVersion.changeableElementGroup.changeDescription.containingChangeSet = changeSetUri;
 	  
