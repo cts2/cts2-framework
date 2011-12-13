@@ -15,6 +15,7 @@ var selectedChangeSetUri;
 var mapViewModel;
 var mapVersionViewModel;
 var csViewModel;
+var csvViewModel;
 var viewModel;
 
 var urlPrefix = "";
@@ -380,6 +381,29 @@ function createEditCodeSystemDialog(){
 		});
 }
 
+function createEditCodeSystemVersionDialog(){
+	   $( "#codeSystemVersionEditForm" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Save!": function() {
+	
+					var newJson = ko.mapping.toJS(csvViewModel);
+					
+					updateCodeSystemVersion(newJson.codeSystemVersionCatalogEntry);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//$(this).dialog('destroy');
+			}
+		});
+}
+
 function createEditEntityDialog(){
 	   $( "#entityEditForm" ).dialog({
 			autoOpen: false,
@@ -712,6 +736,7 @@ $(document).ready(function() {
 		//end target mapping autocomplete
 	
 	   createEditCodeSystemDialog();
+	   createEditCodeSystemVersionDialog();
 	   createEditEntityDialog();
 	   createEditMapDialog();
 	   createEditMapVersionDialog();
@@ -788,7 +813,7 @@ $(document).ready(function() {
 		"bProcessing": false,
 		"bPaginate": true,
 		"bFilter": true,
-		"sAjaxSource": urlPrefix+'codesystems?format=json',
+		"sAjaxSource": urlPrefix+'entities?format=json',
 		"fnServerData": fnEntityObjectToArray()
 	} );
 	
@@ -853,7 +878,7 @@ $(document).ready(function() {
 		  "dataType": 'json',
 		  success: function(data){ 
 			  $.each(data.entryList, function(entry){
-				  $('#entityCsvSelect').append("<option>"+entry.codeSystemVersionName+"</option>");
+				  $('#entityCsvSelect').append("<option>"+data.entryList[entry].codeSystemVersionName+"</option>");
 			  });
 		  },
 		  failure: function(data){ 
@@ -871,6 +896,8 @@ $(document).ready(function() {
      });
 
 	$( "#editCodeSystem" ).tabs();
+	$( "#codesystem" ).tabs();
+	$( "#codesystemversion" ).tabs();
 	$( "#editEntity" ).tabs();
 	$( "#entityEditTabs" ).tabs();
 	$( "#mappings" ).tabs();
@@ -1187,6 +1214,15 @@ function createCodeSystem(){
 	doCreateCodeSystem(csn,about,changeseturi);
 }
 
+function createCodeSystemVersion(){
+	var csvn = $("#csvn").val();
+	var about = $("#csvabout").val();
+	var docuri = $("#docuri").val();
+	var versionOf = $("#csvversionof").val();
+	var changeseturi = $("#csv-create-changeSetDropdown").val();
+	
+	doCreateCodeSystemVersion(csvn,about,docuri,versionOf,changeseturi);
+}
 
 function createEntity(){
 	var name = $("#entityName").val();
@@ -1337,6 +1373,24 @@ function doCreateCodeSystem(csn,about,changeseturi) {
 	doCreate(json,"codesystem",changeseturi);
 }
 
+function doCreateCodeSystemVersion(csvn,about,docuri,versionOf,changeseturi) {
+	
+	var json = {
+			"codeSystemVersionName":csvn,
+			"about":about,
+			"documentURI":docuri,
+			"sourceAndNotation":{
+				"sourceAndNotationDescription":"CTS2 Development Framework Editor"
+			},
+			"versionOf":{
+				"content":versionOf
+			}
+	};
+	
+	
+	doCreate(json,"codesystemversion",changeseturi);
+}
+
 function doCreateMap(mapname,about,changeseturi) {
 	
 	var json = {"mapName":mapname,"about":about};
@@ -1390,7 +1444,7 @@ function _doCreate(url,json,changeSetUri,oncreate){
 				}
 				
 				log("POST",
-						url+"?changesetcontext="+currentChangeSetUri,
+						url+"?changesetcontext="+changeSetUri,
 						"Creating...");
 			}
 		} );
@@ -1576,6 +1630,7 @@ function updateCodingScheme(data) {
 				
 				codeSystemTable.fnReloadAjax(urlPrefix+"codesystems?format=json&changesetcontext="+changeSetUri);
 
+				$("#cs-edit-search-changeSetDropdown").val(changeSetUri);
 			}
 		} );
 

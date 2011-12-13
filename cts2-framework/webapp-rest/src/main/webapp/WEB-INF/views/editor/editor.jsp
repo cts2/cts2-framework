@@ -159,121 +159,218 @@
 		</div>
 
 		<div id="editCodeSystem">
-
+		
 			<ul>
-				<li><a href="#cs-tabs-1">Edit</a></li>
-				<li><a href="#cs-tabs-2">Create New</a></li>
-				<li><a href="#cs-tabs-4">Search</a></li>
-
+				<li><a href="#codesystem">CodeSystem</a></li>
+				<li><a href="#codesystemversion">CodeSystemVersion</a></li>
 			</ul>
-
-			<div id="codeSystemEditForm" title="Edit CodeSystem">
-
-				<label id="codeSystemLNameLabel"><b>CodeSystemName:</b> <span
-					data-bind="text: codeSystemCatalogEntry.codeSystemName"></span></label> <br></br>
-				<label id="csAboutLabel"><b>About:</b> <span
-					data-bind="text: codeSystemCatalogEntry.about"></span></label> <br></br>
-					
-					
-				<fieldset id="cs-chooseChangeSetForEditFieldset"
-					class="ui-widget-content" title="ChangeSet">
-					<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
-					<label for="cs-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
-					<select id="cs-edit-choose-changeSetDropdown"
-						class="changeSetDropdown"
-						name="cs-edit-choose-changeSetDropdown"></select>
-				</fieldset>
-					
-				<form class="ui-widget">
-
-					<div id="cstest-tabs" class="resourceDescriptionTemplate-edit-tabs">
-						<ul>
-								<li><a href="#tab1">Overview</a></li>		
-								<li><a href="#tab2">Comments</a></li>
-								<li><a href="#tab3">Properties</a></li>
-						</ul>	
-						<span
-							data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: codeSystemCatalogEntry, afterRender: addTabsToTemplate } ">
-						</span>
-					</div>
-
-
-				</form>
-
-			</div>
-
-			<div id="cs-tabs-1">
-
-
-				<label for="cs-edit-search-changeSetDropdown">ChangeSet: </label> <select
-					id="cs-edit-search-changeSetDropdown"
-					name="cs-edit-search-changeSetDropdown"
-					data-getAllFunctionName="onListAllCodeSystems"
-					class="AddCurrentOption changeSetDropdown"></select> <br></br> <label
-					for="cs-editAutocomplete">Search: </label> <input
-					id="cs-editAutocomplete" /> <input type="submit" id="clearSearch"
-					value="Clear Search" name="clearSearch"
-					onclick="onClearEditSearch()" /> <br></br>
-
-				<table id="codeSystemTable" class="display">
-					<thead>
-						<tr>
-							<th>CodeSystem Name</th>
-							<th>About</th>
-							<th>Description</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-			<div id="cs-tabs-2">
-
-				<label for="cs-create-changeSetDropdown">ChangeSet: </label> <select
-					class="changeSetDropdown"
-					id="cs-create-changeSetDropdown">
-				</select>
-
-				<form style="width: 50%">
-
-					<fieldset>
-						<legend>Create</legend>
-						<table>
-							<tr>
-								<td>Code System Name</td>
-								<td><input id="csn" name="csn" type="text" /></td>
-							</tr>
-							<tr>
-								<td>About</td>
-								<td><input id="about" name="about" type="text" /></td>
-							</tr>
-
-
-							<tr>
-								<td><input type="submit" value="Create"
-									onclick="createCodeSystem();" /></td>
-							</tr>
-
-						</table>
+			
+			<div id="codesystem">
+	
+				<ul>
+					<li><a href="#cs-tabs-1">Edit</a></li>
+					<li><a href="#cs-tabs-2">Create New</a></li>
+				</ul>
+	
+				<div id="codeSystemEditForm" title="Edit CodeSystem">
+	
+					<label id="codeSystemLNameLabel"><b>CodeSystemName:</b> <span
+						data-bind="text: codeSystemCatalogEntry.codeSystemName"></span></label> <br></br>
+					<label id="csAboutLabel"><b>About:</b> <span
+						data-bind="text: codeSystemCatalogEntry.about"></span></label> <br></br>
+						
+						
+					<fieldset id="cs-chooseChangeSetForEditFieldset"
+						class="ui-widget-content" title="ChangeSet">
+						<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
+						<label for="cs-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
+						<select id="cs-edit-choose-changeSetDropdown"
+							class="changeSetDropdown"
+							name="cs-edit-choose-changeSetDropdown"></select>
 					</fieldset>
-				</form>
+						
+					<form class="ui-widget">
+	
+						<div id="cstest-tabs" class="resourceDescriptionTemplate-edit-tabs">
+							<ul>
+									<li><a href="#tab1">Overview</a></li>		
+									<li><a href="#tab2">Comments</a></li>
+									<li><a href="#tab3">Properties</a></li>
+							</ul>	
+							<span
+								data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: codeSystemCatalogEntry, afterRender: addTabsToTemplate } ">
+							</span>
+						</div>
+	
+	
+					</form>
+	
+				</div>
+	
+				<div id="cs-tabs-1">
+	
+	
+					<label for="cs-edit-search-changeSetDropdown">ChangeSet: </label> <select
+						id="cs-edit-search-changeSetDropdown"
+						name="cs-edit-search-changeSetDropdown"
+						data-getAllFunctionName="onListAllCodeSystems"
+						class="AddCurrentOption changeSetDropdown"></select> <br></br> <label
+						for="cs-editAutocomplete">Search: </label> <input
+						id="cs-editAutocomplete" /> <input type="submit" id="clearSearch"
+						value="Clear Search" name="clearSearch"
+						onclick="onClearEditSearch()" /> <br></br>
+	
+					<table id="codeSystemTable" class="display">
+						<thead>
+							<tr>
+								<th>CodeSystem Name</th>
+								<th>About</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div id="cs-tabs-2">
+	
+					<label for="cs-create-changeSetDropdown">ChangeSet: </label> <select
+						class="changeSetDropdown"
+						id="cs-create-changeSetDropdown">
+					</select>
+	
+					<form style="width: 50%">
+	
+						<fieldset>
+							<legend>Create</legend>
+							<table>
+								<tr>
+									<td>Code System Name</td>
+									<td><input id="csn" name="csn" type="text" /></td>
+								</tr>
+								<tr>
+									<td>About</td>
+									<td><input id="about" name="about" type="text" /></td>
+								</tr>
+	
+	
+								<tr>
+									<td><input type="submit" value="Create"
+										onclick="createCodeSystem();" /></td>
+								</tr>
+	
+							</table>
+						</fieldset>
+					</form>
+				</div>
+	
 			</div>
-
-			<div id="cs-tabs-4">
-
-				<label for="cs-search-changeSetDropdown">ChangeSet: </label> <select
-					id="cs-search-changeSetDropdown" name="cs-search-changeSetDropdown"
-					class="AddCurrentOption changeSetDropdown"></select> <input
-					id="cs-searchAutocomplete" /> <br></br>
-
-				<table id="cs-autocompleteTable" class="display">
-					<thead>
-						<tr>
-							<th>CodeSystem Name</th>
-							<th>About</th>
-							<th>Description</th>
-						</tr>
-					</thead>
-				</table>
+			
+			<div id="codesystemversion">
+	
+				<ul>
+					<li><a href="#csv-tabs-1">Edit</a></li>
+					<li><a href="#csv-tabs-2">Create New</a></li>
+				</ul>
+	
+				<div id="codeSystemVersionEditForm" title="Edit CodeSystemVersion">
+	
+					<label id="codeSystemVersionNameLabel"><b>CodeSystemName:</b> <span
+						data-bind="text: codeSystemVersionCatalogEntry.codeSystemVersionName"></span></label> <br></br>
+					<label id="csvAboutLabel"><b>About:</b> <span
+						data-bind="text: codeSystemVersionCatalogEntry.about"></span></label> <br></br>
+						
+						
+					<fieldset id="csv-chooseChangeSetForEditFieldset"
+						class="ui-widget-content" title="ChangeSet">
+						<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
+						<label for="csv-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
+						<select id="csv-edit-choose-changeSetDropdown"
+							class="changeSetDropdown"
+							name="csv-edit-choose-changeSetDropdown"></select>
+					</fieldset>
+						
+					<form class="ui-widget">
+	
+						<div id="cstest-tabs" class="resourceDescriptionTemplate-edit-tabs">
+							<ul>
+									<li><a href="#tab1">Overview</a></li>		
+									<li><a href="#tab2">Comments</a></li>
+									<li><a href="#tab3">Properties</a></li>
+							</ul>	
+							<span
+								data-bind="template: { name: 'abstractResourceDescriptionTemplate', data: codeSystemCatalogEntry, afterRender: addTabsToTemplate } ">
+							</span>
+						</div>
+	
+	
+					</form>
+	
+				</div>
+	
+				<div id="csv-tabs-1">
+	
+	
+					<label for="csv-edit-search-changeSetDropdown">ChangeSet: </label> <select
+						id="csv-edit-search-changeSetDropdown"
+						name="csv-edit-search-changeSetDropdown"
+						data-getAllFunctionName="onListAllCodeSystemVersions"
+						class="AddCurrentOption changeSetDropdown"></select> <br></br> <label
+						for="csv-editAutocomplete">Search: </label> <input
+						id="csv-editAutocomplete" /> <input type="submit" id="clearSearch"
+						value="Clear Search" name="clearSearch"
+						onclick="onClearEditSearch()" /> <br></br>
+	
+					<table id="codeSystemVersionTable" class="display">
+						<thead>
+							<tr>
+								<th>CodeSystem Name</th>
+								<th>CodeSystemVersion Name</th>
+								<th>Docuemnt URI</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div id="csv-tabs-2">
+	
+					<label for="csv-create-changeSetDropdown">ChangeSet: </label> <select
+						class="changeSetDropdown"
+						id="csv-create-changeSetDropdown">
+					</select>
+	
+					<form style="width: 50%">
+	
+						<fieldset>
+							<legend>Create</legend>
+							<table>
+								<tr>
+									<td>Code System Version Name</td>
+									<td><input id="csvn" name="csn" type="text" /></td>
+								</tr>
+								<tr>
+									<td>About</td>
+									<td><input id="csvabout" name="csvabout" type="text" /></td>
+								</tr>
+								<tr>
+									<td>Document URI</td>
+									<td><input id="docuri" name="docuri" type="text" /></td>
+								</tr>
+								<tr>
+									<td>Version Of</td>
+									<td><input id="csvversionof" name="csvversionof" type="text" /></td>
+								</tr>
+	
+								<tr>
+									<td><input type="submit" value="Create"
+										onclick="createCodeSystemVersion();" /></td>
+								</tr>
+	
+							</table>
+						</fieldset>
+					</form>
+				</div>
+	
 			</div>
+			
 		</div>
 
 		<div id="editEntity">
