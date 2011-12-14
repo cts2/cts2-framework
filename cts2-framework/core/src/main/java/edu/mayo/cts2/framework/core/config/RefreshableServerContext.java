@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.core.config;
 
+import org.apache.commons.lang.StringUtils;
+
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 
@@ -70,7 +72,13 @@ public class RefreshableServerContext implements ServerContext, ConfigChangeObse
 	 * @return the server root with app name
 	 */
 	public String getServerRootWithAppName() {
-		return this.getServerRoot() + "/" + this.getAppName();
+		String appName = this.getAppName();
+		
+		if(StringUtils.isNotBlank(appName)){
+			return this.getServerRoot() + "/" + this.getAppName();
+		} else {
+			return this.getServerRoot();
+		}
 	}
 
 	/**
