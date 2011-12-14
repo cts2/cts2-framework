@@ -101,8 +101,9 @@
 </script>
 
 <script id='abstractResourceDescriptionTemplate' type='text/html'>
-	<span data-bind="template: { name: 'resourceDescriptionTemplate', data: $data }"> </span>
+	<span data-bind="template: { name: 'resourceDescriptionTemplate', data: $data, afterRender: addTabsToTemplate }"> </span>
 </script>
+
 
 <script id='commentTemplate' type='text/html'>
 	<select data-bind="options: ['CHANGENOTE','EDITORIALNOTE','HISTORYNOTE', 'SCOPENOTE', 'NOTE'], value: type " ></select>
@@ -191,7 +192,7 @@
 						
 					<form class="ui-widget">
 	
-						<div id="cstest-tabs" class="resourceDescriptionTemplate-edit-tabs">
+						<div class="resourceDescriptionTemplate-edit-tabs">
 							<ul>
 									<li><a href="#tab1">Overview</a></li>		
 									<li><a href="#tab2">Comments</a></li>
@@ -387,6 +388,15 @@
 					data-bind="text: entityDescription.namedEntity.entityID.namespace"></span></label>
 				<br></br> <label id="entityNameLabel"><b>Entity Name:</b> <span
 					data-bind="text: entityDescription.namedEntity.entityID.name"></span></label>
+					
+				<fieldset id="ed-chooseChangeSetForEditFieldset"
+					class="ui-widget-content" title="ChangeSet">
+					<legend class="ui-widget-header ui-corner-all">ChangeSet</legend>
+					<label for="ed-edit-choose-changeSetDropdown"><b>ChangeSet:</b></label>
+					<select id="ed-edit-choose-changeSetDropdown"
+						class="changeSetDropdown"
+						name="ed-edit-choose-changeSetDropdown"></select>
+				</fieldset>
 
 				<div id="entityEditTabs">
 					<ul>
@@ -427,7 +437,7 @@
 			<script type="text/html" id="designationRowTemplate">
 		<tr>
 			<td>
-				<input type="text" name="designation" id="designation" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
+				<textarea data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
 			</td>
 			<td>
 				<select data-bind="options: ['PREFERRED','ALTERNATIVE','HIDDEN'], selectedOptions: designationRole" >
@@ -437,7 +447,7 @@
 			<script type="text/html" id="definitionRowTemplate">
 		<tr>
 			<td>
-				<input type="text" name="definition" id="designation" data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
+				<textarea data-bind="value: value.content" class="text ui-widget-content ui-corner-all" />
 			</td>
 			<td>
 				<select data-bind="options: ['NORMATIVE','INFORMATIVE'], value: definitionRole" >
@@ -497,9 +507,15 @@
 									type="text" /></td>
 							</tr>
 							<tr>
+								<td>Code System</td>
+								<td><input type="text" id="entityCsSelect" name="entityCsSelect">
+									</input>
+								</td>
+							</tr>
+							<tr>
 								<td>Code System Version</td>
-								<td><select id="entityCsvSelect" name="entityCsvSelect">
-									</select>
+								<td><input type="text" id="entityCsvSelect" name="entityCsvSelect">
+									</input>
 								</td>
 							</tr>
 
