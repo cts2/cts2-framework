@@ -38,8 +38,8 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
 import edu.mayo.cts2.framework.model.service.mapversion.types.MapStatus;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.command.restriction.MapVersionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface MapVersionQueryService.
@@ -49,7 +49,7 @@ import edu.mayo.cts2.framework.service.profile.QueryService;
 public interface MapVersionQueryService extends 
 	QueryService<MapVersion, 
 		MapVersionDirectoryEntry, 
-		MapVersionQueryServiceRestrictions>{
+		ResourceQuery>{
 	
 	public DirectoryResult<EntityDirectoryEntry> mapVersionEntities(
 			NameOrURI mapVersion,

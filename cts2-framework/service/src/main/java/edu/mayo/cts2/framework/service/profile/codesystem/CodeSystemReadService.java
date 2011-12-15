@@ -24,7 +24,9 @@
 package edu.mayo.cts2.framework.service.profile.codesystem;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
 /**
@@ -34,6 +36,16 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
  */
 public interface CodeSystemReadService extends
 		ReadService<CodeSystemCatalogEntry, NameOrURI> {
+
+	@Override
+	public CodeSystemCatalogEntry read(
+			NameOrURI identifier,
+			ResolvedReadContext readContext);
+
+	@Override
+	public boolean exists(
+			NameOrURI identifier, 
+			ReadContext readContext);
 	
 	
 }

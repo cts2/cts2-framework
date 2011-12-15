@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile.statement;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.statement.Statement;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface StatementHistoryService.

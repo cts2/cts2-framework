@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.meta;
 
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
+import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 
 /**
  * The Enum StandardModelAttributeReference.

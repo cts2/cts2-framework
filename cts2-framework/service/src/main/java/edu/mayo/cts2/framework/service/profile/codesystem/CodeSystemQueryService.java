@@ -23,16 +23,19 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystem;
 
-import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
+import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface CodeSystemQueryService.
- *
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface CodeSystemQueryService extends 
-	QueryService<CodeSystemCatalogEntry, CodeSystemCatalogEntrySummary, Void>{
+public interface CodeSystemQueryService
+		extends
+		QueryService<CodeSystemCatalogEntry, CodeSystemCatalogEntrySummary, ResourceQuery> {
 
+	
 }

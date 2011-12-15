@@ -23,13 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import java.util.Set;
-
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
  * The Interface QueryService.
@@ -39,7 +35,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
  * @param <Restrictions> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface QueryService<Resource,Summary,Restrictions> extends BaseQueryService {
+public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends BaseQueryService {
 
 	/**
 	 * Gets the resource summaries.
@@ -52,10 +48,8 @@ public interface QueryService<Resource,Summary,Restrictions> extends BaseQuerySe
 	 * @return the resource summaries
 	 */
 	public DirectoryResult<Summary> getResourceSummaries(
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			Restrictions restrictions,
-			ResolvedReadContext readContext, 
+			Q query,
+			SortCriteria sortCriteria,
 			Page page);
 	
 	/**
@@ -68,10 +62,8 @@ public interface QueryService<Resource,Summary,Restrictions> extends BaseQuerySe
 	 * @return the resource list
 	 */
 	public DirectoryResult<Resource> getResourceList(
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			Restrictions restrictions,
-			ResolvedReadContext readContext, 
+			Q query, 
+			SortCriteria sortCriteria,
 			Page page);
 	
 	/**
@@ -83,8 +75,6 @@ public interface QueryService<Resource,Summary,Restrictions> extends BaseQuerySe
 	 * @return the int
 	 */
 	public int count(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			Restrictions restrictions);
+			Q query);
 	
 }

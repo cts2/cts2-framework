@@ -23,9 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile.statement;
 
-import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
+import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface StatementQueryService.
@@ -33,6 +34,6 @@ import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface StatementQueryService extends 
-	QueryService<Statement, StatementDirectoryEntry, Void>{
+	QueryService<Statement, StatementDirectoryEntry, ResourceQuery>{
 
 }

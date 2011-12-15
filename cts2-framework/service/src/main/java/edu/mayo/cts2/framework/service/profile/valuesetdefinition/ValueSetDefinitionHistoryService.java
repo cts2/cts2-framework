@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
-import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
+import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
  * The Interface ValueSetDefinitionHistoryService.

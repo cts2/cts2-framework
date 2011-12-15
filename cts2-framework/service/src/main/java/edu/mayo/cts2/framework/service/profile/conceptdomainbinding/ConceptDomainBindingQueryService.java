@@ -23,10 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 
-import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
+import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface ConceptDomainBindingQueryService.
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDi
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ConceptDomainBindingQueryService extends 
-	QueryService<ConceptDomainBinding, ConceptDomainBindingDirectoryEntry, ConceptDomainBindingQueryServiceRestrictions>{
+	QueryService<ConceptDomainBinding, ConceptDomainBindingDirectoryEntry, ResourceQuery>{
 
 }

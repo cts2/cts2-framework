@@ -38,6 +38,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
@@ -46,7 +47,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface AssociationQueryService extends 
-	QueryService<Association, AssociationDirectoryEntry, AssociationQueryServiceRestrictions>{
+	QueryService<Association, AssociationDirectoryEntry, ResourceQuery>{
 	
 	/**
 	 * Gets the children associations of entity.

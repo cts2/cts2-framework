@@ -34,4 +34,6 @@ import edu.mayo.cts2.framework.service.profile.HistoryService;
  */
 public interface CodeSystemHistoryService extends
 		HistoryService<CodeSystemCatalogEntry,NameOrURI> {
+	
+	
 }

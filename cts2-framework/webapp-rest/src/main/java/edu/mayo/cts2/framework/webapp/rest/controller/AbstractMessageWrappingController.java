@@ -49,11 +49,14 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
 import edu.mayo.cts2.framework.model.core.RESTResource;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 
 /**
@@ -258,6 +261,33 @@ public abstract class AbstractMessageWrappingController extends
 		msg = this.wrapMessage(msg, httpServletRequest);
 		
 		return msg;
+	}
+	
+	protected <R,S,Q extends ResourceQuery> Directory doQuery(
+			HttpServletRequest httpServletRequest,
+			boolean isList,
+			QueryService<R,S,Q> queryService, 
+			Q query,
+			Page page,
+			SortCriteria sortCriteria,
+			Class<? extends Directory> summaryDirectory,
+			Class<? extends Directory> listDirectory) {
+		
+		DirectoryResult<?> result;
+		Class<? extends Directory> directoryClass;
+		
+		if(isList){
+			result = 
+				queryService.getResourceSummaries(query, sortCriteria, page);
+			directoryClass = listDirectory;
+		} else {
+			result = 
+				queryService.getResourceList(query, sortCriteria, page);
+			directoryClass = summaryDirectory;
+		}
+		
+		return 
+			this.populateDirectory(result, page, httpServletRequest, directoryClass);
 	}
 	
 	protected ResolvedReadContext resolveRestReadContext(RestReadContext context){

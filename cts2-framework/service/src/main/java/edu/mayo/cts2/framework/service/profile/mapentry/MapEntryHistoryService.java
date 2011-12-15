@@ -23,9 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapentry;
 
+import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectoryEntry;
 import edu.mayo.cts2.framework.service.profile.HistoryService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
-import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectoryEntry;
 
 /**
  * The Interface MapEntryHistoryService.

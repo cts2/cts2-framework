@@ -200,6 +200,7 @@ public class CodeSystemController extends AbstractServiceAwareController {
 			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestBody Query query,
+			boolean list,
 			RestFilter resolvedFilter,
 			Page page) {
 		

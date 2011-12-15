@@ -25,8 +25,8 @@ package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
-import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface ValueSetDefinitionQueryService.
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.QueryService;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ValueSetDefinitionQueryService extends 
-	QueryService<ValueSetDefinition, ValueSetDefinitionDirectoryEntry, ValueSetDefinitionQueryServiceRestrictions>{
+	QueryService<ValueSetDefinition, ValueSetDefinitionDirectoryEntry, ResourceQuery>{
 
 }
