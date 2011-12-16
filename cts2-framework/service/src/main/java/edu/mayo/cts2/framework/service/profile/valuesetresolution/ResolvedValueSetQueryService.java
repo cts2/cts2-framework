@@ -23,14 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetresolution;
 
-import java.util.Set;
-
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
-import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 
 /**
@@ -42,8 +37,6 @@ public interface ResolvedValueSetQueryService
 	extends BaseQueryService {
 
 	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			ResolvedValueSetQueryServiceRestrictions restrictions,
+			ResolvedValueSetQuery query,
 			Page page);
 }

@@ -40,26 +40,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectory;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionList;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionMsg;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.ValueSetDefinitionQueryBuilder;
 
 /**
  * The Class ValueSetDefinitionController.
@@ -121,13 +121,14 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS_OF_VALUESET}, method=RequestMethod.GET)
 	@ResponseBody
-	public ValueSetDefinitionDirectory getValueSetDefinitionsOfValueSet(
+	public Directory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
-			@PathVariable(VAR_VALUESETID) String valueSetName) {
+			boolean list,
+			@PathVariable(VAR_VALUESETID) String valueSet) {
 		
 		return this.getValueSetDefinitionsOfValueSet(
 				httpServletRequest, 
@@ -136,7 +137,8 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				restrictions,
 				restFilter,
 				page, 
-				valueSetName);
+				list,
+				valueSet);
 	}
 	
 	/**
@@ -153,16 +155,17 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS_OF_VALUESET}, method=RequestMethod.POST)
 	@ResponseBody
-	public ValueSetDefinitionDirectory getValueSetDefinitionsOfValueSet(
+	public Directory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
-			@PathVariable(VAR_VALUESETID) String valueSetName) {
+			boolean list,
+			@PathVariable(VAR_VALUESETID) String valueSet) {
 		
-		restrictions.setValueset(valueSetName);
+		restrictions.setValueSet(ModelUtils.nameOrUriFromEither(valueSet));
 		
 		return this.getValueSetDefinitions(
 				httpServletRequest, 
@@ -170,7 +173,8 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				query, 
 				restrictions, 
 				restFilter,
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -205,16 +209,16 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@ResponseBody
 	public void getValueSetDefinitionsOfValueSetCount(
 			HttpServletResponse httpServletResponse,
-			@RequestBody Query query,
+			RestReadContext restReadContext,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			@PathVariable(VAR_VALUESETID) String valueSetName) {
+			@PathVariable(VAR_VALUESETID) String valueSet) {
 		
-		restrictions.setValueset(valueSetName);
+		restrictions.setValueSet(ModelUtils.nameOrUriFromEither(valueSet));
 		
 		this.getValueSetDefinitionsCount(
 				httpServletResponse,
-				query,
+				restReadContext,
 				restrictions, 
 				restFilter);
 	}
@@ -222,12 +226,13 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS}, method=RequestMethod.GET)
 	@ResponseBody
-	public ValueSetDefinitionDirectory getValueSetDefinitions(
+	public Directory getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getValueSetDefinitions(
 				httpServletRequest,
@@ -235,7 +240,8 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 				null,
 				restrictions,
 				restFilter,
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -251,32 +257,33 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS}, method=RequestMethod.POST)
 	@ResponseBody
-	public ValueSetDefinitionDirectory getValueSetDefinitions(
+	public Directory getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetDefinitionQueryService);
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
-	
-		DirectoryResult<ValueSetDefinitionDirectoryEntry> directoryResult = 
-			this.valueSetDefinitionQueryService.getResourceSummaries(
-					query, 
-					createSet(filterComponent), 
-					restrictions, 
-					readContext, 
-					page);
+		ValueSetDefinitionQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ValueSetDefinitionDirectory directory = this.populateDirectory(
-				directoryResult, 
+		ValueSetDefinitionQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
+		
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.valueSetDefinitionQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				ValueSetDefinitionDirectory.class);
-		
-		return directory;
+				null,//TODO: Sort not yet supported 
+				ValueSetDefinitionDirectory.class, 
+				ValueSetDefinitionList.class);
 	}
 	
 	/**
@@ -293,17 +300,20 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 	@ResponseBody
 	public void getValueSetDefinitionsCount(
 			HttpServletResponse httpServletResponse,
-			@RequestBody Query query,
+			RestReadContext restReadContext,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetDefinitionQueryService);
+		ValueSetDefinitionQueryBuilder builder = this.getNewResourceQueryBuilder();
+		
+		ValueSetDefinitionQuery resourceQuery = builder.
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
 		
 		int count =
-			this.valueSetDefinitionQueryService.count(
-					query, 
-					createSet(filterComponent), 
-					restrictions);
+			this.valueSetDefinitionQueryService.count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -424,6 +434,13 @@ public class ValueSetDefinitionController extends AbstractServiceAwareController
 			
 		this.valueSetDefinitionMaintenanceService.
 			deleteResource(id, changeseturi);
+	}
+	
+	private ValueSetDefinitionQueryBuilder getNewResourceQueryBuilder(){
+		return new ValueSetDefinitionQueryBuilder(
+			this.valueSetDefinitionQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 
 	public ValueSetDefinitionQueryService getValueSetDefinitionQueryService() {

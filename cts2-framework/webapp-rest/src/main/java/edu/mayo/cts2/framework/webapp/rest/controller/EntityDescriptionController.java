@@ -47,30 +47,32 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
-import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.TaggedCodeSystemRestriction;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
+import edu.mayo.cts2.framework.webapp.rest.query.EntityQueryBuilder;
 import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
 
 /**
@@ -235,12 +237,13 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_ENTITIES_OF_CODESYSTEM_VERSION, method=RequestMethod.GET)
 	@ResponseBody
-	public EntityDirectory getEntityDescriptionsOfCodeSystemVersion(
+	public Directory getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
+			boolean list,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
@@ -251,6 +254,7 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				restrictions, 
 				restFilter, 
 				page, 
+				list,
 				codeSystemName, 
 				codeSystemVersionId);
 	}
@@ -269,13 +273,14 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_ENTITIES_OF_CODESYSTEM_VERSION, method=RequestMethod.POST)
 	@ResponseBody
-	public EntityDirectory getEntityDescriptionsOfCodeSystemVersion(
+	public Directory getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
+			boolean list,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
@@ -296,7 +301,8 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				query, 
 				restrictions, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -353,12 +359,13 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_ENTITIES, method=RequestMethod.GET)
 	@ResponseBody
-	public EntityDirectory getEntityDescriptions(
+	public Directory getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getEntityDescriptions(
 				httpServletRequest, 
@@ -366,7 +373,8 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				null, 
 				restrictions, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -381,36 +389,33 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 	 */
 	@RequestMapping(value=PATH_ENTITIES, method=RequestMethod.POST)
 	@ResponseBody
-	public EntityDirectory getEntityDescriptions(
+	public Directory getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.entityDescriptionQueryService);
+		EntityQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		EntityDescriptionQuery resourceQuery = builder.
+				addQuery(query).
+				addRestrictions(restrictions).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
 		
-		DirectoryResult<EntityDirectoryEntry> directoryResult = 
-			this.entityDescriptionQueryService.
-				getResourceSummaries(
-						query,
-						createSet(filterComponent),
-						restrictions, 
-						readContext, 
-						page);
-
-		
-		EntityDirectory directory = this.populateDirectory(
-				directoryResult, 
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.entityDescriptionQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				EntityDirectory.class);
-
-		
-		return directory;
+				null,//TODO: Sort not yet supported 
+				EntityDirectory.class, 
+				EntityList.class);
 	}
 	
 	/**
@@ -431,13 +436,16 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.entityDescriptionQueryService);
+		EntityQueryBuilder builder = this.getNewResourceQueryBuilder();
+		
+		ResourceQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
 		
 		int count = 
-			this.entityDescriptionQueryService.
-				count(query,
-						createSet(filterComponent),
-						restrictions);
+			this.entityDescriptionQueryService.count(resourceQuery);
 
 		this.setCount(count, httpServletResponse);
 	}
@@ -539,6 +547,13 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				restrictions.getTaggedCodeSystem().setTag(tagName);
 			}
 		}
+	}
+	
+	private EntityQueryBuilder getNewResourceQueryBuilder(){
+		return new EntityQueryBuilder(
+			this.entityDescriptionQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 
 	public EntityDescriptionQueryService getEntityDescriptionQueryService() {

@@ -255,11 +255,9 @@ public class CodeSystemController extends AbstractServiceAwareController {
 	public void getCodeSystemsCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
-			@RequestBody Query query,
 			RestFilter restFilter) {
 		
 		ResourceQuery resourceQuery = this.getNewResourceQueryBuilder().
-				addQuery(query).
 				addRestFilter(restFilter).
 				addRestReadContext(restReadContext).
 				build();

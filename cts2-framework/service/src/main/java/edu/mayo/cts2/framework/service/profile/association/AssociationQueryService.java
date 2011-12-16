@@ -23,22 +23,22 @@
  */
 package edu.mayo.cts2.framework.service.profile.association;
 
-import java.util.Set;
-
 import edu.mayo.cts2.framework.model.association.Association;
+import edu.mayo.cts2.framework.model.association.AssociationDirectory;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
-import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
@@ -59,57 +59,65 @@ public interface AssociationQueryService extends
 	 * @return the children associations of entity
 	 */
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionReadId entity,
-			AssociationQueryServiceRestrictions restrictions,
+			EntityDescriptionQuery query,		
+			ResolvedReadContext readContext,
+			Page page);
+	
+	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntityList(
+			EntityDescriptionReadId entity,
+			EntityDescriptionQuery query,		
 			ResolvedReadContext readContext,
 			Page page);
 	
 	public DirectoryResult<EntityDirectoryEntry> getSourceEntities(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			AssociationQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext,		
+			AssociationQueryServiceRestrictions associationRestrictions,
+			EntityDescriptionQueryServiceRestrictions entityRestrictions,	
+			ResolvedReadContext readContext,
+			Page page);
+	
+	public DirectoryResult<EntityList> getSourceEntitiesList(
+			AssociationQueryServiceRestrictions associationRestrictions,
+			EntityDescriptionQueryServiceRestrictions entityRestrictions,	
+			ResolvedReadContext readContext,
 			Page page);
 	
 	public DirectoryResult<EntityDirectoryEntry> getTargetEntities(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			AssociationQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext,		
+			AssociationQuery associationQuery,
+			EntityDescriptionQuery entityDescriptionQuery,	
+			ResolvedReadContext readContext,
+			Page page);
+	
+	public DirectoryResult<EntityList> getTargetEntitiesList(
+			AssociationQuery associationQuery,
+			EntityDescriptionQuery entityDescriptionQuery,	
+			ResolvedReadContext readContext,
 			Page page);
 	
 	public DirectoryResult<EntityDirectoryEntry> getAllSourceAndTargetEntities(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			AssociationQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext,		
+			AssociationQuery associationQuery,
+			EntityDescriptionQuery entityDescriptionQuery,	
+			ResolvedReadContext readContext,
+			Page page);
+	
+	public DirectoryResult<EntityList> getAllSourceAndTargetEntitiesList(
+			AssociationQuery associationQuery,
+			EntityDescriptionQuery entityDescriptionQuery,	
+			ResolvedReadContext readContext,
 			Page page);
 	
 	public DirectoryResult<EntityDirectoryEntry> getPredicates(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			AssociationQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext,		
+			AssociationQuery associationQuery,
+			EntityDescriptionQuery entityDescriptionQuery,	
+			ResolvedReadContext readContext,
+			Page page);
+	
+	public DirectoryResult<EntityList> getPredicatesList(
+			AssociationQuery associationQuery,
+			EntityDescriptionQuery entityDescriptionQuery,	
+			ResolvedReadContext readContext,
 			Page page);
 
-
-	/**
-	 * Gets the source of associations of entity.
-	 *
-	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param page the page
-	 * @param id the id
-	 * @return the source of associations of entity
-	 */
-	public DirectoryResult<AssociationDirectoryEntry> getSourceOfAssociationsOfEntity(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			Page page, 
-			EntityDescriptionReadId entity,
-			ResolvedReadContext readContext);
 	
 	/**
 	 * Gets the Association Graph result.

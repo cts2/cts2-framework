@@ -7,22 +7,23 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 import org.junit.Before
 import org.junit.Test
-import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.test.web.server.setup.MockMvcBuilders
 
 import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
+import edu.mayo.cts2.framework.model.command.ResolvedFilter
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext
 import edu.mayo.cts2.framework.model.core.Message
-import edu.mayo.cts2.framework.model.directory.DirectoryResult
 import edu.mayo.cts2.framework.model.exception.Cts2RestException
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl
+import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver
+import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver
 
  class CodeSystemControllerTest {
 	
@@ -71,8 +72,18 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl
 	void testGetCodeSystemsCount(){
 		MockHttpServletResponse response = new MockHttpServletResponse()
 		
-		def codeSystemQueryService = [ count: {query,restrictions,filter -> 1}] as CodeSystemQueryService
+		def codeSystemQueryService = [ count: {query -> 1}] as CodeSystemQueryService
 		controller.codeSystemQueryService = codeSystemQueryService
+	
+		def readContextResolver = [
+			resolveRestReadContext: {var -> new ResolvedReadContext() }
+		] as ReadContextResolver;
+		controller.readContextResolver = readContextResolver
+		
+		def filterResolver = [
+			resolveRestFilter: {o,t -> new ResolvedFilter() }
+		] as FilterResolver;
+		controller.filterResolver = filterResolver
 			
 		def result = controller.getCodeSystemsCount(response, null, null)
 	

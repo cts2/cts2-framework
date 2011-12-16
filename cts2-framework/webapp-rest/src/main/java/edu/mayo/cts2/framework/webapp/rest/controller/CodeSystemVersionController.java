@@ -335,7 +335,7 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	public Directory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			Query query,
+			@RequestBody Query query,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,

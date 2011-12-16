@@ -24,13 +24,11 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -45,7 +43,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectory;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingList;
@@ -57,8 +54,6 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.TaggedCodeSystemRestriction;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingQueryService;
@@ -374,9 +369,14 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
 	
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainBindingQueryService);
+		ConceptDomainBindingQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		int count = this.conceptDomainBindingQueryService.count(query, createSet(filterComponent), restrictions);
+		ResourceQuery resourceQuery = builder.
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		int count = this.conceptDomainBindingQueryService.count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}

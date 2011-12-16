@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+
 
 /**
  * The Class ValueSetDefinitionQueryServiceRestrictions.
@@ -31,14 +33,14 @@ package edu.mayo.cts2.framework.service.command.restriction;
  */
 public class ValueSetDefinitionQueryServiceRestrictions {
 
-	private String valueset;
+	private NameOrURI valueSet;
 
-	public String getValueset() {
-		return valueset;
+	public NameOrURI getValueSet() {
+		return valueSet;
 	}
 
-	public void setValueset(String valueset) {
-		this.valueset = valueset;
+	public void setValueSet(NameOrURI valueSet) {
+		this.valueSet = valueSet;
 	}
-	
+
 }

@@ -40,25 +40,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.extension.LocalIdStatement;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownStatement;
 import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.statement.StatementDirectory;
-import edu.mayo.cts2.framework.model.statement.StatementDirectoryEntry;
+import edu.mayo.cts2.framework.model.statement.StatementList;
 import edu.mayo.cts2.framework.model.statement.StatementMsg;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.statement.StatementMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
 import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.ResourceQueryBuilder;
 
 /**
  * The Class StatementController.
@@ -125,18 +125,20 @@ public class StatementController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.GET)
 	@ResponseBody
-	public StatementDirectory getStatements(
+	public Directory getStatements(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getStatements(
 				httpServletRequest, 
 				restReadContext, 
 				null, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -150,31 +152,31 @@ public class StatementController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.POST)
 	@ResponseBody
-	public StatementDirectory getStatements(
+	public Directory getStatements(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.statementQueryService);
+		ResourceQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
-
-		DirectoryResult<StatementDirectoryEntry> directoryResult = this.statementQueryService.getResourceSummaries(
-				query,
-				createSet(filterComponent), 
-				null,
-				readContext, 
-				page);
-
-		StatementDirectory directory = this.populateDirectory(
-				directoryResult, 
+		ResourceQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.statementQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				StatementDirectory.class);
-
-		return directory;
+				null,//TODO: Sort not yet supported 
+				StatementDirectory.class, 
+				StatementList.class);
 	}
 	
 	/**
@@ -190,15 +192,16 @@ public class StatementController extends AbstractServiceAwareController {
 	public void getStatementsCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
-			@RequestBody Query query,
 			RestFilter restFilter) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.statementQueryService);
+		ResourceQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		int count = this.statementQueryService.count(
-				query,
-				createSet(filterComponent),
-				null);
+		ResourceQuery resourceQuery = builder.
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		int count = this.statementQueryService.count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -320,5 +323,12 @@ public class StatementController extends AbstractServiceAwareController {
 		
 		this.statementMaintenanceService.
 			deleteResource(id, changeseturi);
+	}
+	
+	private ResourceQueryBuilder getNewResourceQueryBuilder(){
+		return new ResourceQueryBuilder(
+			this.statementQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 }

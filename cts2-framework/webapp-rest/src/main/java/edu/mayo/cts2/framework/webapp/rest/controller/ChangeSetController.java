@@ -25,6 +25,8 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +49,7 @@ import edu.mayo.cts2.framework.model.core.types.FinalizableState;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest;
 import edu.mayo.cts2.framework.model.service.core.UpdatedChangeInstructions;
 import edu.mayo.cts2.framework.model.service.core.UpdatedCreator;
@@ -56,6 +59,8 @@ import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.updates.ChangeSet;
 import edu.mayo.cts2.framework.model.updates.ChangeSetDirectory;
 import edu.mayo.cts2.framework.model.updates.ChangeSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.command.restriction.ChangeSetQueryExtensionRestrictions;
+import edu.mayo.cts2.framework.service.profile.update.ChangeSetQuery;
 import edu.mayo.cts2.framework.service.profile.update.ChangeSetQueryExtension;
 import edu.mayo.cts2.framework.service.profile.update.ChangeSetService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
@@ -80,19 +85,38 @@ public class ChangeSetController extends AbstractServiceAwareController {
 	
 	@RequestMapping(value="/changesets", method=RequestMethod.GET)
 	@ResponseBody
-	public ChangeSetDirectory getCodeSystems(
+	public ChangeSetDirectory getChangSets(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
-			RestFilter resolvedFilter,
+			ChangeSetQueryExtensionRestrictions restrictions,
+			RestFilter restFilter,
 			Page page) {
 		
-		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, changeSetQueryExtension);
-
+		return this.getChangSets(
+				httpServletRequest,
+				queryControl, null,
+				restrictions, 
+				restFilter,
+				page);
+	}
+	
+	@RequestMapping(value="/changesets", method=RequestMethod.POST)
+	@ResponseBody
+	public ChangeSetDirectory getChangSets(
+			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
+			@RequestBody Query query,
+			ChangeSetQueryExtensionRestrictions restrictions,
+			RestFilter restFilter,
+			Page page) {
+		
+		
 		DirectoryResult<ChangeSetDirectoryEntry> directoryResult = 
 			this.changeSetQueryExtension.getResourceSummaries(
-				null,
-				createSet(filterComponent), 
-				null, 
+				this.getChangeSetQuery(
+						query, 
+						restFilter, 
+						restrictions),
 				page);
 
 		ChangeSetDirectory directory = this.populateDirectory(
@@ -193,5 +217,37 @@ public class ChangeSetController extends AbstractServiceAwareController {
 		responseHeaders.set("Location", location);
 		
 		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);
+	}
+	
+	private ChangeSetQuery getChangeSetQuery(
+			final Query query, 
+			final RestFilter restFilter,
+			final ChangeSetQueryExtensionRestrictions restrictions){
+		
+		final Set<ResolvedFilter> filters = new HashSet<ResolvedFilter>();
+		
+		filters.add(
+				this.getFilterResolver().resolveRestFilter(
+						restFilter,
+						this.changeSetQueryExtension));
+		
+		return new ChangeSetQuery() {
+			
+			@Override
+			public Query getQuery() {
+				return query;
+			}
+
+			@Override
+			public Set<ResolvedFilter> getFilterComponent() {
+				return filters;
+			}
+
+			@Override
+			public ChangeSetQueryExtensionRestrictions getChangeSetQueryExtensionRestrictions() {
+				return restrictions;
+			}
+			
+		};
 	}
 }

@@ -23,9 +23,7 @@ public interface ChangeSetQueryExtension extends BaseQueryService {
 	 * @return the resource summaries
 	 */
 	public DirectoryResult<ChangeSetDirectoryEntry> getResourceSummaries(
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			ChangeSetQueryExtensionRestrictions restrictions,
+			ChangeSetQuery changeSetQuery,
 			Page page);
 
 	/**

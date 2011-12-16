@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +63,7 @@ import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQuery
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetLoaderService;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReference;
@@ -327,13 +329,13 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 			RestFilter restFilter,
 			Page page) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.resolvedValueSetQueryService);
-		
+	
 		DirectoryResult<ResolvedValueSetDirectoryEntry> result = 
 				this.resolvedValueSetQueryService.getResourceSummaries(
-				query, 
-				createSet(filterComponent), 
-				restrictions,
+						this.getResolvedValueSetQuery(
+								query, 
+								restFilter,
+								restrictions),
 				page);
 		
 		return this.populateDirectory(
@@ -379,6 +381,37 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 		return this.getCreateHandler().createResponseEntity(localtion);
 	}
 	
+	private ResolvedValueSetQuery getResolvedValueSetQuery(
+			final Query query, 
+			final RestFilter restFilter,
+			final ResolvedValueSetQueryServiceRestrictions restrictions){
+		
+		final Set<ResolvedFilter> filters = new HashSet<ResolvedFilter>();
+		
+		filters.add(
+				this.getFilterResolver().resolveRestFilter(
+						restFilter,
+						this.resolvedValueSetQueryService));
+		
+		return new ResolvedValueSetQuery() {
+			
+			@Override
+			public Query getQuery() {
+				return query;
+			}
+
+			@Override
+			public Set<ResolvedFilter> getFilterComponent() {
+				return filters;
+			}
+
+			@Override
+			public ResolvedValueSetQueryServiceRestrictions getResolvedValueSetQueryServiceRestrictions() {
+				return restrictions;
+			}
+
+		};
+	}
 
 	public ValueSetDefinitionResolutionService getValueSetDefinitionResolutionService() {
 		return valueSetDefinitionResolutionService;
