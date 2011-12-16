@@ -23,8 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 
 /**
  * The Class MapEntryQueryServiceRestrictions.
@@ -33,22 +35,14 @@ import java.util.List;
  */
 public class MapEntryQueryServiceRestrictions {
 
-	private String mapversion;
-	private List<String> targetentity = new ArrayList<String>();
+	private Set<EntityNameOrURI> targetEntities = new HashSet<EntityNameOrURI>();
 
-	public void setTargetentity(List<String> targetentity) {
-		this.targetentity = targetentity;
+	public Set<EntityNameOrURI> getTargetEntities() {
+		return targetEntities;
 	}
 
-	public List<String> getTargetentity() {
-		return targetentity;
+	public void setTargetEntities(Set<EntityNameOrURI> targetEntities) {
+		this.targetEntities = targetEntities;
 	}
 
-	public String getMapversion() {
-		return mapversion;
-	}
-
-	public void setMapversion(String mapversion) {
-		this.mapversion = mapversion;
-	}
 }

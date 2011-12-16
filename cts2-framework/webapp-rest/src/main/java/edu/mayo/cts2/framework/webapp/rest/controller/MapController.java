@@ -45,15 +45,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryList;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntryMsg;
-import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.types.RestrictionType;
 import edu.mayo.cts2.framework.model.service.exception.UnknownMap;
@@ -66,9 +64,11 @@ import edu.mayo.cts2.framework.service.profile.map.MapHistoryService;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
+import edu.mayo.cts2.framework.service.profile.valueset.MapQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.MapQueryBuilder;
 
 /**
  * The Class MapController.
@@ -178,12 +178,13 @@ public class MapController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAPS, method=RequestMethod.GET)
 	@ResponseBody
-	public MapCatalogEntryDirectory getMaps(
+	public Directory getMaps(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getMaps(
 				httpServletRequest, 
@@ -191,7 +192,8 @@ public class MapController extends AbstractServiceAwareController {
 				null,
 				restrictions, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -206,32 +208,33 @@ public class MapController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_MAPS, method=RequestMethod.POST)
 	@ResponseBody
-	public MapCatalogEntryDirectory getMaps(
+	public Directory getMaps(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		MapQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, mapQueryService);
-
-		DirectoryResult<MapCatalogEntrySummary> directoryResult = this.mapQueryService.getResourceSummaries(
-				query,
-				createSet(filterComponent),
-				restrictions, 
-				readContext, 
-				page);
-
-		MapCatalogEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
+		MapQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
+		
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.mapQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				MapCatalogEntryDirectory.class);
-
-		return directory;
+				null,//TODO: Sort not yet supported 
+				MapCatalogEntryDirectory.class, 
+				MapCatalogEntryList.class);
 	}
 
 	/**
@@ -266,15 +269,19 @@ public class MapController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void getMapsCount(
 			HttpServletResponse httpServletResponse,
-			@RequestBody Query query,
+			RestReadContext restReadContext,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
-		ResolvedFilter filterComponent = this.processFilter(restFilter, mapQueryService);
 		
-		int count = this.mapQueryService.count(
-				null,
-				createSet(filterComponent), 
-				restrictions);
+		MapQueryBuilder builder = this.getNewResourceQueryBuilder();
+		
+		MapQuery resourceQuery = builder.
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
+		
+		int count = this.mapQueryService.count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -412,6 +419,13 @@ public class MapController extends AbstractServiceAwareController {
 						ControllerUtils.idsToNameOrUriSet(codesystem));
 			}
 		}
+	}
+	
+	private MapQueryBuilder getNewResourceQueryBuilder(){
+		return new MapQueryBuilder(
+			this.mapQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 
 	public MapReadService getMapReadService() {

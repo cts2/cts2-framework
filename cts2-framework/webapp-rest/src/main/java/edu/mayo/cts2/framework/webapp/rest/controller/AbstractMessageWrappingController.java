@@ -58,6 +58,8 @@ import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
+import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
 
 /**
  * The Class AbstractMessageWrappingController.
@@ -78,6 +80,12 @@ public abstract class AbstractMessageWrappingController extends
 	
 	@Resource
 	private UpdateHandler updateHandler;
+	
+	@Resource 
+	private FilterResolver filterResolver;
+	
+	@Resource 
+	private ReadContextResolver readContextResolver;
 
 	/*
 	 * (non-Javadoc)
@@ -536,6 +544,22 @@ public abstract class AbstractMessageWrappingController extends
 
 	protected void setUpdateHandler(UpdateHandler updateHandler) {
 		this.updateHandler = updateHandler;
+	}
+
+	protected FilterResolver getFilterResolver() {
+		return filterResolver;
+	}
+
+	protected void setFilterResolver(FilterResolver filterResolver) {
+		this.filterResolver = filterResolver;
+	}
+
+	protected ReadContextResolver getReadContextResolver() {
+		return readContextResolver;
+	}
+
+	protected void setReadContextResolver(ReadContextResolver readContextResolver) {
+		this.readContextResolver = readContextResolver;
 	}
 
 }

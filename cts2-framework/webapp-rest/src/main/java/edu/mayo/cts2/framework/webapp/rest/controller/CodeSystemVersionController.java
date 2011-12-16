@@ -51,10 +51,9 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryList;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryMsg;
-import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -62,14 +61,17 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions.EntityRestriction;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionHistoryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
+import edu.mayo.cts2.framework.webapp.rest.query.CodeSystemVersionQueryBuilder;
 
 /**
  * The Class CodeSystemVersionController.
@@ -257,32 +259,24 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS_OF_CODESYSTEM}, method=RequestMethod.GET)
 	@ResponseBody
-	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersionsOfCodeSystem(
+	public Directory getCodeSystemVersionsOfCodeSystem(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			Page page,
+			boolean list,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
 		
 		restrictions.setCodeSystem(ModelUtils.nameOrUriFromName(codeSystemName));
 		
-		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
-			
-		DirectoryResult<CodeSystemVersionCatalogEntrySummary> directoryResult = 
-			this.codeSystemVersionQueryService.getResourceSummaries(
-					null, 
-					createSet(filterComponent), 
-					restrictions, 
-					null, page);
-		
-		CodeSystemVersionCatalogEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
-				page, 
+		return this.getCodeSystemVersions(
 				httpServletRequest, 
-				CodeSystemVersionCatalogEntryDirectory.class);
-		
-		return directory;
+				restReadContext, 
+				restrictions, 
+				resolvedFilter, 
+				page,
+				list);
 	}
 	
 	/**
@@ -324,46 +318,46 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
+		
 		restrictions.setCodeSystem(ModelUtils.nameOrUriFromName(codeSystemName));
 		
-		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
-		
-		int count =
-			this.codeSystemVersionQueryService.count(null, createSet(filterComponent), restrictions);
-		
-		this.setCount(count, httpServletResponse);
+		this.getCodeSystemVersionsCount(
+				httpServletResponse, 
+				restReadContext, 
+				restrictions, 
+				resolvedFilter);
 	}
+	
 	
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS}, method=RequestMethod.POST)
 	@ResponseBody
-	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersions(
+	public Directory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			Query query,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
-			RestFilter resolvedFilter,
-			Page page) {
+			RestFilter restFilter,
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
+		CodeSystemVersionQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		ResourceQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
 		
-		DirectoryResult<CodeSystemVersionCatalogEntrySummary> directoryResult = 
-			this.codeSystemVersionQueryService.getResourceSummaries(
-					null, 
-					createSet(filterComponent), 
-					restrictions, 
-					readContext, 
-					page);
-		
-		CodeSystemVersionCatalogEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.codeSystemVersionQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				CodeSystemVersionCatalogEntryDirectory.class);
-		
-		return directory;
+				null,//TODO: Sort not yet supported 
+				CodeSystemVersionCatalogEntryDirectory.class, 
+				CodeSystemVersionCatalogEntryList.class);
 	}
 	
 	/**
@@ -378,12 +372,13 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS}, method=RequestMethod.GET)
 	@ResponseBody
-	public CodeSystemVersionCatalogEntryDirectory getCodeSystemVersions(
+	public Directory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getCodeSystemVersions(
 				httpServletRequest, 
@@ -391,7 +386,8 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 				null,
 				restrictions, 
 				resolvedFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -409,12 +405,17 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
-			RestFilter resolvedFilter) {
+			RestFilter restFilter) {
 		
-		ResolvedFilter filterComponent = this.processFilter(resolvedFilter, this.codeSystemVersionQueryService);
+		CodeSystemVersionQuery resourceQuery = this.getNewResourceQueryBuilder().
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
 		
 		int count =
-			this.codeSystemVersionQueryService.count(null, createSet(filterComponent), restrictions);
+			this.codeSystemVersionQueryService.
+				count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -540,6 +541,13 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 		}
 	 }
 
+	private CodeSystemVersionQueryBuilder getNewResourceQueryBuilder(){
+		return new CodeSystemVersionQueryBuilder(
+			this.codeSystemVersionQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
+	}
+	
 	public CodeSystemVersionReadService getCodeSystemVersionReadService() {
 		return codeSystemVersionReadService;
 	}

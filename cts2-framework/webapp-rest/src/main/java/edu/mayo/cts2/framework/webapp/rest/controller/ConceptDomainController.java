@@ -40,17 +40,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryList;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryMsg;
-import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntrySummary;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomain;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainHistoryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainQueryService;
@@ -58,6 +58,7 @@ import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadSe
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.ResourceQueryBuilder;
 
 /**
  * The Class ConceptDomainController.
@@ -167,16 +168,20 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAINS, method=RequestMethod.GET)
 	@ResponseBody
-	public ConceptDomainCatalogEntryDirectory getConceptDomains(
+	public Directory getConceptDomains(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getConceptDomains(
 				httpServletRequest,
+				restReadContext,
 				null, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 
 	/**
@@ -189,30 +194,33 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	 * @return 
 	 * @return the concept domains
 	 */
-	@RequestMapping(value=PATH_CONCEPTDOMAINS, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_CONCEPTDOMAINS, method=RequestMethod.POST)
 	@ResponseBody
-	public ConceptDomainCatalogEntryDirectory getConceptDomains(
+	public Directory getConceptDomains(
 			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
 			@RequestBody Query query,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainQueryService);
-
-		DirectoryResult<ConceptDomainCatalogEntrySummary> directoryResult = 
-				this.conceptDomainQueryService.getResourceSummaries(
-					query,
-					createSet(filterComponent), 
-					null, 
-					null, page);
-
-		ConceptDomainCatalogEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
+		ResourceQueryBuilder builder = this.getNewResourceQueryBuilder();
+		
+		ResourceQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.conceptDomainQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				ConceptDomainCatalogEntryDirectory.class);
-
-		return directory;
+				null,//TODO: Sort not yet supported 
+				ConceptDomainCatalogEntryDirectory.class, 
+				ConceptDomainCatalogEntryList.class);
 	}
 	
 	/**
@@ -245,14 +253,17 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void getConceptDomainsCount(
 			HttpServletResponse httpServletResponse,
-			@RequestBody Query query,
+			RestReadContext restReadContext,
 			RestFilter restFilter) {
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.conceptDomainQueryService);
 		
-		int count = this.conceptDomainQueryService.count(
-				query,
-				createSet(filterComponent), 
-				null);
+		ResourceQueryBuilder builder = this.getNewResourceQueryBuilder();
+		
+		ResourceQuery resourceQuery = builder.
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		int count = this.conceptDomainQueryService.count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -360,6 +371,13 @@ public class ConceptDomainController extends AbstractServiceAwareController {
 				UnknownConceptDomain.class,
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
+	}
+	
+	private ResourceQueryBuilder getNewResourceQueryBuilder(){
+		return new ResourceQueryBuilder(
+			this.conceptDomainQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 
 }

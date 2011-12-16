@@ -50,10 +50,6 @@ import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
@@ -66,8 +62,6 @@ import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
-import edu.mayo.cts2.framework.service.profile.BaseQueryService;
-import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 
 /**
@@ -322,57 +316,6 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 	 */
 	protected int getStart(Page page){
 		return page.getPage() * page.getMaxToReturn();
-	}
-	
-	/**
-	 * Process filter.
-	 *
-	 * @param restFilter the filter
-	 * @param service the service
-	 * @return the filter component
-	 */
-	protected ResolvedFilter processFilter(RestFilter restFilter, BaseQueryService service){
-		if(restFilter == null ||
-				StringUtils.isBlank(restFilter.getMatchvalue())){
-			return null;
-		}
-		
-		String matchAlgorithmReference = restFilter.getMatchalgorithm();
-		
-		MatchAlgorithmReference matchRef = 
-			ControllerUtils.getReference(matchAlgorithmReference, service.getSupportedMatchAlgorithms());
-			
-		ResolvedFilter resolvedFilter = new ResolvedFilter();
-		resolvedFilter.setMatchAlgorithmReference(matchRef);
-		
-		String nameOrUri = restFilter.getFiltercomponent();
-
-		switch(restFilter.getReferencetype()){
-			case ATTRIBUTE: {
-				ModelAttributeReference modelAttributeRef = 
-						ControllerUtils.getReference(nameOrUri, service.getSupportedModelAttributes());
-				
-				resolvedFilter.setModelAttributeReference(modelAttributeRef);
-				break;
-			}
-			case PROPERTY: {
-				PredicateReference propertyRef = 
-						ControllerUtils.getPredicateReference(nameOrUri, service.getSupportedProperties());
-				
-				resolvedFilter.setPropertyReference(propertyRef);
-				break;
-			}
-			case SPECIAL: {
-				throw new UnsupportedOperationException("SPECIAL not supported yet.");
-			}
-			default : {
-				throw new IllegalStateException();
-			}
-		}
-
-		resolvedFilter.setMatchValue(restFilter.getMatchvalue());
-		
-		return resolvedFilter;
 	}
 	
 	@InitBinder

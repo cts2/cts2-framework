@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+
 /**
  * The Class ConceptDomainBindingQueryServiceRestrictions.
  *
@@ -30,13 +32,14 @@ package edu.mayo.cts2.framework.service.command.restriction;
  */
 public class ConceptDomainBindingQueryServiceRestrictions {
 
-	private String conceptdomain;
+	private NameOrURI conceptDomain;
 
-	public String getConceptdomain() {
-		return conceptdomain;
+	public NameOrURI getConceptDomain() {
+		return conceptDomain;
 	}
 
-	public void setConceptdomain(String conceptdomain) {
-		this.conceptdomain = conceptdomain;
-	}	
+	public void setConceptDomain(NameOrURI conceptDomain) {
+		this.conceptDomain = conceptDomain;
+	}
+
 }

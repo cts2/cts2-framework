@@ -342,6 +342,8 @@ interface PathParameters {
 	public static final String PARAM_CODESYSTEMVERSION = "codesystemversion";
 	public static final String PARAM_CODESYSTEMTAG = "tag";
 	public static final String PARAM_CODESYSTEM = "codesystem";
+	
+	public static final String PARAM_CONCEPTDOMAIN = "conceptdomain";
 
 	public static final String PARAM_ENTITY = "entity";
 	public static final String PARAM_ENTITYNAMESPACE = "entitynamespace";

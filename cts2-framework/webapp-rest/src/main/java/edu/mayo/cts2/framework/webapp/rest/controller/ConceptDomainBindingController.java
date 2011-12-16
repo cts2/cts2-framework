@@ -24,13 +24,18 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,24 +46,27 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectory;
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
+import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingList;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.TaggedCodeSystemRestriction;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.ConceptDomainBindingQueryBuilder;
 
 /**
  * The Class ConceptDomainBindingController.
@@ -175,13 +183,14 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.GET)
 	@ResponseBody
-	public ConceptDomainBindingDirectory getConceptDomainBindingsOfConceptDomain(
+	public Directory getConceptDomainBindingsOfConceptDomain(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
-			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
+			boolean list,
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomain) {
 	
 		return this.getConceptDomainBindingsOfConceptDomain(
 				httpServletRequest, 
@@ -190,7 +199,8 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				restrictions, 
 				restFilter, 
 				page, 
-				conceptDomainName);
+				list,
+				conceptDomain);
 	}
 	
 	/**
@@ -207,16 +217,17 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.POST)
 	@ResponseBody
-	public ConceptDomainBindingDirectory getConceptDomainBindingsOfConceptDomain(
+	public Directory getConceptDomainBindingsOfConceptDomain(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
-			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
+			boolean list,
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomain) {
 		
-		restrictions.setConceptdomain(conceptDomainName);
+		restrictions.setConceptDomain(ModelUtils.nameOrUriFromEither(conceptDomain));
 		
 		return this.getConceptDomainBindings(
 				httpServletRequest,
@@ -224,7 +235,8 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				query,
 				restrictions,
 				restFilter,
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -259,16 +271,16 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@ResponseBody
 	public void getConceptDomainBindingsOfConceptDomainCount(
 			HttpServletResponse httpServletResponse,
-			@RequestBody Query query,
+			RestReadContext restReadContext,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
+			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomain) {
 		
-		restrictions.setConceptdomain(conceptDomainName);
+		restrictions.setConceptDomain(ModelUtils.nameOrUriFromEither(conceptDomain));
 		
 		this.getConceptDomainBindingsCount(
 				httpServletResponse, 
-				query, 
+				restReadContext, 
 				restrictions,
 				restFilter);
 	}
@@ -285,12 +297,13 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS}, method=RequestMethod.GET)
 	@ResponseBody
-	public ConceptDomainBindingDirectory getConceptDomainBindings(
+	public Directory getConceptDomainBindings(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getConceptDomainBindings(
 				httpServletRequest, 
@@ -298,7 +311,8 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				null, 
 				restrictions, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -314,35 +328,32 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS}, method=RequestMethod.POST)
 	@ResponseBody
-	public ConceptDomainBindingDirectory getConceptDomainBindings(
+	public Directory getConceptDomainBindings(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			Query query,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(
-				restFilter, 
-				this.conceptDomainBindingQueryService);
+		ConceptDomainBindingQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		ResourceQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
 		
-		DirectoryResult<ConceptDomainBindingDirectoryEntry> directoryResult = 
-			this.conceptDomainBindingQueryService.getResourceSummaries(
-					query, 
-					createSet(filterComponent), 
-					restrictions,
-					readContext, 
-					page);
-		
-		ConceptDomainBindingDirectory directory = this.populateDirectory(
-				directoryResult, 
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.conceptDomainBindingQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				ConceptDomainBindingDirectory.class);
-		
-		return directory;
+				null,//TODO: Sort not yet supported 
+				ConceptDomainBindingDirectory.class, 
+				ConceptDomainBindingList.class);
 	}
 	
 	/**
@@ -359,7 +370,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	@ResponseBody
 	public void getConceptDomainBindingsCount(
 			HttpServletResponse httpServletResponse,
-			Query query,
+			RestReadContext restReadContext,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
 	
@@ -427,5 +438,27 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 				restReadContext, 
 				UnknownConceptDomainBinding.class, 
 				id);
+	}
+	
+	@InitBinder
+	public void initConceptDomainBindingRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_CONCEPTDOMAIN, required=false) String conceptdomain) {
+		
+		if(binder.getTarget() instanceof ConceptDomainBindingQueryServiceRestrictions){
+			ConceptDomainBindingQueryServiceRestrictions restrictions = 
+					(ConceptDomainBindingQueryServiceRestrictions) binder.getTarget();
+
+			if(StringUtils.isNotBlank(conceptdomain)){
+				restrictions.setConceptDomain(ModelUtils.nameOrUriFromEither(conceptdomain));
+			}			
+		}
+	}
+	
+	private ConceptDomainBindingQueryBuilder getNewResourceQueryBuilder(){
+		return new ConceptDomainBindingQueryBuilder(
+			this.conceptDomainBindingQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 }

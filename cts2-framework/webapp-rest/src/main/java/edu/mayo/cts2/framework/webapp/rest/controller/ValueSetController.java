@@ -41,8 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -52,8 +51,8 @@ import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryList;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryMsg;
-import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetHistoryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
@@ -61,6 +60,7 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.ValueSetQueryBuilder;
 
 /**
  * The Class ValueSetController.
@@ -164,12 +164,13 @@ public class ValueSetController extends AbstractServiceAwareController {
 	
 	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.GET)
 	@ResponseBody
-	public ValueSetCatalogEntryDirectory getValueSets(
+	public Directory getValueSets(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
 		return this.getValueSets(
 				httpServletRequest,
@@ -177,7 +178,8 @@ public class ValueSetController extends AbstractServiceAwareController {
 				null, 
 				restrictions, 
 				restFilter, 
-				page);
+				page,
+				list);
 	}
 	
 	/**
@@ -193,31 +195,33 @@ public class ValueSetController extends AbstractServiceAwareController {
 	 */
 	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.POST)
 	@ResponseBody
-	public ValueSetCatalogEntryDirectory getValueSets(
+	public Directory getValueSets(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			ValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page) {
+			Page page,
+			boolean list) {
 		
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetQueryService);
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		ValueSetQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		DirectoryResult<ValueSetCatalogEntrySummary> directoryResult = this.valueSetQueryService.getResourceSummaries(
-				query,
-				createSet(filterComponent), 
-				restrictions,
-				readContext, 
-				page);
-
-		ValueSetCatalogEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
+		ResourceQuery resourceQuery = builder.
+				addQuery(query).
+				addRestrictions(restrictions).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.valueSetQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				ValueSetCatalogEntryDirectory.class);
-
-		return directory;
+				null,//TODO: Sort not yet supported 
+				ValueSetCatalogEntryDirectory.class, 
+				ValueSetCatalogEntryList.class);
 	}
 	
 	/**
@@ -252,15 +256,19 @@ public class ValueSetController extends AbstractServiceAwareController {
 	@ResponseBody
 	public void getValueSetsCount(
 			HttpServletResponse httpServletResponse,
-			@RequestBody Query query,
+			RestReadContext restReadContext,
 			ValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.valueSetQueryService);
 		
-		int count = this.valueSetQueryService.count(
-				query,
-				createSet(filterComponent),
-				restrictions);
+		ValueSetQueryBuilder builder = this.getNewResourceQueryBuilder();
+		
+		ResourceQuery resourceQuery = builder.
+				addRestrictions(restrictions).
+				addRestFilter(restFilter).
+				addRestReadContext(restReadContext).
+				build();
+		
+		int count = this.valueSetQueryService.count(resourceQuery);
 		
 		this.setCount(count, httpServletResponse);
 	}
@@ -359,5 +367,12 @@ public class ValueSetController extends AbstractServiceAwareController {
 					ModelUtils.nameOrUriFromName(
 							valueSetName), 
 							changeseturi);
+	}
+	
+	private ValueSetQueryBuilder getNewResourceQueryBuilder(){
+		return new ValueSetQueryBuilder(
+			this.valueSetQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 }

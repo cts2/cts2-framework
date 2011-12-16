@@ -24,12 +24,17 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,24 +42,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryList;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
-import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectory;
-import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryMsg;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQuery;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQueryService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.query.MapEntryQueryBuilder;
 
 /**
  * The Class MapEntryController.
@@ -167,23 +173,6 @@ public class MapEntryController extends AbstractServiceAwareController {
 			deleteResource(id, changeseturi);
 	}
 	
-	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getMapEntryByMapsFromName(
-			HttpServletRequest httpServletRequest,
-			RestReadContext restReadContext,
-			@PathVariable(VAR_MAPID) String mapName,
-			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
-			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
-		
-		return this.getMapEntryByMapsFromName(
-				httpServletRequest, 
-				restReadContext,
-				null,
-				mapName, 
-				mapVersionName,
-				mapsFromName);
-	}
 	/**
 	 * Gets the map entry by maps from name.
 	 *
@@ -193,9 +182,9 @@ public class MapEntryController extends AbstractServiceAwareController {
 	 * @param mapsFromName the maps from name
 	 * @return the map entry by maps from name
 	 */
-	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.POST)
+	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
 	@ResponseBody
-	public Message getMapEntryByMapsFromName(
+	public Message getMapEntryOfMapVersionByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
@@ -213,7 +202,8 @@ public class MapEntryController extends AbstractServiceAwareController {
 				this.mapEntryReadService, 
 				restReadContext,
 				//TODO: This needs to be fixed
-				UnknownResourceReference.class,id);
+				UnknownResourceReference.class,
+				id);
 	}
 	
 	/**
@@ -230,12 +220,13 @@ public class MapEntryController extends AbstractServiceAwareController {
 	@RequestMapping(value={
 			PATH_MAPENTRIES}, method=RequestMethod.GET)
 	@ResponseBody
-	public MapEntryDirectory getMapEntries(
+	public Directory getMapEntries(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			MapEntryQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
+			boolean list,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 		
@@ -246,6 +237,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 				restrictions, 
 				restFilter, 
 				page,
+				list,
 				mapName,
 				mapVersionName);
 	}
@@ -265,33 +257,85 @@ public class MapEntryController extends AbstractServiceAwareController {
 	@RequestMapping(value={
 			PATH_MAPENTRIES}, method=RequestMethod.POST)
 	@ResponseBody
-	public MapEntryDirectory getMapEntries(
+	public Directory getMapEntries(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
 			MapEntryQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
+			boolean list,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 
-		ResolvedFilter filterComponent = this.processFilter(restFilter, this.mapEntryQueryService);
-		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		MapEntryQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		DirectoryResult<MapEntryDirectoryEntry> directoryResult = 
-			this.mapEntryQueryService.getResourceSummaries(
-					query, 
-					createSet(filterComponent), 
-					restrictions, 
-					readContext, 
-					page);
-
-		MapEntryDirectory directory = this.populateDirectory(
-				directoryResult, 
+		MapEntryQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
+		
+		return this.doQuery(
+				httpServletRequest,
+				list, 
+				this.mapEntryQueryService,
+				resourceQuery,
 				page, 
-				httpServletRequest, 
-				MapEntryDirectory.class);
+				null,//TODO: Sort not yet supported 
+				CodeSystemVersionCatalogEntryDirectory.class, 
+				CodeSystemVersionCatalogEntryList.class);
+	}
+	
+	@RequestMapping(value={
+			PATH_MAPENTRIES}, method=RequestMethod.HEAD)
+	@ResponseBody
+	public void getMapEntriesCount(
+			HttpServletResponse httpServletResponse,
+			RestReadContext restReadContext,
+			@RequestBody Query query,
+			MapEntryQueryServiceRestrictions restrictions,
+			RestFilter restFilter,
+			Page page,
+			boolean list,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
+
+		MapEntryQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		return directory;
+		MapEntryQuery resourceQuery = builder.
+				addQuery(query).
+				addRestFilter(restFilter).
+				addRestrictions(restrictions).
+				addRestReadContext(restReadContext).
+				build();
+		
+		int count = this.mapEntryQueryService.count(resourceQuery);
+		
+		this.setCount(count, httpServletResponse);
+	}
+	
+	@InitBinder
+	public void initMapEntryQueryServiceRestrictionsBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_TARGETENTITYID, required=false) List<String> targetEntities) {
+		
+		if(binder.getTarget() instanceof MapEntryQueryServiceRestrictions){
+			MapEntryQueryServiceRestrictions restrictions = 
+					(MapEntryQueryServiceRestrictions) binder.getTarget();
+
+			Set<EntityNameOrURI> targetEntitiesSet = 
+					ControllerUtils.idsToEntityNameOrUriSet(targetEntities);
+			
+			restrictions.setTargetEntities(targetEntitiesSet);
+		}
+	}
+	
+	private MapEntryQueryBuilder getNewResourceQueryBuilder(){
+		return new MapEntryQueryBuilder(
+			this.mapEntryQueryService, 
+			this.getFilterResolver(),
+			this.getReadContextResolver());
 	}
 }
