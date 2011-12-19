@@ -26,7 +26,7 @@ package edu.mayo.cts2.framework.service.profile.map;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
+import edu.mayo.cts2.framework.service.profile.valueset.MapQuery;
 
 /**
  * The Interface MapQueryService.
@@ -34,6 +34,6 @@ import edu.mayo.cts2.framework.service.profile.ResourceQuery;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MapQueryService extends 
-	QueryService<MapCatalogEntry, MapCatalogEntrySummary, ResourceQuery>{
+	QueryService<MapCatalogEntry, MapCatalogEntrySummary, MapQuery>{
 
 }

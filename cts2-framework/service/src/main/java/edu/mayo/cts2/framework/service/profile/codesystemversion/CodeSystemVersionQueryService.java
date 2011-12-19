@@ -26,7 +26,6 @@ package edu.mayo.cts2.framework.service.profile.codesystemversion;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface CodeSystemVersionQueryService.
@@ -36,6 +35,6 @@ import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 public interface CodeSystemVersionQueryService extends 
 	QueryService<CodeSystemVersionCatalogEntry, 
 		CodeSystemVersionCatalogEntrySummary, 
-		ResourceQuery>{
+		CodeSystemVersionQuery>{
 
 }

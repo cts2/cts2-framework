@@ -26,7 +26,6 @@ package edu.mayo.cts2.framework.service.profile.valueset;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface ValueSetQueryService.
@@ -34,6 +33,6 @@ import edu.mayo.cts2.framework.service.profile.ResourceQuery;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ValueSetQueryService extends 
-	QueryService<ValueSetCatalogEntry, ValueSetCatalogEntrySummary, ResourceQuery>{
+	QueryService<ValueSetCatalogEntry, ValueSetCatalogEntrySummary, ValueSetQuery>{
 
 }

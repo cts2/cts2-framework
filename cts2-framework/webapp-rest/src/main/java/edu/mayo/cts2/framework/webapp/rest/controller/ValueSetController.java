@@ -52,9 +52,9 @@ import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryList;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryMsg;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetHistoryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
@@ -206,7 +206,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 		
 		ValueSetQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResourceQuery resourceQuery = builder.
+		ValueSetQuery resourceQuery = builder.
 				addQuery(query).
 				addRestrictions(restrictions).
 				addRestFilter(restFilter).
@@ -262,7 +262,7 @@ public class ValueSetController extends AbstractServiceAwareController {
 		
 		ValueSetQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResourceQuery resourceQuery = builder.
+		ValueSetQuery resourceQuery = builder.
 				addRestrictions(restrictions).
 				addRestFilter(restFilter).
 				addRestReadContext(restReadContext).

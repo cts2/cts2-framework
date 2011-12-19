@@ -36,7 +36,6 @@ import edu.mayo.cts2.framework.model.service.core.EntityNameOrURIList;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
 /**
  * The Interface EntityDescriptionQueryService.
@@ -44,7 +43,7 @@ import edu.mayo.cts2.framework.service.profile.ResourceQuery;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface EntityDescriptionQueryService extends 
-	QueryService<EntityDescription, EntityDirectoryEntry, ResourceQuery>{
+	QueryService<EntityDescription, EntityDirectoryEntry, EntityDescriptionQuery>{
 
 	public boolean isEntityInSet(
 			EntityNameOrURI entity,

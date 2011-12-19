@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.valuesetresolution;
 
 import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
@@ -38,5 +39,6 @@ public interface ResolvedValueSetQueryService
 
 	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
 			ResolvedValueSetQuery query,
+			SortCriteria sort,
 			Page page);
 }

@@ -30,6 +30,7 @@ public abstract class AbstractResourceQueryBuilder<T,Q extends ResourceQuery> {
 		super();
 		this.filterResolver = filterResolver;
 		this.readContextResolver = readContextResolver;
+		this.baseQueryService = baseQueryService;
 	}
 	
 	public T addQuery(Query query){

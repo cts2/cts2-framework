@@ -286,11 +286,11 @@ public abstract class AbstractMessageWrappingController extends
 		
 		if(isList){
 			result = 
-				queryService.getResourceSummaries(query, sortCriteria, page);
+				queryService.getResourceList(query, sortCriteria, page);
 			directoryClass = listDirectory;
 		} else {
 			result = 
-				queryService.getResourceList(query, sortCriteria, page);
+				queryService.getResourceSummaries(query, sortCriteria, page);
 			directoryClass = summaryDirectory;
 		}
 		

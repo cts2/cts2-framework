@@ -54,11 +54,11 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownConceptDomainBinding;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.ConceptDomainBindingQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingQueryService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
+import edu.mayo.cts2.framework.service.profile.valueset.ConceptDomainBindingQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.ConceptDomainBindingQueryBuilder;
@@ -334,7 +334,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 		
 		ConceptDomainBindingQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResourceQuery resourceQuery = builder.
+		ConceptDomainBindingQuery resourceQuery = builder.
 				addQuery(query).
 				addRestFilter(restFilter).
 				addRestReadContext(restReadContext).
@@ -371,7 +371,7 @@ public class ConceptDomainBindingController extends AbstractServiceAwareControll
 	
 		ConceptDomainBindingQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResourceQuery resourceQuery = builder.
+		ConceptDomainBindingQuery resourceQuery = builder.
 				addRestFilter(restFilter).
 				addRestReadContext(restReadContext).
 				build();

@@ -23,23 +23,19 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapversion;
 
-import java.util.Set;
-
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.EntityReferenceList;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
 import edu.mayo.cts2.framework.model.service.mapversion.types.MapStatus;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 
 /**
  * The Interface MapVersionQueryService.
@@ -49,33 +45,30 @@ import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 public interface MapVersionQueryService extends 
 	QueryService<MapVersion, 
 		MapVersionDirectoryEntry, 
-		ResourceQuery>{
+		MapVersionQuery>{
 	
 	public DirectoryResult<EntityDirectoryEntry> mapVersionEntities(
 			NameOrURI mapVersion,
 			MapRole mapRole, 
 			MapStatus mapStatus, 
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			EntityDescriptionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext);
+			EntityDescriptionQuery query,
+			SortCriteria sort,
+			Page page);
 	
 	public DirectoryResult<EntityDescription> mapVersionEntityList(
 			NameOrURI mapVersion,
 			MapRole mapRole, 
 			MapStatus mapStatus, 
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			EntityDescriptionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext);
+			EntityDescriptionQuery query,
+			SortCriteria sort,
+			Page page);
 	
 	public EntityReferenceList mapVersionEntityReferences(
 			NameOrURI mapVersion,
 			MapRole mapRole, 
 			MapStatus mapStatus, 
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			EntityDescriptionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext);
+			EntityDescriptionQuery query,
+			SortCriteria sort,
+			Page page);
 
 }

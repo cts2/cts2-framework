@@ -117,6 +117,7 @@ public class ChangeSetController extends AbstractServiceAwareController {
 						query, 
 						restFilter, 
 						restrictions),
+						null,//TODO add Sorting
 				page);
 
 		ChangeSetDirectory directory = this.populateDirectory(

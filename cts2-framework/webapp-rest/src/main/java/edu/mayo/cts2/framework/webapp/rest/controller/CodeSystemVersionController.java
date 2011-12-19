@@ -343,9 +343,10 @@ public class CodeSystemVersionController extends AbstractServiceAwareController 
 		
 		CodeSystemVersionQueryBuilder builder = this.getNewResourceQueryBuilder();
 		
-		ResourceQuery resourceQuery = builder.
+		CodeSystemVersionQuery resourceQuery = builder.
 				addQuery(query).
 				addRestFilter(restFilter).
+				addRestrictions(restrictions).
 				addRestReadContext(restReadContext).
 				build();
 		

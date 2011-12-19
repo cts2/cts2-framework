@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
  * The Class MapEntryQueryServiceRestrictions.
@@ -34,6 +35,8 @@ import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class MapEntryQueryServiceRestrictions {
+	
+	private NameOrURI mapVersion;
 
 	private Set<EntityNameOrURI> targetEntities = new HashSet<EntityNameOrURI>();
 
@@ -43,6 +46,14 @@ public class MapEntryQueryServiceRestrictions {
 
 	public void setTargetEntities(Set<EntityNameOrURI> targetEntities) {
 		this.targetEntities = targetEntities;
+	}
+
+	public NameOrURI getMapVersion() {
+		return mapVersion;
+	}
+
+	public void setMapVersion(NameOrURI mapVersion) {
+		this.mapVersion = mapVersion;
 	}
 
 }

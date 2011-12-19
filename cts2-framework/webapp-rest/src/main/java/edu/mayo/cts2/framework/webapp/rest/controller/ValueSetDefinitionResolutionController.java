@@ -336,6 +336,7 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 								query, 
 								restFilter,
 								restrictions),
+					null,//TODO: add Sorting
 				page);
 		
 		return this.populateDirectory(
