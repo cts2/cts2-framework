@@ -11,6 +11,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<develpment.framework.version>${project.parent.version}</develpment.framework.version>
 		<webapp.name>webapp-rest</webapp.name>
 		<webapp.port>5150</webapp.port>
 		<generated.plugin.properties.file>${project.build.directory}/generated/plugin/plugin.properties</generated.plugin.properties.file>
@@ -165,6 +166,7 @@
 							<container>
 								<containerId>jetty6x</containerId>
 								<type>embedded</type>
+								<timeout>120000</timeout>
 								<systemProperties>
 									<cts2.config.dir>${test.config.dir}</cts2.config.dir>
 									<cts2.plugins.dir>${test.plugins.dir}</cts2.plugins.dir>
