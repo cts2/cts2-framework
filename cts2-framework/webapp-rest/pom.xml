@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>service</artifactId>
-			<version>0.4.9-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 
 		<dependency>
