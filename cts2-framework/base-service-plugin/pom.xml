@@ -200,7 +200,7 @@
 									<goal>start</goal>
 								</goals>
 								<configuration>
-        							<timeout>60000</timeout>
+        							<timeout>120000</timeout>
       							</configuration>
 							</execution>
 							<execution>
@@ -229,8 +229,8 @@
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>webapp-rest</artifactId>
 			<version>${project.parent.version}</version>
+			<scope>provided</scope>
 			<type>war</type>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
