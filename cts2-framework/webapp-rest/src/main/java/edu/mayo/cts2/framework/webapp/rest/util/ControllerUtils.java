@@ -1,4 +1,4 @@
-package edu.mayo.cts2.framework.webapp.rest.controller;
+package edu.mayo.cts2.framework.webapp.rest.util;
 
 import java.util.HashSet;
 import java.util.Set;

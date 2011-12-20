@@ -9,7 +9,7 @@ import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
-import edu.mayo.cts2.framework.webapp.rest.controller.ControllerUtils;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 
 @Component
 public class FilterResolver {

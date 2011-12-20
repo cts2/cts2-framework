@@ -70,6 +70,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueS
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 
 /**
  * The Class ValueSetDefinitionController.
@@ -183,7 +184,9 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 						definitionLocalId,
 						ModelUtils.nameOrUriFromName(valueSetName));
 		
-		ResolvedFilter filterComponent = null;//this.processFilter(restFilter, this.valueSetResolutionQueryService);
+		ResolvedFilter filterComponent = this.getFilterResolver().resolveRestFilter(
+				restFilter, this.resolvedValueSetQueryService);
+		
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
 		Set<NameOrURI> codeSystemVersions = 

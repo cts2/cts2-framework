@@ -61,6 +61,7 @@ import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.MapEntryQueryBuilder;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 
 /**
  * The Class MapEntryController.

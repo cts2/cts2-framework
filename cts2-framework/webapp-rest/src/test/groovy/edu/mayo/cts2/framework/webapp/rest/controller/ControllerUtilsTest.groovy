@@ -4,6 +4,8 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
+
 class ControllerUtilsTest {
 	
 	@Test

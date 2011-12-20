@@ -72,6 +72,7 @@ import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 import edu.mayo.cts2.framework.webapp.rest.query.EntityQueryBuilder;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
 
 /**
