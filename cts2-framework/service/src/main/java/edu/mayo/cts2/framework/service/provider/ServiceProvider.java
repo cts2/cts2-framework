@@ -23,10 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.provider;
 
-import java.util.Set;
-
-import edu.mayo.cts2.framework.core.config.PluginConfig;
-import edu.mayo.cts2.framework.core.config.option.Option;
+import edu.mayo.cts2.framework.core.plugin.Plugin;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -34,7 +31,7 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ServiceProvider {
+public interface ServiceProvider  extends Plugin {
 	
 	/**
 	 * Gets the service.
@@ -45,9 +42,4 @@ public interface ServiceProvider {
 	 */
 	public <T extends Cts2Profile> T getService(Class<T> serviceClass);
 	
-	public void initialize(PluginConfig config);
-	
-	public void destroy();
-	
-	public Set<Option> getPluginOptions();
 }

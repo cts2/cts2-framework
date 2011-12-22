@@ -38,12 +38,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.PluginConfig;
-import edu.mayo.cts2.framework.core.config.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.config.PluginManager;
-import edu.mayo.cts2.framework.core.config.PluginReference;
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.core.plugin.PluginConfig;
+import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
+import edu.mayo.cts2.framework.core.plugin.PluginReference;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**

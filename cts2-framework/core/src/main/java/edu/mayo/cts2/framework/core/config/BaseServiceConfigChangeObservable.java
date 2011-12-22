@@ -18,7 +18,7 @@ public class BaseServiceConfigChangeObservable {
 		this.observers.remove(observer);
 	}
 	
-	protected void fireContextConfigPropertiesChangeEvent(OptionHolder newOptions){
+	public void fireContextConfigPropertiesChangeEvent(OptionHolder newOptions){
 		for(ConfigChangeObserver observer : observers) {
 			observer.onContextConfigPropertiesChange(newOptions);
 		}

@@ -96,6 +96,27 @@
 							</execution>
 						</executions>
 					</plugin>
+					
+						    <plugin>
+					      <groupId>com.springsource.bundlor</groupId>
+					      <artifactId>com.springsource.bundlor.maven</artifactId>
+					      <version>1.0.0.RELEASE</version>
+					      <executions>
+					        <execution>
+					          <id>bundlor</id>
+					          <goals>
+					            <goal>bundlor</goal>
+					          </goals>
+					          <phase>install</phase>
+					          
+					          <configuration>
+					          	<outputPath>${basedir}/target/${project.build.finalName}-plugin.jar</outputPath>
+					          	<inputPath>${basedir}/target/${project.build.finalName}-plugin.jar</inputPath>
+					          </configuration>
+					        </execution>
+					        
+					      </executions>
+					    </plugin>
 
 					<plugin>
 						<artifactId>maven-assembly-plugin</artifactId>
@@ -123,29 +144,29 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>2.5</version>
-						<executions>
-							<execution>
-								<id>copy-resources</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${basedir}/target/test-plugins/${project.build.finalName}-${maven.build.timestamp}</outputDirectory>
-									<overwrite>true</overwrite>
-									<resources>
-										<resource>
-											<directory>${basedir}/target/${project.build.finalName}-service-plugin/${project.build.finalName}-service-plugin</directory>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
+<!-- 					<plugin> -->
+<!-- 						<artifactId>maven-resources-plugin</artifactId> -->
+<!-- 						<version>2.5</version> -->
+<!-- 						<executions> -->
+<!-- 							<execution> -->
+<!-- 								<id>copy-resources</id> -->
+<!-- 								<phase>pre-integration-test</phase> -->
+<!-- 								<goals> -->
+<!-- 									<goal>copy-resources</goal> -->
+<!-- 								</goals> -->
+<!-- 								<configuration> -->
+<!-- 									<outputDirectory>${basedir}/target/test-plugins/${project.build.finalName}-${maven.build.timestamp}</outputDirectory> -->
+<!-- 									<overwrite>true</overwrite> -->
+<!-- 									<resources> -->
+<!-- 										<resource> -->
+<!-- 											<directory>${basedir}/target/${project.build.finalName}-service-plugin/${project.build.finalName}-plugin</directory> -->
+<!-- 										</resource> -->
+<!-- 									</resources> -->
+<!-- 								</configuration> -->
+<!-- 							</execution> -->
+<!-- 						</executions> -->
+<!-- 					</plugin> -->
+ 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.2</version>

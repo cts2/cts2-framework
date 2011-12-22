@@ -1,7 +1,8 @@
-package edu.mayo.cts2.framework.core.config;
+package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
 
+import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.config.option.StringOption;
 
@@ -13,7 +14,7 @@ public class PluginConfig {
 	
 	private ServerContext serverContext;
 
-	protected PluginConfig(
+	public PluginConfig(
 			OptionHolder options, 
 			File workDirectory,
 			ServerContext serverContext){

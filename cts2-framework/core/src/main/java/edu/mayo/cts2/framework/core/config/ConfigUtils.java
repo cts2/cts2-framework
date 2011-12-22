@@ -16,7 +16,7 @@ import edu.mayo.cts2.framework.core.config.option.StringOption;
 
 public class ConfigUtils {
 	
-	protected static OptionHolder propertiesToOptionHolder(Properties properties){
+	public static OptionHolder propertiesToOptionHolder(Properties properties){
 		Set<StringOption> stringOptions = new HashSet<StringOption>();
 		
 		for(Entry<Object, Object> entry : properties.entrySet()){
@@ -32,7 +32,7 @@ public class ConfigUtils {
 		return holder;
 	}
 	
-	protected static File createDirectory(String path){
+	public static File createDirectory(String path){
 		File file = new File(path);
 		if (!file.exists()) {
 			file.mkdirs();
@@ -41,7 +41,7 @@ public class ConfigUtils {
 		return file;
 	}
 	
-	protected static File createFile(String path){
+	public static File createFile(String path){
 		File file = new File(path);
 		createDirectory(file.getParent());
 		
@@ -73,7 +73,7 @@ public class ConfigUtils {
 	 * @param file the file
 	 * @return the properties
 	 */
-	protected static Properties loadProperties(File file) {
+	public static Properties loadProperties(File file) {
 		Properties props = new Properties();
 		FileInputStream fis = null;
 		try {
@@ -106,7 +106,7 @@ public class ConfigUtils {
 		doModifyPropertiesFile(propertyName, propertyValue, propsFile, PropertiesModifyAction.ADD_IF_NOT_FOUND);
 	}
 	
-	protected static void updateProperty(String propertyName, String propertyValue, File propsFile) {
+	public static void updateProperty(String propertyName, String propertyValue, File propsFile) {
 		doModifyPropertiesFile(propertyName, propertyValue, propsFile, PropertiesModifyAction.FAIL_IF_NOT_FOUND);
 	}
 

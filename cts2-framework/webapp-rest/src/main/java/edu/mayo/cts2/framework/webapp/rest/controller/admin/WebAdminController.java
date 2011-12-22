@@ -43,12 +43,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import edu.mayo.cts2.framework.core.config.PluginDescription;
 import edu.mayo.cts2.framework.core.config.PluginManager;
-import edu.mayo.cts2.framework.core.config.PluginReference;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionDTO;
+import edu.mayo.cts2.framework.core.plugin.PluginDescription;
+import edu.mayo.cts2.framework.core.plugin.PluginReference;
 
 /**
  * The Class WebAdminController.

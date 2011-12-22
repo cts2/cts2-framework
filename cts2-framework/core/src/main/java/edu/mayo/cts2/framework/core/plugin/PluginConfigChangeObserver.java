@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.core.config;
+package edu.mayo.cts2.framework.core.plugin;
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 

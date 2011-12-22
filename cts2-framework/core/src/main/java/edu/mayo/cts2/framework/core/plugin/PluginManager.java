@@ -1,4 +1,4 @@
-package edu.mayo.cts2.framework.core.config;
+package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,8 +25,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.core.config.BasePluginConfigChangeObservable;
+import edu.mayo.cts2.framework.core.config.ConfigConstants;
+import edu.mayo.cts2.framework.core.config.ConfigInitializer;
+import edu.mayo.cts2.framework.core.config.ConfigUtils;
+import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
-import edu.mayo.cts2.framework.core.plugin.PluginClassLoader;
 
 @Component
 public class PluginManager extends BasePluginConfigChangeObservable implements InitializingBean {
@@ -35,8 +39,6 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 
 	private Map<String,ClassLoader> pluginClassLoaders =
 			new HashMap<String,ClassLoader>();
-	
-	private PluginConfig pluginConfig;
 
 	@Resource
 	private ConfigInitializer configInitializer;
@@ -50,13 +52,7 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 	}
 	
 	protected void initialize(){
-		String inUsePluginName = this.getInUsePluginName();
 		
-		this.pluginConfig = 
-				new PluginConfig(
-						this.getPluginSpecificConfigProperties(inUsePluginName),
-						this.getPluginWorkDirectory(inUsePluginName),
-						this.serviceConfigManager.getServerContext());
 	}
 	
 	public void updatePluginSpecificConfigProperties(
@@ -363,8 +359,11 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 		return pluginName + pluginVersion;
 	}
 	
-	public PluginConfig getPluginConfig(){
-		return this.pluginConfig;
+	public PluginConfig getPluginConfig(String pluginName){
+		return new PluginConfig(
+				this.getPluginSpecificConfigProperties(pluginName),
+				this.getPluginWorkDirectory(pluginName),
+				this.serviceConfigManager.getServerContext());
 	}
 	
 	protected File getPluginWorkDirectory(String pluginName){

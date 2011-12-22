@@ -1,4 +1,4 @@
-package edu.mayo.cts2.framework.core.config;
+package edu.mayo.cts2.framework.core.plugin;
 
 public class PluginDescription extends PluginReference{
 

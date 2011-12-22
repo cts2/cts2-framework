@@ -195,11 +195,11 @@ public class ConfigInitializer {
 				+ ConfigConstants.CONTEXT_PROPERTIES_FILE;
 	}
 
-	protected File getContextConfigDirectory() {
+	public File getContextConfigDirectory() {
 		return this.contextConfigDirectory;
 	}
 	
-	protected File getPluginsDirectory() {
+	public File getPluginsDirectory() {
 		return this.pluginsDirectory;
 	}
 
@@ -211,7 +211,7 @@ public class ConfigInitializer {
 		return this.globalConfigPropsFile;
 	}
 	
-	protected File getContextConfigFile() {
+	public File getContextConfigFile() {
 		return this.contextConfigPropsFile;
 	}
 }

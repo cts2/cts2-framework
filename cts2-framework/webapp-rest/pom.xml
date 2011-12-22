@@ -269,11 +269,45 @@
 	   </extensions>
    
 		<plugins>
+		<plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.3.5</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <supportedProjectTypes>
+            <supportedProjectType>war</supportedProjectType>
+          </supportedProjectTypes>
+          <instructions>
+		       <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package>
+		       <Embed-Directory>WEB-INF/lib</Embed-Directory>
+		       <Embed-Dependency>*;scope=compile</Embed-Dependency>
+		       <Bundle-ClassPath>.,WEB-INF/classes,{maven-dependencies}</Bundle-ClassPath>
+		       <Embed-Transitive>true</Embed-Transitive>
+		       <Web-ContextPath>webapp-rest</Web-ContextPath>
+		      </instructions> 
+        </configuration>
+      </plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
+				<configuration>
+		          <archive>
+		            <!-- add the generated manifest to the war -->
+		            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+		          </archive>
+		        </configuration>
 			</plugin>
 
 			<plugin>
@@ -322,7 +356,6 @@
 				</configuration>
 			</plugin>
 
-	
 			  <plugin>
 			       <groupId>org.codehaus.mojo</groupId>
 			       <artifactId>wagon-maven-plugin</artifactId>

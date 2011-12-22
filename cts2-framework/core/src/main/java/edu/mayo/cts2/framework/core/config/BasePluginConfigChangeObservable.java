@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObservable;
+import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
+import edu.mayo.cts2.framework.core.plugin.PluginReference;
 
 public class BasePluginConfigChangeObservable 
 	implements PluginConfigChangeObservable {

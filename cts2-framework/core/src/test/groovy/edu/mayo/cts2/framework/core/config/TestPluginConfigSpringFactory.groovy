@@ -5,6 +5,7 @@ import java.io.File;
 import org.springframework.beans.factory.FactoryBean
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.core.plugin.PluginConfig;
 
 class TestPluginConfigSpringFactory implements FactoryBean {
 	

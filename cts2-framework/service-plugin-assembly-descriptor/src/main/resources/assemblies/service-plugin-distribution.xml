@@ -2,13 +2,13 @@
 	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
-	<id>service-plugin</id>
+	<id>plugin</id>
 	<formats>
-		<format>zip</format>
 		<format>dir</format>
+		<format>jar</format>
 	</formats>
-	<includeBaseDirectory>true</includeBaseDirectory>
-	<baseDirectory>${project.build.finalName}-service-plugin</baseDirectory>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<baseDirectory>${project.build.finalName}-plugin</baseDirectory>
 	<files>
 		<file>
 			<source>${plugin.properties.file}</source>
