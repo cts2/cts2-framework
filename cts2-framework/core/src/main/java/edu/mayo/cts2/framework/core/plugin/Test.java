@@ -1,7 +1,6 @@
 package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.ServiceLoader;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
@@ -105,8 +105,7 @@ public class Test {
 	
 		Plugin srv = (Plugin) bc.getService(ref);
 
-		System.out.println("-> this" + srv.getPlugin());
-
+		//
 
 		//bc.installBundle("file:/Users/m005256/Documents/workspace-sts-2.8.0.RELEASE/testds/plugins/testds_1.0.0.201112211653.jar");
 		System.out.println(fwk.getRegisteredServices().length);

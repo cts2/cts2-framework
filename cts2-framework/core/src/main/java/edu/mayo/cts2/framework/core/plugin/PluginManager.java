@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,17 +12,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceFactory;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.launch.Framework;
+import org.osgi.framework.launch.FrameworkFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +44,12 @@ import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 @Component
-public class PluginManager extends BasePluginConfigChangeObservable implements InitializingBean {
+public class PluginManager extends BasePluginConfigChangeObservable 
+	implements InitializingBean, DisposableBean {
 	
 	private Log log = LogFactory.getLog(getClass());
-
-	private Map<String,ClassLoader> pluginClassLoaders =
-			new HashMap<String,ClassLoader>();
+	
+	private Framework framework;
 
 	@Resource
 	private ConfigInitializer configInitializer;
@@ -51,8 +62,60 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 		this.initialize();
 	}
 	
-	protected void initialize(){
+	protected void initialize() {
+		ServiceLoader<FrameworkFactory> ff = ServiceLoader.load(FrameworkFactory.class);
+		Map<String, String> config = new HashMap<String,String>();
+		//config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
+		//           "edu.mayo.cts2.framework.core.plugin");
 		
+		//config.put("osgi.compatibility.bootdelegation", "false");
+		config.put("org.osgi.framework.bootdelegation", "*");
+
+		//config.put("org.osgi.framework.bootdelegation", "edu.mayo.cts2.framework.*");
+		//config.put("osgi.parentClassloader","fwk");
+		
+		config.put("org.osgi.framework.bundle.parent","framework");
+		
+		//config.put("felix.service.urlhandlers", "false");
+
+		// add some params to config ...
+		framework = ff.iterator().next().newFramework(config);
+		
+		try {
+			framework.init();
+		} catch (BundleException e) {
+			throw new RuntimeException(e);
+		}
+		
+		final BundleContext bundleContext = framework.getBundleContext();
+		
+		bundleContext.registerService(PluginConfig.class.getName(), new PluginConfigService(this), null);
+
+	
+		this.doInPluginDirectory(new DoInPluginDirectory(){
+
+			@Override
+			public void processPlugins(File plugin) {
+					try {
+						URI pluginPath = plugin.toURI();
+						log.info("Installing Plugin: " + pluginPath);
+						
+						Bundle bundle = bundleContext.installBundle(pluginPath.toString());
+						bundle.update();
+
+					} catch (BundleException e) {
+						throw new RuntimeException(e);
+					}
+
+			}
+			
+		});
+		
+		try {
+			framework.start();
+		} catch (BundleException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void updatePluginSpecificConfigProperties(
@@ -113,6 +176,7 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 	}
 	
 	public void removePlugin(String pluginName, String pluginVersion) {
+		/*
 		boolean isActive = this.isActivePlugin(pluginName, pluginVersion);
 		
 		if(isActive){
@@ -131,68 +195,71 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 		
 		this.firePluginRemovedEvent(
 				new PluginReference(pluginName, pluginVersion));
+		*/
+		throw new UnsupportedOperationException();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> Iterable<PluginService<T>> getServices(Class<T> clazz) {
+
+		ServiceReference<T>[] references;
+		try {
+			references = 
+					(ServiceReference<T>[]) 
+					this.framework.getBundleContext().getAllServiceReferences(clazz.getName(), null);
+		} catch (InvalidSyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		
+		List<PluginService<T>> services = new ArrayList<PluginService<T>>();
+		
+		for(ServiceReference<T> ref : references){
+
+			T service = (T) this.framework.getBundleContext().getService(ref);
+			
+			services.add(new PluginService<T>(service, this.getServicePropertiesMap(ref)));
+		}
+		
+		return services;
 	}
 	
-	protected ClassLoader createClassLoaderForPlugin(String pluginName, String pluginVersion){
-		return new PluginClassLoader(
-				Thread.currentThread().getContextClassLoader(), 
-				this.getPluginDirectory(pluginName, pluginVersion));
-	}
-	
-	private void cleanUpAfterRemove(String pluginName, String pluginVersion){
-		this.pluginClassLoaders.remove(this.getPluginKey(pluginName, pluginVersion));
+	private Map<String,?> getServicePropertiesMap(ServiceReference<?> ref){
+		Map<String,Object> map = new HashMap<String,Object>();
+		for(String key : ref.getPropertyKeys()){
+			map.put(key, ref.getProperty(key));
+		}
+		
+		return map;
 	}
 
 	public PluginDescription getPluginDescription(String pluginName, String pluginVersion) {
-		File pluginFile = this.getPluginDirectory(pluginName, pluginVersion);
+		//File pluginFile = this.getPluginDirectory(pluginName, pluginVersion);
 		
-		return this.toPluginDescription(pluginFile);
-	}
-
-	private File getInUsePluginDirectory() {
-		 return this.findPluginFile(this.getInUsePluginName(), this.getInUsePluginVersion());
-	}
-	
-	private File getPluginDirectory(String pluginName, String pluginVersion) {
-		 return this.findPluginFile(pluginName, pluginVersion);
+		//return this.toPluginDescription(pluginFile);
+		
+		throw new UnsupportedOperationException();
 	}
 
 	public Set<PluginDescription> getPluginDescriptions() {
+		Set<PluginDescription> descriptions = new HashSet<PluginDescription>();
 		
-		return this.doInPluginDirectory(new DoInPluginDirectory<Set<PluginDescription>>(){
-
-			public Set<PluginDescription> processPlugins(List<File> plugins) {
-				Set<PluginDescription> returnSet = new HashSet<PluginDescription>();
-				
-				for(File plugin : plugins){
-
-					PluginDescription pluginDescription = toPluginDescription(plugin);
-					
-					returnSet.add(pluginDescription);
-				}
-				
-				return returnSet;
-			}
-		});
+		for(Bundle bundle : this.framework.getBundleContext().getBundles()){
+			descriptions.add(this.toPluginDescription(bundle));
+		}
+		
+		return descriptions;
 	}
 	
-	private PluginDescription toPluginDescription(File plugin) {
-		Properties props = getPluginProperties(plugin);
+	private PluginDescription toPluginDescription(Bundle bundle){
+		String name = bundle.getSymbolicName();
+		String version = bundle.getVersion().toString();
+		boolean isActive = ( bundle.getState() == Bundle.ACTIVE );
 		
-		String name = getPluginName(props);
-		String version = getPluginVersion(props);
-		String description = getPluginDescription(props);
-		boolean isActive = isActivePlugin(name, version);
+		PluginDescription description = new PluginDescription(name, version, null, isActive);
 		
-		PluginDescription pluginDescription = new PluginDescription(
-				name, 
-				version,
-				description,
-				isActive);
-		
-		return pluginDescription;
+		return description;
 	}
-
+	
 	private boolean isActivePlugin(String name, String version){
 		return StringUtils.equals(name, this.getInUsePluginName())
 				&&
@@ -211,7 +278,7 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 		
 		this.firePluginActivatedEvent(new PluginReference(name, version));
 	}
-	
+	/*
 	private File findPluginFile(final String pluginName, final String pluginVersion){
 		return this.doInPluginDirectory(new DoInPluginDirectory<File>(){
 
@@ -234,7 +301,7 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 			}
 		});
 	}
-
+*/
 	/**
 	 * Install plugin.
 	 * 
@@ -307,27 +374,23 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 		return props;
 	}
 	
+	/*
 	public String getCurrentPluginServiceProviderClassName(){
 		File plugin = this.getInUsePluginDirectory();
 		
 		return this.getPluginProperties(plugin).getProperty(ConfigConstants.PLUGIN_PROVIDER_CLASS_PROP);
 	}
+	*/
 	
-	protected <T> T doInPluginDirectory(DoInPluginDirectory<T> pluginClosure){
+	protected void doInPluginDirectory(DoInPluginDirectory pluginClosure){
 		File pluginDirectory = this.configInitializer.getPluginsDirectory();
 		File[] files = pluginDirectory.listFiles();
 		
-		List<File> returnList = new ArrayList<File>();
-		
 		if (! ArrayUtils.isEmpty(files)) {
 			for (File plugin : pluginDirectory.listFiles()) {
-				if (plugin.isDirectory()) {
-					returnList.add(plugin);
-				}
+				pluginClosure.processPlugins(plugin);
 			}
 		}
-		
-		return pluginClosure.processPlugins(returnList);
 	}
 	
 	private String getInUsePluginName(){
@@ -339,26 +402,7 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 		return (String) ConfigUtils.loadProperties(
 				this.configInitializer.getContextConfigFile()).get(ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP);
 	}
-	
-	public ClassLoader getPluginClassLoader(String pluginName, String pluginVersion){
-		
-		synchronized(this.pluginClassLoaders){
-			String key = getPluginKey(pluginName, pluginVersion);
-			
-			if(! this.pluginClassLoaders.containsKey(key)){
-				this.pluginClassLoaders.put(key, 
-						createClassLoaderForPlugin(pluginName, pluginVersion));
-			}
-			
-			return this.pluginClassLoaders.get(key);
-		}
-		
-	}
-	
-	private String getPluginKey(String pluginName, String pluginVersion){
-		return pluginName + pluginVersion;
-	}
-	
+
 	public PluginConfig getPluginConfig(String pluginName){
 		return new PluginConfig(
 				this.getPluginSpecificConfigProperties(pluginName),
@@ -376,11 +420,6 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 						+ pluginName);
 	}
 	
-	public String getPluginServiceProviderClassName(String pluginName, String pluginVersion) {
-		Properties props = this.getPluginProperties(this.getPluginDirectory(pluginName, pluginVersion));
-		
-		return props.getProperty(ConfigConstants.PLUGIN_PROVIDER_CLASS_PROP);
-	}
 	
 	public PluginReference getActivePlugin() {
 		String name = this.getInUsePluginName();
@@ -411,9 +450,10 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 	private String getPluginVersion(Properties props){
 		return props.getProperty(ConfigConstants.PLUGIN_VERSION_PROP);
 	}
-	private static interface DoInPluginDirectory<T> {
+	
+	private static interface DoInPluginDirectory {
 		
-		public T processPlugins(List<File> plugins);
+		public void processPlugins(File plugins);
 	}
 
 	protected ServiceConfigManager getServiceConfigManager() {
@@ -431,4 +471,31 @@ public class PluginManager extends BasePluginConfigChangeObservable implements I
 	protected void setConfigInitializer(ConfigInitializer configInitializer) {
 		this.configInitializer = configInitializer;
 	}
+
+	@Override
+	public void destroy() throws Exception {
+		framework.stop();
+	}
+	
+	public static class PluginConfigService implements ServiceFactory {
+		
+		private PluginManager pluginManager;
+		
+		public PluginConfigService(PluginManager pluginManager){
+			this.pluginManager = pluginManager;
+		}
+
+		@Override
+		public PluginConfig getService(Bundle bundle, ServiceRegistration registration) {
+			return this.pluginManager.getPluginConfig(bundle.getSymbolicName());
+		}
+
+		@Override
+		public void ungetService(Bundle bundle, ServiceRegistration registration, Object obj) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
 }

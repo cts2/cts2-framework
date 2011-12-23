@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.provider;
 
+import java.net.URL;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
@@ -31,8 +33,16 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.ResourceEntityResolver;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
+import org.springframework.osgi.io.OsgiBundleResourcePatternResolver;
+import org.springframework.osgi.util.BundleDelegatingClassLoader;
 
 import edu.mayo.cts2.framework.core.plugin.PluginConfig;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -42,7 +52,7 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractSpringServiceProvider implements ServiceProvider {
+public abstract class AbstractSpringServiceProvider extends AbstractServiceProvider {
 	
 	public static final String TEST_CONTEXT_SYSTEM_PROP = "test.context";
 	
@@ -63,7 +73,7 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 		}
 		
 	}
-	
+
 	protected ApplicationContext buildParentApplicationContext(PluginConfig pluginConfig){
 		
 		GenericApplicationContext parent = new GenericApplicationContext();
@@ -89,16 +99,17 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 	}
 
 	public void initialize(PluginConfig pluginConfig) {
-		String prop = System.getProperty(TEST_CONTEXT_SYSTEM_PROP);
+		final String prop = System.getProperty(TEST_CONTEXT_SYSTEM_PROP);
 
-		ApplicationContext parent = this.buildParentApplicationContext(pluginConfig);
-
+		final ApplicationContext parent = this.buildParentApplicationContext(pluginConfig);
+			
 		if(BooleanUtils.toBoolean(prop)){
 			log.warn("Using Test Context for: " + this.getClass().getCanonicalName());
-			this.applicationContext = this.getIntegrationTestApplicationContext(parent);
+			applicationContext = getIntegrationTestApplicationContext(parent);
 		} else {
-			this.applicationContext = this.getApplicationContext(parent);	
+			applicationContext = getApplicationContext(parent);	
 		}	
+
 	}
 	
 	public static class RuntimePluginConfigFactory implements FactoryBean<PluginConfig> {
@@ -123,6 +134,35 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider {
 
 		public void setPluginConfig(PluginConfig pluginConfig) {
 			this.pluginConfig = pluginConfig;
+		}
+	}
+	
+	protected class OsgiApplicationContext extends AbstractXmlApplicationContext {
+		
+		private Resource resource;
+		private ResourceLoader resourceLoader;
+		
+		private OsgiApplicationContext(ApplicationContext parent, String path){
+			super(parent);
+			this.setClassLoader(
+					BundleDelegatingClassLoader.createBundleClassLoaderFor(getBundleContext().getBundle()));
+			
+			URL u = getBundleContext().getBundle().getResource(path);
+
+			resource = new UrlResource(u);
+			
+			this.resourceLoader = new OsgiBundleResourcePatternResolver(getBundleContext().getBundle());
+
+			this.refresh();
+		}
+		
+		protected void initBeanDefinitionReader(XmlBeanDefinitionReader beanDefinitionReader){
+			beanDefinitionReader.setResourceLoader(resourceLoader);
+			beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(resourceLoader));
+		}
+		
+		protected Resource[] getConfigResources() {
+			return new Resource[]{resource};
 		}
 	}
 	

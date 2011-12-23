@@ -25,11 +25,6 @@ package edu.mayo.cts2.framework.service.provider;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.Resource;
 
@@ -38,13 +33,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.PluginManager;
-import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
-import edu.mayo.cts2.framework.core.plugin.PluginConfig;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
+import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
-import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.core.plugin.PluginService;
 
 /**
  * A factory for creating ServiceProvider objects.
@@ -100,173 +93,13 @@ public class ServiceProviderFactory implements InitializingBean,
 	 * @return the service provider
 	 */
 	protected ServiceProvider createServiceProvider() {
+		Iterable<PluginService<ServiceProvider>> providers = 
+				this.pluginManager.getServices(ServiceProvider.class);
 		
-		PluginReference activePlugin = pluginManager.getActivePlugin();
-
-		if (activePlugin == null) {
-			log.warn("No Service Plugin declared.");
-
-			return new EmptyServiceProvider();
-		}
-
-		String providerClassName = pluginManager
-				.getPluginServiceProviderClassName(
-						activePlugin.getPluginName(), 
-						activePlugin.getPluginVersion());
-
-		final ClassLoader pluginClassLoader = 
-				pluginManager.getPluginClassLoader(
-						activePlugin.getPluginName(), 
-						activePlugin.getPluginVersion());
-		
-		try {
-			final ServiceProvider provider = this.loadServiceProviderClass(
-					providerClassName, pluginClassLoader);
-
-			this.serviceProvider = this.decorateServiceProvider(provider, pluginClassLoader);
-			
-			serviceProvider.initialize(
-					this.pluginManager.getPluginConfig());
-			
-			return serviceProvider;
-
-		} catch (ClassNotFoundException e) {
-			log.warn("Service Provider Class: " + providerClassName
-					+ " not found!");
-
-			return new EmptyServiceProvider();
-		}
+		return providers.iterator().next().getService();
 	}
 	
-	private RuntimeException handleException(ExecutionException executionException)  {
-		Throwable e = executionException.getCause();
-		
-		if(e instanceof RuntimeException){
-			return (RuntimeException) e;
-		} else {
-			return new RuntimeException(e);
-		}
-	}
-	
-	protected ExecutorService createExecutorService(final ClassLoader pluginClassLoader){
-		return Executors.newFixedThreadPool(1,
-				new ThreadFactory() {
 
-					public Thread newThread(Runnable runnable) {
-						Thread t = new Thread(runnable);
-						t.setContextClassLoader(pluginClassLoader);
-
-						return t;
-					}
-
-				});
-	}
-
-	/**
-	 * Load service provider class.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param classLoader
-	 *            the class loader
-	 * @return the service provider
-	 * @throws ClassNotFoundException
-	 *             the class not found exception
-	 */
-	private ServiceProvider loadServiceProviderClass(String name,
-			ClassLoader classLoader) throws ClassNotFoundException {
-		ServiceProvider serviceProvider;
-		try {
-			serviceProvider = (ServiceProvider) classLoader.loadClass(name)
-					.newInstance();
-		} catch (InstantiationException e) {
-			throw new IllegalStateException(e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalStateException(e);
-		}
-
-		return serviceProvider;
-	}
-	
-	protected ServiceProvider decorateServiceProvider(final ServiceProvider delegate, ClassLoader pluginClassLoader){
-		final ExecutorService ex = this.createExecutorService(pluginClassLoader);
-		
-		ServiceProvider serviceProvider = new ServiceProvider() {
-
-			public <T extends Cts2Profile> T getService(
-					final Class<T> serviceClass) {
-				try {
-					return ex.submit(new Callable<T>() {
-
-						public T call() throws Exception {
-							return delegate.getService(serviceClass);
-						}
-
-					}).get();
-				} catch (ExecutionException e) {
-					throw handleException(e);
-				} catch (InterruptedException e) {
-					throw new IllegalStateException(e);
-				}
-			}
-			
-			public void initialize(
-					final PluginConfig pluginConfig) {
-				try {
-					ex.submit(new Callable<Void>() {
-
-						public Void call() throws Exception {
-							delegate.initialize(pluginConfig);
-							
-							return null;
-						}
-
-					}).get();
-				} catch (ExecutionException e) {
-					throw handleException(e);
-				} catch (InterruptedException e) {
-					throw new IllegalStateException(e);
-				}
-			}
-			
-			public void destroy() {
-				try {
-					ex.submit(new Callable<Void>() {
-
-						public Void call() throws Exception {
-							delegate.destroy();
-							
-							return null;
-						}
-
-					}).get();
-				} catch (ExecutionException e) {
-					throw handleException(e);
-				} catch (InterruptedException e) {
-					throw new IllegalStateException(e);
-				}
-			}
-			
-			public Set<Option> getPluginOptions() {
-				try {
-					return ex.submit(new Callable<Set<Option>>() {
-
-						public Set<Option> call() throws Exception {
-							return delegate.getPluginOptions();
-						}
-
-					}).get();
-				} catch (ExecutionException e) {
-					throw handleException(e);
-				} catch (InterruptedException e) {
-					throw new IllegalStateException(e);
-				}
-			}
-
-		};
-		
-		return serviceProvider;
-	}
 
 	private void fireServiceProviderChangeEvent() {
 		for (ServiceProviderChangeObserver observer : this.observers) {
