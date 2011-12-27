@@ -2,8 +2,12 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.util.Collection;
 import java.util.Dictionary;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.util.CollectionUtils;
 
@@ -11,20 +15,35 @@ public abstract class AbstractPlugin implements Plugin {
 
 	private BundleContext bundleContext;
 	
+	private Set<PluginService<?>> services = 
+			new HashSet<PluginService<?>>();
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		this.bundleContext = context;
-	
-		ServiceTracker tracker = 
-				new ServiceTracker(bundleContext, bundleContext.getServiceReference(PluginConfig.class.getName()), null);
 		
-		PluginConfig config = (PluginConfig)tracker.getService();
+		ServiceReference<PluginConfig> reference = 
+				bundleContext.getServiceReference(PluginConfig.class);
+	
+		ServiceTracker<PluginConfig,PluginConfig> tracker = 
+				new ServiceTracker<PluginConfig,PluginConfig>(
+						bundleContext, 
+						reference,
+						null);
+		
+		PluginConfig config = tracker.getService();
 		
 		this.initialize(config);
 		
 		this.registerServices(this.getServicesToRegister());
 	}
-	
+
+	@Override
+	public Iterable<PluginService<?>> getPluginServices() {
+		return this.services;
+	}
+
+
 	protected abstract Collection<ServiceToRegister> getServicesToRegister();
 	
 	private void registerServices(Collection<ServiceToRegister> services){
@@ -37,7 +56,15 @@ public abstract class AbstractPlugin implements Plugin {
 			Object serviceObj = service.getServiceObject();
 			Dictionary<String,?> dictionary = service.getDictionary();
 			
-			this.getBundleContext().registerService(clazz, serviceObj, dictionary);
+			@SuppressWarnings("unchecked")
+			ServiceRegistration<Object> registeredService = 
+					(ServiceRegistration<Object>) 
+					this.getBundleContext().registerService(clazz, serviceObj, dictionary);
+			
+			this.services.add(
+					new DefaultPluginService<Object>(
+							this.getBundleContext(), 
+							registeredService));
 		}
 	}
 	

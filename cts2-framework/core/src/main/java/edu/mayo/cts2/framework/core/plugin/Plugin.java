@@ -13,5 +13,7 @@ public interface Plugin extends BundleActivator {
 	public void destroy();
 
 	public Set<Option> getPluginOptions();
+	
+	public Iterable<PluginService<?>> getPluginServices();
 
 }

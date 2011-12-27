@@ -1,24 +1,13 @@
 package edu.mayo.cts2.framework.core.plugin;
 
-import java.util.Map;
+import java.util.Dictionary;
 
-public class PluginService<T> {
+public interface PluginService<T> {
+
+	public T getService();
+
+	public void updateProperties(Dictionary<String,?> newProperties);
 	
-	private T service;
-	private Map<String, ?> properties;
-
-	public PluginService(T service, Map<String, ?> properties) {
-		super();
-		this.service = service;
-		this.properties = properties;
-	}
-
-	public T getService() {
-		return service;
-	}
-	
-	public Map<String, ?> getProperties() {
-		return properties;
-	}
+	public void unregister();
 	
 }
