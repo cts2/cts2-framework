@@ -233,11 +233,6 @@ public class OsgiPluginManager extends BasePluginConfigChangeObservable
 		
 		for(ServiceReference<T> ref : references){
 
-			T service = (T) this.framework.getBundleContext().getService(ref);
-			
-			services.add(new DefaultPluginService<T>(service, this.getServicePropertiesMap(ref)));
-			
-			this.framework.getRegisteredServices()[0].
 		}
 		
 		return services;
