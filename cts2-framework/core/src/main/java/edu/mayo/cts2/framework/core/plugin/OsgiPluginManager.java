@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,12 +29,16 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -41,7 +48,9 @@ import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
+import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.core.config.option.StringOption;
 
 @Component
 public class OsgiPluginManager extends BasePluginConfigChangeObservable 
@@ -77,6 +86,8 @@ public class OsgiPluginManager extends BasePluginConfigChangeObservable
 		config.put("org.osgi.framework.bundle.parent","framework");
 		
 		//config.put("felix.service.urlhandlers", "false");
+		
+		config.put("felix.cm.dir", this.configInitializer.getContextConfigDirectory().getPath());
 
 		// add some params to config ...
 		framework = ff.iterator().next().newFramework(config);
@@ -86,14 +97,31 @@ public class OsgiPluginManager extends BasePluginConfigChangeObservable
 		} catch (BundleException e) {
 			throw new RuntimeException(e);
 		}
+		/*
+	
+		for(Bundle bundle : framework.getBundleContext().getBundles()){
+			try {
+				bundle.uninstall();
+			} catch (BundleException e) {
+			//
+			}
+		}
+*/
 		
 		final BundleContext bundleContext = framework.getBundleContext();
 		
+		//Hashtable<String,String> t = new Hashtable<String,String>();
+		//t.put(Constants.ACTIVATION_LAZY, "true");
+		
+		
 		bundleContext.registerService(PluginConfig.class.getName(), new PluginConfigService(this), null);
 
+		
 	
 		this.doInPluginDirectory(new DoInPluginDirectory(){
 
+			int i=10;
+			
 			@Override
 			public void processPlugins(File plugin) {
 					try {
@@ -101,21 +129,61 @@ public class OsgiPluginManager extends BasePluginConfigChangeObservable
 						log.info("Installing Plugin: " + pluginPath);
 						
 						Bundle bundle = bundleContext.installBundle(pluginPath.toString());
+						
+						//BundleStartLevel bsl = bundle.adapt(BundleStartLevel.class);
+						//bsl.setStartLevel(i--);
+	
 						bundle.update();
+						bundle.start();
 
-					} catch (BundleException e) {
+					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}
 
 			}
 			
 		});
-		
+
 		try {
 			framework.start();
 		} catch (BundleException e) {
 			throw new RuntimeException(e);
 		}
+
+		ServiceTracker<ConfigurationAdmin,ConfigurationAdmin> tracker = new ServiceTracker(bundleContext, ConfigurationAdmin.class.getName(), null);
+		tracker.open(true);
+		ConfigurationAdmin service = tracker.getService();
+		
+		Set<Option> options = new HashSet<Option>();
+		options.add(new StringOption("isDefaultService", "true"));
+		
+		Hashtable<String,String> t = new Hashtable<String,String>();
+		t.put("isDefaultService", "true");
+		
+		try {
+			service.getConfiguration("example-service").update(t);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		//Hashtable<String,String> t = new Hashtable<String,String>();
+		//t.put("test", "test");
+/*
+		try {
+			Configuration c = service.getConfiguration("example-service", null);
+			Dictionary props = c.getProperties();
+			props.put("added", "here");
+			c.update(props);
+		
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+*/
+		for(ServiceReference ref : framework.getRegisteredServices()){
+			//System.out.println("Service: " + this.framework.getBundleContext().getService(ref));
+		}
+		
+
 	}
 	
 	/* (non-Javadoc)
@@ -171,10 +239,30 @@ public class OsgiPluginManager extends BasePluginConfigChangeObservable
 	 */
 	@Override
 	public OptionHolder getPluginSpecificConfigProperties(String pluginName) {
-		File file = this.getPluginSpecificConfigPropertiesFile(pluginName);
+
+		ServiceTracker<ConfigurationAdmin,ConfigurationAdmin> tracker = 
+				new ServiceTracker(this.framework.getBundleContext(), ConfigurationAdmin.class.getName(), null);
+		tracker.open(true);
 		
-		return ConfigUtils.propertiesToOptionHolder(
-				ConfigUtils.loadProperties(file));
+		Dictionary dict;
+		try {
+			dict = tracker.getService().getConfiguration(pluginName).getProperties();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+			
+		return new OptionHolder(this.dictionaryToOptions(dict));
+
+	}
+	
+	private Set<Option> dictionaryToOptions(Dictionary dictionary){
+		Set<Option> options = new HashSet<Option>();
+		Enumeration keys = dictionary.keys();
+		while(keys.hasMoreElements()){
+			String key = (String) keys.nextElement();
+			options.add(new StringOption(key, (String)dictionary.get(key)));
+		}
+		return options;
 	}
 	
 	private File getPluginSpecificConfigPropertiesFile(String pluginName) {
@@ -215,24 +303,42 @@ public class OsgiPluginManager extends BasePluginConfigChangeObservable
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public Set<ServiceDescription> getServiceDescriptions() {
+		for(ServiceReference<?> ref : this.framework.getRegisteredServices()){
+			String pluginName = ref.getBundle().getSymbolicName();
+			String pluginVersion = ref.getBundle().getVersion().toString();
+		}
+		
+		return null;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Iterable<PluginService<T>> getServices(Class<T> clazz) {
-
-		ServiceReference<T>[] references;
+	public <T extends Plugin> Iterable<T> getPlugins(Class<T> clazz) {
+		
+		ServiceTracker<T, T> tracker;
 		try {
-			references = 
-					(ServiceReference<T>[]) 
-					this.framework.getBundleContext().getAllServiceReferences(clazz.getName(), null);
+			tracker = new ServiceTracker<T,T>(
+					this.framework.getBundleContext(), 
+					FrameworkUtil.createFilter(
+							"(&(" + Constants.OBJECTCLASS + "="+clazz.getName()+")(isDefaultService=true))"), 
+							null);
 		} catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e);
 		}
+		tracker.open(true);
 		
-		List<PluginService<T>> services = new ArrayList<PluginService<T>>();
+		while(tracker.getTrackingCount() < 1){
+			//
+		}
+
+		ServiceReference<T>[] references = tracker.getServiceReferences();
+		
+		List<T> services = new ArrayList<T>();
 		
 		for(ServiceReference<T> ref : references){
-
+			services.add(this.framework.getBundleContext().getService(ref));
 		}
 		
 		return services;

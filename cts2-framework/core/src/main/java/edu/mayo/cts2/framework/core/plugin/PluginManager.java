@@ -20,13 +20,15 @@ public interface PluginManager {
 
 	public void removePlugin(String pluginName, String pluginVersion);
 
-	public <T> Iterable<PluginService<T>> getServices(Class<T> clazz);
+	public <T extends Plugin> Iterable<T> getPlugins(Class<T> clazz);
 
 	public PluginDescription getPluginDescription(
 			String pluginName,
 			String pluginVersion);
 
 	public Set<PluginDescription> getPluginDescriptions();
+	
+	public Set<ServiceDescription> getServiceDescriptions();
 
 	public void activatePlugin(String name, String version);
 	

@@ -46,7 +46,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionDTO;
-import edu.mayo.cts2.framework.core.plugin.IPluginManager;
+import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginDescription;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
 
@@ -59,7 +59,7 @@ import edu.mayo.cts2.framework.core.plugin.PluginReference;
 public class WebAdminController {
 
 	@Resource
-	private IPluginManager pluginManager;
+	private PluginManager pluginManager;
 	
 	@Resource
 	private ServiceConfigManager serviceConfigManager;
@@ -78,6 +78,7 @@ public class WebAdminController {
 	@RequestMapping(value = { "/admin/plugins/currentplugin/properties" }, method = RequestMethod.GET)
 	@ResponseBody
 	public Collection<OptionDTO> getCurrentPluginSpecificConfigProperties() {
+		/*
 		PluginReference activePlugin = 
 				this.pluginManager.getActivePlugin();
 
@@ -92,6 +93,8 @@ public class WebAdminController {
 		}
 		
 		return this.optionsToDtos(options);
+		*/
+		return null;
 	}
 	
 	@RequestMapping(value = { "/admin/servicecontext/properties" }, method = RequestMethod.GET)
@@ -107,6 +110,7 @@ public class WebAdminController {
 	@RequestMapping(value = { "/admin/plugins/currentplugin/properties" }, method = RequestMethod.POST)
 	@ResponseBody
 	public void updateCurrentPluginSpecificConfigProperties(@RequestBody OptionDTO[] options) {
+		/*
 		PluginReference activePlugin = 
 				this.pluginManager.getActivePlugin();
 		
@@ -119,7 +123,14 @@ public class WebAdminController {
 		}
 
 		this.pluginManager.updatePluginSpecificConfigProperties(activePlugin.getPluginName(), optionMap);
+		*/
 	}
+	
+	@RequestMapping(value = { "/**/*" }, method = RequestMethod.GET)
+	public void test(){
+		System.out.println("default mapping");
+	}
+	
 	
 	@RequestMapping(value = { "/admin/servicecontext/properties" }, method = RequestMethod.POST)
 	@ResponseBody

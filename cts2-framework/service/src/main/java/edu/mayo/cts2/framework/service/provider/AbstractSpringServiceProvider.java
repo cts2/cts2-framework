@@ -74,6 +74,7 @@ public abstract class AbstractSpringServiceProvider extends AbstractServiceProvi
 		
 	}
 
+
 	protected ApplicationContext buildParentApplicationContext(PluginConfig pluginConfig){
 		
 		GenericApplicationContext parent = new GenericApplicationContext();
@@ -142,7 +143,7 @@ public abstract class AbstractSpringServiceProvider extends AbstractServiceProvi
 		private Resource resource;
 		private ResourceLoader resourceLoader;
 		
-		private OsgiApplicationContext(ApplicationContext parent, String path){
+		public OsgiApplicationContext(ApplicationContext parent, String path){
 			super(parent);
 			this.setClassLoader(
 					BundleDelegatingClassLoader.createBundleClassLoaderFor(getBundleContext().getBundle()));

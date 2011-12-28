@@ -31,7 +31,7 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ServiceProvider  extends Plugin {
+public interface ServiceProvider extends Plugin {
 	
 	/**
 	 * Gets the service.

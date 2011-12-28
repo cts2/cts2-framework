@@ -38,7 +38,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
       Service Plugins
     </a>
     
-    <a class="abs icon" style="left:20px;top:300px;" href="#icon_dock_plugin_admin">
+    <a class="abs icon" style="left:20px;top:300px;" href="#icon_dock_services">
       <img src="resources/desktop/assets/images/icons/box-config-icon.png" />
       Plugin Admin
     </a>
@@ -94,7 +94,7 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
         <div class="window_top">
           <span class="float_left">
             <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
-            Service Plugins
+            Plugins
           </span>
           <span class="float_right">
             <a href="#" class="window_min"></a>
@@ -152,17 +152,17 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
   
     </div>
 
-    <div id="window_plugin_admin" class="abs window" style="height: 350px;">
+    <div id="window_services" class="abs window" style="height: 350px;">
       <div class="abs window_inner">
         <div class="window_top">
           <span class="float_left">
             <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
-            Plugin Admin
+            Services
           </span>
           <span class="float_right">
             <a href="#" class="window_min"></a>
             <a href="#" class="window_resize"></a>
-            <a href="#icon_dock_plugin_admin" class="window_close"></a>
+            <a href="#icon_dock_services" class="window_close"></a>
           </span>
         </div>
         <div class="abs window_content">
@@ -179,14 +179,14 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
           </div>
           <div class="window_main">
       
-            <table id="pluginAdminTable" class="display">
+            <table id="servicesTable" class="display">
               <thead>
                 <tr>
                   <th>
-                    Property Name
+                    1
                   </th>
                   <th>
-                    Property Value
+                    2
                   </th>
                 </tr>
               </thead>
@@ -336,8 +336,8 @@ window.top.location = 'http://desktop.sonspring.com/ie.html';
         </a>
       </li>
       
-       <li id="icon_dock_plugin_admin">
-        <a href="#window_plugin_admin">
+       <li id="icon_dock_services">
+        <a href="#window_services">
           <img src="resources/desktop/assets/images/icons/plugin-edit-icon.png" />
           Plugin Admin
         </a>

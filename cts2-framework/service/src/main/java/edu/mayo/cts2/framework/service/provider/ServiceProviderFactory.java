@@ -37,7 +37,6 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
-import edu.mayo.cts2.framework.core.plugin.PluginService;
 
 /**
  * A factory for creating ServiceProvider objects.
@@ -65,7 +64,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	 */
 	public void afterPropertiesSet() throws Exception {
 		this.serviceProvider = this.createServiceProvider();
-		this.pluginManager.registerListener(this);
+		//this.pluginManager.registerListener(this);
 	}
 
 	/**
@@ -93,10 +92,10 @@ public class ServiceProviderFactory implements InitializingBean,
 	 * @return the service provider
 	 */
 	protected ServiceProvider createServiceProvider() {
-		Iterable<PluginService<ServiceProvider>> providers = 
-				this.pluginManager.getServices(ServiceProvider.class);
-		
-		return providers.iterator().next().getService();
+		Iterable<ServiceProvider> providers = 
+				this.pluginManager.getPlugins(ServiceProvider.class);
+
+		return providers.iterator().next();
 	}
 	
 
@@ -123,10 +122,7 @@ public class ServiceProviderFactory implements InitializingBean,
 
 	@Override
 	public void onPluginRemoved(PluginReference ref) {
-		if(this.pluginManager.isActivePlugin(ref)){
-			this.refresh();
-			this.fireServiceProviderChangeEvent();
-		}
+		//
 	}
 
 	@Override
