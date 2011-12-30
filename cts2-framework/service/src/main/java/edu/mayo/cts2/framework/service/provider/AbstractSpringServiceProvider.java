@@ -23,8 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.provider;
 
-import java.net.URL;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
@@ -40,9 +38,6 @@ import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.UrlResource;
-import org.springframework.osgi.io.OsgiBundleResourcePatternResolver;
-import org.springframework.osgi.util.BundleDelegatingClassLoader;
 
 import edu.mayo.cts2.framework.core.plugin.PluginConfig;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -144,16 +139,7 @@ public abstract class AbstractSpringServiceProvider extends AbstractServiceProvi
 		private ResourceLoader resourceLoader;
 		
 		public OsgiApplicationContext(ApplicationContext parent, String path){
-			super(parent);
-			this.setClassLoader(
-					BundleDelegatingClassLoader.createBundleClassLoaderFor(getBundleContext().getBundle()));
-			
-			URL u = getBundleContext().getBundle().getResource(path);
-
-			resource = new UrlResource(u);
-			
-			this.resourceLoader = new OsgiBundleResourcePatternResolver(getBundleContext().getBundle());
-
+		//
 			this.refresh();
 		}
 		

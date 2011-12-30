@@ -12,6 +12,9 @@
         <dependent-module archiveName="filter-0.4.9-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/filter/filter">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="core-0.4.9-SNAPSHOT-tests.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/core/core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="model-0.4.9-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/model/model">
             <dependency-type>uses</dependency-type>
         </dependent-module>

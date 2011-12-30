@@ -34,6 +34,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import edu.mayo.cts2.framework.core.plugin.AbstractExtensionPoint;
+import edu.mayo.cts2.framework.core.plugin.ExtensionPoint;
+import edu.mayo.cts2.framework.core.plugin.ExtensionPointDescriptor;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
@@ -44,7 +47,8 @@ import edu.mayo.cts2.framework.core.plugin.PluginReference;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-public class ServiceProviderFactory implements InitializingBean,
+@ExtensionPointDescriptor(xmlPrefix="service-provider")
+public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvider> implements InitializingBean,
 		PluginConfigChangeObserver, ServiceProviderChangeObservable {
 
 	private final Log log = LogFactory.getLog(getClass().getName());
@@ -63,8 +67,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		this.serviceProvider = this.createServiceProvider();
-		//this.pluginManager.registerListener(this);
+		this.pluginManager.registerExtensionPoint(this);
 	}
 
 	/**
@@ -75,29 +78,9 @@ public class ServiceProviderFactory implements InitializingBean,
 	}
 
 	public ServiceProvider getServiceProvider() {
-		synchronized(this.serviceProvider){
-			return this.serviceProvider;
-		}
+		return this.getService();
 	}
 
-	private void refresh() {
-		synchronized(this.serviceProvider){
-			this.serviceProvider = this.createServiceProvider();
-		}
-	}
-
-	/**
-	 * Creates a new ServiceProvider object.
-	 * 
-	 * @return the service provider
-	 */
-	protected ServiceProvider createServiceProvider() {
-		Iterable<ServiceProvider> providers = 
-				this.pluginManager.getPlugins(ServiceProvider.class);
-
-		return providers.iterator().next();
-	}
-	
 
 
 	private void fireServiceProviderChangeEvent() {
@@ -116,7 +99,7 @@ public class ServiceProviderFactory implements InitializingBean,
 	
 	@Override
 	public void onPluginActivated(PluginReference ref) {
-		this.refresh();
+	
 		this.fireServiceProviderChangeEvent();
 	}
 
@@ -132,7 +115,8 @@ public class ServiceProviderFactory implements InitializingBean,
 
 	@Override
 	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions) {
-		this.refresh();
+
 		this.fireServiceProviderChangeEvent();
 	}
+
 }

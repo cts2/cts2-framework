@@ -26,4 +26,10 @@ public class EmptyServiceProvider extends AbstractServiceProvider {
 		return null;
 	}
 
+	@Override
+	public void updatePluginOptions(Set<Option> newOptions) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

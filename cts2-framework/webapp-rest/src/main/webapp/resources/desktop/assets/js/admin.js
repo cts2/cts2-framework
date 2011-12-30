@@ -150,7 +150,7 @@ function activatePlugin(pluginName, pluginVersion, activateCallback){
 		"type": "PUT", 
 		"contentType": "application/json",
 		"data": "{'pluginName':'"+pluginName+"','pluginVersion':'"+pluginVersion+"'}",
-		"url": "admin/plugins/active", 
+		"url": "admin/plugins/deactive", 
 		"success": activateCallback
 	} );
 	
@@ -226,7 +226,7 @@ $(document).ready(function() {
 		$(this).toggleClass('row_selected');
 		
 		if(aData[2]){
-			$('#activateButton').button('disable')
+			$('#activateButton').button('enable')
 		} else {
 			$('#activateButton').button('enable')
 		}

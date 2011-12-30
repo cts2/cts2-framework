@@ -125,12 +125,7 @@ public class WebAdminController {
 		this.pluginManager.updatePluginSpecificConfigProperties(activePlugin.getPluginName(), optionMap);
 		*/
 	}
-	
-	@RequestMapping(value = { "/**/*" }, method = RequestMethod.GET)
-	public void test(){
-		System.out.println("default mapping");
-	}
-	
+
 	
 	@RequestMapping(value = { "/admin/servicecontext/properties" }, method = RequestMethod.POST)
 	@ResponseBody
@@ -152,6 +147,13 @@ public class WebAdminController {
 	public void activatePlugin(@RequestBody PluginReference plugin) {
 		this.pluginManager.
 			activatePlugin(plugin.getPluginName(), plugin.getPluginVersion());
+	}
+	
+	@RequestMapping(value = { "/admin/plugins/deactive" }, method = RequestMethod.PUT)
+	@ResponseBody
+	public void deactivatePlugin(@RequestBody PluginReference plugin) {
+		this.pluginManager.
+			dectivatePlugin(plugin.getPluginName(), plugin.getPluginVersion());
 	}
 
 	@RequestMapping(value = { "/admin/plugins" }, method = RequestMethod.GET)

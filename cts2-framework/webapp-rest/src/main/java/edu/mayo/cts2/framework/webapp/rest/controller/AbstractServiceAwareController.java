@@ -84,24 +84,37 @@ public class AbstractServiceAwareController extends
 	protected void doInitialize(){
 		//no-op
 	}
+	
+	protected <T extends Cts2Profile> T getCts2Service(Class<T> clazz){
+		ServiceProvider provider = this.serviceProviderFactory.getService();
+		
+		return provider.getService(clazz);
+	}
 
 	/**
 	 * Load services.
 	 */
 	protected void loadServices() {
 		
-		ServiceProvider serviceProvider = this.serviceProviderFactory
-				.getServiceProvider();
-
+	
 
 				for (Field field : this.getClass().getDeclaredFields()) {
 					if (field.isAnnotationPresent(Cts2Service.class)) {
 
 						@SuppressWarnings("unchecked")
-						Class<? extends Cts2Profile> clazz = (Class<? extends Cts2Profile>) field
+						final Class<? extends Cts2Profile> clazz = (Class<? extends Cts2Profile>) field
 								.getType();
+						
+						Cts2Profile service = ProxyFactory.getProxy(clazz, new MethodInterceptor(){
 
-						Cts2Profile service = serviceProvider.getService(clazz);
+							@Override
+							public Object invoke(MethodInvocation method) throws Throwable {
+								return method.getMethod().invoke(
+										serviceProviderFactory.getServiceProvider().getService(clazz),
+										method.getArguments());
+							}
+							
+						});
 						
 						if(service == null){
 							service = this.proxyNullService(clazz);

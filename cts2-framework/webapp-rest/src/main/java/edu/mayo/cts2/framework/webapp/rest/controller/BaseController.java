@@ -31,7 +31,11 @@ public class BaseController extends AbstractServiceAwareController{
 	public BaseService getServiceInfo(
 			HttpServletRequest httpServletRequest) {
 		
-		return baseServiceService.getBaseService();
+		if(this.baseServiceService != null){
+			return baseServiceService.getBaseService();
+		} else {
+			return null;
+		}
 		
 		/*TODO: find a better way to do this.
 		BaseService service = new BaseService();
