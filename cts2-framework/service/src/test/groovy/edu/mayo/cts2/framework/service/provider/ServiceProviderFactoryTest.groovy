@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.junit.Test
 
-import edu.mayo.cts2.framework.core.config.PluginManager
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.plugin.PluginConfig;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
@@ -15,7 +14,7 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile
 class ServiceProviderFactoryTest {
 	
 	def classLoader = new URLClassLoader()
-
+/*
 	def pluginManager = [
 		getActivePlugin : { new PluginReference("test","test") },
 		getPluginServiceProviderClassName : { pluginName,pluginVersion -> TestServiceProvider.class.getName() },
@@ -85,5 +84,5 @@ class TestServiceProvider implements ServiceProvider {
 	public Set<Option> getPluginOptions() {
 		return null;
 	}
-	
+*/	
 }

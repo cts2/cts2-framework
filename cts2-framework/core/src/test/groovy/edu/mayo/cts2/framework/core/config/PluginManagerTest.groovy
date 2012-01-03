@@ -12,7 +12,7 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder
 
 @WithGMock
 class PluginManagerTest {
-
+/*
 	@Test
 	void "Test getPluginClassLoader"(){
 		def manager = new TestPluginManager();
@@ -103,5 +103,5 @@ class TestPluginManager extends PluginManager {
 	protected File getPluginWorkDirectory(String pluginName){
 		new File("file")
 	}
-	
+*/	
 }

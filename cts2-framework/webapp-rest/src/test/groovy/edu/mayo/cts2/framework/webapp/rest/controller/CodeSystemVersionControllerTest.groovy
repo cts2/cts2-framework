@@ -24,7 +24,7 @@ import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver
 	] as CodeSystemVersionReadService
 
 	def codeSystemVersionNameResolver = [
-		getCodeSystemVersionNameFromVersionId: {service,csName,versionId -> return csName+"_"+versionId },
+		getCodeSystemVersionNameFromVersionId: {service,csName,versionId,context -> return csName+"_"+versionId },
 	] as CodeSystemVersionNameResolver
 
 	def httpServletRequest = new MockHttpServletRequest()

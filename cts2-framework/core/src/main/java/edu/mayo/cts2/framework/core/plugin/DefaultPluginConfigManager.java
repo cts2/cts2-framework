@@ -2,17 +2,13 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -23,6 +19,7 @@ import com.atlassian.plugin.spring.AvailableToPlugins;
 import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
+import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
@@ -49,12 +46,12 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 		String inUsePluginName = this.getInUsePluginName();
 
 		this.pluginConfig = new PluginConfig(
-				this.getPluginSpecificConfigProperties(inUsePluginName),
+				this.getPluginConfigProperties(inUsePluginName),
 				this.getPluginWorkDirectory(inUsePluginName),
 				this.serviceConfigManager.getServerContext());
 	}
 
-	public void updatePluginSpecificConfigProperties(String namespace,
+	public void updatePluginConfigProperties(String namespace,
 			Map<String, String> properties) {
 
 		File propertiesFile = this
@@ -72,7 +69,7 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 						*/
 	}
 
-	public void updatePluginSpecificConfigProperty(String namespace,
+	public void updatePluginConfigProperty(String namespace,
 			String propertyName, String propertyValue) {
 
 		File propertiesFile = this
@@ -85,13 +82,18 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 						.getPluginSpecificConfigPropertiesFile(namespace))));
 	}
 
-	public OptionHolder getPluginSpecificConfigProperties(String namespace) {
+	public OptionHolder getPluginConfigProperties(String namespace) {
 		File file = this.getPluginSpecificConfigPropertiesFile(namespace);
 
 		return ConfigUtils.propertiesToOptionHolder(ConfigUtils
 				.loadProperties(file));
 	}
 
+	@Override
+	public ServerContext getServerContext() {
+		return this.serviceConfigManager.getServerContext();
+	}
+	
 	private File getPluginSpecificConfigPropertiesFile(String namespace) {
 		return ConfigUtils.createFile(this
 				.getPluginSpecificConfigPropertiesFilePath(namespace));
@@ -101,56 +103,6 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 		return this.configInitializer.getContextConfigDirectory().getPath()
 				+ File.separator + namespace + ".properties";
 	}
-
-	public Set<PluginDescription> getPluginDescriptions() {
-
-		return this
-				.doInPluginDirectory(new DoInPluginDirectory<Set<PluginDescription>>() {
-
-					public Set<PluginDescription> processPlugins(
-							List<File> plugins) {
-						Set<PluginDescription> returnSet = new HashSet<PluginDescription>();
-
-						for (File plugin : plugins) {
-
-							PluginDescription pluginDescription = toPluginDescription(plugin);
-
-							returnSet.add(pluginDescription);
-						}
-
-						return returnSet;
-					}
-				});
-	}
-
-	private PluginDescription toPluginDescription(File plugin) {
-		Properties props = getPluginProperties(plugin);
-
-		String name = getPluginName(props);
-		String version = getPluginVersion(props);
-		String description = getPluginDescription(props);
-		boolean isActive = isActivePlugin(name, version);
-
-		PluginDescription pluginDescription = new PluginDescription(name,
-				version, description, isActive);
-
-		return pluginDescription;
-	}
-
-	private boolean isActivePlugin(String name, String version) {
-		return StringUtils.equals(name, this.getInUsePluginName())
-				&& StringUtils.equals(version, this.getInUsePluginVersion());
-	}
-
-
-	private Properties getPluginProperties(File plugin) {
-		Properties props = ConfigUtils
-				.loadProperties(new File(plugin.getPath() + File.separator
-						+ ConfigConstants.PLUGIN_PROPERTIES_FILE_NAME));
-
-		return props;
-	}
-
 
 	protected <T> T doInPluginDirectory(DoInPluginDirectory<T> pluginClosure) {
 		File pluginDirectory = this.configInitializer.getPluginsDirectory();
@@ -175,12 +127,6 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 				ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP);
 	}
 
-	private String getInUsePluginVersion() {
-		return (String) ConfigUtils.loadProperties(
-				this.configInitializer.getContextConfigFile()).get(
-				ConfigConstants.IN_USE_SERVICE_PLUGIN_VERSION_PROP);
-	}
-
 	@Override
 	public PluginConfig getPluginConfig(String namespace) {
 		return this.pluginConfig;
@@ -191,18 +137,6 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 
 		return ConfigUtils.createDirectory(file.getPath() + File.separator
 				+ ".work" + File.separator + pluginName);
-	}
-
-	private String getPluginName(Properties props) {
-		return props.getProperty(ConfigConstants.PLUGIN_NAME_PROP);
-	}
-
-	private String getPluginDescription(Properties props) {
-		return props.getProperty(ConfigConstants.PLUGIN_DESCRIPTION_PROP);
-	}
-
-	private String getPluginVersion(Properties props) {
-		return props.getProperty(ConfigConstants.PLUGIN_VERSION_PROP);
 	}
 
 	private static interface DoInPluginDirectory<T> {
@@ -226,4 +160,5 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 	protected void setConfigInitializer(ConfigInitializer configInitializer) {
 		this.configInitializer = configInitializer;
 	}
+
 }

@@ -61,7 +61,7 @@
 							</execution>
 						</executions>
 					</plugin>
-
+<!--
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
@@ -96,20 +96,49 @@
 							</execution>
 						</executions>
 					</plugin>
-					
-					<plugin>
-					    <groupId>org.apache.felix</groupId>
-					    <artifactId>maven-bundle-plugin</artifactId>
-					    <extensions>true</extensions>
-					    <configuration>
-					    	<instructions>
-					    		<Embed-Dependency>*;scope=provided</Embed-Dependency>
-					    		<Spring-Context>*;timeout:=60</Spring-Context>
-					    		<Import-Package>*;resolution:=optional,
-					    		org.springframework.beans.factory;version="[0,10]"</Import-Package>
-					    	</instructions>
-					    </configuration>
-					  </plugin>
+-->
+
+
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<extensions>true</extensions>
+					<configuration>
+						<instructions>
+							<Import-Package>
+							!com.sun.*,
+							!org.apache.avalon.*,
+							!javax.mail.*,
+							!javax.jms.*,
+							!sun.*,
+							!antlr.*,
+							edu.mayo.cts2.*,
+							edu.mayo.cts2.framework.core.xml,
+							com.atlassian.plugin.spring,
+							org.springframework.context.config,
+							edu.mayo.cts2.framework.model.service.association,
+							edu.mayo.cts2.framework.model.service.codesystem,
+							edu.mayo.cts2.framework.model.service.codesystemversion,
+							edu.mayo.cts2.framework.model.service.conceptdomain,
+							edu.mayo.cts2.framework.model.service.conceptdomainbinding,
+							edu.mayo.cts2.framework.model.service.entitydescription,
+							edu.mayo.cts2.framework.model.service.map,
+							edu.mayo.cts2.framework.model.service.mapentry,
+							edu.mayo.cts2.framework.model.service.mapversion,
+							edu.mayo.cts2.framework.model.service.statement,
+							edu.mayo.cts2.framework.model.service.valueset,
+							edu.mayo.cts2.framework.model.service.valuesetdefinition,
+							*;resolution:=optional
+							</Import-Package>
+							<Embed-Transitive>true</Embed-Transitive>			
+							<Embed-Dependency>*;scope=provided</Embed-Dependency>
+							<Spring-Context>*;timeout:=60</Spring-Context>
+							<_exportcontents>*</_exportcontents>
+<!-- 							<_metatype>*</_metatype> -->
+							<_nouses>true</_nouses>
+						</instructions>
+					</configuration>
+				</plugin>
 
 <!-- 					<plugin> -->
 <!-- 						<artifactId>maven-assembly-plugin</artifactId> -->

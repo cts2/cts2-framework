@@ -35,7 +35,6 @@ import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.plugin.AbstractExtensionPoint;
-import edu.mayo.cts2.framework.core.plugin.ExtensionPoint;
 import edu.mayo.cts2.framework.core.plugin.ExtensionPointDescriptor;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.plugin.PluginManager;

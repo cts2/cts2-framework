@@ -108,6 +108,18 @@
 			<artifactId>spring-oxm</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+	
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.ops4j.pax.tinybundles</groupId> -->
+<!-- 			<artifactId>tinybundles</artifactId> -->
+<!-- 			<version>1.0.0</version> -->
+<!-- 		</dependency> -->
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -123,6 +135,10 @@
 				<exclusion>
 					<artifactId>xerces</artifactId>
 					<groupId>xerces</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

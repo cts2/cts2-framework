@@ -23,7 +23,6 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
-import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService
 
  class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRestBindingTestBase {
@@ -51,10 +50,12 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def vsdef = createEntry(getUriToTest())
 		
 		def rs = [
-			read:{id,readcontext -> vsdef }
-		] as ValueSetDefinitionReadService;
+			resolveDefinitionAsDirectory:{o,t,th,f,fi,s,se -> null}
+		] as ValueSetDefinitionResolutionService;
 	
-		controller.setValueSetDefinitionReadService(rs);
+		controller.setValueSetDefinitionResolutionService(rs)
+		//controller.
+
 		
 		controller
 	}

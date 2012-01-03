@@ -2,19 +2,8 @@ package edu.mayo.cts2.framework.service.provider;
 
 import static org.junit.Assert.*
 
-import java.util.Set;
-
-import javax.annotation.Resource
-
-import org.junit.Test
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
-
-import edu.mayo.cts2.framework.core.config.option.Option;
-import edu.mayo.cts2.framework.core.plugin.PluginConfig;
-
 class AbstractSpringServiceProviderTest {
-	
+	/*
 	def provider = new TestAbstractSpringServiceProvider()
 	
 	@Test
@@ -91,6 +80,6 @@ class TestAbstractSpringServiceProvider extends AbstractSpringServiceProvider {
 		return null;
 	}
 			
-			
+	*/		
 	
 }

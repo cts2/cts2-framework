@@ -6,7 +6,7 @@ import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.plugin.PluginConfig;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
-public class EmptyServiceProvider extends AbstractServiceProvider {
+public class EmptyServiceProvider implements ServiceProvider {
 
 	public <T extends Cts2Profile> T getService(Class<T> serviceClass) {
 		return null;
@@ -21,15 +21,12 @@ public class EmptyServiceProvider extends AbstractServiceProvider {
 	}
 
 	@Override
-	public Set<Option> getPluginOptions() {
+	public void updatePluginOptions(Set<Option> newOptions) {
 		//
-		return null;
 	}
 
 	@Override
-	public void updatePluginOptions(Set<Option> newOptions) {
-		// TODO Auto-generated method stub
-		
+	public Set<Option> getPluginOptions() {
+		return null;
 	}
-
 }

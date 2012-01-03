@@ -2,6 +2,8 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +35,7 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 
 	@Resource
 	private ConfigInitializer configInitializer;
-	
+
 	@Resource 
 	private HostComponentProvider hostComponentProvider;
 	
@@ -41,17 +43,15 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 	public static class Cts2SpringHostComponentProviderFactoryBean extends SpringHostComponentProviderFactoryBean{};
 	
 	public void afterPropertiesSet() throws Exception {
-		
+
 		PackageScannerConfiguration scannerConfig = new DefaultPackageScannerConfiguration();
 		scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
 		scannerConfig.getPackageIncludes().add("org.jaxen*");
 
-		scannerConfig.getPackageIncludes().add("org.apache.commons.*");
 	
 		// Determine which module descriptors, or extension points, to expose.
 		// This 'on-start' module is used throughout this guide as an example only
 		DefaultModuleDescriptorFactory modules = new DefaultModuleDescriptorFactory(new DefaultHostContainer());
-		
 	
 		Reflections reflections = new Reflections("edu.mayo.cts2");
 
@@ -64,7 +64,7 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 			
 			modules.addModuleDescriptor(descriptor.xmlPrefix(), descriptor.descriptor());
 		}
-	
+		
 		PluginsConfiguration config = new PluginsConfigurationBuilder()
 	        .pluginDirectory(this.configInitializer.getPluginsDirectory())
 	        .hostComponentProvider(this.hostComponentProvider)
@@ -72,18 +72,16 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 	        .hotDeployPollingFrequency(2, TimeUnit.SECONDS)
 	        .moduleDescriptorFactory(modules)
 	        .build();
-
+		
 		// Start the plugin framework
 		plugins = new AtlassianPlugins(config);
-		
+	
 		plugins.start();
 	}
 	
 	@Override
 	public void registerExtensionPoint(ExtensionPoint<?> extensionPoint) {
-		
 		extensionPoint.init(this.plugins);
-
 	}
 
 	@Override

@@ -21,41 +21,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.core.url;
-
-import javax.annotation.Resource;
+package edu.mayo.cts2.framework.util.spring;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-import edu.mayo.cts2.framework.core.plugin.PluginConfig;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.provider.ServiceProvider;
 
 /**
- * A factory for creating UrlConstructor objects.
+ * The Class AbstractSpringServiceProvider.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class UrlConstructorSpringFactory implements FactoryBean<UrlConstructor> {
+public abstract class AbstractSpringServiceProvider implements ServiceProvider, ApplicationContextAware {
+		
+	private final Log log = LogFactory.getLog(getClass().getName());
 	
-	protected Log log = LogFactory.getLog(getClass().getName());
+	private ApplicationContext applicationContext;
+
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.provider.ServiceProvider#getService(java.lang.Class)
+	 */
+	public synchronized <T extends Cts2Profile> T getService(Class<T> serviceClass) {
+
+		try {
+			return this.applicationContext.getBean(serviceClass);
+		} catch (BeansException e) {
+			log.warn(e);
+			return null;
+		}
+		
+	}
 	
-	@Resource
-	private PluginConfig pluginConfig;
-	
-	public UrlConstructor getObject() throws Exception {
-		return new UrlConstructor(this.pluginConfig.getServerContext());
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.applicationContext = applicationContext;
 	}
-
-	public Class<?> getObjectType() {
-		return UrlConstructor.class;
-	}
-
-	public boolean isSingleton() {
-		return true;
-	}
-
-	public void setPluginConfig(PluginConfig pluginConfig) {
-		this.pluginConfig = pluginConfig;
-	}	
 }

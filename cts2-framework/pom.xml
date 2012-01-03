@@ -33,7 +33,7 @@
 		<module>webapp-rest</module>
 		<module>base-service-plugin</module>
 		<module>service-plugin-assembly-descriptor</module>
-		
+		<module>plugin-util</module>
 	</modules>
 	
 	<properties>

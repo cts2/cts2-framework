@@ -35,14 +35,13 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
+import com.atlassian.plugin.spring.AvailableToPlugins;
 import com.google.common.collect.Iterables;
 
 /**
@@ -50,16 +49,12 @@ import com.google.common.collect.Iterables;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class DelegatingMarshaller implements Marshaller, Unmarshaller {
+@Component
+@AvailableToPlugins
+public class DelegatingMarshaller implements Cts2Marshaller {
 
 	public static final String NS_PROP = "org.exolab.castor.builder.nspackages";
-	public static final String CASTORBUILDER_PROPS = "castorbuilder.properties";
-	public static final String NAMESPACE_LOCATION_PROPS = "namespaceLocations.properties";
-	public static final String NAMESPACE_MAPPINGS_PROPS = "namespaceMappings.properties";
 	
-	private Resource namespaceMappings = new ClassPathResource(NAMESPACE_MAPPINGS_PROPS);
-	private Resource namespaceLocationMappings = new ClassPathResource(NAMESPACE_LOCATION_PROPS);
-
 	private Map<String, CastorMarshaller> packageToMarshallerMap = new HashMap<String, CastorMarshaller>();
 	
 	private Map<String, String> namespaceMap;
@@ -67,17 +62,22 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 
 	private CastorMarshaller defaultMarshaller;
 	
+	public DelegatingMarshaller() throws Exception {
+		this(new DefaultModelXmlPropertiesService());
+	}
+		
 	/**
 	 * Instantiates a new delgating marshaller.
 	 *
 	 * @throws Exception the exception
 	 */
-	public DelegatingMarshaller() throws Exception {
-		this.populateNamespaceMaps(); 
+	public DelegatingMarshaller(ModelXmlPropertiesService resolutionService) throws Exception {
+		this.populateNamespaceMaps(
+				resolutionService.getNamespaceMappingProperties(),
+				resolutionService.getNamespaceLocationProperties()
+		); 
 		
-		Properties castorProps = new Properties();
-		ClassPathResource res = new ClassPathResource(CASTORBUILDER_PROPS);
-		castorProps.load(res.getInputStream());
+		Properties castorProps = resolutionService.getCastorBuilderProperties();
 
 		String nsMappings = (String) castorProps.get(NS_PROP);
 
@@ -135,9 +135,9 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 	/**
 	 * Populate namespace maps.
 	 */
-	private void populateNamespaceMaps() {
-		this.namespaceMap = this.createMapFromProperties(this.namespaceMappings);
-		this.namespaceLocationMap = this.createMapFromProperties(this.namespaceLocationMappings);
+	private void populateNamespaceMaps(Properties namespaceMappings, Properties namespaceLocationMappings) {
+		this.namespaceMap = this.createMapFromProperties(namespaceMappings);
+		this.namespaceLocationMap = this.createMapFromProperties(namespaceLocationMappings);
 	}
 	
 	/**
@@ -146,14 +146,7 @@ public class DelegatingMarshaller implements Marshaller, Unmarshaller {
 	 * @param resource the resource
 	 * @return the map
 	 */
-	private Map<String, String> createMapFromProperties(Resource resource){
-		Properties props = new Properties();
-		try {
-			props.load(resource.getInputStream());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
+	private Map<String, String> createMapFromProperties(Properties props){	
 		Map<String,String> returnMap = new HashMap<String,String>();
 		
 		for(Entry<Object, Object> entry : props.entrySet()){
