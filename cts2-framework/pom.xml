@@ -413,10 +413,41 @@
 			<id>clojars</id>
 			<url>http://clojars.org/repo/</url>
 		</repository>
-		
+
 		<repository>
-			<id>informatics-thirdparty</id>
+			<id>edu.informatics.maven.snapshot</id>
+			<name>Informatics Maven Snapshot Repository</name>
+			<url>http://informatics.mayo.edu/maven/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>edu.informatics.maven.releases</id>
+			<name>Informatics Maven Snapshot Repository</name>
+			<url>http://informatics.mayo.edu/maven/content/repositories/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>edu.informatics.maven.thirdparty</id>
+			<name>Informatics Maven ThirdParty Repository</name>
 			<url>http://informatics.mayo.edu/maven/content/repositories/thirdparty</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 
 	</repositories>

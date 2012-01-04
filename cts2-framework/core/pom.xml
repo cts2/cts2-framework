@@ -9,7 +9,6 @@
 	<artifactId>core</artifactId>
 
 	<properties>
-		<org.springframework-version>3.1.0.M2</org.springframework-version>
 	</properties>
 
 	<dependencies>

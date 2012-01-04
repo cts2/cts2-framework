@@ -2,8 +2,6 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -47,8 +45,10 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 		PackageScannerConfiguration scannerConfig = new DefaultPackageScannerConfiguration();
 		scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
 		scannerConfig.getPackageIncludes().add("org.jaxen*");
-
+		scannerConfig.getPackageIncludes().add("javax.servlet*");
 	
+		scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
+		
 		// Determine which module descriptors, or extension points, to expose.
 		// This 'on-start' module is used throughout this guide as an example only
 		DefaultModuleDescriptorFactory modules = new DefaultModuleDescriptorFactory(new DefaultHostContainer());

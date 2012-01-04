@@ -23,12 +23,16 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService
 
  class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRestBindingTestBase {
 	
 	@Resource
 	ValueSetDefinitionResolutionController controller
+	
+	@Resource
+	ValueSetDefinitionController vsdcontroller
 	
 	@Override
 	public getByUriUrl() {
@@ -53,12 +57,29 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 			resolveDefinitionAsDirectory:{o,t,th,f,fi,s,se -> null}
 		] as ValueSetDefinitionResolutionService;
 	
+		def readService = [
+			read:{o,t -> vsdef}
+		] as ValueSetDefinitionReadService;
+	
 		controller.setValueSetDefinitionResolutionService(rs)
-		//controller.
+		vsdcontroller.setValueSetDefinitionReadService(readService)
 
 		
 		controller
 	}
+	
+	@Test
+	@Override
+	void testGetByUriWithForward(){
+	//
+	}
+	
+	@Test
+	@Override
+	void testGetByUriWithRedirect(){
+	//
+	}
+
 	
 	@Test void TestResolutionDefaultByUri(){
 	
@@ -69,7 +90,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 				.param("redirect","true")
 			)
 			.andExpect(response().status().isOk())
-			.andExpect(response().redirectedUrl(getByNameUrl()+"/resolution"))
+			.andExpect(response().redirectedUrl("/valueset/vs/definition/1/resolution"))
 
 	}
 	
