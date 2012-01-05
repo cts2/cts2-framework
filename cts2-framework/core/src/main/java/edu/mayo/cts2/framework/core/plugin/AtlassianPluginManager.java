@@ -2,34 +2,51 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 
+import org.osgi.framework.BundleContext;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.web.context.ServletContextAware;
 
 import com.atlassian.plugin.DefaultModuleDescriptorFactory;
+import com.atlassian.plugin.ModuleDescriptor;
+import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginState;
-import com.atlassian.plugin.hostcontainer.DefaultHostContainer;
+import com.atlassian.plugin.event.impl.DefaultPluginEventManager;
+import com.atlassian.plugin.hostcontainer.SimpleConstructorHostContainer;
 import com.atlassian.plugin.main.AtlassianPlugins;
 import com.atlassian.plugin.main.PluginsConfiguration;
 import com.atlassian.plugin.main.PluginsConfigurationBuilder;
+import com.atlassian.plugin.metadata.DefaultPluginMetadataManager;
+import com.atlassian.plugin.metadata.PluginMetadataManager;
+import com.atlassian.plugin.module.ModuleFactory;
 import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
 import com.atlassian.plugin.osgi.container.impl.DefaultPackageScannerConfiguration;
 import com.atlassian.plugin.osgi.hostcomponents.HostComponentProvider;
+import com.atlassian.plugin.servlet.DefaultServletModuleManager;
+import com.atlassian.plugin.servlet.ServletModuleManager;
+import com.atlassian.plugin.servlet.descriptors.ServletContextListenerModuleDescriptor;
+import com.atlassian.plugin.servlet.descriptors.ServletFilterModuleDescriptor;
+import com.atlassian.plugin.servlet.descriptors.ServletModuleDescriptor;
+import com.atlassian.plugin.spring.AvailableToPlugins;
 import com.atlassian.plugin.spring.SpringHostComponentProviderFactoryBean;
 
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 
 @Component
-public class AtlassianPluginManager implements PluginManager, InitializingBean {
+public class AtlassianPluginManager implements PluginManager, InitializingBean, ServletContextAware {
 
-	private AtlassianPlugins plugins;
+	AtlassianPlugins plugins;
 
 	@Resource
 	private ConfigInitializer configInitializer;
@@ -37,8 +54,36 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 	@Resource 
 	private HostComponentProvider hostComponentProvider;
 	
+	ServletContext servletContext;
+	
 	@Component
 	public static class Cts2SpringHostComponentProviderFactoryBean extends SpringHostComponentProviderFactoryBean{};
+	
+	@Component
+	@AvailableToPlugins
+	public static class Cts2SpringPluginMetadataManager implements PluginMetadataManager {
+		private PluginMetadataManager delegate = new DefaultPluginMetadataManager();
+
+		@Override
+		public boolean isUserInstalled(Plugin plugin) {
+			return this.delegate.isUserInstalled(plugin);
+		}
+
+		@Override
+		public boolean isSystemProvided(Plugin plugin) {
+			return this.delegate.isSystemProvided(plugin);
+		}
+
+		@Override
+		public boolean isOptional(Plugin plugin) {
+			return this.delegate.isOptional(plugin);
+		}
+
+		@Override
+		public boolean isOptional(ModuleDescriptor<?> moduleDescriptor) {
+			return this.delegate.isOptional(moduleDescriptor);
+		}
+	}
 	
 	public void afterPropertiesSet() throws Exception {
 
@@ -46,12 +91,29 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 		scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
 		scannerConfig.getPackageIncludes().add("org.jaxen*");
 		scannerConfig.getPackageIncludes().add("javax.servlet*");
+		scannerConfig.getPackageIncludes().add("com.sun*");
+		scannerConfig.getPackageIncludes().add("org.json*");
+		scannerConfig.getPackageExcludes().add("com.atlassian.plugins*");
 	
 		scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
+		scannerConfig.getPackageVersions().put("javax.servlet", "2.4");
+		scannerConfig.getPackageVersions().put("javax.servlet.http", "2.4");
 		
 		// Determine which module descriptors, or extension points, to expose.
 		// This 'on-start' module is used throughout this guide as an example only
-		DefaultModuleDescriptorFactory modules = new DefaultModuleDescriptorFactory(new DefaultHostContainer());
+		
+		Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
+		context.put(ModuleFactory.class, ModuleFactory.LEGACY_MODULE_FACTORY);
+		context.put(ServletModuleManager.class, new DefaultServletModuleManager(
+				this.servletContext, 
+				new DefaultPluginEventManager()));
+		
+		SimpleConstructorHostContainer hostContainer = new SimpleConstructorHostContainer(context);
+		
+		DefaultModuleDescriptorFactory modules = new DefaultModuleDescriptorFactory(hostContainer);
+		modules.addModuleDescriptor("servlet-filter", ServletFilterModuleDescriptor.class);
+		modules.addModuleDescriptor("servlet", ServletModuleDescriptor.class);
+		modules.addModuleDescriptor("servlet-context-listener", ServletContextListenerModuleDescriptor.class);
 	
 		Reflections reflections = new Reflections("edu.mayo.cts2");
 
@@ -77,6 +139,11 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 		plugins = new AtlassianPlugins(config);
 	
 		plugins.start();
+		
+		servletContext.setAttribute(
+				BundleContext.class.getName(),
+				plugins.getOsgiContainerManager().getBundles()[0].getBundleContext());
+
 	}
 	
 	@Override
@@ -133,6 +200,11 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean {
 	public boolean isPluginActive(PluginReference ref) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
 
 	

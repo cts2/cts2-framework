@@ -32,7 +32,7 @@ public class AcceptHeaderAdjustingFilter implements Filter {
 		if(! (request instanceof HttpServletRequest)){
 			throw new UnspecifiedCts2RuntimeException("ServletRequest expected to be of type HttpServletRequest");
 		}
-		
+
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
 		@SuppressWarnings("unchecked")

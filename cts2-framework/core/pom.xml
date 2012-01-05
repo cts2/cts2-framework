@@ -53,6 +53,76 @@
 			</exclusions>
 		</dependency>
 	
+<!-- 		<dependency> -->
+<!-- 			  <groupId>com.atlassian.plugins.rest</groupId> -->
+<!-- 			  <artifactId>atlassian-rest-module</artifactId> -->
+<!-- 			  <version>2.5.1</version> -->
+<!-- 		</dependency> -->
+		
+		<dependency>
+	<groupId>rome</groupId>
+	<artifactId>rome</artifactId>
+	<version>1.0</version>
+</dependency>
+
+		<dependency>
+			  <groupId>com.atlassian.plugins.rest</groupId>
+			  <artifactId>atlassian-rest-common</artifactId>
+			  <version>2.5.1</version>
+		</dependency>
+		
+		<dependency>
+			  <groupId>com.atlassian.plugins</groupId>
+			  <artifactId>atlassian-plugins-servlet</artifactId>
+			  <version>2.5.1</version>
+		</dependency>
+		
+				<dependency>
+			  <groupId>com.atlassian.security</groupId>
+			  <artifactId>atlassian-secure-random</artifactId>
+			  <version>2.3</version>
+		</dependency>
+				<dependency>
+			  <groupId>com.atlassian.extras</groupId>
+			  <artifactId>atlassian-extras</artifactId>
+			  <version>3.0.1</version>
+			  <exclusions>
+				 <exclusion>
+	                <groupId>org.springframework</groupId>
+	                <artifactId>spring-aop</artifactId>
+	            </exclusion>
+	            <exclusion>
+	                <groupId>org.springframework</groupId>
+	                <artifactId>spring-context</artifactId>
+	            </exclusion>
+				 <exclusion>
+	                <groupId>javax.jms</groupId>
+	                <artifactId>jms</artifactId>
+	            </exclusion>
+	             <exclusion>
+	                <groupId>com.google.collections</groupId>
+	                <artifactId>google-collections</artifactId>
+	            </exclusion>
+			</exclusions>
+		</dependency>
+		
+				<dependency>
+			  <groupId>com.atlassian.plugins</groupId>
+			  <artifactId>atlassian-plugins-webresource</artifactId>
+			  <version>2.9.1</version>
+		</dependency>
+		
+		<dependency>
+	<groupId>bouncycastle</groupId>
+	<artifactId>bcprov-jdk15</artifactId>
+	<version>140</version>
+</dependency>
+
+<!-- 		<dependency> -->
+<!--     <groupId>com.atlassian.templaterenderer</groupId> -->
+<!--     <artifactId>atlassian-template-renderer-api</artifactId> -->
+<!--     <version>1.4.0</version> -->
+<!-- </dependency> -->
 
 <dependency>
 	<groupId>log4j</groupId>
@@ -221,7 +291,12 @@
 			<artifactId>jaxen</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-        
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20070829</version>
+		</dependency>
 	</dependencies>
 	
 	

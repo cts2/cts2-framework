@@ -42,12 +42,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.config.option.OptionDTO;
-import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginDescription;
+import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
 
 /**
@@ -70,10 +71,10 @@ public class WebAdminController {
 //		return mav;
 //	}
 //
-//	@RequestMapping(value = "/admin/")
-//	public ModelAndView getAdminView() {
-//		return new ModelAndView("admin");
-//	}
+	@RequestMapping(value = "/admin")
+	public ModelAndView getAdminView() {
+		return new ModelAndView("admin/admin");
+	}
 	
 	@RequestMapping(value = { "/admin/plugins/currentplugin/properties" }, method = RequestMethod.GET)
 	@ResponseBody

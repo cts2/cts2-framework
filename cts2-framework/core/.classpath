@@ -17,5 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.apache.felix.webconsole-3.1.8"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -2,14 +2,23 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.util.Collection;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.atlassian.plugin.PluginParseException;
+import com.atlassian.plugin.hostcontainer.DefaultHostContainer;
 import com.atlassian.plugin.hostcontainer.HostContainer;
 import com.atlassian.plugin.osgi.spring.SpringContainerAccessor;
+import com.atlassian.plugin.spring.AvailableToPlugins;
 
+@Component
+@AvailableToPlugins
 public class ClassSpringPrefixModuleFactory extends AbstractSpringPrefixModuleFactory{
 
+	public ClassSpringPrefixModuleFactory() {
+		this(new DefaultHostContainer());
+	}
+	
 	public ClassSpringPrefixModuleFactory(HostContainer hostContainer) {
 		super(hostContainer);
 	}
