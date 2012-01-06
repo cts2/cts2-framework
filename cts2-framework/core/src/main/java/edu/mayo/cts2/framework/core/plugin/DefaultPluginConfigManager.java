@@ -14,8 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import com.atlassian.plugin.spring.AvailableToPlugins;
-
 import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
@@ -24,11 +22,12 @@ import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 
 @Component
-@AvailableToPlugins
-public class DefaultPluginConfigManager implements PluginConfigManager, InitializingBean {
+@ExportedService(PluginConfigManager.class)
+public class DefaultPluginConfigManager 
+	implements PluginConfigManager, InitializingBean {
 
 	private Log log = LogFactory.getLog(getClass());
-
+	
 	private PluginConfig pluginConfig;
 
 	@Resource
@@ -160,5 +159,4 @@ public class DefaultPluginConfigManager implements PluginConfigManager, Initiali
 	protected void setConfigInitializer(ConfigInitializer configInitializer) {
 		this.configInitializer = configInitializer;
 	}
-
 }

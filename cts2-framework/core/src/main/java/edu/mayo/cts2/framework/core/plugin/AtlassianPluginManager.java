@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -43,7 +45,7 @@ import com.atlassian.plugin.spring.SpringHostComponentProviderFactoryBean;
 
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 
-@Component
+//@Component
 public class AtlassianPluginManager implements PluginManager, InitializingBean, ServletContextAware {
 
 	AtlassianPlugins plugins;
@@ -116,7 +118,7 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean, 
 		modules.addModuleDescriptor("servlet-context-listener", ServletContextListenerModuleDescriptor.class);
 	
 		Reflections reflections = new Reflections("edu.mayo.cts2");
-
+/*
 		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(ExtensionPointDescriptor.class);
 
 		for(Class<?> clazz : annotated){
@@ -126,7 +128,7 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean, 
 			
 			modules.addModuleDescriptor(descriptor.xmlPrefix(), descriptor.descriptor());
 		}
-		
+*/		
 		PluginsConfiguration config = new PluginsConfigurationBuilder()
 	        .pluginDirectory(this.configInitializer.getPluginsDirectory())
 	        .hostComponentProvider(this.hostComponentProvider)
@@ -144,13 +146,27 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean, 
 				BundleContext.class.getName(),
 				plugins.getOsgiContainerManager().getBundles()[0].getBundleContext());
 
+		plugins.getOsgiContainerManager().getBundles()[0].getBundleContext().addBundleListener(new OsgiInstallListener());
+
 	}
 	
-	@Override
+	static class OsgiInstallListener implements BundleListener {
+
+		@Override
+		public void bundleChanged(BundleEvent event) {
+			if(event.getType() == BundleEvent.INSTALLED){
+				String location = event.getBundle().getLocation();
+				System.out.println(location);
+			}
+		}
+		
+	}
+	
+/*	@Override
 	public void registerExtensionPoint(ExtensionPoint<?> extensionPoint) {
 		extensionPoint.init(this.plugins);
 	}
-
+*/
 	@Override
 	public void removePlugin(String pluginName, String pluginVersion) {
 		// TODO Auto-generated method stub
@@ -205,6 +221,11 @@ public class AtlassianPluginManager implements PluginManager, InitializingBean, 
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
+	}
+
+	@Override
+	public void registerExtensionPoint(ExtensionPoint extensionPoint) {
+		//
 	}
 
 	

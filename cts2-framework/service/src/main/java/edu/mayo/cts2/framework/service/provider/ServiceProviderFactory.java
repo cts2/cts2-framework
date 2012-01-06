@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.plugin.AbstractExtensionPoint;
-import edu.mayo.cts2.framework.core.plugin.ExtensionPointDescriptor;
+import edu.mayo.cts2.framework.core.plugin.ExtensionPoint;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.plugin.PluginManager;
 import edu.mayo.cts2.framework.core.plugin.PluginReference;
@@ -46,9 +46,8 @@ import edu.mayo.cts2.framework.core.plugin.PluginReference;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-@ExtensionPointDescriptor(xmlPrefix="service-provider")
-public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvider> implements InitializingBean,
-		PluginConfigChangeObserver, ServiceProviderChangeObservable {
+public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvider> 
+	implements PluginConfigChangeObserver, ServiceProviderChangeObservable, ExtensionPoint {
 
 	private final Log log = LogFactory.getLog(getClass().getName());
 
@@ -77,7 +76,7 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	}
 
 	public ServiceProvider getServiceProvider() {
-		return this.getService();
+		return (ServiceProvider) this.getServiceTracker().getService();
 	}
 
 
@@ -116,6 +115,11 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions) {
 
 		this.fireServiceProviderChangeEvent();
+	}
+
+	@Override
+	public Class<?> getServiceClass() {
+		return ServiceProvider.class;
 	}
 
 }

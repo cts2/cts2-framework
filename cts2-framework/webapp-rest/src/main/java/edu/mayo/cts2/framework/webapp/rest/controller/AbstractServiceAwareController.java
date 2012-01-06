@@ -86,7 +86,7 @@ public class AbstractServiceAwareController extends
 	}
 	
 	protected <T extends Cts2Profile> T getCts2Service(Class<T> clazz){
-		ServiceProvider provider = this.serviceProviderFactory.getService();
+		ServiceProvider provider = this.serviceProviderFactory.getServiceProvider();
 		
 		return provider.getService(clazz);
 	}

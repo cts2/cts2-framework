@@ -1,11 +1,11 @@
 package edu.mayo.cts2.framework.core.plugin;
 
-import com.atlassian.plugin.main.AtlassianPlugins;
+import org.osgi.util.tracker.ServiceTracker;
 
-public interface ExtensionPoint<T> {
+public interface ExtensionPoint {
 	
-	public T getService();
+	public Class<?> getServiceClass();
 	
-	public void init(AtlassianPlugins plugins);
+	public void setServiceTracker(ServiceTracker serviceTracker);
 
 }

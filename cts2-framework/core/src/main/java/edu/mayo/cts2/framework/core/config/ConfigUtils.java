@@ -32,6 +32,14 @@ public class ConfigUtils {
 		return holder;
 	}
 	
+	public static File createSubDirectory(File directory, String subDirectoryName){
+		if(!directory.exists()){
+			throw new IllegalStateException("Directory: " + directory.getPath() + " must exist before creating a sub-directory.");
+		}
+		
+		return createDirectory(directory.getPath() + File.separator + subDirectoryName);
+		
+	}
 	public static File createDirectory(String path){
 		File file = new File(path);
 		if (!file.exists()) {

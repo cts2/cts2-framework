@@ -1,11 +1,17 @@
 package edu.mayo.cts2.framework.core.xml;
 
+import java.util.Properties;
+
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 
-import com.atlassian.plugin.spring.AvailableToPlugins;
+public interface Cts2Marshaller extends Marshaller, Unmarshaller {
+	
+	public Properties getCastorBuilderProperties();
+	
+	public Properties getNamespaceLocationProperties();
+	
+	public Properties getNamespaceMappingProperties();
 
-@AvailableToPlugins
-public interface Cts2Marshaller extends Marshaller, Unmarshaller{
 
 }

@@ -41,8 +41,9 @@ import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import com.atlassian.plugin.spring.AvailableToPlugins;
 import com.google.common.collect.Iterables;
+
+import edu.mayo.cts2.framework.core.plugin.ExportedService;
 
 /**
  * The Class DelegatingMarshaller.
@@ -50,7 +51,7 @@ import com.google.common.collect.Iterables;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-@AvailableToPlugins
+@ExportedService
 public class DelegatingMarshaller implements Cts2Marshaller {
 
 	public static final String NS_PROP = "org.exolab.castor.builder.nspackages";
@@ -62,24 +63,29 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 
 	private CastorMarshaller defaultMarshaller;
 	
-	public DelegatingMarshaller() throws Exception {
-		this(new DefaultModelXmlPropertiesService());
-	}
-		
+	private ModelXmlPropertiesHandler modelXmlPropertiesHandler = new ModelXmlPropertiesHandler();
+	
+	private Properties castorBuilderProperties;
+	private Properties namespaceLocationProperties;
+	private Properties namespaceMappingProperties;
+
 	/**
 	 * Instantiates a new delgating marshaller.
 	 *
 	 * @throws Exception the exception
 	 */
-	public DelegatingMarshaller(ModelXmlPropertiesService resolutionService) throws Exception {
+	public DelegatingMarshaller() throws Exception {
+		super();
+		this.castorBuilderProperties = this.modelXmlPropertiesHandler.getCastorBuilderProperties();
+		this.namespaceLocationProperties = this.modelXmlPropertiesHandler.getNamespaceLocationProperties();
+		this.namespaceMappingProperties = this.modelXmlPropertiesHandler.getNamespaceMappingProperties();
+		
 		this.populateNamespaceMaps(
-				resolutionService.getNamespaceMappingProperties(),
-				resolutionService.getNamespaceLocationProperties()
+				this.namespaceMappingProperties,
+				this.namespaceLocationProperties
 		); 
 		
-		Properties castorProps = resolutionService.getCastorBuilderProperties();
-
-		String nsMappings = (String) castorProps.get(NS_PROP);
+		String nsMappings = (String) this.castorBuilderProperties.get(NS_PROP);
 
 		String[] nsAndPackage = StringUtils.split(nsMappings, ",");
 
@@ -206,5 +212,20 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 		} else {
 			return marshaller;
 		}
+	}
+
+	@Override
+	public Properties getCastorBuilderProperties() {
+		return this.castorBuilderProperties;
+	}
+
+	@Override
+	public Properties getNamespaceLocationProperties() {
+		return this.namespaceLocationProperties;
+	}
+
+	@Override
+	public Properties getNamespaceMappingProperties() {
+		return this.namespaceMappingProperties;
 	}
 }

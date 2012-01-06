@@ -4,13 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
 
-import com.atlassian.plugin.spring.AvailableToPlugins;
-
-@Component
-@AvailableToPlugins
-public class DefaultModelXmlPropertiesService implements ModelXmlPropertiesService {
+public class ModelXmlPropertiesHandler {
 	
 	public static final String CASTORBUILDER_PROPS = "castorbuilder.properties";
 	public static final String NAMESPACE_LOCATION_PROPS = "namespaceLocations.properties";
@@ -38,5 +33,4 @@ public class DefaultModelXmlPropertiesService implements ModelXmlPropertiesServi
 		
 		return props;
 	}
-
 }

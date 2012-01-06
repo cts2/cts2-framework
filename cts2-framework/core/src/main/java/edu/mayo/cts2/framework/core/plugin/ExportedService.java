@@ -5,14 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.atlassian.plugin.ModuleDescriptor;
-
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExtensionPointDescriptor {
-	
-	String xmlPrefix();
-	
-	Class<? extends ModuleDescriptor<?>> descriptor() default DefaultModuleDescriptor.class;
+public @interface ExportedService {
 
+	public Class<?>[] value() default Void.class;
 }

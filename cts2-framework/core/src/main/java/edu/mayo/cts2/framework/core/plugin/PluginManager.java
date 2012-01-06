@@ -23,6 +23,6 @@ public interface PluginManager {
 
 	public boolean isPluginActive(PluginReference ref);
 
-	public void registerExtensionPoint(ExtensionPoint<?> extensionPoint);
+	public void registerExtensionPoint(ExtensionPoint extensionPoint);
 
 }
