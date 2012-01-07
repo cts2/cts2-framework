@@ -415,8 +415,7 @@ public class FelixPluginManager implements
 
 	@Override
 	public void activatePlugin(String name, String version) {
-		// TODO Auto-generated method stub
-		
+		//
 	}
 
 
