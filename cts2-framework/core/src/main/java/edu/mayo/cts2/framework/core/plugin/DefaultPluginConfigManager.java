@@ -9,8 +9,6 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +24,6 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 public class DefaultPluginConfigManager 
 	implements PluginConfigManager, InitializingBean {
 
-	private Log log = LogFactory.getLog(getClass());
-	
 	private PluginConfig pluginConfig;
 
 	@Resource

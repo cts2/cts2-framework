@@ -2,20 +2,19 @@ package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.Logger;
-import org.apache.felix.framework.cache.BundleCache;
 import org.apache.felix.framework.util.FelixConstants;
 import org.apache.felix.framework.util.StringMap;
 import org.osgi.framework.Bundle;
@@ -65,15 +64,6 @@ public class FelixPluginManager implements
    // private OsgiPersistentCache persistentCache;
     private Collection<ServiceTracker> trackers = new ArrayList<ServiceTracker>();
     private ExportsBuilder exportsBuilder = new ExportsBuilder();
-    private final ThreadFactory threadFactory = new ThreadFactory()
-    {
-        public Thread newThread(final Runnable r)
-        {
-            final Thread thread = new Thread(r, "Felix:Startup");
-            thread.setDaemon(true);
-            return thread;
-        }
-    };
 
     //private BundleRegistration registration = null;
     private Felix felix = null;
@@ -264,7 +254,6 @@ public class FelixPluginManager implements
     private void validateConfiguration(StringMap configMap) throws OsgiContainerException
     {
         String systemExports = (String) configMap.get(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA);
-        validateCaches(systemExports);
         detectIncorrectOsgiVersion();
         detectXercesOverride(systemExports);
     }
@@ -276,7 +265,7 @@ public class FelixPluginManager implements
      * @param systemExports The system exports
      * @throws OsgiContainerException If xerces has no version
      */
-    void detectXercesOverride(String systemExports) throws OsgiContainerException
+    private void detectXercesOverride(String systemExports) throws OsgiContainerException
     {
         int pos = systemExports.indexOf("org.apache.xerces.util");
         if (pos > -1)
@@ -294,20 +283,6 @@ public class FelixPluginManager implements
                 }
             }
         }
-    }
-
-    /**
-     * Validate caches based on the list of packages exported from the application.  If the list has changed, the cache
-     * directories should be cleared.
-     *
-     * @param systemExports The value of system exports in the header
-     */
-    private void validateCaches(String systemExports)
-    {
-      //  String cacheKey = String.valueOf(systemExports.hashCode());
-      //  persistentCache.validate(cacheKey);
-
-       // log.debug("Using Felix bundle cache directory :" + persistentCache.getOsgiBundleCache().getAbsolutePath());
     }
 
     /**
@@ -390,53 +365,132 @@ public class FelixPluginManager implements
         return System.getProperty(ATLASSIAN_PREFIX + originalSystemProperty);
     }
 
+	private interface DoWithBundle<T>{
+		T doWithBundle(Bundle bundle) throws BundleException;
+	}
 
 	@Override
 	public void removePlugin(String pluginName, String pluginVersion) {
-		// TODO Auto-generated method stub
+		this.doWithBundle(pluginName, pluginVersion, new DoWithBundle<Void>(){
+
+			@Override
+			public Void doWithBundle(Bundle bundle) throws BundleException {
+				bundle.uninstall();
+				return null;
+			}
+			
+		});
+	}
+	
+	protected Bundle findBundle(String name, String version){
+		for(Bundle bundle : this.felix.getBundleContext().getBundles()){
+			if(bundle.getSymbolicName().equals(name) &&
+					bundle.getVersion().toString().equals(version)){
+				return bundle;
+			}
+		}
 		
+		return null;
+	}
+	
+	private <T> T doWithBundle(String name, String version, DoWithBundle<T> closure){
+		Bundle bundle = this.findBundle(name, version);
+		if(bundle == null){
+			log.warn("Plugin: " + name + "version: " + version + " was not found.");
+		}
+		try {
+			return closure.doWithBundle(bundle);
+		} catch (BundleException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
 	@Override
-	public PluginDescription getPluginDescription(String pluginName,
+	public PluginDescription getPluginDescription(
+			String pluginName,
 			String pluginVersion) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.doWithBundle(pluginName, pluginVersion, new DoWithBundle<PluginDescription>(){
+
+			@Override
+			public PluginDescription doWithBundle(Bundle bundle)
+					throws BundleException {
+				return buildPluginDescription(bundle);
+			}
+			
+		});
+		
+	}
+	
+	private PluginDescription buildPluginDescription(Bundle bundle){
+		return new PluginDescription(
+				bundle.getSymbolicName(),
+				bundle.getVersion().toString(),
+				(String)bundle.getHeaders().get(Constants.BUNDLE_DESCRIPTION),
+				bundle.getState() == Bundle.ACTIVE);
 	}
 
 
 	@Override
 	public Set<PluginDescription> getPluginDescriptions() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<PluginDescription> returnSet = new HashSet<PluginDescription>();
+		
+		for(Bundle bundle : this.felix.getBundleContext().getBundles()){
+			returnSet.add(this.buildPluginDescription(bundle));
+		}
+		
+		return returnSet;
 	}
 
 
 	@Override
 	public void activatePlugin(String name, String version) {
-		//
+		this.doWithBundle(name, version, new DoWithBundle<Void>(){
+
+			@Override
+			public Void doWithBundle(Bundle bundle) throws BundleException {
+				bundle.start();
+				return null;
+			}
+			
+		});
 	}
 
 
 	@Override
 	public void dectivatePlugin(String name, String version) {
-		// TODO Auto-generated method stub
-		
-	}
+		this.doWithBundle(name, version, new DoWithBundle<Void>(){
 
+			@Override
+			public Void doWithBundle(Bundle bundle) throws BundleException {
+				bundle.stop();
+				return null;
+			}
+			
+		});
+	}
 
 	@Override
-	public void installPlugin(InputStream source) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void installPlugin(URL source) throws IOException {
+		try {
+			this.felix.getBundleContext().installBundle(source.toString());
+		} catch (BundleException e) {
+			throw new RuntimeException(e);
+		}
 	}
-
 
 	@Override
 	public boolean isPluginActive(PluginReference ref) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.doWithBundle(
+				ref.getPluginName(), 
+				ref.getPluginVersion(), new DoWithBundle<Boolean>(){
+
+			@Override
+			public Boolean doWithBundle(Bundle bundle) throws BundleException {
+				return (bundle.getState() == Bundle.ACTIVE);
+			}
+			
+		});
 	}
 
 

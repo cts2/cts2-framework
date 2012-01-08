@@ -1,32 +1,30 @@
 package edu.mayo.cts2.framework.core.plugin;
 
-import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
-import com.atlassian.plugin.osgi.hostcomponents.HostComponentRegistration;
-import com.atlassian.plugin.osgi.util.OsgiHeaderUtil;
-import com.atlassian.plugin.util.PluginFrameworkUtils;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
+import static edu.mayo.cts2.framework.core.plugin.ExportBuilderUtils.copyUnlessExist;
+import static edu.mayo.cts2.framework.core.plugin.ExportBuilderUtils.parseExportFile;
+import static org.twdata.pkgscanner.PackageScanner.exclude;
+import static org.twdata.pkgscanner.PackageScanner.include;
+import static org.twdata.pkgscanner.PackageScanner.jars;
+import static org.twdata.pkgscanner.PackageScanner.packages;
+
+import java.net.MalformedURLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.twdata.pkgscanner.DefaultOsgiVersionConverter;
 import org.twdata.pkgscanner.ExportPackage;
 import org.twdata.pkgscanner.PackageScanner;
 
-import static edu.mayo.cts2.framework.core.plugin.ExportBuilderUtils.parseExportFile;
-import static edu.mayo.cts2.framework.core.plugin.ExportBuilderUtils.copyUnlessExist;
-import static org.twdata.pkgscanner.PackageScanner.exclude;
-import static org.twdata.pkgscanner.PackageScanner.include;
-import static org.twdata.pkgscanner.PackageScanner.jars;
-import static org.twdata.pkgscanner.PackageScanner.packages;
-
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
+import com.atlassian.plugin.osgi.util.OsgiHeaderUtil;
+import com.atlassian.plugin.util.PluginFrameworkUtils;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 /**
  * Builds the OSGi package exports string.  Uses a file to cache the scanned results, keyed by the application version.
@@ -80,21 +78,6 @@ class ExportsBuilder
     public void clearExportCache()
     {
         exportStringCache = null;
-    }
-
-    /**
-     * Determines framework exports taking into account host components and package scanner configuration.
-     *
-     * @param regs The list of host component registrations
-     * @param packageScannerConfig The configuration for the package scanning
-     * @param cacheDir No longer used. (method deprecated).
-     * @return A list of exports, in a format compatible with OSGi headers
-     * @deprecated Please use {@link #getExports}. Deprecated since 2.3.6
-     */
-    @SuppressWarnings ({ "UnusedDeclaration" })
-    public String determineExports(PackageScannerConfiguration packageScannerConfig, File cacheDir)
-    {
-        return determineExports(packageScannerConfig);
     }
 
     /**

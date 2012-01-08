@@ -1,7 +1,7 @@
 package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.Set;
 
 public interface PluginManager {
@@ -19,7 +19,7 @@ public interface PluginManager {
 	
 	public void dectivatePlugin(String name, String version);
 	
-	public void installPlugin(InputStream source) throws IOException;
+	public void installPlugin(URL source) throws IOException;
 
 	public boolean isPluginActive(PluginReference ref);
 
