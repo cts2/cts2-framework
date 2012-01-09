@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.provider;
 
-import edu.mayo.cts2.framework.core.plugin.Plugin;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
@@ -31,7 +30,7 @@ import edu.mayo.cts2.framework.service.profile.Cts2Profile;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ServiceProvider extends Plugin {
+public interface ServiceProvider {
 	
 	/**
 	 * Gets the service.

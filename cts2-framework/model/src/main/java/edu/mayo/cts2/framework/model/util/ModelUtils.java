@@ -43,7 +43,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice;
+import edu.mayo.cts2.framework.model.updates.ChangeableResource;
 
 /**
  * The Class RestModelUtils.
@@ -267,8 +267,8 @@ public class ModelUtils {
 		return nameOrUri;
 	}
 	
-	public static ChangeableResourceChoice createChangeableResourceChoice(IsChangeable changeable) {
-		ChangeableResourceChoice choice = new ChangeableResourceChoice();
+	public static ChangeableResource createChangeableResource(IsChangeable changeable) {
+		ChangeableResource choice = new ChangeableResource();
 		
 		for(Field field : choice.getClass().getDeclaredFields()){
 			if(field.getType().equals(changeable.getClass())

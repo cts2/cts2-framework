@@ -167,8 +167,7 @@ public class WebAdminController {
 	@ResponseBody
 	public void addPlugin(@RequestParam MultipartFile file) throws IOException {
 
-		this.pluginManager.installPlugin(
-				file.getInputStream());
+		throw new UnsupportedOperationException();
 	}
 
 	@RequestMapping(value = { "/admin/plugin/{pluginName}/version/{pluginVersion}" }, method = RequestMethod.DELETE)

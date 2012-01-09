@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.Logger;
 import org.apache.felix.framework.util.FelixConstants;
@@ -30,8 +31,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.context.ServletContextAware;
 
 import com.atlassian.plugin.osgi.container.OsgiContainerException;
@@ -61,11 +65,9 @@ public class FelixPluginManager implements
     private static final String OSGI_BOOTDELEGATION = "org.osgi.framework.bootdelegation";
     private static final String ATLASSIAN_PREFIX = "atlassian.";
 
-   // private OsgiPersistentCache persistentCache;
     private Collection<ServiceTracker> trackers = new ArrayList<ServiceTracker>();
     private ExportsBuilder exportsBuilder = new ExportsBuilder();
 
-    //private BundleRegistration registration = null;
     private Felix felix = null;
     private boolean felixRunning = false;
     private Logger felixLogger = new Logger(){
@@ -76,6 +78,22 @@ public class FelixPluginManager implements
 	public void afterPropertiesSet() throws Exception {
 		this.start();
 	}
+	
+	protected void autodeployBundles(File pluginDirectory) throws IOException{
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		
+		for(org.springframework.core.io.Resource resource : 
+			resolver.getResources("classpath:/autodeployBundles/*.jar")){
+			
+			File bundleFile = new File(
+					pluginDirectory.getPath() + File.separator + resource.getFilename());
+			
+			if(! bundleFile.exists()){
+				FileUtils.copyInputStreamToFile(resource.getInputStream(), bundleFile);
+			}
+		}
+		
+	}
 
     public void start() throws OsgiContainerException
     {
@@ -83,6 +101,12 @@ public class FelixPluginManager implements
         {
             return;
         }
+        
+        try {
+			this.autodeployBundles(this.configInitializer.getPluginsDirectory());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
         
 		PackageScannerConfiguration scannerConfig = new DefaultPackageScannerConfiguration();
 		scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
@@ -175,6 +199,7 @@ public class FelixPluginManager implements
             	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());
             	try {
 					installedBundle.start();
+					log.info("Auto-starting system bundle: " + installedBundle.getSymbolicName());
 				} catch (BundleException e) {
 					log.warn("Bundle: " + installedBundle.getSymbolicName() + " failed to start.", e);
 				}

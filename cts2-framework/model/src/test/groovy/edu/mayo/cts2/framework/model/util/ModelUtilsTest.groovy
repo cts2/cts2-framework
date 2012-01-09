@@ -7,7 +7,7 @@ import org.junit.Test
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup
 import edu.mayo.cts2.framework.model.entity.NamedIndividualDescription
-import edu.mayo.cts2.framework.model.updates.ChangeableResourceChoice
+import edu.mayo.cts2.framework.model.updates.ChangeableResource
 
 
 

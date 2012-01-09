@@ -55,6 +55,8 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	private PluginManager pluginManager;
 
 	private ServiceProvider serviceProvider;
+	
+	private ServiceProvider emtpyServiceProvider = new EmptyServiceProvider();
 
 	private Set<ServiceProviderChangeObserver> observers = new HashSet<ServiceProviderChangeObserver>();
 
@@ -76,10 +78,11 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	}
 
 	public ServiceProvider getServiceProvider() {
-		return (ServiceProvider) this.getServiceTracker().getService();
+		ServiceProvider serviceProvider = (ServiceProvider)
+				this.getServiceTracker().getService();
+
+		return serviceProvider;
 	}
-
-
 
 	private void fireServiceProviderChangeEvent() {
 		for (ServiceProviderChangeObserver observer : this.observers) {

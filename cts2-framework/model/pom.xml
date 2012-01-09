@@ -117,7 +117,7 @@
 					</execution>
 					
 					<execution>
-						<id>add extends for ChangeableResourceChoice</id>
+						<id>add extends for ChangeableResource</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>replace</goal>
@@ -125,12 +125,12 @@
 	
 						<configuration>
 							<includes>
-								<include>target/generated-sources/**/ChangeableResourceChoice.java</include>
+								<include>target/generated-sources/**/ChangeableResource.java</include>
 							</includes>
 							<replacements>
 								<replacement>
-									<token>class ChangeableResourceChoice</token>
-									<value>class ChangeableResourceChoice extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
+									<token>class ChangeableResource</token>
+									<value>class ChangeableResource extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
 								</replacement>
 							</replacements>
 						</configuration>

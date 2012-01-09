@@ -109,15 +109,30 @@ public class AbstractServiceAwareController extends
 
 							@Override
 							public Object invoke(MethodInvocation method) throws Throwable {
-								return method.getMethod().invoke(
-										serviceProviderFactory.getServiceProvider().getService(clazz),
-										method.getArguments());
+								ServiceProvider retrievedServiceProvider = 
+										serviceProviderFactory.getServiceProvider();
+
+								Cts2Profile retrievedService;
+								if (retrievedServiceProvider == null) {
+									throw new UnsupportedOperationException("This service is not implemented.");
+								} else {
+									retrievedService = retrievedServiceProvider.getService(clazz);
+									
+									if(retrievedService == null){
+										throw new UnsupportedOperationException("This service is not implemented.");
+									}
+								}
+
+								return method.getMethod()
+										.invoke(retrievedService,
+												method.getArguments());
+
 							}
 							
 						});
 						
 						if(service == null){
-							service = this.proxyNullService(clazz);
+							service = proxyNullService(clazz);
 						}
 
 						field.setAccessible(true);
