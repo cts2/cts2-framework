@@ -33,9 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.PathMatcher;
 import org.springframework.web.context.ServletContextAware;
 
 import com.atlassian.plugin.osgi.container.OsgiContainerException;
@@ -117,8 +115,9 @@ public class FelixPluginManager implements
 		scannerConfig.getPackageExcludes().add("com.atlassian.plugins*");
 	
 		scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
-		scannerConfig.getPackageVersions().put("javax.servlet", "2.4");
-		scannerConfig.getPackageVersions().put("javax.servlet.http", "2.4");
+		scannerConfig.getPackageVersions().put("javax.servlet*", "2.4");
+		scannerConfig.getPackageVersions().put("org.apache.commons.collections*", "3.2.1");
+		
 
         // Create a case-insensitive configuration property map.
         final StringMap configMap = new StringMap(false);
