@@ -9,10 +9,8 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
 import edu.mayo.cts2.framework.core.config.ServerContext;
@@ -22,29 +20,13 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 @Component
 @ExportedService(PluginConfigManager.class)
 public class DefaultPluginConfigManager 
-	implements PluginConfigManager, InitializingBean {
-
-	private PluginConfig pluginConfig;
+	implements PluginConfigManager {
 
 	@Resource
 	private ConfigInitializer configInitializer;
 
 	@Resource
 	private ServiceConfigManager serviceConfigManager;
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		this.initialize();
-	}
-
-	protected void initialize() {
-		String inUsePluginName = this.getInUsePluginName();
-
-		this.pluginConfig = new PluginConfig(
-				this.getPluginConfigProperties(inUsePluginName),
-				this.getPluginWorkDirectory(inUsePluginName),
-				this.serviceConfigManager.getServerContext());
-	}
 
 	public void updatePluginConfigProperties(String namespace,
 			Map<String, String> properties) {
@@ -116,15 +98,12 @@ public class DefaultPluginConfigManager
 		return pluginClosure.processPlugins(returnList);
 	}
 
-	private String getInUsePluginName() {
-		return (String) ConfigUtils.loadProperties(
-				this.configInitializer.getContextConfigFile()).get(
-				ConfigConstants.IN_USE_SERVICE_PLUGIN_NAME_PROP);
-	}
-
 	@Override
 	public PluginConfig getPluginConfig(String namespace) {
-		return this.pluginConfig;
+		return new PluginConfig(
+				this.getPluginConfigProperties(namespace),
+				this.getPluginWorkDirectory(namespace),
+				this.getServerContext());
 	}
 
 	protected File getPluginWorkDirectory(String pluginName) {
