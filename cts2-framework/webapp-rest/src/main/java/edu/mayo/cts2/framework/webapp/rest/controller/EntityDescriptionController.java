@@ -52,11 +52,14 @@ import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
+import edu.mayo.cts2.framework.model.entity.EntityListEntry;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -488,6 +491,35 @@ public class EntityDescriptionController extends AbstractServiceAwareController 
 				restReadContext,
 				UnknownEntity.class,
 				id);
+	}
+	
+	@RequestMapping(value=PATH_ALL_DESCRIPTIONS_OF_ENTITYBYID, method=RequestMethod.GET)
+	@ResponseBody
+	public Object getAllEntityDescriptionByName(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_ENTITYID) String entityName,
+			Page page,
+			boolean list) {
+		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+
+		EntityNameOrURI entityId = 
+				ModelUtils.entityNameOrUriFromName(this.getScopedEntityName(entityName));
+		if(list){
+			DirectoryResult<EntityListEntry> entityList = 
+					this.entityDescriptionReadService.readEntityDescriptions(
+							entityId, 
+							null, //TODO
+							readContext, 
+							null); //TODO
+			return 
+					this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+		} else {
+			return 
+					//TODO: This probably needs to be a Message
+					this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+		}
 	}
 	
 	/**

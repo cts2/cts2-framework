@@ -194,6 +194,8 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
+							<argline>-Xmx1028m</argline>
+						 	<argline>-XX:MaxPermSize=256m</argline>
 							<includes>
 								<include>**/*IT.*</include>
 							</includes>
