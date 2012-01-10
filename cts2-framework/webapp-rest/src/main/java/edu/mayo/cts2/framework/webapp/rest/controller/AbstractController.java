@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.oxm.XmlMappingException;
@@ -144,6 +145,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 			HttpServletRequest request, 
 			RuntimeException ex) {
 		log.error(ex);
+		log.error("Stack: " + ExceptionUtils.getStackTrace(ex));
 		
 		int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		
@@ -169,6 +171,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 			HttpServletRequest request, 
 			UnspecifiedCts2RuntimeException ex) {
 		log.error(ex);
+		log.error("Stack: " + ExceptionUtils.getStackTrace(ex));
 		
 		int status = ex.getStatusCode();
 		
@@ -194,6 +197,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 			HttpServletRequest request, 
 			UnsupportedOperationException ex) {
 		log.error(ex);
+		log.error("Stack: " + ExceptionUtils.getStackTrace(ex));
 		
 		int status = HttpServletResponse.SC_NOT_IMPLEMENTED;
 		
@@ -218,6 +222,7 @@ public abstract class AbstractController implements URIHelperInterface, ModelAnd
 			HttpServletRequest request, 
 			XmlMappingException ex) {
 		log.error(ex);
+		log.error("Stack: " + ExceptionUtils.getStackTrace(ex));
 		
 		int status = HttpServletResponse.SC_BAD_REQUEST;
 
