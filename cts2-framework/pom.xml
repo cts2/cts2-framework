@@ -310,27 +310,29 @@
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>1.7.4</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.clojure</groupId>
 			<artifactId>clojure</artifactId>
 			<version>1.2.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.clojure</groupId>
 			<artifactId>clojure-contrib</artifactId>
 			<version>1.2.0</version>
+			<scope>provided</scope>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
 			<version>2.9.1</version>
+			<scope>provided</scope>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.scalatest</groupId>

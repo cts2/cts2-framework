@@ -151,6 +151,7 @@ public class FelixPluginManager implements
                              "org.apache.xerces,org.apache.xerces.*," +
                              "org.apache.xalan,org.apache.xalan.*," +
                              "org.apache.xml.serializer," +
+                             "javax.*," +
                              "sun.*," +
                              "com.sun.xml.bind.v2," +
                              "com.icl.saxon";
