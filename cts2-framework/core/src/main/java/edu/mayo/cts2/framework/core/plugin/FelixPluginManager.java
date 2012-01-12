@@ -201,8 +201,12 @@ public class FelixPluginManager implements
             for(File bundle : this.configInitializer.getPluginsDirectory().listFiles()){
             	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());
             	try {
-					installedBundle.start();
-					log.info("Auto-starting system bundle: " + installedBundle.getSymbolicName());
+            		if(installedBundle.getHeaders().get(Constants.FRAGMENT_HOST) != null){
+            			log.info("Not Auto-starting Fragment bundle: " + installedBundle.getSymbolicName());
+            		} else {
+						installedBundle.start();
+						log.info("Auto-starting system bundle: " + installedBundle.getSymbolicName());
+            		}
 				} catch (BundleException e) {
 					log.warn("Bundle: " + installedBundle.getSymbolicName() + " failed to start.", e);
 				}
