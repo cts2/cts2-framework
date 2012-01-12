@@ -17,7 +17,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="GROOVY_DSL_SUPPORT"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.apache.felix.webconsole-atlassian"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/cts2-editor"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
