@@ -26,6 +26,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -151,6 +152,8 @@ public class FelixPluginManager implements
                              "org.apache.xerces,org.apache.xerces.*," +
                              "org.apache.xalan,org.apache.xalan.*," +
                              "org.apache.xml.serializer," +
+                             "org.springframework.stereotype,"+
+                             "org.springframework.web.bind.annotation," +
                              "javax.*," +
                              "sun.*," +
                              "com.sun.xml.bind.v2," +
@@ -359,14 +362,14 @@ public class FelixPluginManager implements
         return felix.getRegisteredServices();
     }
 
-	public ServiceTracker getServiceTracker(final String clazz) {
+	public ServiceTracker getServiceTracker(final String clazz, ServiceTrackerCustomizer customizer) {
 		if (!isRunning()) {
 			throw new IllegalStateException(
 					"Unable to create a tracker when osgi is not running");
 		}
 
 		final ServiceTracker tracker = new ServiceTracker(
-				this.felix.getBundleContext(), clazz, null) {
+				this.felix.getBundleContext(), clazz, customizer) {
 			@Override
 			public void close() {
 				super.close();
@@ -523,7 +526,8 @@ public class FelixPluginManager implements
 	public void registerExtensionPoint(ExtensionPoint extensionPoint) {
 		extensionPoint.setServiceTracker(
 				this.getServiceTracker(
-						extensionPoint.getServiceClass().getName()));
+						extensionPoint.getServiceClass().getName(),
+						extensionPoint.addServiceTrackerCustomizer()));
 	}
 
 

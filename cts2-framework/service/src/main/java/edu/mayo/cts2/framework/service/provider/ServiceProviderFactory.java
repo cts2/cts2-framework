@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -123,6 +124,11 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	@Override
 	public Class<?> getServiceClass() {
 		return ServiceProvider.class;
+	}
+
+	@Override
+	public ServiceTrackerCustomizer addServiceTrackerCustomizer() {
+		return null;
 	}
 
 }

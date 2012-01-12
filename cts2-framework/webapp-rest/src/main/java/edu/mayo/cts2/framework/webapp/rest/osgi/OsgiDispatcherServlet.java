@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.util.tracker.ServiceTracker;
-import org.springframework.web.multipart.MultipartResolver;
 
 public class OsgiDispatcherServlet extends
 		org.springframework.web.servlet.DispatcherServlet {
@@ -26,23 +25,11 @@ public class OsgiDispatcherServlet extends
 
 	protected void noHandlerFound(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
-		
-		
+	
 		 HttpServlet dispatcher = (HttpServlet) this.osgiServletTracker.getService();
 		 if(dispatcher == null){
 			 super.noHandlerFound(request, response);
 		 } else {
-			 /*
-			 MultipartResolver resolver = this.getMultipartResolver();
-			 
-			 HttpServletRequest resolvedRequest;
-			 if(resolver.isMultipart(request)){
-				 resolvedRequest = resolver.resolveMultipart(request);
-			 } else {
-				 resolvedRequest = request;
-			 }
-			 */
 			 dispatcher.service(request, response);
 		 }	 
 	}

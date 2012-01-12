@@ -197,6 +197,12 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>edu.mayo.cts2.framework</groupId>
+			<artifactId>webapp-rest-extensions</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>

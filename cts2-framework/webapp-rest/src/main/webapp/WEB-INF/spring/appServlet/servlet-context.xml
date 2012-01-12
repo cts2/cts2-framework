@@ -29,7 +29,7 @@
 <!-- 	</beans:bean> -->
 
 	<beans:bean
-		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		class="edu.mayo.cts2.framework.webapp.rest.osgi.OsgiAnnotationHandlerMapping">
 		<beans:property name="order" value="0" />
 		<beans:property name="urlDecode" value="false" />
 		<beans:property name="useDefaultSuffixPattern" value="false" />

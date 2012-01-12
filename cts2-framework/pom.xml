@@ -30,6 +30,7 @@
 		<module>core</module>
 		<module>filter</module>
 		<module>service</module>
+		<module>webapp-rest-extensions</module>
 		<module>webapp-rest</module>
 		<module>base-service-plugin</module>
 		<module>service-plugin-assembly-descriptor</module>
