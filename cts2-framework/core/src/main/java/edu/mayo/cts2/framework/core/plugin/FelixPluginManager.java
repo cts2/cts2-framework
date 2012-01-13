@@ -1,6 +1,7 @@
 package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -197,8 +198,17 @@ public class FelixPluginManager implements
             felixRunning = true;
             
             felix.init();
+            
+            FileFilter fileOnlyFilter = new FileFilter(){
 
-            for(File bundle : this.configInitializer.getPluginsDirectory().listFiles()){
+				@Override
+				public boolean accept(File file) {
+					return !file.isDirectory();
+				}
+            	
+            };
+
+            for(File bundle : this.configInitializer.getPluginsDirectory().listFiles(fileOnlyFilter)){
             	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());
             	try {
             		if(installedBundle.getHeaders().get(Constants.FRAGMENT_HOST) != null){

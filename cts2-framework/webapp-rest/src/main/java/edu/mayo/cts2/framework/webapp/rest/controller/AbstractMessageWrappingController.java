@@ -181,8 +181,10 @@ public abstract class AbstractMessageWrappingController extends
 			urlRoot = urlRoot + "/";
 		}
 
+		String pathInfo = httpServletRequest.getPathInfo();
+	
 		String url = urlRoot
-				+ StringUtils.removeStart(httpServletRequest.getServletPath(),
+				+ StringUtils.removeStart(pathInfo,
 						"/");
 
 		if (isComplete) {
