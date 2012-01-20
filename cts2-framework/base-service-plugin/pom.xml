@@ -10,6 +10,12 @@
 
 	<artifactId>base-service-plugin</artifactId>
 	<packaging>pom</packaging>
+	
+	<name>CTS2 Development Framework Base Service Plugin</name>
+	<description>A Parent POM for CTS2 Development Framework Service Plugins (or other types
+	of Plugins). NOTE: OSGi Bundling is not handled here. Please consult 
+	http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html for more information 
+	on how to construct an OSGi Bundle via Maven.</description>
 
 	<properties>
 		<develpment.framework.version>${project.parent.version}</develpment.framework.version>
@@ -36,9 +42,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
-
 				<plugins>
-
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
@@ -244,35 +248,5 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<version>1.2</version>
-				<configuration>
-					<providerSelection>1.7</providerSelection>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make osgi.version property</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<properties>
-								<rawVersion>${pom.version}</rawVersion>
-							</properties>
-							<source>
-								// Convert POM version to valid OSGi version identifier
-								project.properties['osgi.version'] =
-								(project.properties['rawVersion'] =~ /-/).replaceAll('.')
-							</source>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 	</build>
 </project>

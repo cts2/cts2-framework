@@ -174,6 +174,25 @@ public class MapEntryController extends AbstractServiceAwareController {
 			deleteResource(id, changeseturi);
 	}
 	
+	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
+	@ResponseBody
+	public Message getMapEntryOfMapVersionByName(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_MAPID) String mapName,
+			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
+			@PathVariable(VAR_MAPENTRYID) String mapsFromName) {
+		
+		return this.getMapEntryOfMapVersionByName(
+				httpServletRequest, 
+				restReadContext, 
+				null,
+				mapName,
+				mapVersionName, 
+				mapsFromName);
+	}
+
+	
 	/**
 	 * Gets the map entry by maps from name.
 	 *
@@ -183,7 +202,7 @@ public class MapEntryController extends AbstractServiceAwareController {
 	 * @param mapsFromName the maps from name
 	 * @return the map entry by maps from name
 	 */
-	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
+	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.POST)
 	@ResponseBody
 	public Message getMapEntryOfMapVersionByName(
 			HttpServletRequest httpServletRequest,

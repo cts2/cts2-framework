@@ -16,7 +16,7 @@ class ExceptionFactoryTest {
 		def nm2 = new NameAndMeaningReference(content:"test2", uri:"http://test2.org")
 		def ex = ExceptionFactory.createUnsupportedMatchAlgorithm("testNone", [nm1,nm2])
 		
-		assert ex.getCts2Exception() instanceof UnsupportedMatchAlgorithm
+		assert ex instanceof UnsupportedMatchAlgorithm
 	}
 	
 	@Test
@@ -24,7 +24,7 @@ class ExceptionFactoryTest {
 		
 		def ex = ExceptionFactory.createTimeoutException()
 		
-		assert ex.getCts2Exception() instanceof QueryTimeout
+		assert ex instanceof QueryTimeout
 	}
 
 

@@ -12,7 +12,7 @@ import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
-import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
+import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 
 @Component
@@ -40,7 +40,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 		}
 
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw new UnknownChangeSetException(null);
+			throw new UnknownChangeSet();
 		}
 		
 		T returnedResource = service.createResource(resource);

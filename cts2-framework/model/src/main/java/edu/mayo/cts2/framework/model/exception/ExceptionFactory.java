@@ -33,12 +33,8 @@ import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.exception.changeset.ChangeSetIsNotOpenException;
-import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
-import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
-import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
@@ -61,28 +57,28 @@ public class ExceptionFactory {
 	 * @param possibleValues the possible values
 	 * @return the cts2 rest exception
 	 */
-	public static Cts2RestException createUnsupportedMatchAlgorithm(
+	public static UnsupportedMatchAlgorithm createUnsupportedMatchAlgorithm(
 			String requestedAlgorithm, 
 			Iterable<? extends NameAndMeaningReference> possibleValues) {
 		UnsupportedMatchAlgorithm ex = new UnsupportedMatchAlgorithm();
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
-		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedAlgorithm, possibleValues));
+		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedAlgorithm, possibleValues));
 		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 	
-	public static <T extends NameAndMeaningReference> Cts2RestException createUnsupportedNameOrUriException(
+	public static <T extends NameAndMeaningReference> UnsupportedNameOrURI createUnsupportedNameOrUriException(
 			String requestedNameOrUri, 
 			Iterable<T> possibleValues) {
 		UnsupportedNameOrURI ex = new UnsupportedNameOrURI();
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_READ_CONTEXT);
 		
-		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedNameOrUri, possibleValues));
+		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedNameOrUri, possibleValues));
 		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 
 	/**
@@ -92,7 +88,7 @@ public class ExceptionFactory {
 	 * @param matchAlgorithmReferences the match algorithm references
 	 * @return the cts2 rest exception
 	 */
-	public static Cts2RestException createUnsupportedModelAttribute(
+	public static UnsupportedModelAttribute createUnsupportedModelAttribute(
 			URIAndEntityName name,
 			Iterable<? extends ModelAttributeReference> matchAlgorithmReferences) {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
@@ -100,9 +96,9 @@ public class ExceptionFactory {
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
-		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name.getUri(), matchAlgorithmReferences));
+		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name.getUri(), matchAlgorithmReferences));
 		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 	
 	/**
@@ -112,7 +108,7 @@ public class ExceptionFactory {
 	 * @param matchAlgorithmReferences the match algorithm references
 	 * @return the cts2 rest exception
 	 */
-	public static Cts2RestException createUnsupportedModelAttribute(
+	public static UnsupportedModelAttribute createUnsupportedModelAttribute(
 			String name,
 			Iterable<? extends ModelAttributeReference> matchAlgorithmReferences) {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
@@ -120,9 +116,9 @@ public class ExceptionFactory {
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
-		ex.setMessage(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name, matchAlgorithmReferences));
+		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name, matchAlgorithmReferences));
 		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 	
 	/**
@@ -132,21 +128,22 @@ public class ExceptionFactory {
 	 * @param exceptionClazz the exception clazz
 	 * @return the cts2 rest exception
 	 */
-	public static Cts2RestException createUnknownResourceException(
+	
+	public static UnknownResourceReference createUnknownResourceException(
 			String name,
 			Class<? extends UnknownResourceReference> exceptionClazz) {
 		UnknownResourceReference ex;
 		try {
 			ex = exceptionClazz.newInstance();
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 		
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-		ex.setMessage(ModelUtils.createOpaqueData("Resource with Identifier: " + name + " not found."));
+		ex.setCts2Message(ModelUtils.createOpaqueData("Resource with Identifier: " + name + " not found."));
 		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 	
 	/**
@@ -164,27 +161,25 @@ public class ExceptionFactory {
 		return createUnknownException(message, url, paramString);
 	}
 	
-	public static Cts2RestException createUnknownException(
+	public static UnspecifiedCts2Exception createUnknownException(
 			String message) {
 		
 		UnspecifiedCts2Exception ex = new UnspecifiedCts2Exception();
 		
-		ex.setMessage(ModelUtils.createOpaqueData(message));
+		ex.setCts2Message(ModelUtils.createOpaqueData(message));
 		
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
-		return new Cts2RestException(ex);
+		return ex;
 	}
 	
-	public static Cts2RestException createTimeoutException() {
+	public static QueryTimeout createTimeoutException() {
 		QueryTimeout timeout = new QueryTimeout();
 		timeout.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		timeout.setSeverity(LoggingLevel.ERROR);
 		
-		Cts2RestException ex = new Cts2RestException(timeout);
-	
-		return ex;
+		return timeout;
 	}
 	
 	/**
@@ -206,40 +201,19 @@ public class ExceptionFactory {
 		" Request was: " + url + 
 			", Parameters were: " + paramString;
 		
-		ex.setMessage(ModelUtils.createOpaqueData(message));
+		ex.setCts2Message(ModelUtils.createOpaqueData(message));
 		
 		return ex;
 	}
 	
-	public static ChangeSetIsNotOpen createChangeSetIsNotOpenException(ChangeSetIsNotOpenException changeSetIsNotOpen) {
-		ChangeSetIsNotOpen ex = new ChangeSetIsNotOpen();
-		
-		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-
-		ex.setMessage(ModelUtils.createOpaqueData(changeSetIsNotOpen.getMessage()));
-		
-		return ex;
-	}
-	
-	public static UnknownChangeSet createUnknownChangeSetException(UnknownChangeSetException unknownChangeSet) {
-		UnknownChangeSet ex = new UnknownChangeSet();
-		
-		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-		
-		ex.setMessage(ModelUtils.createOpaqueData(unknownChangeSet.getMessage()));
-		
-		return ex;
-	}
 	
 	/**
 	 * Creates a new Exception object.
 	 *
 	 * @return the unspecified cts2 rest exception
 	 */
-	public static UnspecifiedCts2RuntimeException createPageOutOfBoundsException() {
-		return new UnspecifiedCts2RuntimeException("Page Out of Bounds.", 416);
+	public static UnspecifiedCts2Exception createPageOutOfBoundsException() {
+		return new UnspecifiedCts2Exception("Page Out of Bounds.");
 	}
 	
 	/**
@@ -323,12 +297,12 @@ public class ExceptionFactory {
 	 * @param name the name
 	 * @return the cts2 rest exception
 	 */
-	public static Cts2RestException createUnsupportedPredicateReference(
+	public static UnsupportedPredicate createUnsupportedPredicateReference(
 			String name) {	
 		UnsupportedPredicate ex = new UnsupportedPredicate();
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		ex.setSeverity(LoggingLevel.ERROR);
 
-		return new Cts2RestException(ex);
+		return ex;
 	}
 }

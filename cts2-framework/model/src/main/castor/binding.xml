@@ -9,6 +9,10 @@
 			<member name="changeSetEntry"/>
 		</elementBinding>
 		
+		<elementBinding name="/complexType:CTS2Exception/message">
+			<member name="cts2Message"/>
+		</elementBinding>
+		
 		<complexTypeBinding name="/complexType:Changeable">    
    			<java-class>
    				<implements>edu.mayo.cts2.framework.model.core.IsChangeable</implements>

@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.model.exception;
 
 import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
  * The Class UnspecifiedCts2Exception.
@@ -34,5 +35,14 @@ import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 public class UnspecifiedCts2Exception extends CTS2Exception implements MarshallSuperClass {
 
 	private static final long serialVersionUID = -8567312912032789588L;
+	
+	public UnspecifiedCts2Exception(){
+		super();
+	}
+	
+	public UnspecifiedCts2Exception(String message){
+		super();
+		this.setCts2Message(ModelUtils.createOpaqueData(message));
+	}
 
 }

@@ -7,7 +7,6 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 		/WEB-INF/spring/root-context.xml
-		/WEB-INF/spring/security-context.xml
 		</param-value>
 	</context-param>
 	
@@ -43,6 +42,15 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
+	
+	<filter>
+		<filter-name>osgiFilterExtensionPoint</filter-name>
+		<filter-class>edu.mayo.cts2.framework.webapp.rest.osgi.OsgiExtensionPointFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>osgiFilterExtensionPoint</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -88,14 +96,14 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
+<!-- 	<filter> -->
+<!-- 		<filter-name>springSecurityFilterChain</filter-name> -->
+<!-- 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> -->
+<!-- 	</filter> -->
 
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>springSecurityFilterChain</filter-name> -->
+<!-- 		<url-pattern>/*</url-pattern> -->
+<!-- 	</filter-mapping> -->
 	
 </web-app>

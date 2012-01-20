@@ -17,7 +17,7 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext
 import edu.mayo.cts2.framework.model.core.Message
-import edu.mayo.cts2.framework.model.exception.Cts2RestException
+import edu.mayo.cts2.framework.model.service.exception.CTS2Exception
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
@@ -100,8 +100,8 @@ import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver
 			
 		try{
 			def result = controller.doesCodeSystemExist(response, "test")
-		} catch (Cts2RestException e){
-		assert e.cts2Exception instanceof UnknownCodeSystem
+		} catch (CTS2Exception e){
+		assert e instanceof UnknownCodeSystem
 		return
 		}
 		

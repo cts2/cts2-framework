@@ -47,7 +47,6 @@ import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.types.FinalizableState;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.exception.Cts2RestException;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.UpdateChangeSetMetadataRequest;
@@ -199,7 +198,7 @@ public class ChangeSetController extends AbstractServiceAwareController {
 			FinalizableState newState = updatedState.getState();
 			if(currentState.equals(FinalizableState.FINAL)){
 				if(newState.equals(FinalizableState.OPEN)){
-					throw new Cts2RestException(new ChangeSetIsNotOpen());
+					throw new ChangeSetIsNotOpen();
 				}
 			}
 			if(currentState.equals(FinalizableState.OPEN)){

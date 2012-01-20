@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
@@ -7,6 +8,24 @@
 
 	<name>CTS2 Development Framework</name>
 	<description>The CTS2 Development Framework.</description>
+	<url>http://informatics.mayo.edu/cts2/framework</url>
+	<inceptionYear>2011</inceptionYear>
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<organization>
+		<name>Mayo Clinic</name>
+		<url>http://mayo.edu</url>
+	</organization>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/cts2/cts2-framework/issues</url>
+	</issueManagement>
 
 	<developers>
 		<developer>
@@ -33,13 +52,12 @@
 		<module>webapp-rest-extensions</module>
 		<module>webapp-rest</module>
 		<module>base-service-plugin</module>
-		<module>service-plugin-assembly-descriptor</module>
 		<module>plugin-util</module>
 	</modules>
-	
+
 	<properties>
 		<java-version>1.6</java-version>
-		<org.springframework-version>3.1.0.RC1</org.springframework-version>
+		<org.springframework-version>3.1.0.RELEASE</org.springframework-version>
 	</properties>
 
 	<distributionManagement>
@@ -175,8 +193,8 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
-						 	<argline>-Xmx1028m</argline>
-						 	<argline>-XX:MaxPermSize=256m</argline>
+							<argline>-Xmx1028m</argline>
+							<argline>-XX:MaxPermSize=256m</argline>
 							<excludes>
 								<exclude>**/*IT.*</exclude>
 							</excludes>
@@ -196,7 +214,7 @@
 						</goals>
 						<configuration>
 							<argline>-Xmx1028m</argline>
-						 	<argline>-XX:MaxPermSize=256m</argline>
+							<argline>-XX:MaxPermSize=256m</argline>
 							<includes>
 								<include>**/*IT.*</include>
 							</includes>
@@ -210,14 +228,14 @@
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.0</version>
 				<dependencies>
-		            <dependency><!-- add support for ssh/scp -->
-		              <groupId>org.apache.maven.wagon</groupId>
-		              <artifactId>wagon-ssh</artifactId>
-		              <version>1.0</version>
-		            </dependency>
-	          	</dependencies>
-	          	<configuration>
-			        <reportPlugins>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>1.0</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<reportPlugins>
 						<plugin>
 							<artifactId>maven-javadoc-plugin</artifactId>
 							<version>2.8</version>
@@ -228,17 +246,18 @@
 							<version>2.3</version>
 						</plugin>
 						<plugin>
-					        <groupId>org.apache.maven.plugins</groupId>
-					        <artifactId>maven-project-info-reports-plugin</artifactId>
-					        <version>2.2</version>
-				        </plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.2</version>
+						</plugin>
 					</reportPlugins>
-	          	</configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -275,9 +294,9 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-			
+
 			</plugins>
-			
+
 		</pluginManagement>
 	</build>
 
@@ -397,12 +416,12 @@
 			<id>com.springsource.repository.bundles.external</id>
 			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
 			<url>http://repository.springsource.com/maven/bundles/external</url>
-		</repository> 
+		</repository>
 		<repository>
 			<id>com.springsource.repository.bundles.milestone</id>
 			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
 			<url>http://repository.springsource.com/maven/bundles/milestone</url>
-		</repository> 
+		</repository>
 
 		<repository>
 			<id>scala-tools.org</id>

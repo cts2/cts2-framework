@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -11,18 +12,17 @@
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>webapp-rest</artifactId>
 	<packaging>war</packaging>
-	
+
 	<name>CTS2 Development Framework REST WebApp</name>
 	<description>REST Web Bindings for The CTS2 Development Framework.</description>
 
 	<properties>
-		<org.springframework.roo-version>1.0.2.RELEASE</org.springframework.roo-version>
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<spring-security.version>3.1.0.RC3</spring-security.version>
 		<jetty.version>6.1.22</jetty.version>
 	</properties>
-	
+
 	<dependencies>
 
 		<dependency>
@@ -88,25 +88,19 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>${spring-security.version}</version>
 		</dependency>
 
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>commons-beanutils</groupId> -->
-<!-- 			<artifactId>commons-beanutils</artifactId> -->
-<!-- 			<version>1.8.3</version> -->
-<!-- 		</dependency> -->
-
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-jxpath</groupId>
 			<artifactId>commons-jxpath</artifactId>
@@ -151,19 +145,13 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${org.slf4j-version}</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.slf4j</groupId> -->
-<!-- 			<artifactId>jcl-over-slf4j</artifactId> -->
-<!-- 			<version>${org.slf4j-version}</version> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
+	
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j-version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
 
 		<!-- @Inject -->
 		<dependency>
@@ -196,7 +184,7 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>webapp-rest-extensions</artifactId>
@@ -229,13 +217,13 @@
 			<version>${org.springframework-version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.web.servlet</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test-mvc</artifactId>
@@ -272,73 +260,32 @@
 			<artifactId>org.apache.felix.http.proxy</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
-	 <resources>
-        <resource>
-          <directory>src/main/resources</directory>
-          <filtering>true</filtering>
-        </resource>
-      </resources>   
-      
-	  <extensions>
-	    <extension>
-	       <groupId>org.apache.maven.wagon</groupId>
-	       <artifactId>wagon-ssh</artifactId>
-	       <version>1.0-beta-6</version>
-	     </extension>
-	   </extensions>
-   
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+
 		<plugins>
-<!-- 		<plugin> -->
-<!--         <groupId>org.apache.felix</groupId> -->
-<!--         <artifactId>maven-bundle-plugin</artifactId> -->
-<!--         <version>2.3.5</version> -->
-<!--         <extensions>true</extensions> -->
-<!--         <executions> -->
-<!--           <execution> -->
-<!--             <id>bundle-manifest</id> -->
-<!--             <phase>process-classes</phase> -->
-<!--             <goals> -->
-<!--               <goal>manifest</goal> -->
-<!--             </goals> -->
-<!--           </execution> -->
-<!--         </executions> -->
-<!--         <configuration> -->
-<!--           <supportedProjectTypes> -->
-<!--             <supportedProjectType>war</supportedProjectType> -->
-<!--           </supportedProjectTypes> -->
-<!--           <instructions> -->
-<!-- 		       <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package> -->
-<!-- 		       <Embed-Directory>WEB-INF/lib</Embed-Directory> -->
-<!-- 		       <Embed-Dependency>*;scope=compile</Embed-Dependency> -->
-<!-- 		       <Bundle-ClassPath>.,WEB-INF/classes,{maven-dependencies}</Bundle-ClassPath> -->
-<!-- 		       <Embed-Transitive>true</Embed-Transitive> -->
-<!-- 		       <Web-ContextPath>webapp-rest</Web-ContextPath> -->
-<!-- 		      </instructions>  -->
-<!--         </configuration> -->
-<!--       </plugin> -->
-
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-war-plugin</artifactId> -->
-<!-- 				<version>2.1.1</version> -->
-<!-- 				<configuration> -->
-<!-- 		          <archive> -->
-<!-- 		            add the generated manifest to the war -->
-<!-- 		            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile> -->
-<!-- 		          </archive> -->
-<!-- 		        </configuration> -->
-<!-- 			</plugin> -->
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<version>1.0-beta-1</version>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.gmaven</groupId>
 				<artifactId>gmaven-plugin</artifactId>
@@ -357,64 +304,64 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
-			    <groupId>org.simplericity.jettyconsole</groupId>
-			    <artifactId>jetty-console-maven-plugin</artifactId>
-			    <version>1.43</version>
-			    <executions>
-			        <execution>
-			            <goals>
-			                <goal>createconsole</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			    <configuration>
-				    <backgroundImage>${basedir}/src/main/webapp/resources/images/dflogo-small-server.png</backgroundImage>
-				    <additionalDependencies>
-				        <additionalDependency>
-				            <artifactId>jetty-console-jsp-plugin</artifactId>
-				        </additionalDependency>
-				    </additionalDependencies>
+				<groupId>org.simplericity.jettyconsole</groupId>
+				<artifactId>jetty-console-maven-plugin</artifactId>
+				<version>1.43</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>createconsole</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<backgroundImage>${basedir}/src/main/webapp/resources/images/dflogo-small-server.png</backgroundImage>
+					<additionalDependencies>
+						<additionalDependency>
+							<artifactId>jetty-console-jsp-plugin</artifactId>
+						</additionalDependency>
+					</additionalDependencies>
 				</configuration>
 			</plugin>
 
-			  <plugin>
-			       <groupId>org.codehaus.mojo</groupId>
-			       <artifactId>wagon-maven-plugin</artifactId>
-			       <version>1.0-beta-3</version>
-			      
-			       <executions>
-			         <execution>
-			           <id>upload-war-to-server</id>
-			           <phase>deploy</phase>
-			           <goals>
-			             <goal>upload-single</goal>
-			           </goals>
-			            <configuration>
-			       	 <serverId>site-upload-server</serverId>
-			         <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
-			         <toFile>cts2framework.war</toFile>
-			         <url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/downloads/</url>
-			       </configuration>
-			         </execution>
-			         
-			         <execution>
-			           <id>upload-standalone-jar-to-server</id>
-			           <phase>deploy</phase>
-			           <goals>
-			             <goal>upload-single</goal>
-			           </goals>
-			           		       <configuration>
-			       	 <serverId>site-upload-server</serverId>
-			         <fromFile>${project.build.directory}/${project.build.finalName}-jetty-console.war</fromFile>
-			         <toFile>cts2framework-standalone.jar</toFile>
-			         <url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/downloads/</url>
-			       </configuration>
-			         </execution>
-			         
-			       </executions>
-			  </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+
+				<executions>
+					<execution>
+						<id>upload-war-to-server</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>upload-single</goal>
+						</goals>
+						<configuration>
+							<serverId>site-upload-server</serverId>
+							<fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
+							<toFile>cts2framework.war</toFile>
+							<url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/downloads/</url>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>upload-standalone-jar-to-server</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>upload-single</goal>
+						</goals>
+						<configuration>
+							<serverId>site-upload-server</serverId>
+							<fromFile>${project.build.directory}/${project.build.finalName}-jetty-console.war</fromFile>
+							<toFile>cts2framework-standalone.jar</toFile>
+							<url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/downloads/</url>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

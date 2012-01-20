@@ -15,7 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2Exception;
 
 public class AcceptHeaderAdjustingFilter implements Filter {
 
@@ -30,7 +30,7 @@ public class AcceptHeaderAdjustingFilter implements Filter {
 			ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		if(! (request instanceof HttpServletRequest)){
-			throw new UnspecifiedCts2RuntimeException("ServletRequest expected to be of type HttpServletRequest");
+			throw new UnspecifiedCts2Exception("ServletRequest expected to be of type HttpServletRequest");
 		}
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;

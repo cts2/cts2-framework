@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>edu.mayo.cts2</groupId>
@@ -9,6 +10,9 @@
 
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>model</artifactId>
+
+	<name>CTS2 Development Framework Model Objects</name>
+	<description>Castor Java Bean representation of the CTS2 XSD Model Representation</description>
 
 	<build>
 		<plugins>
@@ -38,7 +42,7 @@
 						<goals>
 							<goal>replace</goal>
 						</goals>
-	
+
 						<configuration>
 							<includes>
 								<include>target/generated-sources/**/*</include>
@@ -50,16 +54,16 @@
 								</replacement>
 							</replacements>
 						</configuration>
-					
+
 					</execution>
-					
+
 					<execution>
 						<id>add extends for NameOrURI</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
-	
+
 						<configuration>
 							<includes>
 								<include>target/generated-sources/**/NameOrURI.java</include>
@@ -67,20 +71,21 @@
 							<replacements>
 								<replacement>
 									<token>class NameOrURI</token>
-									<value>class NameOrURI extends edu.mayo.cts2.framework.model.service.core.AbstractNameToString </value>
+									<value>class NameOrURI extends
+										edu.mayo.cts2.framework.model.service.core.AbstractNameToString </value>
 								</replacement>
 							</replacements>
 						</configuration>
-					
+
 					</execution>
-					
+
 					<execution>
 						<id>add extends for EntityNameOrURI</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
-	
+
 						<configuration>
 							<includes>
 								<include>target/generated-sources/**/EntityNameOrURI.java</include>
@@ -88,20 +93,21 @@
 							<replacements>
 								<replacement>
 									<token>class EntityNameOrURI</token>
-									<value>class EntityNameOrURI extends edu.mayo.cts2.framework.model.service.core.AbstractEntityNameToString </value>
+									<value>class EntityNameOrURI extends
+										edu.mayo.cts2.framework.model.service.core.AbstractEntityNameToString </value>
 								</replacement>
 							</replacements>
 						</configuration>
-					
+
 					</execution>
-					
+
 					<execution>
 						<id>add extends for EntityDescription</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
-	
+
 						<configuration>
 							<includes>
 								<include>target/generated-sources/**/EntityDescription.java</include>
@@ -109,20 +115,43 @@
 							<replacements>
 								<replacement>
 									<token>class EntityDescription</token>
-									<value>class EntityDescription extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
+									<value>class EntityDescription extends
+										edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
 								</replacement>
 							</replacements>
 						</configuration>
-					
+
 					</execution>
-					
+
+					<execution>
+						<id>add extends for CTS2Exception</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/CTS2Exception.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class CTS2Exception</token>
+									<value>class CTS2Exception extends
+										edu.mayo.cts2.framework.model.exception.AbstractCTS2Exception </value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
 					<execution>
 						<id>add extends for ChangeableResource</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
-	
+
 						<configuration>
 							<includes>
 								<include>target/generated-sources/**/ChangeableResource.java</include>
@@ -130,11 +159,12 @@
 							<replacements>
 								<replacement>
 									<token>class ChangeableResource</token>
-									<value>class ChangeableResource extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
+									<value>class ChangeableResource extends
+										edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
 								</replacement>
 							</replacements>
 						</configuration>
-					
+
 					</execution>
 				</executions>
 			</plugin>

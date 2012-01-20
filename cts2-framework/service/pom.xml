@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>edu.mayo.cts2</groupId>
@@ -8,6 +9,10 @@
 
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>service</artifactId>
+
+	<name>CTS2 Development Framework Service Interfaces</name>
+	<description>Service interfaces to allow implementations of CTS2 to follow a uniform
+	development pattern.</description>
 
 	<dependencies>
 
@@ -23,12 +28,12 @@
 			<version>1.2.1</version>
 			<exclusions>
 				<exclusion>
-				   <groupId>org.springframework</groupId>
-				   <artifactId>org.springframework.core</artifactId>
+					<groupId>org.springframework</groupId>
+					<artifactId>org.springframework.core</artifactId>
 				</exclusion>
 				<exclusion>
-				   <groupId>org.springframework</groupId>
-				   <artifactId>org.springframework.context</artifactId>
+					<groupId>org.springframework</groupId>
+					<artifactId>org.springframework.context</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -40,7 +45,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>

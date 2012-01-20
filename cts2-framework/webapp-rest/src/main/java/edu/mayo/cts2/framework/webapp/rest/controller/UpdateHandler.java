@@ -8,8 +8,8 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
-import edu.mayo.cts2.framework.model.exception.changeset.UnknownChangeSetException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2Exception;
+import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.UpdateChangeableMetadataRequest;
 
@@ -29,16 +29,16 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 	
 			resource.setChangeableElementGroup(group);
 		} else if(group.getChangeDescription() == null){
-			throw new UnspecifiedCts2RuntimeException("ChangeDescription must be specified.");
+			throw new UnspecifiedCts2Exception("ChangeDescription must be specified.");
 		} else if(group.getChangeDescription().getChangeType() == null){
-			throw new UnspecifiedCts2RuntimeException("ChangeType must be specified.");
+			throw new UnspecifiedCts2Exception("ChangeType must be specified.");
 		} else if(! (group.getChangeDescription().getChangeType() != ChangeType.METADATA ||
 				group.getChangeDescription().getChangeType() != ChangeType.UPDATE) ){
-			throw new UnspecifiedCts2RuntimeException("Only UPDATE or METADATA changes allowed via this URL.");
+			throw new UnspecifiedCts2Exception("Only UPDATE or METADATA changes allowed via this URL.");
 		}
 
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw new UnknownChangeSetException(null);
+			throw new UnknownChangeSet();
 		}
 		
 		ChangeType type = group.getChangeDescription().getChangeType();

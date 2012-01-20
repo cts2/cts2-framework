@@ -24,7 +24,6 @@
 package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.core.IsChangeable;
-import edu.mayo.cts2.framework.model.exception.changeset.ChangeSetIsNotOpenException;
 
 
 /**

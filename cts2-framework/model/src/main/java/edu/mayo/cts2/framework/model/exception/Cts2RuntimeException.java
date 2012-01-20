@@ -23,56 +23,16 @@
  */
 package edu.mayo.cts2.framework.model.exception;
 
-import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
-
 /**
- * The Class Cts2RestException.
+ * The Class Cts2RuntimeException.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class Cts2RestException extends RuntimeException {
+public class Cts2RuntimeException extends RuntimeException {
 
-	private static final long serialVersionUID = -8637830378600131685L;
-
-	private CTS2Exception cts2Exception;
-
-	private int statusCode;
-
-	/**
-	 * Instantiates a new cts2 rest exception.
-	 *
-	 * @param cts2Exception the cts2 exception
-	 */
-	public Cts2RestException(CTS2Exception cts2Exception) {
-		super();
-		this.cts2Exception = cts2Exception;
-	}
-
-	/**
-	 * Instantiates a new cts2 rest exception.
-	 *
-	 * @param cts2Exception the cts2 exception
-	 * @param cause the cause
-	 */
-	public Cts2RestException(CTS2Exception cts2Exception, Throwable cause) {
-		super(cause);
-		this.cts2Exception = cts2Exception;
-	}
-
-	/**
-	 * Gets the cts2 exception.
-	 * 
-	 * @return the cts2 exception
-	 */
-	public CTS2Exception getCts2Exception() {
-		return cts2Exception;
-	}
-
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	public int getStatusCode() {
-		return statusCode;
+	private static final long serialVersionUID = -8567312912032789588L;
+	
+	public Cts2RuntimeException(Exception e){
+		super(e);
 	}
 }

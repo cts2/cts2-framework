@@ -23,9 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.exception;
 
-import edu.mayo.cts2.framework.model.exception.Cts2RestException;
-
-
+import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 
 /**
  * The Interface Cts2RestExceptionCodeMapper.
@@ -34,14 +32,5 @@ import edu.mayo.cts2.framework.model.exception.Cts2RestException;
  */
 public interface Cts2RestExceptionCodeMapper {
 
-	/**
-	 * Gets the error code.
-	 *
-	 * @param exception the exception
-	 * @return the error code
-	 */
-	public int getErrorCode(Exception exception);
-	
-	@Deprecated
-	public int getErrorCode(Cts2RestException exception);
+	public int getErrorCode(CTS2Exception exception);
 }

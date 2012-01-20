@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import edu.mayo.cts2.framework.model.exception.Cts2RestException;
+import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -24,7 +24,7 @@ public class MethodTimingAspectTest {
 		queryControlTestBean.testWithQueryControlUnderTime(qc);
 	}
 	
-	@Test(expected=Cts2RestException.class)
+	@Test(expected=QueryTimeout.class)
 	public void testOverTimeLimit() throws Exception {
 		QueryControl qc = new QueryControl();
 		qc.setTimelimit(1);

@@ -10,7 +10,11 @@
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>plugin-util</artifactId>
 	<packaging>bundle</packaging>
-
+	
+	<name>CTS2 Development Framework Plugin Utilities</name>
+	<description>Various utilities for CTS2 Development Framework Plugins, designed to be deployed
+		as an OSGi Bundle.</description>
+	
 	<build>
 		<plugins>
 			<plugin>

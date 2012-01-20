@@ -43,6 +43,7 @@ import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@SuppressWarnings("deprecation")
 public class Cts2RestClient {
 	
 	private static Cts2RestClient instance;

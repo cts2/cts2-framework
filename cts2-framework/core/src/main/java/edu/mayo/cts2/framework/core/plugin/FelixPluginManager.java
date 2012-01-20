@@ -237,6 +237,10 @@ public class FelixPluginManager implements
             servletContext.setAttribute(
     				BundleContext.class.getName(),
     				context);
+            
+            servletContext.setAttribute(
+    				PluginManager.class.getName(),
+    				this);
         }
         catch (final Exception ex)
         {
