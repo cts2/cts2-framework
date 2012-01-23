@@ -6,6 +6,8 @@ The CTS2 Development Framework is a toolkit for rapidly creating CTS2 implementa
 Visit our [website][Website] or get support on our [forums][Forums].  
 Track and submit issues and bugs on our [issue tracker][Issues].
 
+Follow us on Twitter!
+---------------------
 [![Follow us on Twitter][Twitter Logo]][Twitter]
 
 Source
