@@ -197,13 +197,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>service-plugin-assembly-descriptor</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>webapp-rest</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>provided</scope>
