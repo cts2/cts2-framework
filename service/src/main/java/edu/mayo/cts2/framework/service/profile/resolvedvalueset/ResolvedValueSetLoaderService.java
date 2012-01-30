@@ -21,19 +21,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetresolution;
+package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 
 /**
- * The Interface ValueSetDefinitionQueryService.
+ * The Interface ValueSetDefinitionReadService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ResolvedValueSetReadService extends Cts2Profile {
-
-	public ResolvedValueSet read(ResolvedValueSetReadId identifier);
+public interface ResolvedValueSetLoaderService extends Cts2Profile {
+	
+	public ResolvedValueSetReference load(ResolvedValueSet resolvedValueSet);
+	
+	public void delete(ResolvedValueSetReadId resolvedValueSetId);
 	
 }

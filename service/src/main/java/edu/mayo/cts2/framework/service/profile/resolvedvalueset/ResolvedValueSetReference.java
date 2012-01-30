@@ -1,4 +1,4 @@
-package edu.mayo.cts2.framework.service.profile.valuesetresolution;
+package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
 import edu.mayo.cts2.framework.model.core.ValueSetDefinitionReference;
 

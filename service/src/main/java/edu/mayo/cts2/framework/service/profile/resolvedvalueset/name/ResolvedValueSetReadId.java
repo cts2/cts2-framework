@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetresolution.name;
+package edu.mayo.cts2.framework.service.profile.resolvedvalueset.name;
 
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 

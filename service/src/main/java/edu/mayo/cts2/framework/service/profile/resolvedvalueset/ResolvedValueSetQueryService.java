@@ -21,21 +21,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.valuesetresolution;
+package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
-import edu.mayo.cts2.framework.service.profile.Cts2Profile;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 
 /**
- * The Interface ValueSetDefinitionReadService.
+ * The Interface ValueSetDefinitionQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ResolvedValueSetLoaderService extends Cts2Profile {
-	
-	public ResolvedValueSetReference load(ResolvedValueSet resolvedValueSet);
-	
-	public void delete(ResolvedValueSetReadId resolvedValueSetId);
-	
+public interface ResolvedValueSetQueryService 
+	extends BaseQueryService {
+
+	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
+			ResolvedValueSetQuery query,
+			SortCriteria sort,
+			Page page);
 }

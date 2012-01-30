@@ -60,14 +60,14 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirector
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetMsg;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetLoaderService;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQuery;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQueryService;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReadService;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReference;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetLoaderService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQuery;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQueryService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReadService;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReference;
-import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
@@ -256,7 +256,7 @@ public class ValueSetDefinitionResolutionController extends AbstractServiceAware
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public ResolvedValueSetMsg getValueSetResolutionByLocalId(
+	public ResolvedValueSetMsg getResolvedValueSetByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,

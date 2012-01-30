@@ -195,9 +195,9 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_RESOLUTION_OF_VALUESETDEFINITION =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT;
 	
-	public static final String PATH_RESOLVED_VALUESET = "/" + VALUE_SET_RESOLUTION_LONG;
+	public static final String PATH_RESOLVED_VALUESET = "/" + RESOLVED_VALUE_SET_LONG;
 	
-	public static final String PATH_RESOLVED_VALUESETS = "/" + VALUE_SET_RESOLUTIONS_LONG;
+	public static final String PATH_RESOLVED_VALUESETS = "/" + RESOLVED_VALUE_SETS_LONG;
 	
 	public static final String PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTIONS_SHORT;
@@ -288,8 +288,8 @@ interface PathKeywords {
 	public static final String VALUESETDEFINITION_BY_URI = "valuesetdefinitionbyuri";
 	public static final String VALUE_SET_RESOLUTION_SHORT = "resolution";
 	public static final String VALUE_SET_RESOLUTIONS_SHORT = "resolutions";
-	public static final String VALUE_SET_RESOLUTION_LONG = "valuesetresolution";
-	public static final String VALUE_SET_RESOLUTIONS_LONG = "valuesetresolutions";
+	public static final String RESOLVED_VALUE_SET_LONG = "resolvedvalueset";
+	public static final String RESOLVED_VALUE_SETS_LONG = "resolvedvaluesets";
 
 	public static final String SOURCEENTITY = "sourceentity";
 	public static final String TARGETENTITIES = "targetentities";
