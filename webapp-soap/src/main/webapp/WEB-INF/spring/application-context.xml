@@ -7,9 +7,9 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
     
     <!-- Spring manage ServiceBean -->
-    <bean id="personServ" class="com.unitedcoders.demo.PersonServiceImpl" />
+    <bean id="test" class="org.omg.schema.spec.cts2._1_0.wsdl.codesystemcatalogreadservices.TestImpl" />
 
     <!-- JAX-WS Service Endpoint -->    
-    <jaxws:endpoint id="personService" implementor="#personServ" address="/personService" />
+    <jaxws:endpoint id="testsoap" implementor="#test" address="/testsoap" />
     
 </beans>

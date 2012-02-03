@@ -64,10 +64,16 @@ public abstract class AbstractResourceQueryBuilder<T,Q extends ResourceQuery> {
 			super();
 			this.resolvedReadContext = readContextResolver.resolveRestReadContext(restReadContext);
 			for(RestFilter filter : restFilter){
-				resolvedFilters.add(
-						filterResolver.resolveRestFilter(
-								filter, 
-								baseQueryService));
+				ResolvedFilter resolvedfilter = filterResolver.resolveRestFilter(
+						filter, 
+						baseQueryService);
+				
+				if(resolvedfilter != null){
+					resolvedFilters.add(
+							filterResolver.resolveRestFilter(
+									filter, 
+									baseQueryService));
+				}
 			}
 		}
 
