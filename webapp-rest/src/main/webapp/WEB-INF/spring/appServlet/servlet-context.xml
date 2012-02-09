@@ -81,10 +81,10 @@
     </beans:bean>
     
 	<sws:static-wsdl id="CodeSystemCatalogReadService"
-		location="file:/Users/m005256/Documents/workspace-sts-2.8.0.RELEASE/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
+		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
 		
 	<sws:static-wsdl id="CodeSystemCatalogQueryService"
-		location="file:/Users/m005256/Documents/workspace-sts-2.8.0.RELEASE/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
+		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
 
 	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogQueryServicesEndpoint"/>
 	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogReadServicesEndpoint"/>
