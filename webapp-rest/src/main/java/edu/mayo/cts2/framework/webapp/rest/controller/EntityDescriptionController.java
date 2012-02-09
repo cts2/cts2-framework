@@ -84,7 +84,7 @@ import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class EntityDescriptionController extends AbstractServiceAwareController {
+public class EntityDescriptionController extends AbstractMessageWrappingController {
 	
 	@Cts2Service
 	private EntityDescriptionQueryService entityDescriptionQueryService;

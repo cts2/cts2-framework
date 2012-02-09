@@ -1,22 +1,19 @@
-package edu.mayo.cts2.framework.webapp.rest.controller;
+package edu.mayo.cts2.framework.webapp.service;
 
 import static org.junit.Assert.*
 
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
-import org.springframework.mock.web.MockHttpServletRequest
 
-import edu.mayo.cts2.framework.model.command.Page
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 
- class AbstractServiceAwareControllerTest {
+ class AbstractServiceAwareBeanTest {
 	
-	private AbstractServiceAwareController controller;
+	private AbstractServiceAwareBean controller;
 	
 	@Before
 	void setup(){
-		this.controller = new AbstractServiceAwareController(){}
+		this.controller = new AbstractServiceAwareBean(){}
 	}
 	
 	@Test(expected=UnsupportedOperationException)

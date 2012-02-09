@@ -46,11 +46,9 @@ public class DirectoryResult<T> {
 	 * @param atEnd the at end
 	 */
 	public DirectoryResult(List<T> entries,
-			boolean complete,
 			boolean atEnd) {
 		super();
 		this.entries = entries;
-		this.setComplete(complete);
 		this.setAtEnd(atEnd);
 	}
 	public List<T> getEntries() {
@@ -58,14 +56,6 @@ public class DirectoryResult<T> {
 	}
 	public void setEntries(List<T> entries) {
 		this.entries = entries;
-	}
-
-	public void setComplete(boolean complete) {
-		this.complete = complete;
-	}
-
-	public boolean isComplete() {
-		return complete;
 	}
 
 	public boolean isAtEnd() {

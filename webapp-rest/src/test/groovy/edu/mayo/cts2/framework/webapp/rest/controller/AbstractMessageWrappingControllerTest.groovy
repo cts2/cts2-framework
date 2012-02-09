@@ -73,7 +73,7 @@ class AbstractMessageWrappingControllerTest {
 	@Test
 	void "Test 'numEntries' on 'populateDirectory' Directory"(){
 
-		def dirResult = new DirectoryResult(["one","two"], true, true)
+		def dirResult = new DirectoryResult(["one","two"], true)
 		
 		
 		def restResource = controller.

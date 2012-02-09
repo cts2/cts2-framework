@@ -101,7 +101,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def rs = [
 			resolveDefinitionAsDirectory:{ p1,p2,p3,p4,p5,p6,p7-> 
 				isCalled = true
-				new DirectoryResult([],true,true)
+				new DirectoryResult([],true)
 			}
 		] as ValueSetDefinitionResolutionService;
 	
@@ -122,7 +122,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def rs = [
 			resolveDefinitionAsDirectory:{ p1,p2,p3,p4,p5,p6,p7->
 				isCalled = true
-				new DirectoryResult([],true,true)
+				new DirectoryResult([],true)
 			}
 		] as ValueSetDefinitionResolutionService;
 	
@@ -167,7 +167,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def rs = [
 			resolveDefinitionAsEntityDirectory:{ p1,p2,p3,p4,p5,p6,p7,p8-> 
 				isCalled = true
-				new DirectoryResult([],true,true)
+				new DirectoryResult([],true)
 			}
 		] as ValueSetDefinitionResolutionService;
 	

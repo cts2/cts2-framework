@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:osgi="http://www.springframework.org/schema/osgi"
 	xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:util="http://www.springframework.org/schema/util" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="
-		http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:sws="http://www.springframework.org/schema/web-services"
+	xsi:schemaLocation="http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<util:properties id="buildProperties" location="classpath:build-info.properties"/>
+	<util:properties id="buildProperties" location="classpath:build-info.properties" />
 
-	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 
-<!-- 	<beans:bean id="multipartResolver" -->
-<!-- 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
-<!-- 	</beans:bean> -->
+	<!-- <beans:bean id="multipartResolver" -->
+	<!-- class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
+	<!-- </beans:bean> -->
 
 	<beans:bean
 		class="edu.mayo.cts2.framework.webapp.rest.osgi.OsgiAnnotationHandlerMapping">
@@ -35,10 +33,67 @@
 		<beans:property name="useDefaultSuffixPattern" value="false" />
 	</beans:bean>
 
+	<!-- SOAP Handling -->
+
+<!-- 	<sws:annotation-driven /> -->
+
+	<beans:bean class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter">
+		<beans:property name="messageFactory">
+		<beans:bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean
+		class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
+		<beans:property name="marshaller" ref="marshaller" />
+		<beans:property name="unmarshaller" ref="marshaller" />
+	</beans:bean>
+
+    <beans:bean class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
+    	<beans:property name="transformLocations" value="true"/>
+    </beans:bean>
+
+    <beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <beans:property name="mappings">
+           <beans:props>
+             <beans:prop key="CodeSystemCatalogReadService.wsdl">CodeSystemCatalogReadService</beans:prop>
+             <beans:prop key="CodeSystemCatalogReadService">codeSystemCatalogReadServiceDispatcher</beans:prop>
+             <beans:prop key="CodeSystemCatalogQueryService.wsdl">CodeSystemCatalogQueryService</beans:prop>
+             <beans:prop key="CodeSystemCatalogQueryService">codeSystemCatalogQueryServiceDispatcher</beans:prop>
+           </beans:props>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="codeSystemCatalogReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    	<beans:property name="endpointMappings">
+	    	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+	     		<beans:property name="service" value="CodeSystemCatalogReadServicesEndpoint"/>
+	     	</beans:bean>
+    	</beans:property>
+    </beans:bean>
+   
+    <beans:bean id="codeSystemCatalogQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    	<beans:property name="endpointMappings">
+	    	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+	     		<beans:property name="service" value="CodeSystemCatalogQueryServicesEndpoint"/>
+	     	</beans:bean>
+    	</beans:property>
+    </beans:bean>
+    
+	<sws:static-wsdl id="CodeSystemCatalogReadService"
+		location="file:/Users/m005256/Documents/workspace-sts-2.8.0.RELEASE/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
+		
+	<sws:static-wsdl id="CodeSystemCatalogQueryService"
+		location="file:/Users/m005256/Documents/workspace-sts-2.8.0.RELEASE/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
+
+	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogQueryServicesEndpoint"/>
+	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogReadServicesEndpoint"/>
+	<!-- END SOAP Handling -->
+
 	<beans:bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<beans:property name="messageConverters" ref="messageConverters" />
-		<beans:property name="urlDecode" value="true"/>
+		<beans:property name="urlDecode" value="true" />
 	</beans:bean>
 
 	<util:list id="messageConverters">
@@ -64,7 +119,7 @@
 		class="edu.mayo.cts2.framework.webapp.rest.converter.AnnotationMethodHandlerExceptionResolverFactoryBean">
 	</beans:bean>
 
-	<beans:bean id="conversion-service"  
+	<beans:bean id="conversion-service"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
 
 	<!-- Imports user-defined @Controller beans that process client requests -->
@@ -72,55 +127,56 @@
 
 	<beans:bean id="marshaller"
 		class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller" />
-		
-<!-- 	<osgi:service id="marshallerService" ref="marshaller">   -->
-<!--   		<osgi:interfaces> -->
-<!-- 		     <value>org.springframework.oxm.Marshaller</value> -->
-<!-- 		     <value>org.springframework.oxm.Unmarshaller</value> -->
-<!--  		</osgi:interfaces> -->
-<!--   	</osgi:service> -->
+
+	<!-- <osgi:service id="marshallerService" ref="marshaller">   -->
+	<!-- <osgi:interfaces> -->
+	<!-- <value>org.springframework.oxm.Marshaller</value> -->
+	<!-- <value>org.springframework.oxm.Unmarshaller</value> -->
+	<!-- </osgi:interfaces> -->
+	<!-- </osgi:service> -->
 
 	<beans:bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-				
-<!-- NOT NEEDED -->
-<!-- 	<beans:bean -->
-<!-- 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"> -->
-<!-- 		<beans:property name="mediaTypes"> -->
-<!-- 			<beans:map> -->
-<!-- 				<beans:entry key="xml" value="application/xml" /> -->
-<!-- 				<beans:entry key="json" value="application/json" /> -->
-<!-- 				<beans:entry key="htm" value="text/html" /> -->
-<!-- 				<beans:entry key="html" value="text/html" /> -->
-<!-- 			</beans:map> -->
-<!-- 		</beans:property> -->
-<!-- 		<beans:property name="viewResolvers"> -->
-<!-- 			<util:list> -->
-<!-- 				<beans:bean -->
-<!-- 					class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
-<!-- 					<beans:property name="prefix" value="/WEB-INF/views/" /> -->
-<!-- 					<beans:property name="suffix" value=".jsp" /> -->
-<!-- 				</beans:bean> -->
-<!-- 			</util:list> -->
-<!-- 		</beans:property> -->
-<!-- 		<beans:property name="defaultViews"> -->
-<!-- 			<util:list> -->
-<!-- 				<beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.XmlView"> -->
-<!-- 					<beans:property name="modelKey"> -->
-<!-- 						<util:constant -->
-<!-- 							static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" /> -->
-<!-- 					</beans:property> -->
-<!-- 					<beans:property name="marshaller" ref="marshaller" /> -->
-<!-- 				</beans:bean> -->
-<!-- 			</util:list> -->
-<!-- 		</beans:property> -->
-<!-- 		<beans:property name="defaultContentType" value="application/xml" /> -->
-<!-- 		<beans:property name="ignoreAcceptHeader" value="false" /> -->
-<!-- 		<beans:property name="favorParameter" value="true" /> -->
-<!-- 		<beans:property name="favorPathExtension" value="false" /> -->
-<!-- 	</beans:bean> -->
+
+	<!-- NOT NEEDED -->
+	<!-- <beans:bean -->
+	<!-- class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"> -->
+	<!-- <beans:property name="mediaTypes"> -->
+	<!-- <beans:map> -->
+	<!-- <beans:entry key="xml" value="application/xml" /> -->
+	<!-- <beans:entry key="json" value="application/json" /> -->
+	<!-- <beans:entry key="htm" value="text/html" /> -->
+	<!-- <beans:entry key="html" value="text/html" /> -->
+	<!-- </beans:map> -->
+	<!-- </beans:property> -->
+	<!-- <beans:property name="viewResolvers"> -->
+	<!-- <util:list> -->
+	<!-- <beans:bean -->
+	<!-- class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
+	<!-- <beans:property name="prefix" value="/WEB-INF/views/" /> -->
+	<!-- <beans:property name="suffix" value=".jsp" /> -->
+	<!-- </beans:bean> -->
+	<!-- </util:list> -->
+	<!-- </beans:property> -->
+	<!-- <beans:property name="defaultViews"> -->
+	<!-- <util:list> -->
+	<!-- <beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.XmlView"> -->
+	<!-- <beans:property name="modelKey"> -->
+	<!-- <util:constant -->
+	<!-- static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" 
+		/> -->
+	<!-- </beans:property> -->
+	<!-- <beans:property name="marshaller" ref="marshaller" /> -->
+	<!-- </beans:bean> -->
+	<!-- </util:list> -->
+	<!-- </beans:property> -->
+	<!-- <beans:property name="defaultContentType" value="application/xml" /> -->
+	<!-- <beans:property name="ignoreAcceptHeader" value="false" /> -->
+	<!-- <beans:property name="favorParameter" value="true" /> -->
+	<!-- <beans:property name="favorPathExtension" value="false" /> -->
+	<!-- </beans:bean> -->
 
 </beans:beans>

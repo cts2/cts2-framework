@@ -114,6 +114,7 @@ public class FelixPluginManager implements
 		scannerConfig.getPackageIncludes().add("javax.servlet*");
 		scannerConfig.getPackageIncludes().add("com.sun*");
 		scannerConfig.getPackageIncludes().add("org.json*");
+		scannerConfig.getPackageIncludes().add("org.springframework.oxm*");
 		scannerConfig.getPackageExcludes().add("com.atlassian.plugins*");
 	
 		scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
@@ -152,11 +153,13 @@ public class FelixPluginManager implements
                              "com.jprofiler,com.jprofiler.*," +
                              "org.apache.xerces,org.apache.xerces.*," +
                              "org.apache.xalan,org.apache.xalan.*," +
+                             "org.apache.xpath.*," +
                              "org.apache.xml.serializer," +
                              "org.springframework.stereotype,"+
                              "org.springframework.web.bind.annotation," +
                              "javax.*," +
                              "sun.*," +
+                             "com.sun.*," +
                              "com.sun.xml.bind.v2," +
                              "com.icl.saxon";
         }

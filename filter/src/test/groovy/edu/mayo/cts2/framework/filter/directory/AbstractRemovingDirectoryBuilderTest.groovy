@@ -139,25 +139,25 @@ class AbstractRemovingDirectoryBuilderTest {
 	}
 	
 	@Test
-	void Test_createDirectoryResult_is_not_complete(){
+	void Test_createDirectoryResult_is_not_at_end(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 		builder.addStart(0)
 		builder.addMaxToReturn(1)
 		
 		def results = builder.createDirectoryResult(["one","two"])
 		
-		assertFalse results.isComplete()
+		assertFalse results.isAtEnd()
 	}
 	
 	@Test
-	void Test_createDirectoryResult_is_complete(){
+	void Test_createDirectoryResult_is_at_end(){
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 		builder.addStart(0)
 		builder.addMaxToReturn(10)
 		
 		def results = builder.createDirectoryResult(["one","two"])
 		
-		assertTrue results.isComplete()
+		assertTrue results.isAtEnd()
 	}
 }
 

@@ -67,7 +67,7 @@ import edu.mayo.cts2.framework.webapp.rest.query.ValueSetDefinitionQueryBuilder;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class ValueSetDefinitionController extends AbstractServiceAwareController {
+public class ValueSetDefinitionController extends AbstractMessageWrappingController {
 
 	@Cts2Service
 	private ValueSetDefinitionQueryService valueSetDefinitionQueryService;

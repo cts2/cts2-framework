@@ -57,13 +57,14 @@ import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
+import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
 
 /**
  * The Class AbstractController.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractController implements URIHelperInterface, ModelAndViewInterface {
+public abstract class AbstractController extends AbstractServiceAwareBean implements URIHelperInterface, ModelAndViewInterface {
 	
 	protected Log log = LogFactory.getLog(getClass());
 

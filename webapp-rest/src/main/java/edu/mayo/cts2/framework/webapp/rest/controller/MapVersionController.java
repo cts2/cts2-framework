@@ -79,7 +79,7 @@ import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class MapVersionController extends AbstractServiceAwareController {
+public class MapVersionController extends AbstractMessageWrappingController {
 
 	@Cts2Service
 	private MapVersionReadService mapVersionReadService;

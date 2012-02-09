@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/cts2-soap" xmlns:tns="http://www.example.org/cts2-soap"
+	elementFormDefault="qualified">
+
+	<xs:import
+		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogReadServices"
+		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogReadServiceTypes.xsd" />
+
+	<xs:import
+		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices"
+		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogQueryServiceTypes.xsd" />
+
+</schema>

@@ -65,6 +65,18 @@ public class ControllerUtils {
 		throw ExceptionFactory.createUnsupportedNameOrUriException(nameOrUri, list);
 	}
 	
+	public static <R extends NameAndMeaningReference> R getReference(NameOrURI nameOrUri, Iterable<R> list) {
+		
+		for(R ref : list){
+			if(StringUtils.equals(ref.getContent(), nameOrUri.getName()) ||
+				StringUtils.equals(ref.getUri(), nameOrUri.getUri())){
+				return ref;
+			}
+		}
+		
+		throw ExceptionFactory.createUnsupportedNameOrUriException(nameOrUri, list);
+	}
+	
 	public static PredicateReference getPredicateReference(String nameOrUri, Iterable<? extends PredicateReference> list) {
 		
 		//TODO: does not take into account namespaces

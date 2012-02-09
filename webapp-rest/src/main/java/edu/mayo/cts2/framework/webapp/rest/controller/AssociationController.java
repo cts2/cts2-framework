@@ -83,7 +83,7 @@ import edu.mayo.cts2.framework.webapp.rest.query.EntityQueryBuilder;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class AssociationController extends AbstractServiceAwareController {
+public class AssociationController extends AbstractMessageWrappingController {
 	
 	@Cts2Service
 	private AssociationReadService associationReadService;

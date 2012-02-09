@@ -50,14 +50,8 @@ import edu.mayo.cts2.framework.core.plugin.PluginReference;
 public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvider> 
 	implements PluginConfigChangeObserver, ServiceProviderChangeObservable, ExtensionPoint {
 
-	private final Log log = LogFactory.getLog(getClass().getName());
-
 	@Resource
 	private PluginManager pluginManager;
-
-	private ServiceProvider serviceProvider;
-	
-	private ServiceProvider emtpyServiceProvider = new EmptyServiceProvider();
 
 	private Set<ServiceProviderChangeObserver> observers = new HashSet<ServiceProviderChangeObserver>();
 

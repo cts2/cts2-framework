@@ -149,10 +149,14 @@ public abstract class AbstractMessageWrappingController extends
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T extends Directory> T populateDirectory(
-			DirectoryResult<?> result, Page page,
-			HttpServletRequest httpServletRequest, Class<T> directoryClazz) {
+			DirectoryResult<?> result, 
+			Page page,
+			HttpServletRequest httpServletRequest, 
+			Class<T> directoryClazz) {
 
-		boolean isComplete = result.isComplete();
+		boolean atEnd = result.isAtEnd();
+		
+		boolean isComplete = atEnd && ( page.getPage() == 0 );
 
 		T directory;
 		try {

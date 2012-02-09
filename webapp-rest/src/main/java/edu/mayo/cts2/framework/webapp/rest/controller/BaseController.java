@@ -12,7 +12,7 @@ import edu.mayo.cts2.framework.model.service.core.BaseService;
 import edu.mayo.cts2.framework.service.profile.BaseSerivceService;
 
 @Controller
-public class BaseController extends AbstractServiceAwareController{
+public class BaseController extends AbstractMessageWrappingController{
 	
 	@Cts2Service
 	private BaseSerivceService baseServiceService;

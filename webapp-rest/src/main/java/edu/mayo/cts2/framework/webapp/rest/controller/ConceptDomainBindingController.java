@@ -69,7 +69,7 @@ import edu.mayo.cts2.framework.webapp.rest.query.ConceptDomainBindingQueryBuilde
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class ConceptDomainBindingController extends AbstractServiceAwareController {
+public class ConceptDomainBindingController extends AbstractMessageWrappingController {
 
 	@Cts2Service
 	private ConceptDomainBindingReadService conceptDomainBindingReadService;

@@ -36,6 +36,7 @@ import javax.xml.transform.Source;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,7 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-@ExportedService
+@ExportedService( { Cts2Marshaller.class,Marshaller.class,Unmarshaller.class } )
 public class DelegatingMarshaller implements Cts2Marshaller {
 
 	public static final String NS_PROP = "org.exolab.castor.builder.nspackages";

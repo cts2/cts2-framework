@@ -10,53 +10,144 @@
 
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>webapp-soap</artifactId>
-	<packaging>war</packaging>
+	<packaging>bundle</packaging>
 
-	<!-- Dependency properties -->
-	<properties>
-		<junit-version>4.5</junit-version>
-		<cxf.version>2.2.6</cxf.version>
-		<spring-version>3.0.1.RELEASE</spring-version>
-		<commons-logging-version>1.1.1</commons-logging-version>
-	</properties>
+	<build>
+		<finalName>test-soap</finalName>
+		<plugins>
 
-	<!-- Plugin configuration -->
-	
-
-	<!-- Dependency definitions -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Import-Package>
+							org.springframework.ui.context,
+							edu.mayo.cts2.framework.core.xml,
+							org.springframework.oxm.castor,
+							edu.mayo.cts2.framework.core.plugin,
+							org.springframework.core.env*,
+							!org.springframework.ui*,
+							!org.apache.ws*,
+							!org.mortbay*,
+							!org.codehaus.jackson*,
+							!javax.*,
+							!org.apache.oro*,
+							!netscape.ldap*,
+							!com.lowagie*,
+							!freemarker*,
+							!jxl*,
+							!net.sf.jasperreports*,
+							!nu,!nu.*,
+							!org.apache.axiom.*,
+							!org.apache.catalina.*,
+							!org.apache.poi.*,
+							!org.apache.tiles*,
+							!org.apache.velocity*,
+							*
+						</Import-Package>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Dependency>org.springframework.osgi.web,wsdl4j,spring-webmvc,spring-ws-core,spring-xml</Embed-Dependency>
+						<Spring-Context>*;timeout:=60</Spring-Context>
+						<_exportcontents>*</_exportcontents>
+						<_nouses>true</_nouses>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>2.0.3.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-oxm</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-webmvc</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>3.1.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>3.1.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>4.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
+			<version>4.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>service</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-
-		<!-- Apache CXF dependencies -->
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-			<version>${cxf.version}</version>
+			<version>0.5.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-
-
-		<!-- Logging -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>${commons-logging-version}</version>
-		</dependency>
-
-		<!-- Testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
-			<scope>test</scope>
+			<groupId>org.springframework.osgi</groupId>
+			<artifactId>org.springframework.osgi.web</artifactId>
+			<version>1.2.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+	</repositories>
 </project>

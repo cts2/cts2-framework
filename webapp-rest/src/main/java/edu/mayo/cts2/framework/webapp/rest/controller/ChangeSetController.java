@@ -71,7 +71,7 @@ import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class ChangeSetController extends AbstractServiceAwareController {
+public class ChangeSetController extends AbstractMessageWrappingController {
 	
 	@Cts2Service
 	private ChangeSetService changeSetService;

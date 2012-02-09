@@ -33,6 +33,7 @@ import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
@@ -67,6 +68,14 @@ public class ExceptionFactory {
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedAlgorithm, possibleValues));
 		
 		return ex;
+	}
+	
+	public static <T extends NameAndMeaningReference> UnsupportedNameOrURI createUnsupportedNameOrUriException(
+			NameOrURI requestedNameOrUri, 
+			Iterable<T> possibleValues) {
+		String nameOrUri = requestedNameOrUri.getName() != null ? requestedNameOrUri.getName() : requestedNameOrUri.getUri();
+		
+		return createUnsupportedNameOrUriException(nameOrUri, possibleValues);
 	}
 	
 	public static <T extends NameAndMeaningReference> UnsupportedNameOrURI createUnsupportedNameOrUriException(

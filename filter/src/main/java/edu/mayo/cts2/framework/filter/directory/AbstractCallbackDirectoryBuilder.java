@@ -114,8 +114,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 	 * #restrict(java.util.List, org.cts2.core.Filter)
 	 */
 	public DirectoryResult<T> resolve() {
-		
-		boolean isExhausted = true;
+
 		boolean atEnd = true;
 		
 		if(CollectionUtils.isEmpty(this.getFilterComponents())){
@@ -141,7 +140,6 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 						filter,
 						DEFAULT_SCORE_THRESHOLD);
 				
-				isExhausted &= result.isComplete();
 				atEnd &= result.isAtEnd();
 				
 				this.resultBuffer.addAll(result.getEntries());
@@ -151,7 +149,6 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 						filter,
 						DEFAULT_SCORE_THRESHOLD);
 				
-				isExhausted &= result.isComplete();
 				atEnd &= result.isAtEnd();
 				
 				this.resultBuffer.addAll(result.getEntries());
@@ -159,7 +156,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 
 		}
 
-		return new DirectoryResult<T>(this.resultBuffer, isExhausted, atEnd);
+		return new DirectoryResult<T>(this.resultBuffer, atEnd);
 	}
 	
 	/* (non-Javadoc)

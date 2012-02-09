@@ -26,7 +26,7 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService
 
- class ValueSetDefinitionControllerRestBindingTest extends ControllerRestBindingTestBase {
+class ValueSetDefinitionControllerRestBindingTest extends ControllerRestBindingTestBase {
 	
 	@Resource
 	ValueSetDefinitionController controller

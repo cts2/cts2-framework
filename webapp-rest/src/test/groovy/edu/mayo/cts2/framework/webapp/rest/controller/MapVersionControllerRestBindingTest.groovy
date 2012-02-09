@@ -66,7 +66,7 @@ class MapVersionControllerRestBindingTest extends ControllerRestBindingTestBase 
 		def qs = [
 			getResourceSummaries:{
 				query,sort,page -> 
-				new DirectoryResult([],true,true)}
+				new DirectoryResult([],true)}
 		] as MapVersionQueryService;
 	
 		controller.setMapVersionQueryService(qs);
@@ -83,7 +83,7 @@ class MapVersionControllerRestBindingTest extends ControllerRestBindingTestBase 
 		def qs = [
 			getResourceSummaries:{
 				query,sort,page ->
-				new DirectoryResult([],true,true)}
+				new DirectoryResult([],true)}
 		] as MapVersionQueryService;
 	
 		controller.setMapVersionQueryService(qs);

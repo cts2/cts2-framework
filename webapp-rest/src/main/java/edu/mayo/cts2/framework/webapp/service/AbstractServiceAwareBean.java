@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.webapp.rest.controller;
+package edu.mayo.cts2.framework.webapp.service;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,11 +48,10 @@ import edu.mayo.cts2.framework.service.provider.ServiceProviderFactory;
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class AbstractServiceAwareController extends
-		AbstractMessageWrappingController implements InitializingBean, ServiceProviderChangeObserver {
+public class AbstractServiceAwareBean implements InitializingBean, ServiceProviderChangeObserver {
 
 	private static Log log = LogFactory
-			.getLog(AbstractServiceAwareController.class);
+			.getLog(AbstractServiceAwareBean.class);
 
 	@Resource
 	private ServiceProviderFactory serviceProviderFactory;

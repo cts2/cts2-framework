@@ -77,7 +77,7 @@ import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class MapController extends AbstractServiceAwareController {
+public class MapController extends AbstractMessageWrappingController {
 	
 	@Cts2Service
 	private MapReadService mapReadService;

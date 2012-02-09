@@ -67,7 +67,7 @@ import edu.mayo.cts2.framework.webapp.rest.query.ResourceQueryBuilder;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Controller
-public class CodeSystemController extends AbstractServiceAwareController {
+public class CodeSystemController extends AbstractMessageWrappingController {
 	
 	@Cts2Service
 	private CodeSystemReadService codeSystemReadService;
