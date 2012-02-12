@@ -31,12 +31,12 @@
 			<version>1.4.01</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
 			<version>2.7.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -307,6 +307,20 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.http.proxy</artifactId>
 			<version>2.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.groovy.modules</groupId>
+			<artifactId>groovyws</artifactId>
+			<version>0.5.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>juli</artifactId>
+			<version>6.0.35</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

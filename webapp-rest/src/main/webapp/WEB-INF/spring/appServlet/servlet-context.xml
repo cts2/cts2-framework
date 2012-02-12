@@ -35,8 +35,6 @@
 
 	<!-- SOAP Handling -->
 
-<!-- 	<sws:annotation-driven /> -->
-
 	<beans:bean class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter">
 		<beans:property name="messageFactory">
 		<beans:bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
@@ -49,17 +47,17 @@
 		<beans:property name="unmarshaller" ref="marshaller" />
 	</beans:bean>
 
-    <beans:bean class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
+    <beans:bean class="edu.mayo.cts2.framework.webapp.soap.wsdl.LocationAdjustingWsdlDefinitionHandlerAdapter">
     	<beans:property name="transformLocations" value="true"/>
     </beans:bean>
 
     <beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <beans:property name="mappings">
            <beans:props>
-             <beans:prop key="CodeSystemCatalogReadService.wsdl">CodeSystemCatalogReadService</beans:prop>
-             <beans:prop key="CodeSystemCatalogReadService">codeSystemCatalogReadServiceDispatcher</beans:prop>
-             <beans:prop key="CodeSystemCatalogQueryService.wsdl">CodeSystemCatalogQueryService</beans:prop>
-             <beans:prop key="CodeSystemCatalogQueryService">codeSystemCatalogQueryServiceDispatcher</beans:prop>
+             <beans:prop key="soap/service/CodeSystemCatalogReadService.wsdl">CodeSystemCatalogReadService</beans:prop>
+             <beans:prop key="soap/service/CodeSystemCatalogReadService">codeSystemCatalogReadServiceDispatcher</beans:prop>
+             <beans:prop key="soap/service/CodeSystemCatalogQueryService.wsdl">CodeSystemCatalogQueryService</beans:prop>
+             <beans:prop key="soap/service/CodeSystemCatalogQueryService">codeSystemCatalogQueryServiceDispatcher</beans:prop>
            </beans:props>
         </beans:property>
     </beans:bean>

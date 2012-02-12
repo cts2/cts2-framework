@@ -34,7 +34,7 @@ public final class ProxyServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8648910455822026016L;
 
-	private ServiceTracker tracker;
+	private transient ServiceTracker tracker;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {

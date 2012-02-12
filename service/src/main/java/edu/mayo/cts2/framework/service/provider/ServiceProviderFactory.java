@@ -28,10 +28,13 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.config.option.OptionHolder;
@@ -48,10 +51,19 @@ import edu.mayo.cts2.framework.core.plugin.PluginReference;
  */
 @Component
 public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvider> 
-	implements PluginConfigChangeObserver, ServiceProviderChangeObservable, ExtensionPoint {
+	implements PluginConfigChangeObserver, 
+	ServiceProviderChangeObservable, 
+	ExtensionPoint,
+	ApplicationContextAware {
+	
+	public static final String USE_CLASSPATH_PROVIDER_PROP = "useClasspathProvider";
+	
+	protected Log log = LogFactory.getLog(getClass());
 
 	@Resource
 	private PluginManager pluginManager;
+	
+	private ServiceProvider classPathServiceProvider;
 
 	private Set<ServiceProviderChangeObserver> observers = new HashSet<ServiceProviderChangeObserver>();
 
@@ -73,9 +85,15 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	}
 
 	public ServiceProvider getServiceProvider() {
-		ServiceProvider serviceProvider = (ServiceProvider)
+		ServiceProvider serviceProvider;
+		
+		if(this.classPathServiceProvider != null){
+			serviceProvider = this.classPathServiceProvider;
+		} else {
+			serviceProvider = (ServiceProvider)
 				this.getServiceTracker().getService();
-
+		}
+		
 		return serviceProvider;
 	}
 
@@ -123,6 +141,24 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 	@Override
 	public ServiceTrackerCustomizer addServiceTrackerCustomizer() {
 		return null;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		if(BooleanUtils.toBoolean(System.getProperty(USE_CLASSPATH_PROVIDER_PROP))){
+			ServiceProvider classpathServiceProvider = null;
+			try {
+				classpathServiceProvider = 
+						applicationContext.getBean(ServiceProvider.class);
+				
+				log.warn("NOTICE: Found a ServiceProvider on the Classpath: " + classpathServiceProvider +
+						". This Service Provider will be set as active cannot be disabled.");
+			} catch (NoSuchBeanDefinitionException  e) {
+				log.info("No ServiceProvider found on the Classpath... waiting for a Service Plugin.");
+			}
+			
+			this.classPathServiceProvider = classpathServiceProvider;
+		}
 	}
 
 }

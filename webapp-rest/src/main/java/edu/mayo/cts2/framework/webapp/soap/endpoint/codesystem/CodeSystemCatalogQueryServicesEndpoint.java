@@ -3,6 +3,7 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -17,6 +18,8 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.FilterComponent;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.GetAllCodeSystems;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.GetAllCodeSystemsResponse;
 import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Resolve;
 import edu.mayo.cts2.framework.model.wsdl.codesystemquery.ResolveResponse;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
@@ -34,6 +37,19 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
 	private CodeSystemQueryService codeSystemQueryService;
 	
 	private FilterResolver filterResolver = new FilterResolver();
+	
+	@PayloadRoot(localPart = "getAllCodeSystems", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+	@ResponsePayload
+	public GetAllCodeSystemsResponse getAllCodeSystems(@RequestPayload final GetAllCodeSystems request) {
+		GetAllCodeSystemsResponse response = new GetAllCodeSystemsResponse();
+		
+		SoapDirectoryUriRequest<?> directoryUri = 
+				(SoapDirectoryUriRequest<?>) DirectoryUriUtils.buildSoapDirectoryUriRequest(0, null, null);
+		
+		response.setReturn(DirectoryUriUtils.serialize(directoryUri));
+	
+		return response;
+	}
 
 	@PayloadRoot(localPart = "resolve", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
 	@ResponsePayload
@@ -54,11 +70,13 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
 		
 		final Set<ResolvedFilter> resolvedFilters = new HashSet<ResolvedFilter>();
 		
-		for(FilterComponent filter : filters){
-			ResolvedFilter resolvedFilter = 
-					filterResolver.resolveFilter(filter, this.codeSystemQueryService);
-			
-			resolvedFilters.add(resolvedFilter);
+		if(CollectionUtils.isNotEmpty(filters)){
+			for(FilterComponent filter : filters){
+				ResolvedFilter resolvedFilter = 
+						filterResolver.resolveFilter(filter, this.codeSystemQueryService);
+				
+				resolvedFilters.add(resolvedFilter);
+			}
 		}
 
 		//TODO: Need to abstract this for other Query Services, 

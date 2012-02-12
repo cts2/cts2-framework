@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.Logger;
 import org.apache.felix.framework.util.FelixConstants;
@@ -261,7 +262,7 @@ public class FelixPluginManager implements
         public HostActivator(Object service, Class<?>[] interfaces){
      
         	this.service = service;
-        	this.interfaces = interfaces;
+        	this.interfaces = (Class<?>[]) ArrayUtils.clone(interfaces);
         }
 
         public void start(BundleContext context)

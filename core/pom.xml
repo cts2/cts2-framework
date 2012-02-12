@@ -31,6 +31,10 @@
 					<groupId>xerces</groupId>
 					<artifactId>xercesImpl</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -69,23 +73,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.atlassian.plugins.rest</groupId>
-			<artifactId>atlassian-rest-common</artifactId>
-			<version>2.5.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.atlassian.plugins</groupId>
-			<artifactId>atlassian-plugins-servlet</artifactId>
-			<version>2.5.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.atlassian.security</groupId>
-			<artifactId>atlassian-secure-random</artifactId>
-			<version>2.3</version>
-		</dependency>
-		<dependency>
 			<groupId>com.atlassian.extras</groupId>
 			<artifactId>atlassian-extras</artifactId>
 			<version>3.0.1</version>
@@ -110,22 +97,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.atlassian.plugins</groupId>
-			<artifactId>atlassian-plugins-webresource</artifactId>
-			<version>2.9.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
 			<version>140</version>
 		</dependency>
-
-		<!-- <dependency> -->
-		<!-- <groupId>com.atlassian.templaterenderer</groupId> -->
-		<!-- <artifactId>atlassian-template-renderer-api</artifactId> -->
-		<!-- <version>1.4.0</version> -->
-		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>log4j</groupId>
@@ -205,6 +180,10 @@
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

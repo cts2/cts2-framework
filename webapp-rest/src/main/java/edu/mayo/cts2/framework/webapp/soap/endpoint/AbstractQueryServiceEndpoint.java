@@ -3,10 +3,12 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Date;
 
 import org.springframework.util.ReflectionUtils;
 
 import edu.mayo.cts2.framework.model.core.Directory;
+import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.webapp.soap.directoryuri.SoapDirectoryUriRequest;
@@ -52,6 +54,11 @@ public abstract class AbstractQueryServiceEndpoint extends AbstractEndpoint {
 		}
 
 		directory.setNumEntries((long) result.getEntries().size());
+		
+		directory.setHeading(new RESTResource());
+		directory.getHeading().setAccessDate(new Date());
+		directory.getHeading().setResourceRoot("soap");
+		directory.getHeading().setResourceURI("soap");
 
 		return directory;
 	}

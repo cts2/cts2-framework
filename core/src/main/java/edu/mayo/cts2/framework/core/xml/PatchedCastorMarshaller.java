@@ -23,8 +23,15 @@
  */
 package edu.mayo.cts2.framework.core.xml;
 
+import javax.xml.transform.dom.DOMSource;
+
 import org.exolab.castor.xml.Marshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 /**
  * The Class PatchedCastorMarshaller.
@@ -32,6 +39,8 @@ import org.springframework.oxm.castor.CastorMarshaller;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class PatchedCastorMarshaller extends CastorMarshaller {
+	
+	private static final String XMLNS_NS = "http://www.w3.org/2000/xmlns/";
 
 	/* (non-Javadoc)
 	 * @see org.springframework.oxm.castor.CastorMarshaller#customizeMarshaller(org.exolab.castor.xml.Marshaller)
@@ -41,4 +50,39 @@ public class PatchedCastorMarshaller extends CastorMarshaller {
 		super.customizeMarshaller(marshaller);
 		marshaller.setInternalContext(marshaller.getInternalContext());
 	}
+	
+    /* (non-Javadoc)
+     * @see org.springframework.oxm.support.AbstractMarshaller#unmarshalDomSource(javax.xml.transform.dom.DOMSource)
+     *
+     * Fix for: http://jira.codehaus.org/browse/CASTOR-2903
+     */
+    protected Object unmarshalDomSource(DOMSource domSource) throws XmlMappingException {
+        
+        Node node = domSource.getNode();
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+            Element element = (Element)node;
+            
+            Node parent = node.getParentNode();
+            while (parent != null) {
+                NamedNodeMap atts = parent.getAttributes();
+                if (atts != null) {
+                    for (int i=0, j=atts.getLength(); i<j; i++) {
+                        
+                        Attr att = (Attr) atts.item(i);
+                        if (XMLNS_NS.equals(att.getNamespaceURI())) {
+                            String name = att.getName();
+                            String value = att.getValue();     
+                            if (!element.hasAttributeNS(XMLNS_NS, name)) {
+                                element.setAttributeNS(XMLNS_NS, name, value);
+                            }
+                        }
+                        
+                    }
+                }
+                parent = parent.getParentNode();
+            }
+        }
+        
+        return super.unmarshalDomSource(domSource);
+    }
 }

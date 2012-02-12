@@ -20,11 +20,9 @@ public class DirectoryUriUtils {
 	}
 
 	public static SoapDirectoryUriRequest<?> deserialize(String serializedDirectoryUri) {
-		byte[] bytes = Base64.decodeBase64(serializedDirectoryUri.getBytes());
+		String directoryUri = StringUtils.substringAfter(serializedDirectoryUri, DIRECTORY_URI_PREFIX);
 		
-		String directoryUri = new String(bytes);
-		
-		directoryUri = StringUtils.substringAfter(directoryUri, DIRECTORY_URI_PREFIX);
+		byte[] bytes = Base64.decodeBase64(directoryUri.getBytes());
 
 		return (SoapDirectoryUriRequest<?>) SerializationUtils.deserialize(bytes);
 	}

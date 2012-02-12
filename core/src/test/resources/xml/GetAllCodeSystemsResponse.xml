@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<getAllCodeSystemsResponse
+	xmlns="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogQueryServiceTypes.xsd">
+	
+	<return>urn:directoryuri:rO0ABXNyAE9lZHUubWF5by5jdHMyLmZyYW1ld29yay53ZWJhcHAuc29hcC5kaXJlY3Rvcnl1cmkuRGVmYXVsdFNvYXBEaXJlY3RvcnlVcmlSZXF1ZXN0CmXQ84YnfZ8CAAJJAARwYWdlTAAQc29hcERpcmVjdG9yeVVyaXQAQ0xlZHUvbWF5by9jdHMyL2ZyYW1ld29yay93ZWJhcHAvc29hcC9kaXJlY3Rvcnl1cmkvU29hcERpcmVjdG9yeVVyaTt4cAAAAABzcgBIZWR1Lm1heW8uY3RzMi5mcmFtZXdvcmsud2ViYXBwLnNvYXAuZGlyZWN0b3J5dXJpLkRlZmF1bHRTb2FwRGlyZWN0b3J5VXJpl/7M+Hc9+GECAANMABBmaWx0ZXJDb21wb25lbnRzdAAPTGphdmEvdXRpbC9TZXQ7TAAMcmVzdHJpY3Rpb25zdAASTGphdmEvbGFuZy9PYmplY3Q7TAAMc2V0T3BlcmF0aW9udABQTGVkdS9tYXlvL2N0czIvZnJhbWV3b3JrL3dlYmFwcC9zb2FwL2RpcmVjdG9yeXVyaS9Tb2FwRGlyZWN0b3J5VXJpJFNldE9wZXJhdGlvbjt4cHBwcA==
+	</return>
+</getAllCodeSystemsResponse>

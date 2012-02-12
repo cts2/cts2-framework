@@ -126,7 +126,9 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 		
 		String location = this.namespaceLocationMap.get(namespace);
 		
-		marshaller.setSchemaLocation(namespace + " " + location);
+		if(StringUtils.isNotBlank(location)){
+			marshaller.setSchemaLocation(namespace + " " + location);
+		}
 
 		marshaller.setValidating(true);
 		
