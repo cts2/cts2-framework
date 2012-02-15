@@ -25,6 +25,9 @@ package edu.mayo.cts2.framework.service.profile.codesystem;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 
@@ -37,5 +40,24 @@ public interface CodeSystemQueryService
 		extends
 		QueryService<CodeSystemCatalogEntry, CodeSystemCatalogEntrySummary, ResourceQuery> {
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceSummaries(edu.mayo.cts2.framework.service.profile.ResourceQuery, edu.mayo.cts2.framework.model.core.SortCriteria, edu.mayo.cts2.framework.model.command.Page)
+	 */
+	@Override
+	public DirectoryResult<CodeSystemCatalogEntrySummary> getResourceSummaries(
+			ResourceQuery query, SortCriteria sortCriteria, Page page);
+
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.service.profile.ResourceQuery, edu.mayo.cts2.framework.model.core.SortCriteria, edu.mayo.cts2.framework.model.command.Page)
+	 */
+	@Override
+	public DirectoryResult<CodeSystemCatalogEntry> getResourceList(
+			ResourceQuery query, SortCriteria sortCriteria, Page page);
+
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.service.profile.ResourceQuery)
+	 */
+	@Override
+	public int count(ResourceQuery query);
 	
 }

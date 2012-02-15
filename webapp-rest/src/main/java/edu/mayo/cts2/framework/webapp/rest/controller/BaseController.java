@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.mayo.cts2.framework.model.service.core.BaseService;
-import edu.mayo.cts2.framework.service.profile.BaseSerivceService;
+import edu.mayo.cts2.framework.service.profile.BaseServiceService;
 
 @Controller
 public class BaseController extends AbstractMessageWrappingController{
 	
 	@Cts2Service
-	private BaseSerivceService baseServiceService;
+	private BaseServiceService baseServiceService;
 
 	@Value("#{buildProperties.buildversion}")
 	private String buildVersion;

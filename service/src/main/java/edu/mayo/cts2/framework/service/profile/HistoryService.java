@@ -31,20 +31,29 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
  * The Interface HistoryService.
  *
  * @param <R> the generic type
+ * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface HistoryService<R,I> extends Cts2Profile {
+public interface HistoryService<R,I> extends BaseService {
 
 	public Date getEarliestChange();
 	
 	public Date getLatestChange();
 	
+	/**
+	 * Gets the change history.
+	 *
+	 * @param identifier the identifier
+	 * @param fromDate the from date
+	 * @param toDate the to date
+	 * @return the change history
+	 */
 	public DirectoryResult<R> getChangeHistory(I identifier, Date fromDate, Date toDate);
 	
 	/**
 	 * Gets the earliest change for.
 	 *
-	 * @param name the name
+	 * @param identifier the identifier
 	 * @return the earliest change for
 	 */
 	public R getEarliestChangeFor(I identifier);
@@ -52,7 +61,7 @@ public interface HistoryService<R,I> extends Cts2Profile {
 	/**
 	 * Gets the last change for.
 	 *
-	 * @param name the name
+	 * @param identifier the identifier
 	 * @return the last change for
 	 */
 	public R getLastChangeFor(I identifier);
@@ -60,7 +69,7 @@ public interface HistoryService<R,I> extends Cts2Profile {
 	/**
 	 * Gets the change history for.
 	 *
-	 * @param name the name
+	 * @param identifier the identifier
 	 * @return the change history for
 	 */
 	public DirectoryResult<R> getChangeHistoryFor(I identifier);

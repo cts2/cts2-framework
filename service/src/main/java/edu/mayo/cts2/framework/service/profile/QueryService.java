@@ -32,7 +32,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
  *
  * @param <Resource> the generic type
  * @param <Summary> the generic type
- * @param <Restrictions> the generic type
+ * @param <Q> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends BaseQueryService {
@@ -41,9 +41,7 @@ public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends 
 	 * Gets the resource summaries.
 	 *
 	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
-	 * @param readContext 
+	 * @param sortCriteria the sort criteria
 	 * @param page the page
 	 * @return the resource summaries
 	 */
@@ -56,8 +54,7 @@ public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends 
 	 * Gets the resource list.
 	 *
 	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
+	 * @param sortCriteria the sort criteria
 	 * @param page the page
 	 * @return the resource list
 	 */
@@ -70,8 +67,6 @@ public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends 
 	 * Count.
 	 *
 	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
 	 * @return the int
 	 */
 	public int count(

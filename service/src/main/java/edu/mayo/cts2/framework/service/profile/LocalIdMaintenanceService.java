@@ -30,7 +30,9 @@ import edu.mayo.cts2.framework.model.extension.ChangeableLocalIdResource;
 /**
  * The Interface MaintenanceService.
  *
+ * @param <T> the generic type
  * @param <R> the generic type
+ * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface LocalIdMaintenanceService< 
@@ -38,8 +40,4 @@ public interface LocalIdMaintenanceService<
 	R extends IsChangeable,
 	I> extends BaseMaintenanceService<T,R,I> {
 
-	
-	
-	
-	
 }

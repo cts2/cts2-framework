@@ -2,10 +2,16 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.core.NamespaceReference;
+import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -35,6 +41,41 @@ public class CodeSystemCatalogReadServicesEndpointTestIT extends SoapEndpointTes
 
 			@Override
 			public boolean exists(NameOrURI identifier, ReadContext readContext) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String getServiceName() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public OpaqueData getServiceDescription() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String getServiceVersion() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public SourceReference getServiceProvider() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public List<FormatReference> getSupportedFormatList() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public FormatReference getDefaultFormat() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public List<NamespaceReference> getKnownNamespaceList() {
 				throw new UnsupportedOperationException();
 			}
 			

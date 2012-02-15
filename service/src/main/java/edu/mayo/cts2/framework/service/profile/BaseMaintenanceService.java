@@ -37,7 +37,7 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
 public interface BaseMaintenanceService<
 	T extends IsChangeable, 
 	R extends IsChangeable,
-	I> extends Cts2Profile {
+	I> extends BaseService {
 
 	/**
 	 * Update changeable metadata.
@@ -59,8 +59,6 @@ public interface BaseMaintenanceService<
 	 *
 	 * @param resource the resource
 	 * @return the t
-	 *
-	 * @throws ChangeSetIsNotOpenException The requested ChangeSet is not open
 	 */
 	public T createResource(R resource);
 	

@@ -34,10 +34,10 @@ import edu.mayo.cts2.framework.model.service.core.ReadContext;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ReadService<R,I> extends Cts2Profile {
+public interface ReadService<R,I> extends BaseService {
 
 	/**
-	 * Reads the specified CTS2 Resource
+	 * Reads the specified CTS2 Resource.
 	 *
 	 * @param identifier the identifier
 	 * @param readContext TODO
@@ -49,6 +49,7 @@ public interface ReadService<R,I> extends Cts2Profile {
 	 * Exists.
 	 *
 	 * @param identifier the identifier
+	 * @param readContext the read context
 	 * @return true, if successful
 	 */
 	public boolean exists(I identifier, ReadContext readContext);

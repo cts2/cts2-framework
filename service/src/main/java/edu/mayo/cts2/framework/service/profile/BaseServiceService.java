@@ -1,5 +1,5 @@
 /*
- * Copyright: (c) 2004-2011 Mayo Foundation for Medical Education and 
+ * Copyright: (c) 2004-2012 Mayo Foundation for Medical Education and 
  * Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
  * triple-shield Mayo logo are trademarks and service marks of MFMER.
  *
@@ -23,48 +23,15 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
- * The Class AbstractService.
+ * The Interface BaseServiceService.
  *
- * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractService<T extends BaseService> implements Cts2Profile {
-	
-	private T service;
-	
-	protected abstract String getVersion();
-	protected abstract String getProvider();
-	protected abstract String getDescription();
-	
-	
-	@SuppressWarnings("unchecked")
-	protected T getService(){
-		
-		try {
-			this.service = (T) this.service.getClass().newInstance();
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-		
-		String name = this.service.getClass().getSimpleName();
-		
-		service.setServiceProvider(this.getServiceProvider());
-		service.setServiceName(name);
-		service.setServiceVersion(getVersion());
-		service.setServiceDescription(ModelUtils.createOpaqueData("The " + name + ", Service. " + this.getDescription()));
-	
-		return service;
-	}
-	
-	private SourceReference getServiceProvider(){
-		SourceReference provider = new SourceReference();
-		provider.setContent(getProvider());
-		
-		return provider;
-	}
+public interface BaseServiceService extends Cts2Profile {
+
+	public BaseService getBaseService();
+
 }

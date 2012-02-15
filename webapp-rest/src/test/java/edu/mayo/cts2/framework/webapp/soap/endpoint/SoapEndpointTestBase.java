@@ -52,6 +52,7 @@ public class SoapEndpointTestBase {
 	        ctx.setServer(server);
 	        server.setHandler(ctx);
 	        server.start();
+	        
 	        Thread.sleep(5000);
 	        
 	        serverRunning = true;

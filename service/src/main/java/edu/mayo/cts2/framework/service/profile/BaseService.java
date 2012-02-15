@@ -1,5 +1,5 @@
 /*
- * Copyright: (c) 2004-2011 Mayo Foundation for Medical Education and 
+ * Copyright: (c) 2004-2012 Mayo Foundation for Medical Education and 
  * Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
  * triple-shield Mayo logo are trademarks and service marks of MFMER.
  *
@@ -23,32 +23,32 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
-import edu.mayo.cts2.framework.model.service.core.BaseQueryService;
+import java.util.List;
+
+import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.core.NamespaceReference;
+import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceReference;
 
 /**
- * The Class AbstractQueryService.
+ * The Interface BaseService.
  *
- * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractQueryService <
-	T extends BaseQueryService>
-	extends AbstractService<T> 
-	implements edu.mayo.cts2.framework.service.profile.BaseQueryService {
-	
-	protected abstract String getVersion();
-	
-	protected abstract String getProvider();
-	
-	protected abstract String getDescription();
+public interface BaseService extends Cts2Profile {
 
-	/**
-	 * Gets the reference.
-	 *
-	 * @param <R> the generic type
-	 * @param nameOrUri the name or uri
-	 * @param list the list
-	 * @return the reference
-	 */
+	public String getServiceName();
+
+	public OpaqueData getServiceDescription();
+
+	public String getServiceVersion();
+
+	public SourceReference getServiceProvider() ;
+
+	public List<FormatReference> getSupportedFormatList();
+
+	public FormatReference getDefaultFormat();
+
+	public List<NamespaceReference> getKnownNamespaceList();
 
 }

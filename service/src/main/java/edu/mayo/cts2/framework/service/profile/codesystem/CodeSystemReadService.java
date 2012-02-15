@@ -37,15 +37,20 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
 public interface CodeSystemReadService extends
 		ReadService<CodeSystemCatalogEntry, NameOrURI> {
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object, edu.mayo.cts2.framework.model.command.ResolvedReadContext)
+	 */
 	@Override
 	public CodeSystemCatalogEntry read(
 			NameOrURI identifier,
 			ResolvedReadContext readContext);
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object, edu.mayo.cts2.framework.model.service.core.ReadContext)
+	 */
 	@Override
 	public boolean exists(
 			NameOrURI identifier, 
 			ReadContext readContext);
-	
 	
 }

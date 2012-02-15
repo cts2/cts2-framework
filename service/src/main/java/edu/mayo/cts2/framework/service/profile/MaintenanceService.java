@@ -30,6 +30,7 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
  * The Interface MaintenanceService.
  *
  * @param <R> the generic type
+ * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MaintenanceService< 

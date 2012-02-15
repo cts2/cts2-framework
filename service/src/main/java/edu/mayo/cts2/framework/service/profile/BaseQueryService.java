@@ -32,12 +32,9 @@ import edu.mayo.cts2.framework.model.core.PredicateReference;
 /**
  * The Interface QueryService.
  *
- * @param <Resource> the generic type
- * @param <Summary> the generic type
- * @param <Restrictions> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface BaseQueryService extends Cts2Profile {
+public interface BaseQueryService extends BaseService {
 
 	public Set<? extends MatchAlgorithmReference> getSupportedMatchAlgorithms();
 	
