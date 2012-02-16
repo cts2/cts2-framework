@@ -3,6 +3,9 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 import java.util.HashSet;
 import java.util.Set;
 
+import edu.mayo.cts2.framework.model.wsdl.basequeryservice.*;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.*;
+import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -18,10 +21,6 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.FilterComponent;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
-import edu.mayo.cts2.framework.model.wsdl.codesystemquery.GetAllCodeSystems;
-import edu.mayo.cts2.framework.model.wsdl.codesystemquery.GetAllCodeSystemsResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Resolve;
-import edu.mayo.cts2.framework.model.wsdl.codesystemquery.ResolveResponse;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.webapp.soap.directoryuri.DirectoryUriUtils;
@@ -116,8 +115,63 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
 		
 		return response;
 	}
-	
-	
+
+  @PayloadRoot(localPart = "getSupportMatchAlgorithm", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public GetSupportedMatchAlgorithmResponse getSupportMatchAlgorithm(@RequestPayload GetSupportedMatchAlgorithm request) {
+    GetSupportedMatchAlgorithmResponse response = new GetSupportedMatchAlgorithmResponse();
+//    response.setReturn(this.codeSystemQueryService.getSupportedMatchAlgorithms());
+    return response;
+  }
+
+  @PayloadRoot(localPart = "getSupportedModelAttribute", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public GetSupportedModelAttributeResponse getSupportedModelAttribute(@RequestPayload GetSupportedModelAttribute request) {
+    GetSupportedModelAttributeResponse response = new GetSupportedModelAttributeResponse();
+    return response;
+  }
+
+  @PayloadRoot(localPart = "getKnownProperty", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public GetKnownPropertyResponse getKnownProperty(@RequestPayload GetKnownProperty request) {
+    GetKnownPropertyResponse response = new GetKnownPropertyResponse();
+    return response;
+  }
+
+  @PayloadRoot(localPart = "count", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public CountResponse count(@RequestPayload Count request) {
+    CountResponse response = new CountResponse();
+    return response;
+  }
+
+  @PayloadRoot(localPart = "difference", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public DifferenceResponse difference(@RequestPayload Difference request) {
+    DifferenceResponse response = new DifferenceResponse();
+    return response;
+  }
+
+  @PayloadRoot(localPart = "intersect", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public IntersectResponse intersect(@RequestPayload Intersect request) {
+    IntersectResponse response = new IntersectResponse();
+    return response;
+  }
+
+  @PayloadRoot(localPart = "restrict", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public RestrictResponse restrict(@RequestPayload Restrict request) {
+    RestrictResponse response = new RestrictResponse();
+    return response;
+  }
+
+  @PayloadRoot(localPart = "union", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
+  @ResponsePayload
+  public UnionResponse union(@RequestPayload Union request) {
+    UnionResponse response = new UnionResponse();
+    return response;
+  }
 	
 	protected Page getPage(int pageNumber, QueryControl queryControl){
 		Page page = new Page();

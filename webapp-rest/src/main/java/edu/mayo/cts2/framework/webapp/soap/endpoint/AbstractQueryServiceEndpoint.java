@@ -1,65 +1,84 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint;
 
+import edu.mayo.cts2.framework.model.core.Directory;
+import edu.mayo.cts2.framework.model.core.RESTResource;
+import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
+import edu.mayo.cts2.framework.model.wsdl.basequeryservice.*;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.*;
+import edu.mayo.cts2.framework.service.profile.BaseQueryService;
+import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.webapp.soap.directoryuri.SoapDirectoryUriRequest;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Date;
 
-import org.springframework.util.ReflectionUtils;
-
-import edu.mayo.cts2.framework.model.core.Directory;
-import edu.mayo.cts2.framework.model.core.RESTResource;
-import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.webapp.soap.directoryuri.SoapDirectoryUriRequest;
-
 
 public abstract class AbstractQueryServiceEndpoint extends AbstractEndpoint {
 
-	protected <T extends Directory> T populateDirectory(
-			DirectoryResult<?> result, 
-			SoapDirectoryUriRequest<?> request,
-			Class<T> directoryClazz) {
+  protected <T,I> T doCount(
+      final QueryService queryService,
+      final I identifier,
+      final QueryControl queryControl,
+      ReadContext readContext){
+   return null;
+  }
+  
+  protected <T extends Directory> T populateDirectory(
+      DirectoryResult<?> result,
+      SoapDirectoryUriRequest<?> request,
+      Class<T> directoryClazz) {
 
-		boolean atEnd = result.isAtEnd();
-		
-		boolean isComplete = atEnd && ( request.getPage() == 0 );
+    boolean atEnd = result.isAtEnd();
 
-		T directory;
-		try {
-			directory = directoryClazz.newInstance();
+    boolean isComplete = atEnd && (request.getPage() == 0);
 
-			final Field field = ReflectionUtils.findField(directoryClazz,
-					"_entryList");
+    T directory;
+    try {
+      directory = directoryClazz.newInstance();
 
-			AccessController.doPrivileged(new PrivilegedAction<Void>() {
-				public Void run() {
-					field.setAccessible(true);
+      final Field field = ReflectionUtils.findField(directoryClazz,
+          "_entryList");
 
-					return null;
-				}
-			});
+      AccessController.doPrivileged(new PrivilegedAction<Void>() {
+        public Void run() {
+          field.setAccessible(true);
 
-			ReflectionUtils.setField(field, directory, result.getEntries());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+          return null;
+        }
+      });
 
-		if (isComplete) {
-			directory.setComplete(CompleteDirectory.COMPLETE);
-		} else {
-			directory.setComplete(CompleteDirectory.PARTIAL);
+      ReflectionUtils.setField(field, directory, result.getEntries());
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
 
-			//TODO:
-		}
+    if (isComplete) {
+      directory.setComplete(CompleteDirectory.COMPLETE);
+    }
+    else {
+      directory.setComplete(CompleteDirectory.PARTIAL);
 
-		directory.setNumEntries((long) result.getEntries().size());
-		
-		directory.setHeading(new RESTResource());
-		directory.getHeading().setAccessDate(new Date());
-		directory.getHeading().setResourceRoot("soap");
-		directory.getHeading().setResourceURI("soap");
+      //TODO:
+    }
 
-		return directory;
-	}
+    directory.setNumEntries((long) result.getEntries().size());
+
+    directory.setHeading(new RESTResource());
+    directory.getHeading().setAccessDate(new Date());
+    directory.getHeading().setResourceRoot("soap");
+    directory.getHeading().setResourceURI("soap");
+
+    return directory;
+  }
 }
