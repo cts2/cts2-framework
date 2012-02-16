@@ -10,5 +10,9 @@
 	<xs:import
 		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogQueryServiceTypes.xsd" />
+		
+	<xs:import
+		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogHistoryServices"
+		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogHistoryServiceTypes.xsd" />
 
 </schema>
