@@ -2,3 +2,10 @@ target/
 .scala_dependencies
 .cache
 .DS_Store
+
+### Intellij Idea ###
+*.ids
+*.iml
+*.ipr
+*.iws
+.idea/
