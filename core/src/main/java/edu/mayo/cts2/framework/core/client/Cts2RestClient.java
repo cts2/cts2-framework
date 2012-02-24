@@ -36,6 +36,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import edu.mayo.cts2.framework.core.xml.Cts2Marshaller;
 import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 
 /**
@@ -50,7 +51,7 @@ public class Cts2RestClient {
 	
 	private RestTemplate template;
 	
-	private DelegatingMarshaller marshaller = new DelegatingMarshaller();
+	private Cts2Marshaller marshaller;
 	private HttpMessageConverter<Object> converter = new MarshallingHttpMessageConverter(marshaller);
 	
 	/**
@@ -58,6 +59,7 @@ public class Cts2RestClient {
 	 *
 	 * @return the cts2 rest client
 	 */
+	@Deprecated
 	public static synchronized Cts2RestClient instance(){
 		if(instance == null){
 			try {
@@ -75,6 +77,11 @@ public class Cts2RestClient {
 	 * @throws Exception the exception
 	 */
 	private Cts2RestClient() throws Exception {
+		this(new DelegatingMarshaller());
+	}
+	
+	public Cts2RestClient(Cts2Marshaller marshaller) throws Exception {
+		this.marshaller = marshaller;
 		this.template = createRestTemplate(null);
 	}
 
@@ -147,6 +154,14 @@ public class Cts2RestClient {
 
 		
 		this.createRestTemplate(commons).put(url, cts2Resource);
+	}
+
+	public Cts2Marshaller getMarshaller() {
+		return marshaller;
+	}
+
+	public void setMarshaller(Cts2Marshaller marshaller) {
+		this.marshaller = marshaller;
 	}
 
 }

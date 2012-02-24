@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -300,15 +301,15 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	 * @param conceptDomain the concept domain
 	 * @param changeseturi the changeseturi
 	 * @param conceptDomainName the concept domain name
+	 * @return 
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAIN, method=RequestMethod.POST)
-	@ResponseBody
-	public void createConceptDomain(
+	public ResponseEntity<Void> createConceptDomain(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
-		this.getCreateHandler().create(
+		return this.getCreateHandler().create(
 				conceptDomain, 
 				changeseturi, 
 				PATH_CONCEPTDOMAIN_BYID, 
