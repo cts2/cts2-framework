@@ -34,7 +34,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface HistoryService<R,I> extends BaseService {
+public interface HistoryService<R,I> extends BaseQueryService {
 
 	public Date getEarliestChange();
 	

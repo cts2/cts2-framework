@@ -15,4 +15,8 @@
 		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogHistoryServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogHistoryServiceTypes.xsd" />
 
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemVersionCatalogReadServiceTypes.xsd" />
+
 </schema>

@@ -1,55 +1,113 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.Read;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
+import edu.mayo.cts2.framework.model.wsdl.codesystemhistory.*;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
+import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseHistoryService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpointTestBase {
 
-public class CodeSystemCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
-
-  String uri = "http://localhost:8081/webapp-rest/soap/service/CodeSystemCatalogReadService";
+  String uri = "http://localhost:8081/webapp-rest/soap/service/CodeSystemCatalogHistoryService";
 
   @Test
-  public void TestRead() throws Exception {
+  public void TestGetEarliestChangeFor() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
-    Read readRequest = new Read();
-    readRequest.setCodeSystemId(ModelUtils.nameOrUriFromName("test"));
-    ReadResponse response = (ReadResponse) this.doSoapCall(uri, readRequest);
-    assertEquals(response.getReturn().getCodeSystemName(), "test");
+    GetEarliestChangeFor request = new GetEarliestChangeFor();
+    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
+    GetEarliestChangeForResponse response = (GetEarliestChangeForResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getReturn().getCodeSystemName());
   }
 
   @Test
-  public void TestExists() throws Exception {
+  public void TestGetLastChangeFor() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
-    Exists existsRequest = new Exists();
-    existsRequest.setCodeSystemId(ModelUtils.nameOrUriFromName("test"));
-    ExistsResponse response = (ExistsResponse) this.doSoapCall(uri, existsRequest);
-    assertTrue(response.getReturn());
+    GetLastChangeFor request = new GetLastChangeFor();
+    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
+    GetLastChangeForResponse response = (GetLastChangeForResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getReturn().getCodeSystemName());
   }
 
+  @Test
+  public void TestGetChangeHistoryFor() throws Exception {
+//    MockServiceProvider.cts2Service = new MockService();
+//    GetChangeHistoryFor request = new GetChangeHistoryFor();
+//    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
+//    GetChangeHistoryForResponse response = (GetChangeHistoryForResponse) this.doSoapCall(uri, request);
+
+    fail("not implemented");
+  }
+
+  /* BaseHistoryServices */
+  @Test
+  public void TestReadChangeSet() throws Exception {
+//    MockServiceProvider.cts2Service = new MockService();
+//    ReadChangeSet request = new ReadChangeSet();
+//    request.setURI("test");
+//    ReadChangeSetResponse response = (ReadChangeSetResponse) this.doSoapCall(uri, request);
+
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestResolve() throws Exception {
+    fail("not implemented");
+  }
+
+  /* BaseQueryServices */
+  /* TODO: Write Tests For: BaseQueryServices */
+  @Test
+  public void TestUnion() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestRestrict() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestIntersect() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestDifference() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestCount() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestGetSupportedMatchAlgorithm() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestGetSupportedModelAttribute() throws Exception {
+    fail("not implemented");
+  }
+
+  @Test
+  public void TestGetKnownProperty() throws Exception {
+    fail("not implemented");
+  }
+
+  /* BaseServices */
   @Test
   public void TestGetServiceName() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
@@ -116,21 +174,8 @@ public class CodeSystemCatalogReadServicesEndpointTestIT extends SoapEndpointTes
     assertTrue(ArrayUtils.contains(formatReferences, new FormatReference("fr3")));
   }
 
-  private class MockService extends MockBaseService implements CodeSystemReadService {
-
-    public CodeSystemCatalogEntry read(NameOrURI identifier,
-                                       ResolvedReadContext readContext) {
-      CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
-      entry.setCodeSystemName("test");
-      entry.setAbout("testAbout");
-      return entry;
-    }
-
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
-      return identifier.getName().equals("test");
-    }
+  private class MockService extends MockBaseHistoryService {
 
   }
 
 }
-

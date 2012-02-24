@@ -60,6 +60,8 @@
              <beans:prop key="soap/service/CodeSystemCatalogQueryService">codeSystemCatalogQueryServiceDispatcher</beans:prop>
              <beans:prop key="soap/service/CodeSystemCatalogHistoryService.wsdl">CodeSystemCatalogHistoryService</beans:prop>
              <beans:prop key="soap/service/CodeSystemCatalogHistoryService">codeSystemCatalogHistoryServiceDispatcher</beans:prop>
+             <beans:prop key="soap/service/CodeSystemVersionCatalogReadService.wsdl">CodeSystemVersionCatalogReadService</beans:prop>
+             <beans:prop key="soap/service/CodeSystemVersionCatalogReadService">codeSystemVersionCatalogReadServiceDispatcher</beans:prop>
            </beans:props>
         </beans:property>
     </beans:bean>
@@ -88,6 +90,14 @@
       </beans:property>
     </beans:bean>
 
+  <beans:bean id="codeSystemVersionCatalogReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="CodeSystemVersionCatalogReadServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
 	<sws:static-wsdl id="CodeSystemCatalogReadService"
 		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
 		
@@ -95,11 +105,15 @@
 		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
 
   <sws:static-wsdl id="CodeSystemCatalogHistoryService"
-                   location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogHistoryService.wsdl" />
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogHistoryService.wsdl" />
+
+  <sws:static-wsdl id="CodeSystemVersionCatalogReadService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogReadService.wsdl" />
 
 	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogQueryServicesEndpoint"/>
 	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogReadServicesEndpoint"/>
 	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogHistoryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogReadServicesEndpoint"/>
 	<!-- END SOAP Handling -->
 
 	<beans:bean

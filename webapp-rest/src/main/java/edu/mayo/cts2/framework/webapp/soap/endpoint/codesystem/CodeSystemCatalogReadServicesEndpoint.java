@@ -1,6 +1,7 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
+import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
 import edu.mayo.cts2.framework.model.wsdl.codesystemread.Exists;
 import edu.mayo.cts2.framework.model.wsdl.codesystemread.ExistsResponse;
@@ -59,7 +60,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public GetImplementationTypeResponse getImplementationType(@RequestPayload GetImplementationType request) {
     GetImplementationTypeResponse response = new GetImplementationTypeResponse();
-//    response.setReturn(ImplementationProfile.IP_SOAP);
+    response.setReturn(0, ImplementationProfile.IP_SOAP);
     return response;
   }
 
@@ -114,9 +115,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "getSupportedProfile", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/BaseServiceTypes")
   @ResponsePayload
   public GetSupportedProfileResponse getSupportedProfile(@RequestPayload GetSupportedProfile request) {
-    GetSupportedProfileResponse response = new GetSupportedProfileResponse();
-//    response.setReturn(this.baseService.getSupportedProfile());
-    return response;
+    throw new UnsupportedOperationException("Method not implemented");
   }
 
 }
