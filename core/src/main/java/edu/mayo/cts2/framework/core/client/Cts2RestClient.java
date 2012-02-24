@@ -52,7 +52,7 @@ public class Cts2RestClient {
 	private RestTemplate template;
 	
 	private Cts2Marshaller marshaller;
-	private HttpMessageConverter<Object> converter = new MarshallingHttpMessageConverter(marshaller);
+	private HttpMessageConverter<Object> converter;
 	
 	/**
 	 * Instance.
@@ -82,6 +82,7 @@ public class Cts2RestClient {
 	
 	public Cts2RestClient(Cts2Marshaller marshaller) throws Exception {
 		this.marshaller = marshaller;
+		this.converter = new MarshallingHttpMessageConverter(marshaller);
 		this.template = createRestTemplate(null);
 	}
 
