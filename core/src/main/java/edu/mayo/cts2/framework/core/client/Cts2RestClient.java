@@ -118,7 +118,11 @@ public class Cts2RestClient {
 	 * @return the cts2 resource
 	 */
 	public <T> T getCts2Resource(String url, Class<T> clazz){
-		return this.template.getForObject(url, clazz);
+		return this.template.getForObject(url, clazz, new Object[0]);
+	}
+	
+	public <T> T getCts2Resource(String url, Class<T> clazz, String... queryParameters){
+		return this.template.getForObject(url, clazz, (Object[])queryParameters);
 	}
 	
 	/**

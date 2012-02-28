@@ -6,7 +6,6 @@ import org.junit.Test
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
-import edu.mayo.cts2.framework.model.core.types.EntryState
 import edu.mayo.cts2.framework.model.core.types.FinalizableState
 import edu.mayo.cts2.framework.model.entity.EntityDescription
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
@@ -27,6 +26,18 @@ class MappingGsonHttpMessageConverterTest {
 		def json = gson.toJson(cs)
 		
 		assertNotNull json
+	}
+	
+	@Test
+	void TestGetJsonFromNonCts2Object(){
+		
+		def o = new JTablesResponse(["hi","there"])
+		
+		def json = gson.toJson(o)
+		
+		assertNotNull json
+		
+		assertEquals '{"Result":"OK","Records":["hi","there"]}', json
 	}
 	
 	@Test
