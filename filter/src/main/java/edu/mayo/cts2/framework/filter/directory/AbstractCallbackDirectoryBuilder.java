@@ -32,7 +32,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -49,10 +48,7 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 	/** The match algorithm references. */
 	private Set<MatchAlgorithmReference> matchAlgorithmReferences = 
 		new HashSet<MatchAlgorithmReference>();
-	
-	private Set<ResolvableModelAttributeReference<T>> resolvableModelAttributeReferences = 
-		new HashSet<ResolvableModelAttributeReference<T>>();
-	
+		
 	private Callback<T> callback;
 	
 	private List<T> resultBuffer;
@@ -79,19 +75,6 @@ public abstract class AbstractCallbackDirectoryBuilder<T> extends AbstractNonLaz
 		super();
 		this.callback = callback;
 		this.matchAlgorithmReferences = matchAlgorithmReferences;
-	}
-
-	
-	/**
-	 * Adds the supported model attribute reference.
-	 *
-	 * @param reference the reference
-	 * @return the directory builder
-	 */
-	public DirectoryBuilder<T> addSupportedModelAttributeReference(
-			ResolvableModelAttributeReference<T> reference){
-		this.resolvableModelAttributeReferences.add(reference);
-		return this;
 	}
 	
 	/**

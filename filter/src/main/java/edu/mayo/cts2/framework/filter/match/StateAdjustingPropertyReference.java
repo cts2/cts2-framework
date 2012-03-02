@@ -25,7 +25,7 @@ package edu.mayo.cts2.framework.filter.match;
 
 import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
  * The Class StateAdjustingModelAttributeReference.
@@ -33,7 +33,7 @@ import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
  * @param <S> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class StateAdjustingModelAttributeReference<S> extends ModelAttributeReference implements MarshallSuperClass {
+public class StateAdjustingPropertyReference<S> extends PropertyReference implements MarshallSuperClass {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5500382462242484409L;
@@ -45,7 +45,7 @@ public class StateAdjustingModelAttributeReference<S> extends ModelAttributeRefe
 	 *
 	 * @param stateUpdater the state updater
 	 */
-	public StateAdjustingModelAttributeReference(StateUpdater<S> stateUpdater) {
+	public StateAdjustingPropertyReference(StateUpdater<S> stateUpdater) {
 		this.stateUpdater = stateUpdater;
 	}
 
@@ -61,23 +61,14 @@ public class StateAdjustingModelAttributeReference<S> extends ModelAttributeRefe
 		return this.stateUpdater.updateState(currentState, matchAlgorithm, queryString);
 	}
 
-	/**
-	 * To model attribute reference.
-	 *
-	 * @param <S> the generic type
-	 * @param ref the ref
-	 * @param stateUpdater the state updater
-	 * @return the state adjusting model attribute reference
-	 */
-	public static <S> StateAdjustingModelAttributeReference<S> toModelAttributeReference(
-			ModelAttributeReference ref, StateUpdater<S> stateUpdater){
-		StateAdjustingModelAttributeReference<S> returnRef = 
-			new StateAdjustingModelAttributeReference<S>(stateUpdater);
+	public static <S> StateAdjustingPropertyReference<S> toPropertyReference(
+			PropertyReference ref, StateUpdater<S> stateUpdater){
+		StateAdjustingPropertyReference<S> returnRef = 
+			new StateAdjustingPropertyReference<S>(stateUpdater);
 		
-		returnRef.setContent(ref.getContent());
-		returnRef.setUri(ref.getUri());
-		returnRef.setHref(ref.getHref());
-		
+		returnRef.setReferenceTarget(ref.getReferenceTarget());
+		returnRef.setReferenceTarget(ref.getReferenceTarget());
+	
 		return returnRef;
 	}
 

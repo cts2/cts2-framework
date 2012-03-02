@@ -57,7 +57,6 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
@@ -71,6 +70,7 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
@@ -280,6 +280,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	public Directory getAssociationsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			RestFilter restFilter,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page,
@@ -301,6 +302,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 		return this.getAssociations(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				restFilter, 
 				associationRestrictions, 
 				page,
@@ -322,7 +324,8 @@ public class AssociationController extends AbstractMessageWrappingController {
 	public Directory getAssociations(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			Query query,
+			QueryControl queryControl,
+			@RequestBody Query query,
 			RestFilter restFilter,
 			AssociationQueryServiceRestrictions restrictions,
 			Page page,
@@ -343,7 +346,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 				this.associationQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				AssociationDirectory.class, 
 				AssociationList.class);
 	}
@@ -362,6 +365,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	public Directory getAssociations(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			RestFilter restFilter,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			Page page, 
@@ -371,6 +375,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 				this.getAssociations(
 						httpServletRequest, 
 						restReadContext,
+						queryControl,
 						null,
 						restFilter,
 						associationRestrictions, 
@@ -517,6 +522,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	public Directory getSourceOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			RestFilter resolvedFilter,
 			Page page,
@@ -528,6 +534,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 		return this.getSourceOfAssociationsOfEntity(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				null, 
 				associationRestrictions, 
 				resolvedFilter, 
@@ -556,7 +563,8 @@ public class AssociationController extends AbstractMessageWrappingController {
 	public Directory getSourceOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
-			Query query,
+			QueryControl queryControl,
+			@RequestBody Query query,
 			AssociationQueryServiceRestrictions associationRestrictions,
 			RestFilter resolvedFilter,
 			Page page,
@@ -580,6 +588,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 		return this.getAssociationsOfCodeSystemVersion(
 				httpServletRequest, 
 				restReadContext, 
+				queryControl,
 				resolvedFilter,
 				associationRestrictions, 
 				page, 

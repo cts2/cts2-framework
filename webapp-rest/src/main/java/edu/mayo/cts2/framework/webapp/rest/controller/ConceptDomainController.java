@@ -172,6 +172,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	public Directory getConceptDomains(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			RestFilter restFilter,
 			Page page,
 			boolean list) {
@@ -179,6 +180,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 		return this.getConceptDomains(
 				httpServletRequest,
 				restReadContext,
+				queryControl,
 				null, 
 				restFilter, 
 				page,
@@ -200,6 +202,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	public Directory getConceptDomains(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			RestFilter restFilter,
 			Page page,
@@ -219,7 +222,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 				this.conceptDomainQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				ConceptDomainCatalogEntryDirectory.class, 
 				ConceptDomainCatalogEntryList.class);
 	}

@@ -8,6 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
@@ -63,6 +65,19 @@ public class ControllerUtils {
 		}
 		
 		throw ExceptionFactory.createUnsupportedNameOrUriException(nameOrUri, list);
+	}
+	
+	public static PropertyReference getPropertyReference(TargetReferenceType type, String nameOrUri, Iterable<? extends PropertyReference> list) {
+		//TODO: Factor in 'type'
+	
+		for(PropertyReference ref : list){
+			if(StringUtils.equals(ref.getReferenceTarget().getName(), nameOrUri) ||
+					StringUtils.equals(ref.getReferenceTarget().getUri(), nameOrUri)){
+					return ref;
+				}
+		}
+		
+		throw ExceptionFactory.createUnsupportedPredicateReference(nameOrUri);
 	}
 	
 	public static <R extends NameAndMeaningReference> R getReference(NameOrURI nameOrUri, Iterable<R> list) {

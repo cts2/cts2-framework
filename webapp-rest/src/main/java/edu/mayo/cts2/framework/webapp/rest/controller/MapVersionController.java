@@ -244,6 +244,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	public Directory getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -253,6 +254,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 		return this.getMapVersionsOfMap(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				null, 
 				restrictions,
 				restFilter,
@@ -278,6 +280,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	public Directory getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -290,6 +293,8 @@ public class MapVersionController extends AbstractMessageWrappingController {
 		return this.getMapVersions(
 				httpServletRequest,
 				restReadContext, 
+				queryControl, 
+				query,
 				restrictions, 
 				restFilter,
 				page,
@@ -311,6 +316,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	public Directory getMapVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -319,6 +325,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 		return this.getMapVersions(
 				httpServletRequest, 
 				restReadContext, 
+				queryControl,
 				null,
 				restrictions, 
 				restFilter,
@@ -342,6 +349,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	public Directory getMapVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			MapVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -363,7 +371,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 				this.mapVersionQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				MapVersionDirectory.class, 
 				MapVersionList.class);
 	}

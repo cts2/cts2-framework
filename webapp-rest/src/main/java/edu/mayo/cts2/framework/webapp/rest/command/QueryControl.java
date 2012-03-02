@@ -31,8 +31,8 @@ package edu.mayo.cts2.framework.webapp.rest.command;
 public class QueryControl {
 
 	private long timelimit = -1;
-	private String format;
 	private String sort;
+	private String sortdirection;
 
 	public long getTimelimit() {
 		return timelimit;
@@ -42,20 +42,20 @@ public class QueryControl {
 		this.timelimit = timelimit;
 	}
 
-	public String getFormat() {
-		return format;
-	}
-
-	public void setFormat(String format) {
-		this.format = format;
-	}
-
 	public String getSort() {
 		return sort;
 	}
 
 	public void setSort(String sort) {
 		this.sort = sort;
+	}
+
+	public String getSortdirection() {
+		return sortdirection;
+	}
+
+	public void setSortdirection(String sortdirection) {
+		this.sortdirection = sortdirection;
 	}
 
 }

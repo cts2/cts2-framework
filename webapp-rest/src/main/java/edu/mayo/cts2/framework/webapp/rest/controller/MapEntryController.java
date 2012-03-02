@@ -58,6 +58,7 @@ import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQuery;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQueryService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.MapEntryQueryBuilder;
@@ -243,6 +244,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	public Directory getMapEntries(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			MapEntryQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -253,6 +255,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 		return this.getMapEntries(
 				httpServletRequest,
 				restReadContext,
+				queryControl,
 				null, 
 				restrictions, 
 				restFilter, 
@@ -280,6 +283,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	public Directory getMapEntries(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			MapEntryQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -303,7 +307,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 				this.mapEntryQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				CodeSystemVersionCatalogEntryDirectory.class, 
 				CodeSystemVersionCatalogEntryList.class);
 	}

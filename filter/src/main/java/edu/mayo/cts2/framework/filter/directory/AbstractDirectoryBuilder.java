@@ -24,7 +24,6 @@
 package edu.mayo.cts2.framework.filter.directory;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -32,8 +31,7 @@ import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
@@ -155,28 +153,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 				references);
 	}
 	
-	/**
-	 * Gets the model attribute reference.
-	 *
-	 * @param <M> the generic type
-	 * @param reference the reference
-	 * @param references the references
-	 * @return the model attribute reference
-	 */
-	protected <M extends ModelAttributeReference> M getModelAttributeReference(ModelAttributeReference reference, Iterable<M> references){
-		for(M modelReference : references){
-			if(StringUtils.equals(modelReference.getContent(), reference.getContent())){
-				return modelReference;
-			}
-			if(StringUtils.equals(modelReference.getUri(),reference.getUri())){
-				return modelReference;
-			}
-		}
-		
-		throw ExceptionFactory.createUnsupportedModelAttribute(
-				reference.getContent(), 
-				references);
-	}
+	
 	
 	/**
 	 * Gets the model attribute reference.
@@ -186,17 +163,19 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 * @param references the references
 	 * @return the model attribute reference
 	 */
-	protected <M extends ModelAttributeReference> M getModelAttributeReference(URIAndEntityName nameOrUri, List<M> references){
+	protected <M extends PropertyReference> M getPropertyReference(
+			PropertyReference nameOrUri, 
+			Iterable<? extends M> references){
 		for(M modelAttribute : references){
-			if(modelAttribute.getContent().equals(nameOrUri.getName())){
+			if(modelAttribute.getReferenceTarget().getName().equals(nameOrUri.getReferenceTarget().getName())){
 				return modelAttribute;
 			}
-			if(modelAttribute.getUri().equals(nameOrUri.getUri())){
+			if(modelAttribute.getReferenceTarget().getUri().equals(nameOrUri.getReferenceTarget().getUri())){
 				return modelAttribute;
 			}
 		}
 		
-		throw ExceptionFactory.createUnsupportedModelAttribute(
+		throw ExceptionFactory.createUnsupportedPropertyReference(
 				nameOrUri, 
 				references);
 	}

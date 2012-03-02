@@ -71,6 +71,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescripti
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
@@ -495,9 +496,10 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	
 	@RequestMapping(value=PATH_ALL_DESCRIPTIONS_OF_ENTITYBYID, method=RequestMethod.GET)
 	@ResponseBody
-	public Object getAllEntityDescriptionByName(
+	public Object getAllEntityDescriptionsByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@PathVariable(VAR_ENTITYID) String entityName,
 			Page page,
 			boolean list) {
@@ -506,13 +508,15 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 
 		EntityNameOrURI entityId = 
 				ModelUtils.entityNameOrUriFromName(this.getScopedEntityName(entityName));
+		
+	
 		if(list){
 			DirectoryResult<EntityListEntry> entityList = 
 					this.entityDescriptionReadService.readEntityDescriptions(
 							entityId, 
 							null, //TODO
 							readContext, 
-							null); //TODO
+							page); //TODO
 			return 
 					this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
 		} else {

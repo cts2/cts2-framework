@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,18 +49,26 @@ import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.Parameter;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.RESTResource;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.SortCriterion;
 import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
+import edu.mayo.cts2.framework.model.core.types.SortDirection;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
+import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
 import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 
 /**
  * The Class AbstractMessageWrappingController.
@@ -283,12 +292,14 @@ public abstract class AbstractMessageWrappingController extends
 			QueryService<R,S,Q> queryService, 
 			Q query,
 			Page page,
-			SortCriteria sortCriteria,
+			QueryControl queryControl,
 			Class<? extends Directory> summaryDirectory,
 			Class<? extends Directory> listDirectory) {
 		
 		DirectoryResult<?> result;
 		Class<? extends Directory> directoryClass;
+		
+		SortCriteria sortCriteria = this.resolveSort(queryControl, queryService);
 		
 		if(isList){
 			result = 
@@ -304,6 +315,38 @@ public abstract class AbstractMessageWrappingController extends
 			this.populateDirectory(result, page, httpServletRequest, directoryClass);
 	}
 	
+	private SortCriteria resolveSort(QueryControl sort, BaseQueryService queryService) {
+		if(sort == null || StringUtils.isBlank(sort.getSort())){
+			return null;
+		}
+		Set<? extends PropertyReference> predicates = queryService.getSupportedSortReferences();
+		PropertyReference ref = 
+				ControllerUtils.getPropertyReference(null, sort.getSort(), predicates);
+
+		SortCriterion sortCriterion = new SortCriterion();
+		sortCriterion.setSortDirection(this.getSortDirection(sort.getSortdirection()));
+		sortCriterion.setSortElement(ref);
+		
+		SortCriteria sortCriteria = new SortCriteria();
+		sortCriteria.addEntry(sortCriterion);
+		
+		return sortCriteria;
+	}
+	
+	private SortDirection getSortDirection(String direction){
+		if(StringUtils.isBlank(direction) || StringUtils.equals(direction, "descending")){
+			return SortDirection.DESCENDING;
+		}
+		if(StringUtils.equals(direction, "ascending")){
+			return SortDirection.ASCENDING;
+		}
+		
+		throw new StatusSettingCts2RestException(
+				"Invalid 'sortdirection' parameter.", 
+				ExceptionType.INVALID_SERVICE_INPUT, 
+				400);
+	}
+
 	protected ResolvedReadContext resolveRestReadContext(RestReadContext context){
 		if(context == null){
 			return null;

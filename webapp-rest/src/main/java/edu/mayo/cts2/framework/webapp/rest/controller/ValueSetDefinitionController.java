@@ -57,6 +57,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.ValueSetDefinitionQueryBuilder;
@@ -124,6 +125,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	public Directory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -133,6 +135,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 		return this.getValueSetDefinitionsOfValueSet(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				null,
 				restrictions,
 				restFilter,
@@ -158,6 +161,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	public Directory getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -170,6 +174,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 		return this.getValueSetDefinitions(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				query, 
 				restrictions, 
 				restFilter,
@@ -229,6 +234,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	public Directory getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -237,6 +243,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 		return this.getValueSetDefinitions(
 				httpServletRequest,
 				restReadContext,
+				queryControl,
 				null,
 				restrictions,
 				restFilter,
@@ -260,6 +267,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	public Directory getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			ValueSetDefinitionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -281,7 +289,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 				this.valueSetDefinitionQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				ValueSetDefinitionDirectory.class, 
 				ValueSetDefinitionList.class);
 	}

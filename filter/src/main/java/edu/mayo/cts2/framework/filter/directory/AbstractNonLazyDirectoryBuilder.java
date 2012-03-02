@@ -29,8 +29,8 @@ import java.util.Set;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.core.types.SetOperator;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 
 /**
  * The Class AbstractNonLazyDirectoryBuilder.

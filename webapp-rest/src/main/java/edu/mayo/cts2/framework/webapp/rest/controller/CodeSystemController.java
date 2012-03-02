@@ -219,7 +219,7 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 				this.codeSystemQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				CodeSystemCatalogEntryDirectory.class, 
 				CodeSystemCatalogEntryList.class);
 	}

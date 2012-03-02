@@ -182,6 +182,7 @@ public class MapController extends AbstractMessageWrappingController {
 	public Directory getMaps(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -190,6 +191,7 @@ public class MapController extends AbstractMessageWrappingController {
 		return this.getMaps(
 				httpServletRequest, 
 				restReadContext, 
+				queryControl,
 				null,
 				restrictions, 
 				restFilter, 
@@ -212,6 +214,7 @@ public class MapController extends AbstractMessageWrappingController {
 	public Directory getMaps(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			MapQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -233,7 +236,7 @@ public class MapController extends AbstractMessageWrappingController {
 				this.mapQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				MapCatalogEntryDirectory.class, 
 				MapCatalogEntryList.class);
 	}

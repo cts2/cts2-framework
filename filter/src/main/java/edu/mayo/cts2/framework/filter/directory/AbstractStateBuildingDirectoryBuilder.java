@@ -28,10 +28,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.mayo.cts2.framework.filter.match.StateAdjustingModelAttributeReference;
+import edu.mayo.cts2.framework.filter.match.StateAdjustingPropertyReference;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
@@ -48,8 +47,8 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	private Set<MatchAlgorithmReference> matchAlgorithmReferences = 
 		new HashSet<MatchAlgorithmReference>();
 	
-	private Set<StateAdjustingModelAttributeReference<S>> stateAdjustingModelAttributeReference = 
-		new HashSet<StateAdjustingModelAttributeReference<S>>();
+	private Set<StateAdjustingPropertyReference<S>> stateAdjustingPropertyReference = 
+		new HashSet<StateAdjustingPropertyReference<S>>();
 
 	private Callback<S,T> callback;
 
@@ -80,13 +79,13 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 			S initialState,
 			Callback<S,T> callback,
 			Set<MatchAlgorithmReference> matchAlgorithmReferences,
-			Set<StateAdjustingModelAttributeReference<S>> modelAttributeReferences
+			Set<StateAdjustingPropertyReference<S>> stateAdjustingPropertyReferences
 			){
 		super();
 		this.initialState = initialState;
 		this.callback = callback;
 		this.matchAlgorithmReferences = matchAlgorithmReferences;
-		this.stateAdjustingModelAttributeReference = modelAttributeReferences;
+		this.stateAdjustingPropertyReference = stateAdjustingPropertyReferences;
 	}
 
 	/**
@@ -95,9 +94,9 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	 * @param reference the reference
 	 * @return the directory builder
 	 */
-	public DirectoryBuilder<T> addSupportedModelAttributeReference(
-			StateAdjustingModelAttributeReference<S> reference){
-		this.stateAdjustingModelAttributeReference.add(reference);
+	public DirectoryBuilder<T> addStateAdjustingPropertyReference(
+			StateAdjustingPropertyReference<S> reference){
+		this.stateAdjustingPropertyReference.add(reference);
 		return this;
 	}
 
@@ -133,37 +132,25 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 				continue;
 			}
 			
-			TargetReferenceType referenceType = filter.getReferenceType();
 			
 			MatchAlgorithmReference matchAlgorithmReference = 
 					this.getMatchAlgorithm(filter.getMatchAlgorithmReference(), matchAlgorithmReferences);
 			
 			String queryString = filter.getMatchValue();
 			
-			switch (referenceType) {
-				case PROPERTY : {
-					throw new UnsupportedOperationException();
-				}
-				case ATTRIBUTE : {
-					StateAdjustingModelAttributeReference<S> modelAttributeReference = 
-						this.getModelAttributeReference(
-								filter.getModelAttributeReference(),
-								this.stateAdjustingModelAttributeReference);
+		
+					StateAdjustingPropertyReference<S> modelAttributeReference = 
+						this.getPropertyReference(
+								filter.getPropertyReference(),
+								this.stateAdjustingPropertyReference);
 					
 					state = modelAttributeReference.updateState(
 							state, 
 							matchAlgorithmReference, 
 							queryString);
 					break;
-				}
-				case SPECIAL : {
-					throw new UnsupportedOperationException();
-				}
-				
-				default : {
-					throw new IllegalStateException();
-				}
-			}
+		
+	
 		}
 		
 		for(StateBuildingRestriction<S> restriction : this.getRestrictions()){

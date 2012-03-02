@@ -24,9 +24,7 @@
 package edu.mayo.cts2.framework.model.command;
 
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
  * The Class ResolvedFilter.
@@ -36,10 +34,8 @@ import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 public class ResolvedFilter {
 	
 	private MatchAlgorithmReference matchAlgorithmReference;
-	private URIAndEntityName propertyReference;
-	private ModelAttributeReference modelAttributeReference;
+	private PropertyReference propertyReference;
 	private String matchValue;
-	private TargetReferenceType referenceType = TargetReferenceType.ATTRIBUTE;
 	
 	public MatchAlgorithmReference getMatchAlgorithmReference() {
 		return matchAlgorithmReference;
@@ -50,23 +46,8 @@ public class ResolvedFilter {
 		this.matchAlgorithmReference = matchAlgorithmReference;
 	}
 
-	public URIAndEntityName getPropertyReference() {
+	public PropertyReference getPropertyReference() {
 		return propertyReference;
-	}
-
-	public void setPropertyReference(URIAndEntityName propertyReference) {
-		this.referenceType = TargetReferenceType.PROPERTY;
-		this.propertyReference = propertyReference;
-	}
-
-	public ModelAttributeReference getModelAttributeReference() {
-		return modelAttributeReference;
-	}
-
-	public void setModelAttributeReference(
-			ModelAttributeReference modelAttributeReference) {
-		this.referenceType = TargetReferenceType.ATTRIBUTE;
-		this.modelAttributeReference = modelAttributeReference;
 	}
 
 	public String getMatchValue() {
@@ -77,12 +58,8 @@ public class ResolvedFilter {
 		this.matchValue = matchValue;
 	}
 
-	public TargetReferenceType getReferenceType() {
-		return referenceType;
+	public void setPropertyReference(PropertyReference propertyReference) {
+		this.propertyReference = propertyReference;
 	}
-	
-	@Deprecated
-	public void setReferenceType(TargetReferenceType referenceType) {
-		this.referenceType = referenceType;
-	}
+
 }

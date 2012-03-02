@@ -32,6 +32,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
@@ -106,6 +107,19 @@ public class ExceptionFactory {
 		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name.getUri(), matchAlgorithmReferences));
+		
+		return ex;
+	}
+	
+	public static UnknownResourceReference createUnsupportedPropertyReference(
+			PropertyReference propertyReference,
+			Iterable<? extends PropertyReference> propertyReferences) {
+		UnknownResourceReference ex = new UnknownResourceReference();
+		
+		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
+		
+		ex.setCts2Message(getPossibleValuesMessageFromPropertyReference("PropertyReference", propertyReference.getReferenceTarget().getUri(), propertyReferences));
 		
 		return ex;
 	}
@@ -246,6 +260,19 @@ public class ExceptionFactory {
 		return getPossibleValuesMessage(type, requestedValue, returnList);
 	}
 	
+	private static OpaqueData getPossibleValuesMessageFromPropertyReference(
+			String type, 
+			String requestedValue, 
+			Iterable<? extends PropertyReference> possibleValues){
+		List<String> returnList = new ArrayList<String>();
+		
+		for(PropertyReference ref : possibleValues) {
+			returnList.add(propertyRefToString(ref));
+		}
+	
+		return getPossibleValuesMessage(type, requestedValue, returnList);
+	}
+	
 	/**
 	 * Name and meaning ref to string.
 	 *
@@ -268,6 +295,27 @@ public class ExceptionFactory {
 		if(ref.getHref() != null && !ref.getHref().isEmpty()){
 			sb.append(", ");
 			sb.append("Href: " + ref.getHref());
+		}
+		
+		return sb.toString();
+	}
+	
+	private static String propertyRefToString(PropertyReference ref){
+		if(ref == null){
+			return null;
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("Name: " + ref.getReferenceTarget().getName());
+		
+		if(ref.getReferenceTarget().getUri() != null && !ref.getReferenceTarget().getUri().isEmpty()){
+			sb.append(", ");
+			sb.append("URI: " + ref.getReferenceTarget().getUri());
+		}
+		
+		if(ref.getReferenceTarget().getHref() != null && !ref.getReferenceTarget().getHref().isEmpty()){
+			sb.append(", ");
+			sb.append("Href: " + ref.getReferenceTarget().getHref());
 		}
 		
 		return sb.toString();
