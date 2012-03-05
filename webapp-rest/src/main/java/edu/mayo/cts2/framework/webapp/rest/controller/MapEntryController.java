@@ -42,12 +42,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryDirectory;
-import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryList;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
+import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectory;
+import edu.mayo.cts2.framework.model.mapversion.MapEntryList;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryMsg;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -308,8 +308,8 @@ public class MapEntryController extends AbstractMessageWrappingController {
 				resourceQuery,
 				page, 
 				queryControl,
-				CodeSystemVersionCatalogEntryDirectory.class, 
-				CodeSystemVersionCatalogEntryList.class);
+				MapEntryDirectory.class, 
+				MapEntryList.class);
 	}
 	
 	@RequestMapping(value={
