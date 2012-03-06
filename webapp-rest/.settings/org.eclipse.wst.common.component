@@ -16,6 +16,12 @@
         <dependent-module archiveName="webapp-rest-extensions-0.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/webapp-rest-extensions/webapp-rest-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="core-0.6.0-SNAPSHOT-tests.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/core/core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="model-0.6.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/model/model">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
 		<property name="java-output-path" value="target/classes"/>
         <property name="context-root" value="webapp-rest"/>
 	</wb-module>
