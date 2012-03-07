@@ -56,6 +56,7 @@ import edu.mayo.cts2.framework.service.profile.statement.StatementMaintenanceSer
 import edu.mayo.cts2.framework.service.profile.statement.StatementQueryService;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
 import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.ResourceQueryBuilder;
@@ -128,6 +129,7 @@ public class StatementController extends AbstractMessageWrappingController {
 	public Directory getStatements(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			RestFilter restFilter,
 			Page page,
 			boolean list) {
@@ -135,6 +137,7 @@ public class StatementController extends AbstractMessageWrappingController {
 		return this.getStatements(
 				httpServletRequest, 
 				restReadContext, 
+				queryControl,
 				null, 
 				restFilter, 
 				page,
@@ -155,6 +158,7 @@ public class StatementController extends AbstractMessageWrappingController {
 	public Directory getStatements(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			RestFilter restFilter,
 			Page page,
@@ -174,7 +178,7 @@ public class StatementController extends AbstractMessageWrappingController {
 				this.statementQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				StatementDirectory.class, 
 				StatementList.class);
 	}

@@ -24,6 +24,9 @@
 package edu.mayo.cts2.framework.service.meta;
 
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 
 /**
@@ -78,5 +81,16 @@ public enum StandardModelAttributeReference {
 	 */
 	public ModelAttributeReference getModelAttributeReference(){
 		return this.reference;
+	}
+	
+	public PropertyReference getPropertyReference(){
+		PropertyReference ref = new PropertyReference();
+		ref.setReferenceType(TargetReferenceType.ATTRIBUTE);
+		ref.setReferenceTarget(new URIAndEntityName());
+		ref.getReferenceTarget().setName(this.reference.getContent());
+		ref.getReferenceTarget().setUri(this.reference.getUri());
+		ref.getReferenceTarget().setHref(this.reference.getHref());
+		
+		return ref;
 	}
 }

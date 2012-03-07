@@ -262,6 +262,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	public Directory getCodeSystemVersionsOfCodeSystem(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			Page page,
@@ -273,6 +274,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		return this.getCodeSystemVersions(
 				httpServletRequest, 
 				restReadContext, 
+				queryControl,
 				restrictions, 
 				resolvedFilter, 
 				page,
@@ -335,6 +337,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	public Directory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -356,7 +359,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 				this.codeSystemVersionQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				CodeSystemVersionCatalogEntryDirectory.class, 
 				CodeSystemVersionCatalogEntryList.class);
 	}
@@ -376,6 +379,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	public Directory getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			CodeSystemVersionQueryServiceRestrictions restrictions,
 			RestFilter resolvedFilter,
 			Page page,
@@ -384,6 +388,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		return this.getCodeSystemVersions(
 				httpServletRequest, 
 				restReadContext, 
+				queryControl,
 				null,
 				restrictions, 
 				resolvedFilter, 

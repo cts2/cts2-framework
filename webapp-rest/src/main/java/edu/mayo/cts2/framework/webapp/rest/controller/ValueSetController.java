@@ -167,6 +167,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	public Directory getValueSets(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			ValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
 			Page page,
@@ -175,6 +176,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 		return this.getValueSets(
 				httpServletRequest,
 				restReadContext, 
+				queryControl,
 				null, 
 				restrictions, 
 				restFilter, 
@@ -198,6 +200,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	public Directory getValueSets(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			ValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -219,7 +222,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 				this.valueSetQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				ValueSetCatalogEntryDirectory.class, 
 				ValueSetCatalogEntryList.class);
 	}

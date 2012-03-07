@@ -7,12 +7,10 @@ import org.junit.Test
 import edu.mayo.cts2.framework.filter.match.AttributeResolver
 import edu.mayo.cts2.framework.filter.match.Matcher
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference
+import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
-import edu.mayo.cts2.framework.model.core.FilterComponent
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference
+import edu.mayo.cts2.framework.model.core.PropertyReference
 import edu.mayo.cts2.framework.model.core.URIAndEntityName
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType
 
 class AbstractRemovingDirectoryBuilderTest {
 
@@ -23,16 +21,16 @@ class AbstractRemovingDirectoryBuilderTest {
 		
 
 		def filter = new ResolvedFilter(matchValue:"test")
-		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
-		filter.setModelAttributeReference(name);
+		def name = new PropertyReference(referenceTarget:new URIAndEntityName(name:"string", uri:"http://string/"))
+		filter.setPropertyReference(name);
 		
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
-		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
-		modelRef.setContent("string")
-		modelRef.setUri("http://string/")
-		builder.addSupportedModelAttributeReference(modelRef);
+		ResolvablePropertyReference modelRef = new ResolvablePropertyReference(attributeResolver)
+		modelRef.setReferenceTarget(new URIAndEntityName(name:"string", uri:"http://string/"))
+	
+		builder.addResolvablePropertyReference(modelRef);
 
-		def result = builder.getCandidateText(filter, TargetReferenceType.ATTRIBUTE, "one")
+		def result = builder.getCandidateText(modelRef, "one")
 
 		def expected = ["one"]
 
@@ -44,14 +42,14 @@ class AbstractRemovingDirectoryBuilderTest {
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
 		def filter = new ResolvedFilter(matchValue:"test")
-		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
-		filter.setModelAttributeReference(name);
+		def name = new PropertyReference(referenceTarget:new URIAndEntityName(name:"string", uri:"http://string/"))
+		filter.setPropertyReference(name);
 
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
-		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
-		modelRef.setContent("string")
-		modelRef.setUri("http://string/")
-		builder.addSupportedModelAttributeReference(modelRef);
+		ResolvablePropertyReference modelRef = new ResolvablePropertyReference(attributeResolver)
+		modelRef.setReferenceTarget(new URIAndEntityName(name:"string", uri:"http://string/"))
+	
+		builder.addResolvablePropertyReference(modelRef);
 		
 		def algorithm = [ matchScore : { matchtext,comparestring -> 0.6f } ] as Matcher
 		
@@ -60,7 +58,7 @@ class AbstractRemovingDirectoryBuilderTest {
 		builder.addSupportedMatchAlgorithmReference(matchAlgorithm)
 		
 		filter.setMatchAlgorithmReference(matchAlgorithm)
-		filter.setReferenceType(TargetReferenceType.ATTRIBUTE)
+		filter.setPropertyReference(modelRef)
 
 		def result = builder.doRestrict(filter, 0.5)
 
@@ -74,14 +72,14 @@ class AbstractRemovingDirectoryBuilderTest {
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
 		def filter = new ResolvedFilter(matchValue:"test")
-		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
-		filter.setModelAttributeReference(name);	
+		def name = new PropertyReference(referenceTarget:new URIAndEntityName(name:"string", uri:"http://string/"))
+		filter.setPropertyReference(name);
 
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
-		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
-		modelRef.setContent("string")
-		modelRef.setUri("http://string/")
-		builder.addSupportedModelAttributeReference(modelRef);
+		ResolvablePropertyReference modelRef = new ResolvablePropertyReference(attributeResolver)
+		modelRef.setReferenceTarget(new URIAndEntityName(name:"string", uri:"http://string/"))
+	
+		builder.addResolvablePropertyReference(modelRef);
 		
 		def algorithm = [ matchScore : { matchtext,comparestring -> 0.4f } ] as Matcher
 		
@@ -90,7 +88,7 @@ class AbstractRemovingDirectoryBuilderTest {
 		builder.addSupportedMatchAlgorithmReference(matchAlgorithm)
 		
 		filter.setMatchAlgorithmReference(matchAlgorithm)
-		filter.setReferenceType(TargetReferenceType.ATTRIBUTE)
+		filter.setPropertyReference(modelRef)
 
 		def result = builder.doRestrict(filter, 0.5)
 
@@ -104,14 +102,14 @@ class AbstractRemovingDirectoryBuilderTest {
 		def builder = new TestAbstractRemovingDirectoryBuilder()
 
 		def filter = new ResolvedFilter(matchValue:"test")
-		def name = new ModelAttributeReference(content:"string", uri:"http://string/")
-		filter.setModelAttributeReference(name);
+		def name = new PropertyReference(referenceTarget:new URIAndEntityName(name:"string", uri:"http://string/"))
+		filter.setPropertyReference(name);
 
 		def attributeResolver = [resolveAttribute: { obj -> return [obj] }]  as AttributeResolver
-		ResolvableModelAttributeReference modelRef = new ResolvableModelAttributeReference(attributeResolver)
-		modelRef.setContent("string")
-		modelRef.setUri("http://string/")
-		builder.addSupportedModelAttributeReference(modelRef);
+		ResolvablePropertyReference modelRef = new ResolvablePropertyReference(attributeResolver)
+		modelRef.setReferenceTarget(new URIAndEntityName(name:"string", uri:"http://string/"))
+	
+		builder.addResolvablePropertyReference(modelRef);
 		
 		def algorithm = [ matchScore : { matchtext,comparestring -> 0.5f } ] as Matcher
 		
@@ -120,7 +118,7 @@ class AbstractRemovingDirectoryBuilderTest {
 		builder.addSupportedMatchAlgorithmReference(matchAlgorithm)
 		
 		filter.setMatchAlgorithmReference(matchAlgorithm)
-		filter.setReferenceType(TargetReferenceType.ATTRIBUTE)
+		filter.setPropertyReference(modelRef)
 
 		def result = builder.doRestrict(filter, 0.5)
 

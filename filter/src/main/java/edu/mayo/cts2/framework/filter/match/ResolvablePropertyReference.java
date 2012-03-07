@@ -24,15 +24,15 @@
 package edu.mayo.cts2.framework.filter.match;
 
 import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
- * The Class ResolvablePredicateReference.
+ * The Class ResolvableModelAttributeReference.
  *
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ResolvablePredicateReference<T> extends PredicateReference implements MarshallSuperClass {
+public class ResolvablePropertyReference<T> extends PropertyReference implements MarshallSuperClass {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5500382462242484409L;
@@ -45,8 +45,19 @@ public class ResolvablePredicateReference<T> extends PredicateReference implemen
 	 *
 	 * @param attributeResolver the attribute resolver
 	 */
-	public ResolvablePredicateReference(AttributeResolver<T> attributeResolver){
+	public ResolvablePropertyReference(AttributeResolver<T> attributeResolver){
 		this.attributeResolver = attributeResolver;
+	}
+	
+	public static <S> ResolvablePropertyReference<S> toPropertyReference(
+			PropertyReference ref, AttributeResolver<S> attributeResolver){
+		ResolvablePropertyReference<S> returnRef = 
+			new ResolvablePropertyReference<S>(attributeResolver);
+		
+		returnRef.setReferenceTarget(ref.getReferenceTarget());
+		returnRef.setReferenceTarget(ref.getReferenceTarget());
+	
+		return returnRef;
 	}
 	
 	/**
@@ -58,26 +69,4 @@ public class ResolvablePredicateReference<T> extends PredicateReference implemen
 	public Iterable<String> getModelAttributeValue(T modelObject){
 		return this.attributeResolver.resolveAttribute(modelObject);
 	}
-	
-	/**
-	 * To predicate reference.
-	 *
-	 * @param <T> the generic type
-	 * @param ref the ref
-	 * @param attributeResolver the attribute resolver
-	 * @return the resolvable predicate reference
-	 */
-	public static <T> ResolvablePredicateReference<T> toPredicateReference(
-			PredicateReference ref, AttributeResolver<T> attributeResolver){
-		ResolvablePredicateReference<T> returnRef = 
-			new ResolvablePredicateReference<T>(attributeResolver);
-
-		returnRef.setName(ref.getName());
-		returnRef.setNamespace(ref.getNamespace());
-		returnRef.setUri(ref.getUri());
-		returnRef.setHref(ref.getHref());
-		
-		return returnRef;
-	}
-
 }

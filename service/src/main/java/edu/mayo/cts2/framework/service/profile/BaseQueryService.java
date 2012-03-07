@@ -26,8 +26,8 @@ package edu.mayo.cts2.framework.service.profile;
 import java.util.Set;
 
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
  * The Interface QueryService.
@@ -38,8 +38,10 @@ public interface BaseQueryService extends BaseService {
 
 	public Set<? extends MatchAlgorithmReference> getSupportedMatchAlgorithms();
 	
-	public Set<? extends ModelAttributeReference> getSupportedModelAttributes();
+	public Set<? extends PropertyReference> getSupportedSearchReferences();
 	
-	public Set<? extends PredicateReference> getSupportedProperties();
-	
+	public Set<? extends PropertyReference> getSupportedSortReferences();
+
+	public Set<PredicateReference> getKnownProperties();
+
 }

@@ -4,8 +4,8 @@ import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.service.core.FilterComponent;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
@@ -27,30 +27,15 @@ public class FilterResolver {
 		ResolvedFilter resolvedFilter = new ResolvedFilter();
 		resolvedFilter.setMatchAlgorithmReference(matchRef);
 		
+		//TODO: Check for a URI here
 		String name = restFilter.getEntityName().getName();
 
-		switch(restFilter.getReferenceType()){
-			case ATTRIBUTE: {
-				ModelAttributeReference modelAttributeRef = 
-						ControllerUtils.getReference(name, service.getSupportedModelAttributes());
-				
-				resolvedFilter.setModelAttributeReference(modelAttributeRef);
-				break;
-			}
-			case PROPERTY: {
-				PredicateReference propertyRef = 
-						ControllerUtils.getPredicateReference(name, service.getSupportedProperties());
-				
-				resolvedFilter.setPropertyReference(propertyRef);
-				break;
-			}
-			case SPECIAL: {
-				throw new UnsupportedOperationException("SPECIAL not supported yet.");
-			}
-			default : {
-				throw new IllegalStateException();
-			}
-		}
+		TargetReferenceType type = restFilter.getReferenceType();
+
+		PropertyReference propertyReference = 
+				ControllerUtils.getPropertyReference(type, name, service.getSupportedSearchReferences());
+		
+		resolvedFilter.setPropertyReference(propertyReference);
 
 		resolvedFilter.setMatchValue(restFilter.getMatchValue());
 		

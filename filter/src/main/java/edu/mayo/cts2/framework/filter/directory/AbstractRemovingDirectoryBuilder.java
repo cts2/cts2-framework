@@ -30,12 +30,10 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.match.Matcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
+import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 
@@ -56,11 +54,8 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	private Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences = 
 		new HashSet<ResolvableMatchAlgorithmReference>();
 	
-	private Set<ResolvableModelAttributeReference<F>> resolvableModelAttributeReferences = 
-		new HashSet<ResolvableModelAttributeReference<F>>();
-	
-	private Set<ResolvablePredicateReference<F>> resolvablePredicateReferences = 
-		new HashSet<ResolvablePredicateReference<F>>();
+	private Set<ResolvablePropertyReference<F>> resolvablePropertyReferences = 
+		new HashSet<ResolvablePropertyReference<F>>();
 	
 	private Set<F> allPossibleResults;
 	
@@ -72,7 +67,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @param allPossibleResults the all possible results
 	 */
 	public AbstractRemovingDirectoryBuilder(List<F> allPossibleResults){
-		this(allPossibleResults, null, null, null);
+		this(allPossibleResults, null, null);
 	}
 	
 	/**
@@ -86,8 +81,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	public AbstractRemovingDirectoryBuilder(
 			List<F> allPossibleResults,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvableModelAttributeReference<F>> resolvableModelAttributeReferences,
-			Set<ResolvablePredicateReference<F>> resolvablePredicateReferences
+			Set<ResolvablePropertyReference<F>> resolvablePropertyReferences
 			){
 		super();
 		this.allPossibleResults = new HashSet<F>(allPossibleResults);
@@ -97,12 +91,8 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 			this.matchAlgorithmReferences = matchAlgorithmReferences;
 		}
 		
-		if(resolvableModelAttributeReferences != null){
-			this.resolvableModelAttributeReferences = resolvableModelAttributeReferences;
-		}
-		
-		if(resolvablePredicateReferences != null){
-			this.resolvablePredicateReferences = resolvablePredicateReferences;
+		if(resolvablePropertyReferences != null){
+			this.resolvablePropertyReferences = resolvablePropertyReferences;
 		}
 	}
 	
@@ -112,9 +102,9 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @param reference the reference
 	 * @return the directory builder
 	 */
-	public DirectoryBuilder<T> addSupportedModelAttributeReference(
-			ResolvableModelAttributeReference<F> reference){
-		this.resolvableModelAttributeReferences.add(reference);
+	public DirectoryBuilder<T> addSupportedPropertyReference(
+			ResolvablePropertyReference<F> reference){
+		this.resolvablePropertyReferences.add(reference);
 		return this;
 	}
 	
@@ -128,6 +118,12 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 			ResolvableMatchAlgorithmReference reference){
 		this.matchAlgorithmReferences.add(reference);
 		
+		return this;
+	}
+	
+	public DirectoryBuilder<T> addResolvablePropertyReference(
+			ResolvablePropertyReference<F> reference){
+		this.resolvablePropertyReferences.add(reference);
 		return this;
 	}
 	
@@ -257,13 +253,11 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 		
 		Matcher algorithm = this.getMatchAlgorithm(filterComponent.getMatchAlgorithmReference());
 		
-		TargetReferenceType referenceType = filterComponent.getReferenceType();
-		
 		String matchText = filterComponent.getMatchValue();
 		
 		for(F candidate : this.allPossibleResults){
 			Iterable<String> candidates = 
-				this.getCandidateText(filterComponent, referenceType, candidate);
+				this.getCandidateText(filterComponent.getPropertyReference(), candidate);
 			
 			for(String candidateText : candidates){
 				float score = algorithm.matchScore(matchText, candidateText);
@@ -287,38 +281,12 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @return the candidate text
 	 */
 	protected Iterable<String> getCandidateText(
-			ResolvedFilter filterComponent,
-			TargetReferenceType referenceType,
+			PropertyReference propertyReference,
 			F candidate) {
-		Iterable<String> candidateText;
+		ResolvablePropertyReference<F> ref = 
+				this.getResolvablePropertyReferences(propertyReference);
 		
-		switch (referenceType) {
-			case PROPERTY : {
-				ResolvablePredicateReference<F> modelAttributeReference = 
-					this.getResolvablePredicateReferences(filterComponent.getPropertyReference());
-				
-				candidateText = modelAttributeReference.getModelAttributeValue(candidate);
-				break;
-			}
-			case ATTRIBUTE : {
-				ResolvableModelAttributeReference<F> modelAttributeReference = 
-					this.getModelAttributeReference(
-							filterComponent.getModelAttributeReference(),
-							this.resolvableModelAttributeReferences);
-				
-				candidateText = modelAttributeReference.getModelAttributeValue(candidate);
-				break;
-			}
-			case SPECIAL : {
-				throw new UnsupportedOperationException();
-			}
-			
-			default : {
-				throw new IllegalStateException();
-			}
-		}
-		
-		return candidateText;
+		return ref.getModelAttributeValue(candidate);
 	}
 	
 	/**
@@ -329,19 +297,19 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 */
 
 	
-	private ResolvablePredicateReference<F> getResolvablePredicateReferences(URIAndEntityName nameOrUri){
-		for(ResolvablePredicateReference<F> predicate : this.resolvablePredicateReferences){
-			if(predicate.getName().equals(nameOrUri.getName())){
+	private ResolvablePropertyReference<F> getResolvablePropertyReferences(PropertyReference nameOrUri){
+		for(ResolvablePropertyReference<F> predicate : this.resolvablePropertyReferences){
+			if(predicate.getReferenceTarget().getName().equals(nameOrUri.getReferenceTarget().getName())){
 				return predicate;
 			}
-			if(predicate.getUri().equals(nameOrUri.getUri())){
+			if(predicate.getReferenceTarget().getUri().equals(nameOrUri.getReferenceTarget().getUri())){
 				return predicate;
 			}
 		}
 		
-		throw ExceptionFactory.createUnsupportedModelAttribute(
+		throw ExceptionFactory.createUnsupportedPropertyReference(
 				nameOrUri, 
-				this.resolvableModelAttributeReferences);
+				this.resolvablePropertyReferences);				
 	}
 	
 	/**
