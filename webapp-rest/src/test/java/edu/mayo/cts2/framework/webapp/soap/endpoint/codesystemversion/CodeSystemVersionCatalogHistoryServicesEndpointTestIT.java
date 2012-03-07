@@ -1,16 +1,34 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceAndNotation;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
-import edu.mayo.cts2.framework.model.wsdl.codesystemhistory.*;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespace;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespaceResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescription;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescriptionResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceName;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceNameResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProvider;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProviderResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersion;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersionResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
+import edu.mayo.cts2.framework.model.wsdl.codesystemversionhistory.GetEarliestChangeFor;
+import edu.mayo.cts2.framework.model.wsdl.codesystemversionhistory.GetEarliestChangeForResponse;
+import edu.mayo.cts2.framework.model.wsdl.codesystemversionhistory.GetLastChangeFor;
+import edu.mayo.cts2.framework.model.wsdl.codesystemversionhistory.GetLastChangeForResponse;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseHistoryService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
@@ -18,48 +36,43 @@ import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpointTestBase {
+public class CodeSystemVersionCatalogHistoryServicesEndpointTestIT extends SoapEndpointTestBase {
 
-  String uri = "http://localhost:8081/webapp-rest/soap/service/CodeSystemCatalogHistoryService";
+  String uri = "http://localhost:8081/webapp-rest/soap/service/CodeSystemVersionCatalogHistoryService";
 
   @Test
-  public void TestGetEarliestChangeFor() throws Exception {
+  public void TestGetEarliestChangeFor() {
     MockServiceProvider.cts2Service = new MockService();
     GetEarliestChangeFor request = new GetEarliestChangeFor();
-    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
+    request.setCodeSystemVersion(ModelUtils.nameOrUriFromName("test"));
     GetEarliestChangeForResponse response = (GetEarliestChangeForResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getCodeSystemName());
+    assertEquals("success", response.getReturn().getCodeSystemVersionName());
   }
 
   @Test
-  public void TestGetLastChangeFor() throws Exception {
+  public void TestGetLastChangeFor() {
     MockServiceProvider.cts2Service = new MockService();
     GetLastChangeFor request = new GetLastChangeFor();
     request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
     GetLastChangeForResponse response = (GetLastChangeForResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getCodeSystemName());
+    assertEquals("success", response.getReturn().getCodeSystemVersionName());
   }
 
   @Test
-  public void TestGetChangeHistoryFor() throws Exception {
-//    MockServiceProvider.cts2Service = new MockService();
-//    GetChangeHistoryFor request = new GetChangeHistoryFor();
-//    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
-//    GetChangeHistoryForResponse response = (GetChangeHistoryForResponse) this.doSoapCall(uri, request);
-
+  public void TestGetChangeHistoryFor() {
     fail("not implemented");
   }
 
-  /* BaseHistoryServices */
+  /*******************************************************/
+  /*                Base History Services                */
+  /*******************************************************/
+  /* TODO: Write Tests For: BaseHistoryServices */
   @Test
   public void TestReadChangeSet() throws Exception {
-//    MockServiceProvider.cts2Service = new MockService();
-//    ReadChangeSet request = new ReadChangeSet();
-//    request.setURI("test");
-//    ReadChangeSetResponse response = (ReadChangeSetResponse) this.doSoapCall(uri, request);
-
     fail("not implemented");
   }
 
@@ -68,7 +81,9 @@ public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpoint
     fail("not implemented");
   }
 
-  /* BaseQueryServices */
+  /*******************************************************/
+  /*                 Base Query Services                 */
+  /*******************************************************/
   /* TODO: Write Tests For: BaseQueryServices */
   @Test
   public void TestUnion() throws Exception {
@@ -181,7 +196,7 @@ public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpoint
 
   /********************************************************************************************************************/
   /*                                                                                                                  */
-  /*                                 Mock Code System Catalog History Service Class                                   */
+  /*                             Mock Code System Version Catalog History Service Class                               */
   /*                                                                                                                  */
   /********************************************************************************************************************/
   private class MockService extends MockBaseHistoryService {
@@ -189,13 +204,16 @@ public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpoint
     @Override
     public Object getEarliestChangeFor(Object identifier) {
       NameOrURI nameOrURI = (NameOrURI) identifier;
-      CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
+      CodeSystemVersionCatalogEntry entry = new CodeSystemVersionCatalogEntry();
       entry.setAbout("This is a test entry");
+      entry.setSourceAndNotation(new SourceAndNotation());
+      entry.setDocumentURI("testURI");
+      entry.setVersionOf(new CodeSystemReference("default"));
       if (nameOrURI.getName().equals("test")) {
-        entry.setCodeSystemName("success");
+        entry.setCodeSystemVersionName("success");
       }
       else {
-        entry.setCodeSystemName("fail");
+        entry.setCodeSystemVersionName("fail");
       }
       return entry;
     }
@@ -203,13 +221,16 @@ public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpoint
     @Override
     public Object getLastChangeFor(Object identifier) {
       NameOrURI nameOrURI = (NameOrURI) identifier;
-      CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
+      CodeSystemVersionCatalogEntry entry = new CodeSystemVersionCatalogEntry();
       entry.setAbout("This is a test entry");
+      entry.setSourceAndNotation(new SourceAndNotation());
+      entry.setDocumentURI("testURI");
+      entry.setVersionOf(new CodeSystemReference("default"));
       if (nameOrURI.getName().equals("test")) {
-        entry.setCodeSystemName("success");
+        entry.setCodeSystemVersionName("success");
       }
       else {
-        entry.setCodeSystemName("fail");
+        entry.setCodeSystemVersionName("fail");
       }
       return entry;
     }
@@ -221,5 +242,4 @@ public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpoint
     }
 
   }
-
 }

@@ -48,7 +48,7 @@ public class SoapEndpointTestBase {
 	        WebAppContext ctx = new WebAppContext();
 	        ctx.setClassLoader(Thread.currentThread().getContextClassLoader());
 	        ctx.setContextPath("/webapp-rest");
-	        ctx.setWar("src/main/webapp");
+	        ctx.setWar("/Users/m091355/Dropbox/code/cts2/cts2-framework/webapp-rest/src/main/webapp");
 	        ctx.setServer(server);
 	        server.setHandler(ctx);
 	        server.start();

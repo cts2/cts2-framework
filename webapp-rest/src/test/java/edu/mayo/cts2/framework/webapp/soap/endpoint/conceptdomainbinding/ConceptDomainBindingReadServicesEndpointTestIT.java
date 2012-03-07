@@ -1,115 +1,67 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
-import edu.mayo.cts2.framework.model.core.FormatReference;
-import edu.mayo.cts2.framework.model.core.NamespaceReference;
-import edu.mayo.cts2.framework.model.core.OpaqueData;
-import edu.mayo.cts2.framework.model.core.SourceReference;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
-import edu.mayo.cts2.framework.model.wsdl.codesystemhistory.*;
+import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTag;
+import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTagResponse;
+import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Read;
+import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
+import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
-import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseHistoryService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpointTestBase {
+public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
-  String uri = "http://localhost:8081/webapp-rest/soap/service/CodeSystemCatalogHistoryService";
-
-  @Test
-  public void TestGetEarliestChangeFor() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    GetEarliestChangeFor request = new GetEarliestChangeFor();
-    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
-    GetEarliestChangeForResponse response = (GetEarliestChangeForResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getCodeSystemName());
-  }
+  String uri = "http://localhost:8081/webapp-rest/soap/service/ConceptDomainBindingReadService";
 
   @Test
-  public void TestGetLastChangeFor() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    GetLastChangeFor request = new GetLastChangeFor();
-    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
-    GetLastChangeForResponse response = (GetLastChangeForResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getCodeSystemName());
+  public void TestGetSupportedTag() throws Exception {
+    GetSupportedTag request = new GetSupportedTag();
+    GetSupportedTagResponse response = (GetSupportedTagResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getReturn(0).getContent());
   }
-
+  
   @Test
-  public void TestGetChangeHistoryFor() throws Exception {
-//    MockServiceProvider.cts2Service = new MockService();
-//    GetChangeHistoryFor request = new GetChangeHistoryFor();
-//    request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
-//    GetChangeHistoryForResponse response = (GetChangeHistoryForResponse) this.doSoapCall(uri, request);
-
-    fail("not implemented");
+  public void TestRead() throws Exception {
+    Read request = new Read();
+    request.setConceptDomain(ModelUtils.nameOrUriFromName("test"));
+    request.setApplicableContext(ModelUtils.nameOrUriFromName("applicableContextTest"));
+    request.setBindingQualifier(ModelUtils.nameOrUriFromName("bindingQualifierTest"));
+    request.setValueSet(ModelUtils.nameOrUriFromName("valueSetTest"));
+    ReadResponse response = (ReadResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getReturn().getBindingURI());
   }
-
-  /* BaseHistoryServices */
+  
   @Test
-  public void TestReadChangeSet() throws Exception {
-//    MockServiceProvider.cts2Service = new MockService();
-//    ReadChangeSet request = new ReadChangeSet();
-//    request.setURI("test");
-//    ReadChangeSetResponse response = (ReadChangeSetResponse) this.doSoapCall(uri, request);
-
-    fail("not implemented");
+  public void TestExists() throws Exception {
+    fail("Method not implemented.");
   }
-
+  
   @Test
-  public void TestResolve() throws Exception {
-    fail("not implemented");
+  public void TestReadByURI() throws Exception {
+    fail("Method not implemented.");
   }
-
-  /* BaseQueryServices */
-  /* TODO: Write Tests For: BaseQueryServices */
+  
   @Test
-  public void TestUnion() throws Exception {
-    fail("not implemented");
+  public void TestExistsURI() throws Exception {
+    fail("Method not implemented.");
   }
-
-  @Test
-  public void TestRestrict() throws Exception {
-    fail("not implemented");
-  }
-
-  @Test
-  public void TestIntersect() throws Exception {
-    fail("not implemented");
-  }
-
-  @Test
-  public void TestDifference() throws Exception {
-    fail("not implemented");
-  }
-
-  @Test
-  public void TestCount() throws Exception {
-    fail("not implemented");
-  }
-
-  @Test
-  public void TestGetSupportedMatchAlgorithm() throws Exception {
-    fail("not implemented");
-  }
-
-  @Test
-  public void TestGetSupportedModelAttribute() throws Exception {
-    fail("not implemented");
-  }
-
-  @Test
-  public void TestGetKnownProperty() throws Exception {
-    fail("not implemented");
-  }
-
+  
   /*******************************************************/
   /*                    Base Services                    */
   /*******************************************************/
@@ -181,45 +133,48 @@ public class CodeSystemCatalogHistoryServicesEndpointTestIT extends SoapEndpoint
 
   /********************************************************************************************************************/
   /*                                                                                                                  */
-  /*                                 Mock Code System Catalog History Service Class                                   */
+  /*                                 Mock Concept Domain Binding Read Service Class                                   */
   /*                                                                                                                  */
   /********************************************************************************************************************/
-  private class MockService extends MockBaseHistoryService {
+  private class MockService extends MockBaseService implements ConceptDomainBindingReadService {
+
+//    @Override
+//    public ConceptDomainBinding read(NameOrURI conceptDomain, NameOrURI valueSet, NameOrURI applicableContext, NameOrURI bindingQualifier) {
+//
+//    }
+//
+//    @Override
+//    public ConceptDomainBinding readByURI(DocumentURI uri) {
+//
+//    }
+//
+//    @Override
+//    public boolean exists(NameOrURI conceptDomain, NameOrURI valueSet, NameOrURI applicableContext, NameOrURI bindingQualifier) {
+//
+//    }
+//
+//    @Override
+//    public boolean existsURI(DocumentURI uri) {
+//
+//    }
 
     @Override
-    public Object getEarliestChangeFor(Object identifier) {
-      NameOrURI nameOrURI = (NameOrURI) identifier;
-      CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
-      entry.setAbout("This is a test entry");
-      if (nameOrURI.getName().equals("test")) {
-        entry.setCodeSystemName("success");
-      }
-      else {
-        entry.setCodeSystemName("fail");
-      }
-      return entry;
+    public LocalIdConceptDomainBinding read(ConceptDomainBindingReadId identifier, ResolvedReadContext readContext) {
+      return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Object getLastChangeFor(Object identifier) {
-      NameOrURI nameOrURI = (NameOrURI) identifier;
-      CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
-      entry.setAbout("This is a test entry");
-      if (nameOrURI.getName().equals("test")) {
-        entry.setCodeSystemName("success");
-      }
-      else {
-        entry.setCodeSystemName("fail");
-      }
-      return entry;
+    public boolean exists(ConceptDomainBindingReadId identifier, ReadContext readContext) {
+      return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    /* TODO: Implement Mock Method: getChangeHistoryFor */
-    public DirectoryResult getChangeHistoryFor(Object identifier) {
-      throw new UnsupportedOperationException();
+    public VersionTagReference[] getSupportedTag() {
+      VersionTagReference ref = new VersionTagReference("success");
+      VersionTagReference refs[] = new VersionTagReference[1];
+      refs[0] = ref;
+      return refs;
     }
-
+    
   }
 
 }

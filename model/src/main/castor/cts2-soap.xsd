@@ -3,20 +3,128 @@
 	targetNamespace="http://www.example.org/cts2-soap" xmlns:tns="http://www.example.org/cts2-soap"
 	elementFormDefault="qualified">
 
-	<xs:import
+  <!-- ================================================ -->
+  <!--                Association Services              -->
+  <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AdvancedAssociationQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/AdvancedAssociationQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/AssociationHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/AssociationMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/AssociationQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/AssociationReadServiceTypes.xsd" />
+
+
+  <!-- ================================================ -->
+  <!--           Code System Catalog Services           -->
+  <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices"
+		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogQueryServiceTypes.xsd" />
+
+  <xs:import
 		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogReadServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogReadServiceTypes.xsd" />
 
-	<xs:import
-		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices"
-		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogQueryServiceTypes.xsd" />
-		
-	<xs:import
-		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogHistoryServices"
-		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemCatalogHistoryServiceTypes.xsd" />
+  <!-- ================================================ -->
+  <!--       Code System Version Catalog Services       -->
+  <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemVersionCatalogHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemVersionCatalogMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemVersionCatalogQueryServiceTypes.xsd" />
 
   <xs:import
       namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices"
       schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/CodeSystemVersionCatalogReadServiceTypes.xsd" />
+
+  <!-- ================================================ -->
+  <!--          Concept Domain Binding Services         -->
+  <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainBindingMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainBindingQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainBindingReadServiceTypes.xsd" />
+
+  <!-- ================================================ -->
+  <!--          Concept Domain Catalog Services         -->
+  <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainCatalogHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainCatalogMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainCatalogQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ConceptDomainCatalogReadServiceTypes.xsd" />
+
+  <!-- ================================================ -->
+  <!--            Entity Description Services           -->
+  <!-- ================================================ -->
+
+  <!-- ================================================ -->
+  <!--                Map Catalog Services              -->
+  <!-- ================================================ -->
+
+  <!-- ================================================ -->
+  <!--                Map Entry Services                -->
+  <!-- ================================================ -->
+
+  <!-- ================================================ -->
+  <!--              Map Resolution Services             -->
+  <!-- ================================================ -->
+
+  <!-- ================================================ -->
+  <!--                 Statement Services               -->
+  <!-- ================================================ -->
+
+  <!-- ================================================ -->
+  <!--            Value Set Catalog Services            -->
+  <!-- ================================================ -->
+
+  <!-- ================================================ -->
+  <!--           Value Set Definition Services          -->
+  <!-- ================================================ -->
 
 </schema>

@@ -25,34 +25,15 @@ public class MockBaseHistoryService extends MockBaseQueryService implements Hist
   }
 
   public Object getEarliestChangeFor(Object identifier) {
-    NameOrURI nameOrURI = (NameOrURI) identifier;
-    CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
-    entry.setAbout("This is a test entry");
-    if (nameOrURI.getName().equals("test")) {
-      entry.setCodeSystemName("success");
-    }
-    else {
-      entry.setCodeSystemName("fail");
-    }
-    return entry;
+    throw new UnsupportedOperationException("The HistoryService interface shouldn't have this method...");
   }
 
-  public CodeSystemCatalogEntry getLastChangeFor(Object identifier) {
-    NameOrURI nameOrURI = (NameOrURI) identifier;
-    CodeSystemCatalogEntry entry = new CodeSystemCatalogEntry();
-    entry.setAbout("This is a test entry");
-    if (nameOrURI.getName().equals("test")) {
-      entry.setCodeSystemName("success");
-    }
-    else {
-      entry.setCodeSystemName("fail");
-    }
-    return entry;
+  public Object getLastChangeFor(Object identifier) {
+    throw new UnsupportedOperationException("The HistoryService interface shouldn't have this method...");
   }
 
-  /* TODO: Implement Mock Method: getChangeHistoryFor */
   public DirectoryResult getChangeHistoryFor(Object identifier) {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("The HistoryService interface shouldn't have this method...");
   }
 
 }

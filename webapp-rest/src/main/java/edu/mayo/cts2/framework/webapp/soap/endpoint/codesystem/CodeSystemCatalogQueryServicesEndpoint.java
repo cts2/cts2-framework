@@ -5,6 +5,16 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.wsdl.basequeryservice.*;
 import edu.mayo.cts2.framework.model.wsdl.codesystemquery.*;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Count;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.CountResponse;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Difference;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.DifferenceResponse;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Intersect;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.IntersectResponse;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Restrict;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.RestrictResponse;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.Union;
+import edu.mayo.cts2.framework.model.wsdl.codesystemquery.UnionResponse;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;

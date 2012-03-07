@@ -47,48 +47,165 @@
 		<beans:property name="unmarshaller" ref="marshaller" />
 	</beans:bean>
 
-    <beans:bean class="edu.mayo.cts2.framework.webapp.soap.wsdl.LocationAdjustingWsdlDefinitionHandlerAdapter">
-    	<beans:property name="transformLocations" value="true"/>
-    </beans:bean>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.wsdl.LocationAdjustingWsdlDefinitionHandlerAdapter">
+  	<beans:property name="transformLocations" value="true"/>
+  </beans:bean>
 
-    <beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <beans:property name="mappings">
-           <beans:props>
-             <beans:prop key="soap/service/CodeSystemCatalogReadService.wsdl">CodeSystemCatalogReadService</beans:prop>
-             <beans:prop key="soap/service/CodeSystemCatalogReadService">codeSystemCatalogReadServiceDispatcher</beans:prop>
-             <beans:prop key="soap/service/CodeSystemCatalogQueryService.wsdl">CodeSystemCatalogQueryService</beans:prop>
-             <beans:prop key="soap/service/CodeSystemCatalogQueryService">codeSystemCatalogQueryServiceDispatcher</beans:prop>
-             <beans:prop key="soap/service/CodeSystemCatalogHistoryService.wsdl">CodeSystemCatalogHistoryService</beans:prop>
-             <beans:prop key="soap/service/CodeSystemCatalogHistoryService">codeSystemCatalogHistoryServiceDispatcher</beans:prop>
-             <beans:prop key="soap/service/CodeSystemVersionCatalogReadService.wsdl">CodeSystemVersionCatalogReadService</beans:prop>
-             <beans:prop key="soap/service/CodeSystemVersionCatalogReadService">codeSystemVersionCatalogReadServiceDispatcher</beans:prop>
-           </beans:props>
-        </beans:property>
-    </beans:bean>
+  <beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <beans:property name="mappings">
+      <beans:props>
+        <!-- Association Services -->
+        <beans:prop key="soap/service/AdvancedAssociationQueryService.wsdl">AdvancedAssociationQueryService</beans:prop>
+        <beans:prop key="soap/service/AdvancedAssociationQueryService">advancedAssociationQueryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/AssociationHistoryService.wsdl">AssociationHistoryService</beans:prop>
+        <beans:prop key="soap/service/AssociationHistoryService">associationHistoryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/AssociationMaintenanceService.wsdl">AssociationMaintenanceService</beans:prop>
+        <beans:prop key="soap/service/AssociationMaintenanceService">associationMaintenanceServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/AssociationQueryService.wsdl">AssociationQueryService</beans:prop>
+        <beans:prop key="soap/service/AssociationQueryService">associationQueryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/AssociationReadService.wsdl">AssociationReadService</beans:prop>
+        <beans:prop key="soap/service/AssociationReadService">associationReadServiceDispatcher</beans:prop>
+        <!-- Code System Catalog Services -->
+        <beans:prop key="soap/service/CodeSystemCatalogHistoryService.wsdl">CodeSystemCatalogHistoryService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogHistoryService">codeSystemCatalogHistoryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogMaintenanceService.wsdl">CodeSystemCatalogMaintenanceService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogMaintenanceService">codeSystemCatalogMaintenanceServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogQueryService.wsdl">CodeSystemCatalogQueryService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogQueryService">codeSystemCatalogQueryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogReadService.wsdl">CodeSystemCatalogReadService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemCatalogReadService">codeSystemCatalogReadServiceDispatcher</beans:prop>
+        <!-- Code System Version Catalog Services  -->
+        <beans:prop key="soap/service/CodeSystemVersionCatalogHistoryService.wsdl">CodeSystemVersionCatalogHistoryService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogHistoryService">codeSystemVersionCatalogHistoryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogMaintenanceService.wsdl">CodeSystemVersionCatalogMaintenanceService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogMaintenanceService">codeSystemVersionCatalogMaintenanceServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogQueryService.wsdl">CodeSystemVersionCatalogQueryService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogQueryService">codeSystemVersionCatalogQueryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogReadService.wsdl">CodeSystemVersionCatalogReadService</beans:prop>
+        <beans:prop key="soap/service/CodeSystemVersionCatalogReadService">codeSystemVersionCatalogReadServiceDispatcher</beans:prop>
+        <!-- Concept Domain Binding Services -->
+        <beans:prop key="soap/service/ConceptDomainBindingMaintenanceService.wsdl">ConceptDomainBindingMaintenanceService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainBindingMaintenanceService">conceptDomainBindingMaintenanceServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainBindingQueryService.wsdl">ConceptDomainBindingQueryService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainBindingQueryService">conceptDomainBindingQueryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainBindingReadService.wsdl">ConceptDomainBindingReadService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainBindingReadService">conceptDomainBindingReadServiceDispatcher</beans:prop>
+        <!-- Concept Domain Catalog Services  -->
+        <beans:prop key="soap/service/ConceptDomainCatalogHistoryService.wsdl">ConceptDomainCatalogHistoryService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogHistoryService">conceptDomainCatalogHistoryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogMaintenanceService.wsdl">ConceptDomainCatalogMaintenanceService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogMaintenanceService">conceptDomainCatalogMaintenanceServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogQueryService.wsdl">ConceptDomainCatalogQueryService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogQueryService">conceptDomainCatalogQueryServiceDispatcher</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogReadService.wsdl">ConceptDomainCatalogReadService</beans:prop>
+        <beans:prop key="soap/service/ConceptDomainCatalogReadService">conceptDomainCatalogReadServiceDispatcher</beans:prop>
+      </beans:props>
+    </beans:property>
+  </beans:bean>
 
-    <beans:bean id="codeSystemCatalogReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-    	<beans:property name="endpointMappings">
-	    	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
-	     		<beans:property name="service" value="CodeSystemCatalogReadServicesEndpoint"/>
-	     	</beans:bean>
-    	</beans:property>
-    </beans:bean>
-   
-    <beans:bean id="codeSystemCatalogQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-    	<beans:property name="endpointMappings">
-	    	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
-	     		<beans:property name="service" value="CodeSystemCatalogQueryServicesEndpoint"/>
-	     	</beans:bean>
-    	</beans:property>
-    </beans:bean>
+  <!-- ================================================ -->
+  <!--                Association Services              -->
+  <!-- ================================================ -->
+  <beans:bean id="advancedAssociationQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="AdvancedAssociationQueryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
 
-    <beans:bean id="codeSystemCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-      <beans:property name="endpointMappings">
-        <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
-          <beans:property name="service" value="CodeSystemCatalogHistoryServicesEndpoint"/>
-        </beans:bean>
-      </beans:property>
-    </beans:bean>
+  <beans:bean id="associationHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="AssociationHistoryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="associationMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="AssociationMaintenanceServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="associationQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="AssociationQueryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="associationReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="AssociationReadServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+  <!-- ================================================ -->
+  <!--           Code System Catalog Services           -->
+  <!-- ================================================ -->
+  <beans:bean id="codeSystemCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="CodeSystemCatalogHistoryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="codeSystemCatalogMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="CodeSystemCatalogMaintenanceServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="codeSystemCatalogQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+  	<beans:property name="endpointMappings">
+	  	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+	   		<beans:property name="service" value="CodeSystemCatalogQueryServicesEndpoint"/>
+	   	</beans:bean>
+  	</beans:property>
+  </beans:bean>
+
+  <beans:bean id="codeSystemCatalogReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+  	<beans:property name="endpointMappings">
+	  	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+	   		<beans:property name="service" value="CodeSystemCatalogReadServicesEndpoint"/>
+	   	</beans:bean>
+  	</beans:property>
+  </beans:bean>
+
+  <!-- ================================================ -->
+  <!--       Code System Version Catalog Services       -->
+  <!-- ================================================ -->
+  <beans:bean id="codeSystemVersionCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="CodeSystemVersionCatalogHistoryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="codeSystemVersionCatalogMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="CodeSystemVersionCatalogMaintenanceServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="codeSystemVersionCatalogQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="CodeSystemVersionCatalogQueryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
 
   <beans:bean id="codeSystemVersionCatalogReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
     <beans:property name="endpointMappings">
@@ -98,22 +215,139 @@
     </beans:property>
   </beans:bean>
 
-	<sws:static-wsdl id="CodeSystemCatalogReadService"
-		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
-		
-	<sws:static-wsdl id="CodeSystemCatalogQueryService"
-		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
+  <!-- ================================================ -->
+  <!--          Concept Domain Binding Services         -->
+  <!-- ================================================ -->
+  <beans:bean id="conceptDomainBindingMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainBindingMaintenanceServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
 
+  <beans:bean id="conceptDomainBindingQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainBindingQueryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="conceptDomainBindingReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainBindingReadServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <!-- ================================================ -->
+  <!--       Concept Domain Catalog Services       -->
+  <!-- ================================================ -->
+  <beans:bean id="conceptDomainCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainCatalogHistoryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="conceptDomainCatalogMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainCatalogMaintenanceServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="conceptDomainCatalogQueryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainCatalogQueryServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="conceptDomainCatalogReadServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <beans:property name="endpointMappings">
+      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
+        <beans:property name="service" value="ConceptDomainCatalogReadServicesEndpoint"/>
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <!-- Association Services -->
+  <sws:static-wsdl id="AdvancedAssociationQueryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AdvancedAssociationQueryService.wsdl" />
+  <sws:static-wsdl id="AssociationHistoryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationHistoryService.wsdl" />
+  <sws:static-wsdl id="AssociationMaintenanceService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationMaintenanceService.wsdl" />
+  <sws:static-wsdl id="AssociationQueryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationQueryService.wsdl" />
+  <sws:static-wsdl id="AssociationReadService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationReadService.wsdl" />
+
+  <!-- Code System Catalog Services -->
   <sws:static-wsdl id="CodeSystemCatalogHistoryService"
     location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogHistoryService.wsdl" />
+  <sws:static-wsdl id="CodeSystemCatalogMaintenanceService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogMaintenanceService.wsdl" />
+	<sws:static-wsdl id="CodeSystemCatalogQueryService"
+		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
+	<sws:static-wsdl id="CodeSystemCatalogReadService"
+		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
 
+  <!-- Code System Version Catalog Services  -->
+  <sws:static-wsdl id="CodeSystemVersionCatalogHistoryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />
+  <sws:static-wsdl id="CodeSystemVersionCatalogMaintenanceService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogMaintenanceService.wsdl" />
+  <sws:static-wsdl id="CodeSystemVersionCatalogQueryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogQueryService.wsdl" />
   <sws:static-wsdl id="CodeSystemVersionCatalogReadService"
     location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogReadService.wsdl" />
 
-	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogQueryServicesEndpoint"/>
-	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogReadServicesEndpoint"/>
-	<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogHistoryServicesEndpoint"/>
+  <!-- Concept Domain Binding Services   -->
+  <sws:static-wsdl id="ConceptDomainBindingMaintenanceService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainBindingMaintenanceService.wsdl" />
+  <sws:static-wsdl id="ConceptDomainBindingQueryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainBindingQueryService.wsdl" />
+  <sws:static-wsdl id="ConceptDomainBindingReadService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainBindingReadService.wsdl" />
+
+  <!-- Code System Version Catalog Services  -->
+  <sws:static-wsdl id="ConceptDomainCatalogHistoryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogHistoryService.wsdl" />
+  <sws:static-wsdl id="ConceptDomainCatalogMaintenanceService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogMaintenanceService.wsdl" />
+  <sws:static-wsdl id="ConceptDomainCatalogQueryService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogQueryService.wsdl" />
+  <sws:static-wsdl id="ConceptDomainCatalogReadService"
+    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogReadService.wsdl" />
+
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.association.AdvancedAssociationQueryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.association.AssociationHistoryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.association.AssociationMaintenanceServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.association.AssociationQueryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.association.AssociationReadServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogHistoryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogMaintenanceServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogQueryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogReadServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogHistoryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogMaintenanceServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogQueryServicesEndpoint"/>
   <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogReadServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding.ConceptDomainBindingMaintenanceServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding.ConceptDomainBindingQueryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding.ConceptDomainBindingReadServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomaincatalog.ConceptDomainCatalogHistoryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomaincatalog.ConceptDomainCatalogMaintenanceServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomaincatalog.ConceptDomainCatalogQueryServicesEndpoint"/>
+  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomaincatalog.ConceptDomainCatalogReadServicesEndpoint"/>
+
 	<!-- END SOAP Handling -->
 
 	<beans:bean

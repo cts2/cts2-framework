@@ -30,16 +30,14 @@ public class MockBaseService implements BaseService {
     return new SourceReference("test ref");
   }
 
+  /* TODO: Remove this method from the interface? */
   public List<FormatReference> getSupportedFormatList() {
-    List<FormatReference> formatReferences = new ArrayList<FormatReference>(3);
-    formatReferences.add(new FormatReference("fr1"));
-    formatReferences.add(new FormatReference("fr2"));
-    formatReferences.add(new FormatReference("fr3"));
-    return formatReferences;
+    throw new UnsupportedOperationException("This method should be implemented by the endpoint, not here...");
   }
 
+  /* TODO: Remove this method from the interface? */
   public FormatReference getDefaultFormat() {
-    return new FormatReference("testRef");
+    throw new UnsupportedOperationException("This method should be implemented by the endpoint, not here...");
   }
 
   public List<DocumentedNamespaceReference> getKnownNamespaceList() {

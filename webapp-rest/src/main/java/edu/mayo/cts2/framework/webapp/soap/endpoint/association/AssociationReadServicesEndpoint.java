@@ -1,11 +1,19 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.association;
 
-import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.model.wsdl.associationread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.associationread.ExistsByExternalStatementId;
+import edu.mayo.cts2.framework.model.wsdl.associationread.ExistsByExternalStatementIdResponse;
+import edu.mayo.cts2.framework.model.wsdl.associationread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.associationread.Read;
+import edu.mayo.cts2.framework.model.wsdl.associationread.ReadByExternalStatementId;
+import edu.mayo.cts2.framework.model.wsdl.associationread.ReadByExternalStatementIdResponse;
+import edu.mayo.cts2.framework.model.wsdl.associationread.ReadResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
@@ -24,124 +32,69 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.ExistsCodeSystemVersionForCodeSystem;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.ExistsCodeSystemVersionForCodeSystemResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.ExistsVersionId;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.ExistsVersionIdResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.GetCodeSystemByVersionId;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.GetCodeSystemByVersionIdResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.GetCodeSystemVersionForCodeSystem;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.GetCodeSystemVersionForCodeSystemResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.GetSupportedTag;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.GetSupportedTagResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.Read;
-import edu.mayo.cts2.framework.model.wsdl.codesystemversionread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
+import edu.mayo.cts2.framework.service.profile.association.AssociationReadService;
+import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-@Endpoint("CodeSystemVersionCatalogReadServicesEndpoint")
-public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
+@Endpoint("AssociationReadServicesEndpoint")
+public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint {
 
   @Cts2Service
-  private CodeSystemVersionReadService codeSystemVersionReadService;
+  private AssociationReadService associationReadService;
 
-  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
+  /* TODO: Implement Method: read */
+  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationReadServices")
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
-    CodeSystemVersionCatalogEntry entry = this.doRead(
-        this.codeSystemVersionReadService,
-        request.getCodeSystemVersion(),
-        request.getQueryControl(),
-        request.getContext());
-
-    ReadResponse readResponse = new ReadResponse();
-    readResponse.setReturn(entry);
-
-    return readResponse;
+    throw new UnsupportedOperationException("Method not implemented.");
+//    Association association = this.doRead(
+//        this.associationReadService,
+//        request.getAssociationID(),
+//        request.getQueryControl(),
+//        request.getContext());
+//
+//    ReadResponse readResponse = new ReadResponse();
+//    readResponse.setReturn(association);
+//
+//    return readResponse;
   }
 
-  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
+  /* TODO: Implement Method: exists */
+  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.codeSystemVersionReadService.exists(
-        request.getCodeSystemVersion(),
-        request.getContext());
-
-    ExistsResponse existsResponse = new ExistsResponse();
-    existsResponse.setReturn(exists);
-
-    return existsResponse;
+    throw new UnsupportedOperationException("Method not implemented.");
+//    boolean exists = this.associationReadService.exists(
+//        request.getAssociationID(),
+//        request.getContext());
+//
+//    ExistsResponse existsResponse = new ExistsResponse();
+//    existsResponse.setReturn(exists);
+//
+//    return existsResponse;
   }
 
-  @PayloadRoot(localPart = "existsCodeSystemVersionForCodeSystem", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
+  /* TODO: Implement Method: readByExternalStatementId */
+  @PayloadRoot(localPart = "readByExternalStatementId", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationReadServices")
   @ResponsePayload
-  public ExistsCodeSystemVersionForCodeSystemResponse existsCodeSystemVersionForCodeSystem(
-      @RequestPayload ExistsCodeSystemVersionForCodeSystem request) {
-    boolean exists = this.codeSystemVersionReadService.existsCodeSystemVersionForCodeSystem(
-        request.getCodeSystem(),
-        request.getTag().getName());
-
-    ExistsCodeSystemVersionForCodeSystemResponse response = new ExistsCodeSystemVersionForCodeSystemResponse();
-    response.setReturn(exists);
-
-    return response;
+  public ReadByExternalStatementIdResponse readByExternalStatementId(@RequestPayload ReadByExternalStatementId request) {
+    throw new UnsupportedOperationException("Method not implemented.");
   }
 
-  @PayloadRoot(localPart = "existsVersionId", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
+  /* TODO: Implement Method: existsByExternalStatementId */
+  @PayloadRoot(localPart = "existsByExternalStatementId", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationReadServices")
   @ResponsePayload
-  public ExistsVersionIdResponse existsVersionId(@RequestPayload ExistsVersionId request) {
-    boolean exists = this.codeSystemVersionReadService.existsVersionId(
-        request.getCodeSystem(),
-        request.getOfficialResourceVersionID());
-
-    ExistsVersionIdResponse response = new ExistsVersionIdResponse();
-    response.setReturn(exists);
-
-    return response;
-  }
-
-  @PayloadRoot(localPart = "getCodeSystemVersionForCodeSystem", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
-  @ResponsePayload
-  public GetCodeSystemVersionForCodeSystemResponse getCodeSystemVersionForCodeSystem(
-      @RequestPayload GetCodeSystemVersionForCodeSystem request) {
-    GetCodeSystemVersionForCodeSystemResponse response = new GetCodeSystemVersionForCodeSystemResponse();
-    response.setReturn(
-        this.codeSystemVersionReadService.getCodeSystemVersionForCodeSystem(
-            request.getCodeSystem(),
-            request.getTag().getName()));
-    return response;
-  }
-
-  /* TODO: Implement Method: getCodeSystemByVersionId */
-  @PayloadRoot(localPart = "getCodeSystemByVersionId", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
-  @ResponsePayload
-  public GetCodeSystemByVersionIdResponse getCodeSystemByVersionId(
-      @RequestPayload GetCodeSystemByVersionId request) {
-//    GetCodeSystemByVersionIdResponse response = new GetCodeSystemByVersionIdResponse();
-//    response.setReturn(
-//        this.codeSystemVersionReadService.getCodeSystemByVersionId(
-//            request.getCodeSystem(),
-//            request.getOfficialResourceVersionId(),
-//            request.getReadContext()));
-//    return response;
-    throw new UnsupportedOperationException("Method not implemented");
-  }
-
-  /* TODO: Implement Method: getSupportedTag */
-  @PayloadRoot(localPart = "getSupportedTag", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
-  @ResponsePayload
-  public GetSupportedTagResponse getSupportedTag(@RequestPayload GetSupportedTag request) {
-//    GetSupportedTagResponse response = new GetSupportedTagResponse();
-//    response.setReturn(this.codeSystemVersionReadService.getSupportedTag());
+  public ExistsByExternalStatementIdResponse exists(@RequestPayload ExistsByExternalStatementId request) {
+    throw new UnsupportedOperationException("Method not implemented.");
+//    boolean exists = this.associationReadService.exists(request.getExternalStatementId(), request.getContext());
+//    ExistsByExternalStatementIdResponse response = new ExistsByExternalStatementIdResponse();
+//    response.setReturn(exists);
 //
 //    return response;
-    throw new UnsupportedOperationException("Method not implemented");
   }
 
   /*******************************************************/
@@ -174,7 +127,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetKnownNamespaceResponse getKnownNamespace(@RequestPayload GetKnownNamespace request) {
     GetKnownNamespaceResponse response = new GetKnownNamespaceResponse();
-    response.setReturn(this.codeSystemVersionReadService.getKnownNamespaceList());
+    response.setReturn(this.associationReadService.getKnownNamespaceList());
 
     return response;
   }
@@ -183,7 +136,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetServiceDescriptionResponse getServiceDescription(@RequestPayload GetServiceDescription request) {
     GetServiceDescriptionResponse response = new GetServiceDescriptionResponse();
-    response.setReturn(this.codeSystemVersionReadService.getServiceDescription());
+    response.setReturn(this.associationReadService.getServiceDescription());
 
     return response;
   }
@@ -192,7 +145,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetServiceNameResponse getServiceName(@RequestPayload GetServiceName request) {
     GetServiceNameResponse response = new GetServiceNameResponse();
-    response.setReturn(this.codeSystemVersionReadService.getServiceName());
+    response.setReturn(this.associationReadService.getServiceName());
 
     return response;
   }
@@ -201,7 +154,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetServiceProviderResponse getServiceProvider(@RequestPayload GetServiceProvider request) {
     GetServiceProviderResponse response = new GetServiceProviderResponse();
-    response.setReturn(this.codeSystemVersionReadService.getServiceProvider());
+    response.setReturn(this.associationReadService.getServiceProvider());
 
     return response;
   }
@@ -210,7 +163,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetServiceVersionResponse getServiceVersion(@RequestPayload GetServiceVersion request) {
     GetServiceVersionResponse response = new GetServiceVersionResponse();
-    response.setReturn(this.codeSystemVersionReadService.getServiceVersion());
+    response.setReturn(this.associationReadService.getServiceVersion());
 
     return response;
   }

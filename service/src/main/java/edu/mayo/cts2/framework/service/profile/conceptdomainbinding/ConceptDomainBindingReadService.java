@@ -34,4 +34,7 @@ import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.Concept
  */
 public interface ConceptDomainBindingReadService extends
 		ReadService<LocalIdConceptDomainBinding, ConceptDomainBindingReadId> {
+
+
+
 }

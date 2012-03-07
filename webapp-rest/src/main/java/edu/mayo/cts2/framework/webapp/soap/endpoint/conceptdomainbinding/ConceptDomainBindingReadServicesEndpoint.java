@@ -1,70 +1,63 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationTypeResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespace;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespaceResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescription;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescriptionResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceName;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceNameResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProvider;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProviderResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersion;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersionResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.Read;
-import edu.mayo.cts2.framework.model.wsdl.codesystemread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
+import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.*;
+import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-@Endpoint("CodeSystemCatalogReadServicesEndpoint")
-public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
+@Endpoint("ConceptDomainBindingReadServicesEndpoint")
+public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServiceEndpoint {
 
   @Cts2Service
-  private CodeSystemReadService codeSystemReadService;
+  private ConceptDomainBindingReadService conceptDomainBindingReadService;
 
-  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogReadServices")
+  /* TODO: Implement Method: read */
+  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServiceTypes")
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
-    CodeSystemCatalogEntry entry = this.doRead(
-        this.codeSystemReadService,
-        request.getCodeSystemId(),
-        request.getQueryControl(),
-        request.getContext());
-
-    ReadResponse readResponse = new ReadResponse();
-    readResponse.setReturn(entry);
-
-    return readResponse;
+    throw new UnsupportedOperationException("Method not implemented");
   }
 
-  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogReadServices")
+  /* TODO: Implement Method: exists */
+  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServiceTypes")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.codeSystemReadService.exists(request.getCodeSystemId(), request.getContext());
+    throw new UnsupportedOperationException("Method not implemented");
+  }
 
-    ExistsResponse existsResponse = new ExistsResponse();
-    existsResponse.setReturn(exists);
+  /* TODO: Implement Method: readByURI */
+  @PayloadRoot(localPart = "readByURI", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServiceTypes")
+  @ResponsePayload
+  public ReadByURIResponse readByURI(@RequestPayload ReadByURI request) {
+    throw new UnsupportedOperationException("Method not implemented");
+  }
 
-    return existsResponse;
+  /* TODO: Implement Method: existsURI */
+  @PayloadRoot(localPart = "existsURI", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServiceTypes")
+  @ResponsePayload
+  public ExistsURIResponse existsURI(@RequestPayload ExistsURI request) {
+//    ExistsResponse response = new ExistsResponse();
+//    response.setReturn(this.conceptDomainBindingReadService.);
+    throw new UnsupportedOperationException("Method not implemented");
+  }
+
+  /* TODO: Implement Method: getSupportedTag */
+  @PayloadRoot(localPart = "getSupportedTag", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServiceTypes")
+  @ResponsePayload
+  public GetSupportedTagResponse getSupportedTag(@RequestPayload GetSupportedTag request) {
+//    GetSupportedTagResponse response = new GetSupportedTagResponse();
+//    response.setReturn(conceptDomainBindingReadService.exists());
+//    return response;
+    throw new UnsupportedOperationException("Method not implemented");
   }
 
   /*******************************************************/
@@ -97,7 +90,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public GetKnownNamespaceResponse getKnownNamespace(@RequestPayload GetKnownNamespace request) {
     GetKnownNamespaceResponse response = new GetKnownNamespaceResponse();
-    response.setReturn(this.codeSystemReadService.getKnownNamespaceList());
+    response.setReturn(this.conceptDomainBindingReadService.getKnownNamespaceList());
 
     return response;
   }
@@ -106,7 +99,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public GetServiceDescriptionResponse getServiceDescription(@RequestPayload GetServiceDescription request) {
     GetServiceDescriptionResponse response = new GetServiceDescriptionResponse();
-    response.setReturn(this.codeSystemReadService.getServiceDescription());
+    response.setReturn(this.conceptDomainBindingReadService.getServiceDescription());
 
     return response;
   }
@@ -115,7 +108,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public GetServiceNameResponse getServiceName(@RequestPayload GetServiceName request) {
     GetServiceNameResponse response = new GetServiceNameResponse();
-    response.setReturn(this.codeSystemReadService.getServiceName());
+    response.setReturn(this.conceptDomainBindingReadService.getServiceName());
 
     return response;
   }
@@ -124,7 +117,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public GetServiceProviderResponse getServiceProvider(@RequestPayload GetServiceProvider request) {
     GetServiceProviderResponse response = new GetServiceProviderResponse();
-    response.setReturn(this.codeSystemReadService.getServiceProvider());
+    response.setReturn(this.conceptDomainBindingReadService.getServiceProvider());
 
     return response;
   }
@@ -133,7 +126,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public GetServiceVersionResponse getServiceVersion(@RequestPayload GetServiceVersion request) {
     GetServiceVersionResponse response = new GetServiceVersionResponse();
-    response.setReturn(this.codeSystemReadService.getServiceVersion());
+    response.setReturn(this.conceptDomainBindingReadService.getServiceVersion());
 
     return response;
   }
