@@ -97,6 +97,21 @@ public class UrlConstructor {
 	}
 
 	/**
+	 * Creates the source url.
+	 *
+	 * @param codeSystemName the code system name
+	 * @param codeSystemVersionName the code system version name
+	 * @param entityName the entity name
+	 * @return the string
+	 * 
+	 * @deprecated use 'createSubjectOfUrl'
+	 */
+	@Deprecated
+	public String createSourceUrl(String codeSystemName, String codeSystemVersionName, String entityName){
+		return this.createSubjectOfUrl(codeSystemName, codeSystemVersionName, entityName);
+	}
+	
+	/**
 	 * Creates the sourceof url.
 	 *
 	 * @param codeSystemName the code system name
@@ -104,8 +119,8 @@ public class UrlConstructor {
 	 * @param entityName the entity name
 	 * @return the string
 	 */
-	public String createSourceUrl(String codeSystemName, String codeSystemVersionName, String entityName){
-		return this.createEntityUrl(codeSystemName, codeSystemVersionName, entityName) + "/" + URIHelperInterface.SOURCEOF;
+	public String createSubjectOfUrl(String codeSystemName, String codeSystemVersionName, String entityName){
+		return this.createEntityUrl(codeSystemName, codeSystemVersionName, entityName) + "/" + URIHelperInterface.SUBJECTOF;
 	}
 	
 	/**

@@ -27,6 +27,7 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
@@ -42,5 +43,8 @@ public interface ResolvedValueSetResolutionService extends Cts2Profile {
 			ResolvedValueSetReadId identifier,
 			Set<ResolvedFilter> filterComponent, 
 			Page page);
+	
+	public ResolvedValueSet resolveDefinition(
+			ResolvedValueSetReadId identifier);
 
 }
