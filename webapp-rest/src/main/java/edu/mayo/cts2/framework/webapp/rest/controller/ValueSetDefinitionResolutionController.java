@@ -286,6 +286,10 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 							null,//TODO: Possibly want to include filters 
 							page);
 				
+				if(directory == null){
+					throw ExceptionFactory.createUnknownResourceException(id.toString(), UnknownResourceReference.class);
+				}
+				
 				IteratableResolvedValueSet iterable = this.populateDirectory(
 						directory, 
 						page, 
