@@ -64,7 +64,6 @@ import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQuery
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetLoaderService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQueryService;
-import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReadService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReference;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetResolutionService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
@@ -88,9 +87,6 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 
 	@Cts2Service
 	private ResolvedValueSetLoaderService resolvedValueSetLoaderService;
-	
-	@Cts2Service
-	private ResolvedValueSetReadService resolvedValueSetReadService;
 	
 	@Cts2Service
 	private ResolvedValueSetQueryService resolvedValueSetQueryService;
@@ -285,7 +281,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		switch (resolution) {
 			case iterable : {
 				ResolvedValueSetResult directory = 
-						this.resolvedValueSetResolutionService.resolveDefinition(
+						this.resolvedValueSetResolutionService.getResolution(
 							id, 
 							null,//TODO: Possibly want to include filters 
 							page);
@@ -302,7 +298,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			}
 			case complete : {
 				ResolvedValueSet resolvedValueSet = 
-						this.resolvedValueSetReadService.read(id);
+						this.resolvedValueSetResolutionService.getResolution(id);
 				
 				if(resolvedValueSet == null){
 					throw ExceptionFactory.createUnknownResourceException(

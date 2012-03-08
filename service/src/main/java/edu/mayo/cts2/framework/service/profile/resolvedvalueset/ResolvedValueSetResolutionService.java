@@ -39,12 +39,12 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueS
  */
 public interface ResolvedValueSetResolutionService extends Cts2Profile {
 
-	public ResolvedValueSetResult resolveDefinition(
+	public ResolvedValueSetResult getResolution(
 			ResolvedValueSetReadId identifier,
 			Set<ResolvedFilter> filterComponent, 
 			Page page);
 	
-	public ResolvedValueSet resolveDefinition(
+	public ResolvedValueSet getResolution(
 			ResolvedValueSetReadId identifier);
 
 }
