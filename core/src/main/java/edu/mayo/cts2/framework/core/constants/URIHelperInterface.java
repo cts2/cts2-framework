@@ -114,10 +114,20 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + ASSOCIATIONS;
 	public static final String PATH_GRAPH_OF_CODESYSTEMVERSION = 
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + GRAPH;
+	
 	public static final String PATH_CHILDREN_ASSOCIATIONS_OF_ENTITY = 
 		PATH_ENTITYBYID + "/" + CHILDREN;
-	public static final String PATH_SOURCEOF_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + SOURCEOF;
+	public static final String PATH_ANCESTOR_ASSOCIATIONS_OF_ENTITY = 
+		PATH_ENTITYBYID + "/" + ANCESTORS;
+	public static final String PATH_DECENDANT_ASSOCIATIONS_OF_ENTITY = 
+		PATH_ENTITYBYID + "/" + DESCENDANTS;
+	
+	public static final String PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY = 
+		PATH_ENTITYBYID + "/" + SUBJECTOF;
+	public static final String PATH_TARGETOF_ASSOCIATIONS_OF_ENTITY = 
+		PATH_ENTITYBYID + "/" + TARGETOF;
+	public static final String PATH_PREDICATEOF_ASSOCIATIONS_OF_ENTITY = 
+		PATH_ENTITYBYID + "/" + PREDICATEOF;
 	
 	/* Statement */
 	public static final String PATH_STATEMENTS = "/" + STATEMENTS;
@@ -307,8 +317,12 @@ interface PathKeywords {
 	public static final String ASSOCIATION = "association";
 	public static final String ASSOCIATION_BY_URI = "associationbyuri";
 	public static final String GRAPH = "graph";
-	public static final String SOURCEOF = "sourceof";
+	public static final String SUBJECTOF = "subjectof";
+	public static final String PREDICATEOF = "predicateof";
+	public static final String TARGETOF = "targetof";
 	public static final String CHILDREN = "children";
+	public static final String ANCESTORS = "ancestors";
+	public static final String DESCENDANTS = "descendants";
 	
 	public static final String SERVICE = "service";
 	public static final String URI = "uri";
@@ -395,12 +409,17 @@ interface PathParameters {
 	public static final String RESOLUTION_TYPE_COMPLETESET = "complete";
 	
 	public static enum ValueSetDefinitionResolutionTypes { 
-		directory,
+		iterable,
 		entitydirectory,
 		complete 
 	}
 	
-	public static final String DEFAULT_VALUESETDEFINITION_RESOLUTION = "directory";
+	public static enum ResolvedValueSetResolutionTypes { 
+		iterable,
+		complete 
+	}
+	
+	public static final String DEFAULT_VALUESETDEFINITION_RESOLUTION = "iterable";
 
 }
 

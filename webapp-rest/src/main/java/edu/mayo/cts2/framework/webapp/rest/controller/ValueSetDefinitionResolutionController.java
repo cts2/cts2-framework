@@ -54,6 +54,7 @@ import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.model.valuesetdefinition.IteratableResolvedValueSet;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
@@ -65,7 +66,9 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSet
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReadService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReference;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetResolutionService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
@@ -91,6 +94,9 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	
 	@Cts2Service
 	private ResolvedValueSetQueryService resolvedValueSetQueryService;
+	
+	@Cts2Service
+	private ResolvedValueSetResolutionService resolvedValueSetResolutionService;
 	
 	@Cts2Service
 	private ValueSetDefinitionResolutionService valueSetDefinitionResolutionService;
@@ -183,7 +189,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 				new ValueSetDefinitionReadId(
 						definitionLocalId,
 						ModelUtils.nameOrUriFromName(valueSetName));
-		
+
 		ResolvedFilter filterComponent = this.getFilterResolver().resolveRestFilter(
 				restFilter, this.resolvedValueSetQueryService);
 		
@@ -195,9 +201,9 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		NameOrURI tag = ModelUtils.nameOrUriFromEither(tagName);
 		
 		switch (resolution) {
-			case directory : {
-				DirectoryResult<ResolvedValueSetDirectoryEntry> directory = this.valueSetDefinitionResolutionService.
-						resolveDefinitionAsDirectory(
+			case iterable : {
+				ResolvedValueSetResult directory = this.valueSetDefinitionResolutionService.
+						resolveDefinition(
 								definitionId, 
 								codeSystemVersions, 
 								tag, 
@@ -206,11 +212,15 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 								readContext, 
 								page);
 				
-				return this.populateDirectory(
+				IteratableResolvedValueSet iterable = this.populateDirectory(
 						directory, 
 						page, 
 						httpServletRequest, 
-						ResolvedValueSetDirectory.class);
+						IteratableResolvedValueSet.class);
+				
+				iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
+				
+				return iterable;
 			}
 			case entitydirectory : {
 				DirectoryResult<EntityDirectoryEntry> entityDirectory = this.valueSetDefinitionResolutionService.
@@ -247,8 +257,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			default : {
 				throw new IllegalStateException();
 			}
-		}
-		
+		}	
 	}
 	
 	@RequestMapping(value={	
@@ -256,12 +265,16 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public ResolvedValueSetMsg getResolvedValueSetByLocalId(
+	public Object getResolvedValueSetResolutionByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
-			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId) {
+			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId,
+			@RequestParam(
+					value=RESOLUTION_TYPE, defaultValue=DEFAULT_VALUESETDEFINITION_RESOLUTION) 
+			ResolvedValueSetResolutionTypes resolution,
+			Page page) {
 		
 		ResolvedValueSetReadId id = 
 				new ResolvedValueSetReadId(
@@ -269,19 +282,43 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 						ModelUtils.nameOrUriFromName(valueSetName),
 						ModelUtils.nameOrUriFromName(definitionLocalId));
 		
-		ResolvedValueSet resolvedValueSet = 
-				this.resolvedValueSetReadService.read(id);
-		
-		if(resolvedValueSet == null){
-			throw ExceptionFactory.createUnknownResourceException(
-					resolvedValueSetLocalId, 
-					UnknownResourceReference.class);
-		}
-		
-		ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
-		msg.setResolvedValueSet(resolvedValueSet);
-		
-		return this.wrapMessage(msg, httpServletRequest);
+		switch (resolution) {
+			case iterable : {
+				ResolvedValueSetResult directory = 
+						this.resolvedValueSetResolutionService.resolveDefinition(
+							id, 
+							null,//TODO: Possibly want to include filters 
+							page);
+				
+				IteratableResolvedValueSet iterable = this.populateDirectory(
+						directory, 
+						page, 
+						httpServletRequest, 
+						IteratableResolvedValueSet.class);
+				
+				iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
+				
+				return iterable;
+			}
+			case complete : {
+				ResolvedValueSet resolvedValueSet = 
+						this.resolvedValueSetReadService.read(id);
+				
+				if(resolvedValueSet == null){
+					throw ExceptionFactory.createUnknownResourceException(
+							resolvedValueSetLocalId, 
+							UnknownResourceReference.class);
+				}
+				
+				ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
+				msg.setResolvedValueSet(resolvedValueSet);
+				
+				return this.wrapMessage(msg, httpServletRequest);
+			}
+			default : {
+				throw new IllegalStateException();
+			}
+		}	
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION, method=RequestMethod.GET)
@@ -371,7 +408,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESET, method=RequestMethod.POST)
-	public ResponseEntity<Void> loadValueSetResolution(
+	public ResponseEntity<Void> loadResolvedValueSet(
 			HttpServletRequest httpServletRequest,
 			@RequestBody ResolvedValueSet resolvedValueSet) {
 		

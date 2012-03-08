@@ -23,25 +23,24 @@
  */
 package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
+import java.util.Set;
+
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
-import edu.mayo.cts2.framework.service.profile.BaseQueryService;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 
 /**
- * The Interface ValueSetDefinitionQueryService.
+ * The Interface ValueSetDefinitionResolutionService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ResolvedValueSetQueryService 
-	extends BaseQueryService {
+public interface ResolvedValueSetResolutionService extends Cts2Profile {
 
-	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
-			ResolvedValueSetQuery query,
-			SortCriteria sort,
+	public ResolvedValueSetResult resolveDefinition(
+			ResolvedValueSetReadId identifier,
+			Set<ResolvedFilter> filterComponent, 
 			Page page);
-	
-	public int count(ResolvedValueSetQuery query);
-	
+
 }
