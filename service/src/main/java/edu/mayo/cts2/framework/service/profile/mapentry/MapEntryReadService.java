@@ -23,7 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapentry;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 
@@ -34,4 +37,9 @@ import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
  */
 public interface MapEntryReadService extends
 		ReadService<MapEntry, MapEntryReadId> {
+
+  public boolean exists(NameOrURI mapVersion, EntityNameOrURI mapFrom, ResolvedReadContext resolvedReadContext);
+
+  public MapEntry read(NameOrURI mapVersion, EntityNameOrURI mapFrom, ResolvedReadContext resolvedReadContext);
+
 }

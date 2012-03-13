@@ -1,16 +1,21 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomaincatalog;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.map;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
+import edu.mayo.cts2.framework.model.core.MapVersionReference;
+import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.SourceAndRoleReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
+import edu.mayo.cts2.framework.model.mapversion.MapEntry;
+import edu.mayo.cts2.framework.model.mapversion.types.MapProcessingRule;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
-import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
@@ -34,7 +39,12 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
+import edu.mayo.cts2.framework.model.wsdl.mapentryread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.mapentryread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapentryread.Read;
+import edu.mayo.cts2.framework.model.wsdl.mapentryread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
+import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
@@ -43,32 +53,32 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-public class ConceptDomainCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
-
-  String uri = "http://localhost:8081/webapp-rest/soap/service/ConceptDomainCatalogReadService";
+public class MapEntryReadServicesEndpointTestIT extends SoapEndpointTestBase {
   
-  @Test
-  public void TestExists() throws Exception {
-    fail("Method not implemented.");
-  }
+  String uri = "http://localhost:8081/webapp-rest/soap/service/MapEntryReadService";
 
   @Test
   public void TestRead() throws Exception {
-    fail("Method not implemented.");
+    MockServiceProvider.cts2Service = new MockService();
+    Read request = new Read();
+    request.setMapVersion(ModelUtils.nameOrUriFromName("test"));
+    request.setMapFrom(ModelUtils.entityNameOrUriFromUri("test.version.uri"));
+    request.setContext(new ReadContext());
+    ReadResponse response = (ReadResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getMapEntry().getSource(0).getContent());
   }
 
   @Test
-  public void TestExistsDefiningEntity() throws Exception {
-    fail("Method not implemented.");
+  public void TestExists() throws Exception {
+    MockServiceProvider.cts2Service = new MockService();
+    Exists request = new Exists();request.setMapVersion(ModelUtils.nameOrUriFromName("test"));
+    request.setMapFrom(ModelUtils.entityNameOrUriFromUri("test.version.uri"));
+    request.setContext(new ReadContext());
+    ExistsResponse response = (ExistsResponse) this.doSoapCall(uri, request);
+    assertTrue(response.getReturn());
   }
 
-  @Test
-  public void TestReadByDefiningEntity() throws Exception {
-    fail("Method not implemented.");
-  }
-  
   /*******************************************************/
   /*                    Base Services                    */
   /*******************************************************/
@@ -128,7 +138,7 @@ public class ConceptDomainCatalogReadServicesEndpointTestIT extends SoapEndpoint
     GetSupportedProfile request = new GetSupportedProfile();
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
-    assertEquals(StructuralProfile.SP_CODE_SYSTEM, profile.getStructuralProfile());
+    assertEquals(StructuralProfile.SP_MAP, profile.getStructuralProfile());
     assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile(0));
   }
 
@@ -154,52 +164,59 @@ public class ConceptDomainCatalogReadServicesEndpointTestIT extends SoapEndpoint
 
   /********************************************************************************************************************/
   /*                                                                                                                  */
-  /*                                  Mock Code System Catalog Read Service Class                                     */
+  /*                                       Mock Map Entry Read Service Class                                          */
   /*                                                                                                                  */
   /********************************************************************************************************************/
-  private class MockService extends MockBaseService implements ConceptDomainReadService {
+  private class MockService extends MockBaseService implements MapEntryReadService {
 
-    public boolean existsDefiningEntity(EntityNameOrURI entity, ReadContext context) {
-      return entity.getEntityName().equals("test") && context != null;
-    }
-    
-    public ConceptDomainCatalogEntry readByDefiningEntity(
-        EntityNameOrURI entity,
-        QueryControl queryControl,
-        ReadContext context) {
-      ConceptDomainCatalogEntry entry = new ConceptDomainCatalogEntry();
-      ScopedEntityName entityName = new ScopedEntityName();
-
-      if (entity.getEntityName().equals("test") && queryControl != null && context != null) {
-        entityName.setName("success");
-        entity.setEntityName(entityName);
-      }
-      else {
-        entityName.setName("fail");
-        entity.setEntityName(entityName);
-      }
-
-      return entry;
-    }
-    
     @Override
-    public ConceptDomainCatalogEntry read(NameOrURI identifier, ResolvedReadContext readContext) {
-      ConceptDomainCatalogEntry entry = new ConceptDomainCatalogEntry();
-      entry.setAbout("test about");
-
-      if (identifier.getName().equals("test") && readContext != null) {
-        entry.setConceptDomainName("success");
-      }
-      else {
-        entry.setConceptDomainName("fail");
-      }
-
-      return entry;
+    public boolean exists(NameOrURI mapVersion, EntityNameOrURI mapFrom, ResolvedReadContext resolvedReadContext) {
+      return mapVersion.getName().equals("test")
+          && mapFrom.getUri().equals("test.version.uri")
+          && resolvedReadContext != null;
     }
 
     @Override
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
-      return identifier.getName().equals("test") && readContext != null;
+    public boolean exists(MapEntryReadId identifier, ReadContext readContext) {
+      throw new UnsupportedOperationException("Method not implemented");
     }
+
+    @Override
+    public MapEntry read(NameOrURI mapVersion, EntityNameOrURI mapFrom, ResolvedReadContext resolvedReadContext) {
+      MapEntry entry = new MapEntry();
+      SourceAndRoleReference sourceAndRoleReference = new SourceAndRoleReference();
+      sourceAndRoleReference.setSource(new SourceReference("test.sourceRef"));
+
+      if (mapVersion.getName().equals("test") && mapFrom.getUri().equals("test.version.uri")) {
+        sourceAndRoleReference.setContent("success");
+      }
+      else {
+        sourceAndRoleReference.setContent("fail");
+      }
+
+      SourceAndRoleReference refs[] = new SourceAndRoleReference[1];
+      refs[0] = sourceAndRoleReference;
+      entry.setSource(refs);
+
+      MapVersionReference versionReference = new MapVersionReference();
+      versionReference.setMapVersion(new NameAndMeaningReference("test.version"));
+      entry.setAssertedBy(versionReference);
+
+      URIAndEntityName uriAndEntityName = new URIAndEntityName();
+      uriAndEntityName.setName("test.name");
+      uriAndEntityName.setNamespace("test");
+      entry.setMapFrom(uriAndEntityName);
+
+      entry.setProcessingRule(MapProcessingRule.FIRST_MATCH);
+
+      return entry;
+    }
+
+    @Override
+    public MapEntry read(MapEntryReadId identifier, ResolvedReadContext readContext) {
+      throw new UnsupportedOperationException("Method not implemented");
+    }
+
   }
+
 }

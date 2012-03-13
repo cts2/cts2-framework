@@ -1,10 +1,12 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomaincatalog;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.map;
 
 import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.map.MapReadService;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
@@ -23,56 +25,47 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.ExistsDefiningEntity;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.ExistsDefiningEntityResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.Read;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.ReadByDefiningEntity;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.ReadByDefiningEntityResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomaincatalogread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadService;
+import edu.mayo.cts2.framework.model.wsdl.mapcatalogread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.mapcatalogread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapcatalogread.Read;
+import edu.mayo.cts2.framework.model.wsdl.mapcatalogread.ReadResponse;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-@Endpoint("ConceptDomainCatalogReadServicesEndpoint")
-public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
+@Endpoint("MapCatalogReadServicesEndpoint")
+public class MapCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
 
   @Cts2Service
-  private ConceptDomainReadService conceptDomainReadService;
+  private MapReadService mapReadService;
 
-  /* TODO: Implement Method: read */
-  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServiceTypes")
+  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogReadServices")
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
 
-    throw new UnsupportedOperationException("Method not implemented");
+    MapCatalogEntry entry = this.doRead(
+        this.mapReadService,
+        request.getCodeSystemId(),
+        request.getQueryControl(),
+        request.getContext());
+    
+    ReadResponse response = new ReadResponse();
+    response.setReturn(entry);
+    return response;
   }
 
-  /* TODO: Implement Method: readByDefiningEntity */
-  @PayloadRoot(localPart = "readByDefiningEntity", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServiceTypes")
-  @ResponsePayload
-  public ReadByDefiningEntityResponse readByDefiningEntity(@RequestPayload ReadByDefiningEntity request) {
-    throw new UnsupportedOperationException("Method not implemented");
-  }
-
-  /* TODO: Implement Method: exists */
-  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServiceTypes")
+  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    throw new UnsupportedOperationException("Method not implemented");
-  }
+    boolean exists = this.mapReadService.exists(request.getCodeSystemId(), request.getContext());
 
-  /* TODO: Implement Method: existsDefiningEntity */
-  @PayloadRoot(localPart = "existsDefiningEntity", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServiceTypes")
-  @ResponsePayload
-  public ExistsDefiningEntityResponse existsByDefiningEntity(@RequestPayload ExistsDefiningEntity request) {
-    throw new UnsupportedOperationException("Method not implemented");
+    ExistsResponse response = new ExistsResponse();
+    response.setReturn(exists);
+    return response;
   }
-
+  
   /*******************************************************/
   /*                   BaseServices                      */
   /*******************************************************/
@@ -103,7 +96,7 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetKnownNamespaceResponse getKnownNamespace(@RequestPayload GetKnownNamespace request) {
     GetKnownNamespaceResponse response = new GetKnownNamespaceResponse();
-    response.setReturn(this.conceptDomainReadService.getKnownNamespaceList());
+    response.setReturn(this.mapReadService.getKnownNamespaceList());
 
     return response;
   }
@@ -112,7 +105,7 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceDescriptionResponse getServiceDescription(@RequestPayload GetServiceDescription request) {
     GetServiceDescriptionResponse response = new GetServiceDescriptionResponse();
-    response.setReturn(this.conceptDomainReadService.getServiceDescription());
+    response.setReturn(this.mapReadService.getServiceDescription());
 
     return response;
   }
@@ -121,7 +114,7 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceNameResponse getServiceName(@RequestPayload GetServiceName request) {
     GetServiceNameResponse response = new GetServiceNameResponse();
-    response.setReturn(this.conceptDomainReadService.getServiceName());
+    response.setReturn(this.mapReadService.getServiceName());
 
     return response;
   }
@@ -130,7 +123,7 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceProviderResponse getServiceProvider(@RequestPayload GetServiceProvider request) {
     GetServiceProviderResponse response = new GetServiceProviderResponse();
-    response.setReturn(this.conceptDomainReadService.getServiceProvider());
+    response.setReturn(this.mapReadService.getServiceProvider());
 
     return response;
   }
@@ -139,7 +132,7 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceVersionResponse getServiceVersion(@RequestPayload GetServiceVersion request) {
     GetServiceVersionResponse response = new GetServiceVersionResponse();
-    response.setReturn(this.conceptDomainReadService.getServiceVersion());
+    response.setReturn(this.mapReadService.getServiceVersion());
 
     return response;
   }
@@ -160,7 +153,7 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetSupportedProfileResponse getSupportedProfile(@RequestPayload GetSupportedProfile request) {
     ProfileElement profile = new ProfileElement();
-    profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM);
+    profile.setStructuralProfile(StructuralProfile.SP_MAP);
 
     FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
     functionalProfiles[0] = FunctionalProfile.FP_READ;
@@ -174,5 +167,6 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
 
     return response;
   }
+
 
 }

@@ -1,24 +1,28 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.valuesetdefinition;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
-import edu.mayo.cts2.framework.model.core.ConceptDomainReference;
-import edu.mayo.cts2.framework.model.core.ContextReference;
-import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.core.CodeSystemReference;
+import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
+import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceAndNotation;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.ValueSetReference;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
+import edu.mayo.cts2.framework.model.core.types.SetOperator;
+import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.model.valuesetdefinition.CompleteCodeSystemReference;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
@@ -37,88 +41,75 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTag;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTagResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Read;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ExistsDefinitionForValueSet;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ExistsDefinitionForValueSetResponse;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.Read;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ReadDefinitionForValueSet;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ReadDefinitionForValueSetResponse;
+import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpointTestBase {
+public class ValueSetDefinitionReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
-  String uri = "http://localhost:8081/webapp-rest/soap/service/ConceptDomainBindingReadService";
-
-  @Test
-  public void TestGetSupportedTag() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    GetSupportedTag request = new GetSupportedTag();
-    GetSupportedTagResponse response = (GetSupportedTagResponse) this.doSoapCall(uri, request);
-    VersionTagReference[] versionTagReferences = response.getReturn();
-    assertEquals(3, versionTagReferences.length);
-    assertTrue(ArrayUtils.contains(versionTagReferences, new VersionTagReference("tag1")));
-    assertTrue(ArrayUtils.contains(versionTagReferences, new VersionTagReference("tag2")));
-    assertTrue(ArrayUtils.contains(versionTagReferences, new VersionTagReference("tag3")));
-  }
+  String uri = "http://localhost:8081/webapp-rest/soap/service/ValueSetDefinitionReadService";
 
   @Test
   public void TestRead() throws Exception {
+    fail("Method not implemented");
     MockServiceProvider.cts2Service = new MockService();
     Read request = new Read();
-    request.setConceptDomain(ModelUtils.nameOrUriFromName("test"));
-    request.setApplicableContext(ModelUtils.nameOrUriFromName("applicableContextTest"));
-    request.setBindingQualifier(ModelUtils.nameOrUriFromName("bindingQualifierTest"));
-    request.setValueSet(ModelUtils.nameOrUriFromName("valueSetTest"));
+    request.setValueSetDefinitionURI("test");
+    request.setContext(new ReadContext());
+    request.setQueryControl(new QueryControl());
     ReadResponse response = (ReadResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getBindingURI());
+    assertEquals("success", response.getReturn().getDocumentURI());
+  }
+
+  @Test
+  public void TestReadDefinitionForValueSet() throws Exception {
+    MockServiceProvider.cts2Service = new MockService();
+    ReadDefinitionForValueSet request = new ReadDefinitionForValueSet();
+    request.setValueSet(ModelUtils.nameOrUriFromName("test"));
+    request.setTag(ModelUtils.nameOrUriFromName("test.tag"));
+    request.setContext(new ReadContext());
+    ReadDefinitionForValueSetResponse response = (ReadDefinitionForValueSetResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getReturn().getDocumentURI());
   }
 
   @Test
   public void TestExists() throws Exception {
+    fail("Method not implemented");
     MockServiceProvider.cts2Service = new MockService();
     Exists request = new Exists();
-    request.setConceptDomain(ModelUtils.nameOrUriFromName("test"));
-    request.setApplicableContext(ModelUtils.nameOrUriFromName("applicableContextTest"));
-    request.setBindingQualifier(ModelUtils.nameOrUriFromName("bindingQualifierTest"));
-    request.setValueSet(ModelUtils.nameOrUriFromName("valueSetTest"));
+    request.setValueSetDefinitionURI("test");
+    request.setContext(new ReadContext());
     ExistsResponse response = (ExistsResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
   }
 
   @Test
-  public void TestReadByURI() throws Exception {
+  public void TestExistsDefinitionForValueSet() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
-    ReadByURI request = new ReadByURI();
-    request.setUri("test.uri");
-    ReadByURIResponse response = (ReadByURIResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getBindingURI());
-  }
-
-  @Test
-  public void TestExistsURI() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    ExistsURI request = new ExistsURI();
-    request.setEntity("test");
-    ExistsURIResponse response = (ExistsURIResponse) this.doSoapCall(uri, request);
+    ExistsDefinitionForValueSet request = new ExistsDefinitionForValueSet();
+    request.setValueSet(ModelUtils.nameOrUriFromName("test"));
+    request.setTag(ModelUtils.nameOrUriFromName("test.tag"));
+    request.setContext(new ReadContext());
+    ExistsDefinitionForValueSetResponse response = (ExistsDefinitionForValueSetResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
   }
-
+  
   /*******************************************************/
   /*                    Base Services                    */
   /*******************************************************/
@@ -178,7 +169,7 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
     GetSupportedProfile request = new GetSupportedProfile();
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
-    assertEquals(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING, profile.getStructuralProfile());
+    assertEquals(StructuralProfile.SP_VALUE_SET_DEFINITION, profile.getStructuralProfile());
     assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile(0));
   }
 
@@ -204,88 +195,76 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
 
   /********************************************************************************************************************/
   /*                                                                                                                  */
-  /*                                 Mock Concept Domain Binding Read Service Class                                   */
+  /*                                        Mock ValueSet Read Service Class                                          */
   /*                                                                                                                  */
+  /********************************************************************************************************************/
+  private class MockService extends MockBaseService implements ValueSetDefinitionReadService {
 
-  /**
-   * ****************************************************************************************************************
-   */
-  private class MockService extends MockBaseService implements ConceptDomainBindingReadService {
+    @Override
+    public boolean existsDefinitionForValueSet(NameOrURI valueSet, NameOrURI tag, ReadContext readContext) {
+      return valueSet.getName().equals("test") && tag.getName().equals("test.tag") && readContext != null;
+    }
 
-    public LocalIdConceptDomainBinding read(ConceptDomainBindingReadId identifier, ResolvedReadContext readContext) {
-      ConceptDomainBinding binding = new ConceptDomainBinding();
+    @Override
+    public ValueSetDefinition readDefinitionForValueSet(NameOrURI valueSet, NameOrURI tag, ReadContext readContext) {
+      ValueSetDefinition definition = createValueSetDefinition();
 
-      if (identifier.getName().equals("test") && readContext != null) {
-        binding.setBindingURI("success");
+      if (valueSet.getName().equals("test") && tag.getName().equals("test.tag") && readContext != null) {
+        definition.setDocumentURI("success");
       }
       else {
-        binding.setBindingURI("fail");
+        definition.setDocumentURI("fail");
       }
 
-      LocalIdConceptDomainBinding entry = new LocalIdConceptDomainBinding(binding);
-      return entry;
+      return definition;
     }
 
-    public boolean exists(ConceptDomainBindingReadId identifier, ReadContext readContext) {
-      return identifier.getName().equals("test");
-    }
+    @Override
+    public LocalIdValueSetDefinition read(ValueSetDefinitionReadId identifier, ResolvedReadContext readContext) {
+      LocalIdValueSetDefinition localIdValueSetDefinition = new LocalIdValueSetDefinition(createValueSetDefinition());
 
-    public boolean exists(NameOrURI conceptDomain, NameOrURI valueSet, NameOrURI applicableContext, NameOrURI bindingQualifier) {
-      return conceptDomain.getName().equals("test")
-          && valueSet.getName().equals("valueSetTest")
-          && applicableContext.getName().equals("applicableContextTest")
-          && bindingQualifier.getName().equals("bindingQualifierTest");
-    }
-
-    public boolean existsURI(String documentURI) {
-      return documentURI.equals("test");
-    }
-
-    public ConceptDomainBinding read(
-        NameOrURI conceptDomain, NameOrURI valueSet,
-        NameOrURI applicableContext, NameOrURI bindingQualifier) {
-      ConceptDomainBinding binding = createBinding();
-
-      if (conceptDomain.getName().equals("test")
-          && valueSet.getName().equals("valueSetTest")
-          && applicableContext.getName().equals("applicableContextTest")
-          && bindingQualifier.getName().equals("bindingQualifierTest")) {
-        binding.setBindingURI("success");
+      if (identifier.getValueSet().getName().equals("test") && readContext != null) {
+        localIdValueSetDefinition.setLocalID("success");
       }
       else {
-        binding.setBindingURI("fail");
+        localIdValueSetDefinition.setLocalID("fail");
       }
 
-      return binding;
+      return localIdValueSetDefinition;
     }
 
-    public ConceptDomainBinding readByURI(String documentURI) {
-      ConceptDomainBinding binding = createBinding();
-
-      if (documentURI.equals("test.uri")) {
-        binding.setBindingURI("success");
-      }
-      else {
-        binding.setBindingURI("fail");
-      }
-
-      return binding;
+    @Override
+    public boolean exists(ValueSetDefinitionReadId identifier, ReadContext readContext) {
+      return identifier.getName().equals("test") && readContext != null;
     }
 
-    public List<VersionTagReference> getSupportedTag() {
-      List<VersionTagReference> tags = new ArrayList<VersionTagReference>(3);
-      tags.add(new VersionTagReference("tag1"));
-      tags.add(new VersionTagReference("tag2"));
-      tags.add(new VersionTagReference("tag3"));
-      return tags;
-    }
+    private ValueSetDefinition createValueSetDefinition() {
+      ValueSetDefinition definition = new ValueSetDefinition();
+      definition.setAbout("test.about");
 
-    private ConceptDomainBinding createBinding() {
-      ConceptDomainBinding binding = new ConceptDomainBinding();
-      binding.setApplicableContext(new ContextReference("test_ref"));
-      binding.setBindingFor(new ConceptDomainReference("test_ref"));
-      binding.setBoundValueSet(new ValueSetReference("test_ref"));
-      return binding;
+      SourceAndNotation sourceAndNotation = new SourceAndNotation();
+      sourceAndNotation.setSourceDocument("test.sourceandnotation.document");
+      definition.setSourceAndNotation(sourceAndNotation);
+
+      ValueSetReference valueSetReference = new ValueSetReference("test.valuesetref");
+      definition.setDefinedValueSet(valueSetReference);
+
+      ValueSetDefinitionEntry entry = new ValueSetDefinitionEntry();
+      CompleteCodeSystemReference codeSystemReference = new CompleteCodeSystemReference();
+      CodeSystemReference ref = new CodeSystemReference("test.codesystem");
+      codeSystemReference.setCodeSystem(ref);
+      CodeSystemVersionReference codeSystemVersionReference = new CodeSystemVersionReference();
+      codeSystemVersionReference.setCodeSystem(ref);
+      codeSystemVersionReference.setVersion(new NameAndMeaningReference("test.codesystemref.version"));
+      codeSystemReference.setCodeSystemVersion(codeSystemVersionReference);
+      entry.setCompleteCodeSystem(codeSystemReference);
+      entry.setOperator(SetOperator.INTERSECT);
+      entry.setEntryOrder(1L);
+      ValueSetDefinitionEntry entries[] = new ValueSetDefinitionEntry[1];
+      entries[0] = entry;
+      definition.setEntry(entries);
+
+      return definition;
     }
   }
 

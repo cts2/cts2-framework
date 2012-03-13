@@ -1,9 +1,13 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.mapversion;
 
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.mapversion.MapEntry;
+import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -25,17 +29,19 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTag;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTagResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Read;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.EntryExists;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.EntryExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ExistsMapVersionForMap;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ExistsMapVersionForMapResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.Read;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadEntry;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadEntryResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadMapVersionForMap;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadMapVersionForMapResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -44,76 +50,83 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import java.util.concurrent.Callable;
 
-@Endpoint("ConceptDomainBindingReadServicesEndpoint")
-public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServiceEndpoint {
+@Endpoint("MapVersionReadServicesEndpoint")
+public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint {
 
   @Cts2Service
-  private ConceptDomainBindingReadService conceptDomainBindingReadService;
+  private MapVersionReadService mapVersionReadService;
 
-  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
+  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
+    MapVersion mapVersion = this.doRead(
+        this.mapVersionReadService,
+        request.getMapVersion(),
+        request.getQueryControl(),
+        request.getContext());
+
     ReadResponse response = new ReadResponse();
-    NameOrURI conceptDomain = request.getConceptDomain();
-    NameOrURI valueSet = request.getValueSet();
-    NameOrURI applicableContext = request.getApplicableContext();
-    NameOrURI bindingQualifier = request.getBindingQualifier();
-
-    response.setReturn(
-        this.doRead(
-            this.conceptDomainBindingReadService,
-            conceptDomain,
-            valueSet,
-            applicableContext,
-            bindingQualifier));
-
+    response.setMapVersion(mapVersion);
     return response;
   }
 
-  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
+  @PayloadRoot(localPart = "readMapVersionForMap", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
+  @ResponsePayload
+  public ReadMapVersionForMapResponse readMapVersionForMap(@RequestPayload ReadMapVersionForMap request) {
+    MapVersion mapVersion = this.doReadMapVersionForMap(
+        this.mapVersionReadService,
+        request.getMap(),
+        request.getTag(),
+        request.getQueryControl(),
+        request.getContext());
+
+    ReadMapVersionForMapResponse response = new ReadMapVersionForMapResponse();
+    response.setMapVersion(mapVersion);
+    return response;
+  }
+
+  @PayloadRoot(localPart = "readEntry", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
+  @ResponsePayload
+  public ReadEntryResponse readEntry(@RequestPayload ReadEntry request) {
+    MapEntry entry = this.mapVersionReadService.readEntry(request.getMapVersion(), request.getSourceEntity());
+
+    ReadEntryResponse response = new ReadEntryResponse();
+    response.setReturn(entry);
+    return response;
+  }
+
+  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
+    boolean exists = this.mapVersionReadService.exists(request.getMapVersion(), request.getContext());
+
     ExistsResponse response = new ExistsResponse();
-    NameOrURI conceptDomain = request.getConceptDomain();
-    NameOrURI valueSet = request.getValueSet();
-    NameOrURI applicableContext = request.getApplicableContext();
-    NameOrURI bindingQualifier = request.getBindingQualifier();
-
-    boolean exists =
-        this.conceptDomainBindingReadService.exists(
-            conceptDomain,
-            valueSet,
-            applicableContext,
-            bindingQualifier);
     response.setReturn(exists);
-
     return response;
   }
 
-  @PayloadRoot(localPart = "readByURI", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
+  @PayloadRoot(localPart = "existsMapVersionForMap", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
-  public ReadByURIResponse readByURI(@RequestPayload ReadByURI request) {
-    ReadByURIResponse response = new ReadByURIResponse();
-    response.setReturn(this.doReadByURI(this.conceptDomainBindingReadService, request.getUri()));
+  public ExistsMapVersionForMapResponse existsMapVersionForMap(@RequestPayload ExistsMapVersionForMap request) {
+    boolean exists = this.mapVersionReadService.existsMapVersionForMap(
+        request.getMap(),
+        request.getTag().getName(),
+        this.resolveReadContext(request.getContext()));
 
+    ExistsMapVersionForMapResponse response = new ExistsMapVersionForMapResponse();
+    response.setReturn(exists);
     return response;
   }
 
-  @PayloadRoot(localPart = "existsURI", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
+  @PayloadRoot(localPart = "entryExists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
-  public ExistsURIResponse existsURI(@RequestPayload ExistsURI request) {
-    ExistsURIResponse response = new ExistsURIResponse();
-    response.setReturn(this.conceptDomainBindingReadService.existsURI(request.getEntity()));
+  public EntryExistsResponse entryExists(@RequestPayload EntryExists request) {
+    boolean exists = this.mapVersionReadService.entryExists(
+        request.getMapVersion(),
+        request.getSourceEntity());
 
-    return response;
-  }
-
-  @PayloadRoot(localPart = "getSupportedTag", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
-  @ResponsePayload
-  public GetSupportedTagResponse getSupportedTag(@RequestPayload GetSupportedTag request) {
-    GetSupportedTagResponse response = new GetSupportedTagResponse();
-    response.setReturn(conceptDomainBindingReadService.getSupportedTag());
-
+    EntryExistsResponse response = new EntryExistsResponse();
+    response.setReturn(exists);
     return response;
   }
 
@@ -147,7 +160,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetKnownNamespaceResponse getKnownNamespace(@RequestPayload GetKnownNamespace request) {
     GetKnownNamespaceResponse response = new GetKnownNamespaceResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getKnownNamespaceList());
+    response.setReturn(this.mapVersionReadService.getKnownNamespaceList());
 
     return response;
   }
@@ -156,7 +169,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceDescriptionResponse getServiceDescription(@RequestPayload GetServiceDescription request) {
     GetServiceDescriptionResponse response = new GetServiceDescriptionResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceDescription());
+    response.setReturn(this.mapVersionReadService.getServiceDescription());
 
     return response;
   }
@@ -165,7 +178,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceNameResponse getServiceName(@RequestPayload GetServiceName request) {
     GetServiceNameResponse response = new GetServiceNameResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceName());
+    response.setReturn(this.mapVersionReadService.getServiceName());
 
     return response;
   }
@@ -174,7 +187,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceProviderResponse getServiceProvider(@RequestPayload GetServiceProvider request) {
     GetServiceProviderResponse response = new GetServiceProviderResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceProvider());
+    response.setReturn(this.mapVersionReadService.getServiceProvider());
 
     return response;
   }
@@ -183,7 +196,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceVersionResponse getServiceVersion(@RequestPayload GetServiceVersion request) {
     GetServiceVersionResponse response = new GetServiceVersionResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceVersion());
+    response.setReturn(this.mapVersionReadService.getServiceVersion());
 
     return response;
   }
@@ -204,7 +217,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetSupportedProfileResponse getSupportedProfile(@RequestPayload GetSupportedProfile request) {
     ProfileElement profile = new ProfileElement();
-    profile.setStructuralProfile(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING);
+    profile.setStructuralProfile(StructuralProfile.SP_MAP_VERSION);
 
     FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
     functionalProfiles[0] = FunctionalProfile.FP_READ;
@@ -218,34 +231,22 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
 
     return response;
   }
-
-  private ConceptDomainBinding doRead(
-      final ConceptDomainBindingReadService readService,
-      final NameOrURI conceptDomain,
-      final NameOrURI valueSet,
-      final NameOrURI applicableContext,
-      final NameOrURI bindingQualifier) {
-    return this.doTimedCall(new Callable<ConceptDomainBinding>() {
-
-      @Override
-      public ConceptDomainBinding call() throws Exception {
-        return readService.read(conceptDomain, valueSet, applicableContext, bindingQualifier);
-      }
-
-    }, null);
-  }
   
-  private ConceptDomainBinding doReadByURI(
-      final ConceptDomainBindingReadService readService,
-      final String uri) {
-    return this.doTimedCall(new Callable<ConceptDomainBinding>() {
+  private MapVersion doReadMapVersionForMap(
+      final MapVersionReadService readService,
+      final NameOrURI map,
+      final NameOrURI tag,
+      final QueryControl queryControl,
+      final ReadContext context) {
+    final ResolvedReadContext resolvedReadContext = this.resolveReadContext(context);
 
+    return this.doTimedCall(new Callable<MapVersion>() {
+      
       @Override
-      public ConceptDomainBinding call() throws Exception {
-        return readService.readByURI(uri);
+      public MapVersion call() throws Exception {
+        return readService.readMapVersionForMap(map, tag.getName(), resolvedReadContext);
       }
-
-    }, null);
+    }, queryControl);
   }
 
 }

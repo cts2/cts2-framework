@@ -1,19 +1,23 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.mapversion;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
-import edu.mayo.cts2.framework.model.core.ConceptDomainReference;
-import edu.mayo.cts2.framework.model.core.ContextReference;
-import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.core.MapReference;
+import edu.mayo.cts2.framework.model.core.MapVersionReference;
+import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceAndNotation;
+import edu.mayo.cts2.framework.model.core.SourceAndRoleReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
-import edu.mayo.cts2.framework.model.core.ValueSetReference;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.mapversion.MapEntry;
+import edu.mayo.cts2.framework.model.mapversion.MapVersion;
+import edu.mayo.cts2.framework.model.mapversion.types.MapProcessingRule;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
@@ -37,85 +41,69 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTag;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTagResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Read;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.EntryExists;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.EntryExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ExistsMapVersionForMap;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ExistsMapVersionForMapResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.Read;
+import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpointTestBase {
+public class MapVersionReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
-  String uri = "http://localhost:8081/webapp-rest/soap/service/ConceptDomainBindingReadService";
-
-  @Test
-  public void TestGetSupportedTag() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    GetSupportedTag request = new GetSupportedTag();
-    GetSupportedTagResponse response = (GetSupportedTagResponse) this.doSoapCall(uri, request);
-    VersionTagReference[] versionTagReferences = response.getReturn();
-    assertEquals(3, versionTagReferences.length);
-    assertTrue(ArrayUtils.contains(versionTagReferences, new VersionTagReference("tag1")));
-    assertTrue(ArrayUtils.contains(versionTagReferences, new VersionTagReference("tag2")));
-    assertTrue(ArrayUtils.contains(versionTagReferences, new VersionTagReference("tag3")));
-  }
+  String uri = "http://localhost:8081/webapp-rest/soap/service/MapVersionReadService";
 
   @Test
   public void TestRead() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
     Read request = new Read();
-    request.setConceptDomain(ModelUtils.nameOrUriFromName("test"));
-    request.setApplicableContext(ModelUtils.nameOrUriFromName("applicableContextTest"));
-    request.setBindingQualifier(ModelUtils.nameOrUriFromName("bindingQualifierTest"));
-    request.setValueSet(ModelUtils.nameOrUriFromName("valueSetTest"));
+    request.setMapVersion(ModelUtils.nameOrUriFromName("test"));
+    request.setContext(new ReadContext());
+    QueryControl queryControl = new QueryControl();
+    queryControl.setTimeLimit(100000L);
+    request.setQueryControl(queryControl);
     ReadResponse response = (ReadResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getBindingURI());
+    assertEquals("success", response.getMapVersion().getMapVersionName());
   }
 
   @Test
   public void TestExists() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
     Exists request = new Exists();
-    request.setConceptDomain(ModelUtils.nameOrUriFromName("test"));
-    request.setApplicableContext(ModelUtils.nameOrUriFromName("applicableContextTest"));
-    request.setBindingQualifier(ModelUtils.nameOrUriFromName("bindingQualifierTest"));
-    request.setValueSet(ModelUtils.nameOrUriFromName("valueSetTest"));
+    request.setMapVersion(ModelUtils.nameOrUriFromName("test"));
+    request.setContext(new ReadContext());
     ExistsResponse response = (ExistsResponse) this.doSoapCall(uri, request);
+    assertTrue(response.getReturn());
+  }
+  
+  @Test
+  public void TestExistsMapVersionForMap() throws Exception {
+    MockServiceProvider.cts2Service = new MockService();
+    ExistsMapVersionForMap request = new ExistsMapVersionForMap();
+    request.setMap(ModelUtils.nameOrUriFromName("test"));
+    request.setTag(ModelUtils.nameOrUriFromName("test.tag"));
+    request.setContext(new ReadContext());
+    ExistsMapVersionForMapResponse response = (ExistsMapVersionForMapResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
   }
 
   @Test
-  public void TestReadByURI() throws Exception {
+  public void TestEntryExists() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
-    ReadByURI request = new ReadByURI();
-    request.setUri("test.uri");
-    ReadByURIResponse response = (ReadByURIResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getBindingURI());
-  }
-
-  @Test
-  public void TestExistsURI() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    ExistsURI request = new ExistsURI();
-    request.setEntity("test");
-    ExistsURIResponse response = (ExistsURIResponse) this.doSoapCall(uri, request);
+    EntryExists request = new EntryExists();
+    request.setMapVersion(ModelUtils.nameOrUriFromName("test"));
+    request.setSourceEntity(ModelUtils.entityNameOrUriFromUri("test.uri"));
+    EntryExistsResponse response = (EntryExistsResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
   }
 
@@ -178,7 +166,7 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
     GetSupportedProfile request = new GetSupportedProfile();
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
-    assertEquals(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING, profile.getStructuralProfile());
+    assertEquals(StructuralProfile.SP_MAP_VERSION, profile.getStructuralProfile());
     assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile(0));
   }
 
@@ -204,88 +192,94 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
 
   /********************************************************************************************************************/
   /*                                                                                                                  */
-  /*                                 Mock Concept Domain Binding Read Service Class                                   */
+  /*                                      Mock Map Version Read Service Class                                         */
   /*                                                                                                                  */
+  /********************************************************************************************************************/
+  private class MockService extends MockBaseService implements MapVersionReadService {
 
-  /**
-   * ****************************************************************************************************************
-   */
-  private class MockService extends MockBaseService implements ConceptDomainBindingReadService {
+    @Override
+    public boolean entryExists(NameOrURI mapVersion, EntityNameOrURI sourceEntity) {
+      return mapVersion.getName().equals("test") && sourceEntity.getUri().equals("test.uri");
+    }
 
-    public LocalIdConceptDomainBinding read(ConceptDomainBindingReadId identifier, ResolvedReadContext readContext) {
-      ConceptDomainBinding binding = new ConceptDomainBinding();
+    @Override
+    public boolean existsMapVersionForMap(NameOrURI map, String tagName, ResolvedReadContext readContext) {
+      return map.getName().equals("test") && tagName.equals("test.tag") && readContext != null;
+    }
 
-      if (identifier.getName().equals("test") && readContext != null) {
-        binding.setBindingURI("success");
+    @Override
+    public MapVersion readMapVersionForMap(NameOrURI map, String tagName, ResolvedReadContext readContext) {
+      MapVersion mapVersion = createMapVersion();
+
+      if (map.getName().equals("test") && tagName.equals("test.tag") && readContext != null) {
+        mapVersion.setMapVersionName("success");
       }
       else {
-        binding.setBindingURI("fail");
+        mapVersion.setMapVersionName("fail");
       }
 
-      LocalIdConceptDomainBinding entry = new LocalIdConceptDomainBinding(binding);
+      return mapVersion;
+    }
+
+    @Override
+    public MapEntry readEntry(NameOrURI mapVersion, EntityNameOrURI sourceEntity) {
+      MapEntry entry = new MapEntry();
+      SourceAndRoleReference sourceAndRoleReference = new SourceAndRoleReference();
+      sourceAndRoleReference.setSource(new SourceReference("test.sourceRef"));
+
+      if (mapVersion.getName().equals("test") && sourceEntity.getUri().equals("test.uri")) {
+        sourceAndRoleReference.setContent("success");
+      }
+      else {
+        sourceAndRoleReference.setContent("fail");
+      }
+
+      SourceAndRoleReference refs[] = new SourceAndRoleReference[1];
+      refs[0] = sourceAndRoleReference;
+      entry.setSource(refs);
+
+      MapVersionReference versionReference = new MapVersionReference();
+      versionReference.setMapVersion(new NameAndMeaningReference("test.version"));
+      entry.setAssertedBy(versionReference);
+
+      URIAndEntityName uriAndEntityName = new URIAndEntityName();
+      uriAndEntityName.setName("test.name");
+      uriAndEntityName.setNamespace("test");
+      entry.setMapFrom(uriAndEntityName);
+
+      entry.setProcessingRule(MapProcessingRule.FIRST_MATCH);
+
       return entry;
     }
 
-    public boolean exists(ConceptDomainBindingReadId identifier, ReadContext readContext) {
-      return identifier.getName().equals("test");
-    }
-
-    public boolean exists(NameOrURI conceptDomain, NameOrURI valueSet, NameOrURI applicableContext, NameOrURI bindingQualifier) {
-      return conceptDomain.getName().equals("test")
-          && valueSet.getName().equals("valueSetTest")
-          && applicableContext.getName().equals("applicableContextTest")
-          && bindingQualifier.getName().equals("bindingQualifierTest");
-    }
-
-    public boolean existsURI(String documentURI) {
-      return documentURI.equals("test");
-    }
-
-    public ConceptDomainBinding read(
-        NameOrURI conceptDomain, NameOrURI valueSet,
-        NameOrURI applicableContext, NameOrURI bindingQualifier) {
-      ConceptDomainBinding binding = createBinding();
-
-      if (conceptDomain.getName().equals("test")
-          && valueSet.getName().equals("valueSetTest")
-          && applicableContext.getName().equals("applicableContextTest")
-          && bindingQualifier.getName().equals("bindingQualifierTest")) {
-        binding.setBindingURI("success");
+    @Override
+    public MapVersion read(NameOrURI identifier, ResolvedReadContext readContext) {
+      MapVersion mapVersion = createMapVersion();
+      
+      if (identifier.getName().equals("test") && readContext != null) {
+        mapVersion.setMapVersionName("success");
       }
       else {
-        binding.setBindingURI("fail");
+        mapVersion.setMapVersionName("fail");
       }
 
-      return binding;
+      return mapVersion;
     }
 
-    public ConceptDomainBinding readByURI(String documentURI) {
-      ConceptDomainBinding binding = createBinding();
-
-      if (documentURI.equals("test.uri")) {
-        binding.setBindingURI("success");
-      }
-      else {
-        binding.setBindingURI("fail");
-      }
-
-      return binding;
+    @Override
+    public boolean exists(NameOrURI identifier, ReadContext readContext) {
+      return identifier.getName().equals("test") && readContext != null;
     }
 
-    public List<VersionTagReference> getSupportedTag() {
-      List<VersionTagReference> tags = new ArrayList<VersionTagReference>(3);
-      tags.add(new VersionTagReference("tag1"));
-      tags.add(new VersionTagReference("tag2"));
-      tags.add(new VersionTagReference("tag3"));
-      return tags;
-    }
-
-    private ConceptDomainBinding createBinding() {
-      ConceptDomainBinding binding = new ConceptDomainBinding();
-      binding.setApplicableContext(new ContextReference("test_ref"));
-      binding.setBindingFor(new ConceptDomainReference("test_ref"));
-      binding.setBoundValueSet(new ValueSetReference("test_ref"));
-      return binding;
+    private MapVersion createMapVersion() {
+      MapVersion mapVersion = new MapVersion();
+      mapVersion.setAbout("test.about");
+      SourceAndNotation sourceAndNotation = new SourceAndNotation();
+      sourceAndNotation.setSourceAndNotationDescription("test.sourceAndNotation");
+      mapVersion.setSourceAndNotation(sourceAndNotation);
+      mapVersion.setDocumentURI("test.documentURI");
+      mapVersion.setVersionOf(new MapReference("test.mapRef"));
+      return mapVersion;
     }
   }
 

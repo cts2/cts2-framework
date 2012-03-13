@@ -25,8 +25,11 @@ package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+
+import java.util.List;
 
 /**
  * The Interface CodeSystemVersionReadService.
@@ -72,6 +75,8 @@ public interface CodeSystemVersionReadService extends
 			NameOrURI codeSystem, 
 			String officialResourceVersionId, 
 			ResolvedReadContext readContext);
+
+  public List<VersionTagReference> getSupportedTag();
 }
 
 

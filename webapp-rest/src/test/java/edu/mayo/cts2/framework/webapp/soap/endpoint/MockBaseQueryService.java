@@ -4,6 +4,7 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.service.profile.QueryService;
@@ -42,11 +43,16 @@ public class MockBaseQueryService extends MockBaseService implements QueryServic
     throw new UnsupportedOperationException();
   }
 
-  public Set<? extends ModelAttributeReference> getSupportedModelAttributes() {
+  public Set<? extends PropertyReference> getSupportedSearchReferences() {
     throw new UnsupportedOperationException();
   }
 
-  public Set<? extends PredicateReference> getSupportedProperties() {
+  public Set<? extends PropertyReference> getSupportedSortReferences() {
     throw new UnsupportedOperationException();
   }
+
+  public Set<PredicateReference> getKnownProperties() {
+    throw new UnsupportedOperationException();
+  }
+
 }

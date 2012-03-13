@@ -1,12 +1,11 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.valueset;
 
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.core.FormatReference;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
@@ -25,95 +24,44 @@ import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Exists;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ExistsURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTag;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.GetSupportedTagResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.Read;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURI;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURIResponse;
-import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadResponse;
-import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.Read;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import java.util.concurrent.Callable;
-
-@Endpoint("ConceptDomainBindingReadServicesEndpoint")
-public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServiceEndpoint {
-
+@Endpoint("ValueSetCatalogReadServicesEndpoint")
+public class ValueSetCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
+  
   @Cts2Service
-  private ConceptDomainBindingReadService conceptDomainBindingReadService;
+  private ValueSetReadService valueSetReadService;
 
-  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
+  @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogReadServices")
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
+    ValueSetCatalogEntry entry = this.doRead(
+        this.valueSetReadService,
+        request.getValueSetId(),
+        request.getQueryControl(),
+        request.getContext());
+    
     ReadResponse response = new ReadResponse();
-    NameOrURI conceptDomain = request.getConceptDomain();
-    NameOrURI valueSet = request.getValueSet();
-    NameOrURI applicableContext = request.getApplicableContext();
-    NameOrURI bindingQualifier = request.getBindingQualifier();
-
-    response.setReturn(
-        this.doRead(
-            this.conceptDomainBindingReadService,
-            conceptDomain,
-            valueSet,
-            applicableContext,
-            bindingQualifier));
-
+    response.setReturn(entry);
     return response;
   }
 
-  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
+  @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
+    boolean exists = this.valueSetReadService.exists(request.getValueSetId(), request.getContext());
+
     ExistsResponse response = new ExistsResponse();
-    NameOrURI conceptDomain = request.getConceptDomain();
-    NameOrURI valueSet = request.getValueSet();
-    NameOrURI applicableContext = request.getApplicableContext();
-    NameOrURI bindingQualifier = request.getBindingQualifier();
-
-    boolean exists =
-        this.conceptDomainBindingReadService.exists(
-            conceptDomain,
-            valueSet,
-            applicableContext,
-            bindingQualifier);
     response.setReturn(exists);
-
-    return response;
-  }
-
-  @PayloadRoot(localPart = "readByURI", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
-  @ResponsePayload
-  public ReadByURIResponse readByURI(@RequestPayload ReadByURI request) {
-    ReadByURIResponse response = new ReadByURIResponse();
-    response.setReturn(this.doReadByURI(this.conceptDomainBindingReadService, request.getUri()));
-
-    return response;
-  }
-
-  @PayloadRoot(localPart = "existsURI", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
-  @ResponsePayload
-  public ExistsURIResponse existsURI(@RequestPayload ExistsURI request) {
-    ExistsURIResponse response = new ExistsURIResponse();
-    response.setReturn(this.conceptDomainBindingReadService.existsURI(request.getEntity()));
-
-    return response;
-  }
-
-  @PayloadRoot(localPart = "getSupportedTag", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices")
-  @ResponsePayload
-  public GetSupportedTagResponse getSupportedTag(@RequestPayload GetSupportedTag request) {
-    GetSupportedTagResponse response = new GetSupportedTagResponse();
-    response.setReturn(conceptDomainBindingReadService.getSupportedTag());
-
     return response;
   }
 
@@ -147,7 +95,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetKnownNamespaceResponse getKnownNamespace(@RequestPayload GetKnownNamespace request) {
     GetKnownNamespaceResponse response = new GetKnownNamespaceResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getKnownNamespaceList());
+    response.setReturn(this.valueSetReadService.getKnownNamespaceList());
 
     return response;
   }
@@ -156,7 +104,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceDescriptionResponse getServiceDescription(@RequestPayload GetServiceDescription request) {
     GetServiceDescriptionResponse response = new GetServiceDescriptionResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceDescription());
+    response.setReturn(this.valueSetReadService.getServiceDescription());
 
     return response;
   }
@@ -165,7 +113,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceNameResponse getServiceName(@RequestPayload GetServiceName request) {
     GetServiceNameResponse response = new GetServiceNameResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceName());
+    response.setReturn(this.valueSetReadService.getServiceName());
 
     return response;
   }
@@ -174,7 +122,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceProviderResponse getServiceProvider(@RequestPayload GetServiceProvider request) {
     GetServiceProviderResponse response = new GetServiceProviderResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceProvider());
+    response.setReturn(this.valueSetReadService.getServiceProvider());
 
     return response;
   }
@@ -183,7 +131,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetServiceVersionResponse getServiceVersion(@RequestPayload GetServiceVersion request) {
     GetServiceVersionResponse response = new GetServiceVersionResponse();
-    response.setReturn(this.conceptDomainBindingReadService.getServiceVersion());
+    response.setReturn(this.valueSetReadService.getServiceVersion());
 
     return response;
   }
@@ -204,7 +152,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public GetSupportedProfileResponse getSupportedProfile(@RequestPayload GetSupportedProfile request) {
     ProfileElement profile = new ProfileElement();
-    profile.setStructuralProfile(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING);
+    profile.setStructuralProfile(StructuralProfile.SP_VALUE_SET);
 
     FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
     functionalProfiles[0] = FunctionalProfile.FP_READ;
@@ -218,34 +166,5 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
 
     return response;
   }
-
-  private ConceptDomainBinding doRead(
-      final ConceptDomainBindingReadService readService,
-      final NameOrURI conceptDomain,
-      final NameOrURI valueSet,
-      final NameOrURI applicableContext,
-      final NameOrURI bindingQualifier) {
-    return this.doTimedCall(new Callable<ConceptDomainBinding>() {
-
-      @Override
-      public ConceptDomainBinding call() throws Exception {
-        return readService.read(conceptDomain, valueSet, applicableContext, bindingQualifier);
-      }
-
-    }, null);
-  }
   
-  private ConceptDomainBinding doReadByURI(
-      final ConceptDomainBindingReadService readService,
-      final String uri) {
-    return this.doTimedCall(new Callable<ConceptDomainBinding>() {
-
-      @Override
-      public ConceptDomainBinding call() throws Exception {
-        return readService.readByURI(uri);
-      }
-
-    }, null);
-  }
-
 }

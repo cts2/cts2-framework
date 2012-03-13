@@ -23,9 +23,14 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 
+import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
+
+import java.util.List;
 
 /**
  * The Interface ConceptDomainBindingReadService.
@@ -35,6 +40,23 @@ import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.Concept
 public interface ConceptDomainBindingReadService extends
 		ReadService<LocalIdConceptDomainBinding, ConceptDomainBindingReadId> {
 
+  public boolean exists(
+      final NameOrURI conceptDomain,
+      final NameOrURI valueSet,
+      final NameOrURI applicableContext,
+      final NameOrURI bindingQualifier
+  );
+  
+  public boolean existsURI(final String documentURI);
+  
+  public ConceptDomainBinding read(
+      final NameOrURI conceptDomain,
+      final NameOrURI valueSet,
+      final NameOrURI applicableContext,
+      final NameOrURI bindingQualifier);
+  
+  public ConceptDomainBinding readByURI(final String documentURI);
 
+  public List<VersionTagReference> getSupportedTag();
 
 }

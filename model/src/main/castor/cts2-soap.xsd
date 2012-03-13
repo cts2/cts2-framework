@@ -102,29 +102,142 @@
   <!-- ================================================ -->
   <!--            Entity Description Services           -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/EntityDescriptionHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/EntityDescriptionMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/EntityDescriptionQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/EntityDescriptionReadServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionTransformServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/EntityDescriptionTransformServiceTypes.xsd" />
 
   <!-- ================================================ -->
-  <!--                Map Catalog Services              -->
+  <!--                    Map Services                  -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapCatalogHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapCatalogMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapCatalogQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapCatalogReadServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapResolutionServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapResolutionServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--                Map Entry Services                -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapEntryHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapEntryMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapEntryQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapEntryReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
-  <!--              Map Resolution Services             -->
+  <!--              Map Version Services             -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapVersionHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapVersionMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapVersionQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/MapVersionReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--                 Statement Services               -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/StatementHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/StatementHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/StatementQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/StatementQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/StatementReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/StatementReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--            Value Set Catalog Services            -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetCatalogHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetCatalogMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetCatalogQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetCatalogReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--           Value Set Definition Services          -->
   <!-- ================================================ -->
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionHistoryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionMaintenanceServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionQueryServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionQueryServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionReadServices"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionReadServiceTypes.xsd" />
+
+  <xs:import
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionResolution"
+      schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionResolutionTypes.xsd" />
 
 </schema>

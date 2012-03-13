@@ -25,13 +25,20 @@ package edu.mayo.cts2.framework.service.profile.entitydescription;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.CodeSystemReference;
+import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.EntityReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
+import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
@@ -42,13 +49,17 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  */
 public interface EntityDescriptionReadService extends
 		ReadService<EntityDescription, EntityDescriptionReadId> {
-	
-	public EntityDescription readByCodeSystem(
-			EntityNameOrURI entityId, 
-			NameOrURI codeSystem, 
-			String tagName, 
-			ResolvedReadContext readContext);
-	
+
+  public EntityDescriptionBase read(
+      EntityNameOrURI entityId,
+      NameOrURI codeSystemVersion,
+      ResolvedReadContext resolvedReadContext);
+
+  public boolean exists(
+      EntityNameOrURI entityId,
+      NameOrURI codeSystemVersion,
+      ResolvedReadContext resolvedReadContext);
+
 	public boolean existsInCodeSystem(
 			EntityNameOrURI entityId, 
 			NameOrURI codeSystem, 
@@ -64,4 +75,20 @@ public interface EntityDescriptionReadService extends
 	public EntityReference availableDescriptions(
 			EntityNameOrURI entityId, 
 			ResolvedReadContext readContext);
+
+  public EntityDescriptionBase readByCodeSystem(
+      EntityNameOrURI entityId,
+      NameOrURI codeSystem,
+      NameOrURI tag,
+      ResolvedReadContext readContext);
+
+  public EntityList readEntityDescriptions(
+      EntityNameOrURI entityId,
+      ResolvedReadContext readContext);
+
+  public CodeSystemReference[] getKnownCodeSystem();
+
+  public CodeSystemVersionReference[] getKnownCodeSystemVersion();
+
+  public VersionTagReference[] getSupportedVersionTag();
 }

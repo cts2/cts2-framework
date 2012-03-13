@@ -23,7 +23,9 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 
@@ -34,4 +36,9 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
  */
 public interface ConceptDomainReadService extends
 		ReadService<ConceptDomainCatalogEntry, NameOrURI> {
+
+  public ConceptDomainCatalogEntry readByDefiningEntity(EntityNameOrURI entity, ResolvedReadContext resolvedReadContext);
+
+  public boolean existsDefiningEntity(EntityNameOrURI entity, ResolvedReadContext resolvedReadContext);
+
 }

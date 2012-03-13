@@ -1,8 +1,11 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.association;
 
 import edu.mayo.cts2.framework.model.association.Association;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -39,6 +42,8 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
+import java.util.concurrent.Callable;
 
 @Endpoint("AssociationReadServicesEndpoint")
 public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint {
@@ -83,6 +88,9 @@ public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint
   @ResponsePayload
   public ReadByExternalStatementIdResponse readByExternalStatementId(@RequestPayload ReadByExternalStatementId request) {
     throw new UnsupportedOperationException("Method not implemented.");
+//    Association association = this.doReadExternalStatementId();
+//    ReadByExternalStatementIdResponse response = new ReadByExternalStatementIdResponse();
+//    response.setReturn();
   }
 
   /* TODO: Implement Method: existsByExternalStatementId */
@@ -184,7 +192,7 @@ public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint
   @ResponsePayload
   public GetSupportedProfileResponse getSupportedProfile(@RequestPayload GetSupportedProfile request) {
     ProfileElement profile = new ProfileElement();
-    profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM);
+    profile.setStructuralProfile(StructuralProfile.SP_ASSOCIATION);
 
     FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
     functionalProfiles[0] = FunctionalProfile.FP_READ;
@@ -199,4 +207,20 @@ public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint
     return response;
   }
 
+  private Association doRead(
+      final AssociationReadService readService,
+      final AssociationReadId associationId,
+      final QueryControl queryControl,
+      final ReadContext context) {
+    final ResolvedReadContext resolvedReadContext = this.resolveReadContext(context);
+
+    return this.doTimedCall(new Callable<Association>() {
+
+      @Override
+      public Association call() throws Exception {
+        return readService.read(associationId, resolvedReadContext);
+      }
+    }, queryControl);
+  }
+  
 }

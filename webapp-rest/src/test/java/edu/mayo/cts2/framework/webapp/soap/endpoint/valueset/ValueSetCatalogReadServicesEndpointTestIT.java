@@ -1,22 +1,42 @@
-package edu.mayo.cts2.framework.webapp.soap.endpoint.association;
+package edu.mayo.cts2.framework.webapp.soap.endpoint.valueset;
 
-import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
+import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.model.wsdl.associationread.*;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
-import edu.mayo.cts2.framework.service.profile.association.AssociationReadService;
-import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationTypeResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespace;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespaceResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescription;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescriptionResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceName;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceNameResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProvider;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProviderResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersion;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersionResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.Exists;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.ExistsResponse;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.Read;
+import edu.mayo.cts2.framework.model.wsdl.valuesetread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
@@ -25,51 +45,31 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase {
+public class ValueSetCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
-  String uri = "http://localhost:8081/webapp-rest/soap/service/AssociationReadService";
+  String uri = "http://localhost:8081/webapp-rest/soap/service/ValueSetCatalogReadService";
 
   @Test
   public void TestRead() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
-    Read readRequest = new Read();
-    readRequest.setAssociationID("test");
-    readRequest.setContext(new ReadContext());
-    ReadResponse response = (ReadResponse) this.doSoapCall(uri, readRequest);
-    assertEquals("success", response.getReturn().getAssociationID());
+    Read request = new Read();
+    request.setValueSetId(ModelUtils.nameOrUriFromName("test"));
+    QueryControl queryControl = new QueryControl();
+    queryControl.setTimeLimit(10000L);
+    request.setQueryControl(queryControl);
+    request.setContext(new ReadContext());
+    ReadResponse response = (ReadResponse) this.doSoapCall(uri, request);
+    assertEquals("success", response.getReturn().getValueSetName());
   }
 
   @Test
   public void TestExists() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
-    Exists existsRequest = new Exists();
-    existsRequest.setAssociationID("test");
-    existsRequest.setContext(new ReadContext());
-    ExistsResponse response = (ExistsResponse) this.doSoapCall(uri, existsRequest);
-    assertTrue(response.getReturn());
-  }
-
-  @Test
-  public void TestReadByExternalStatementId() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    ReadByExternalStatementId readRequest = new ReadByExternalStatementId();
-    readRequest.setExternalStatementId("test");
-    readRequest.setScopingNamespace(ModelUtils.nameOrUriFromName("namespaceTest"));
-    readRequest.setContext(new ReadContext());
-    ReadByExternalStatementIdResponse response = (ReadByExternalStatementIdResponse) this.doSoapCall(uri, readRequest);
-    assertEquals("success", response.getReturn().getAssociationID());
-  }
-
-  @Test
-  public void TestExistsByExternalStatementId() throws Exception {
-    MockServiceProvider.cts2Service = new MockService();
-    ExistsByExternalStatementId existsRequest = new ExistsByExternalStatementId();
-    existsRequest.setExternalStatementId("test");
-    existsRequest.setScopingNamespace(ModelUtils.nameOrUriFromName("namespaceTest"));
-    existsRequest.setContext(new ReadContext());
-    ExistsByExternalStatementIdResponse response = (ExistsByExternalStatementIdResponse) this.doSoapCall(uri, existsRequest);
+    Exists request = new Exists();
+    request.setValueSetId(ModelUtils.nameOrUriFromName("test"));
+    request.setContext(new ReadContext());
+    ExistsResponse response = (ExistsResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
   }
 
@@ -132,7 +132,7 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
     GetSupportedProfile request = new GetSupportedProfile();
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
-    assertEquals(StructuralProfile.SP_ASSOCIATION, profile.getStructuralProfile());
+    assertEquals(StructuralProfile.SP_VALUE_SET, profile.getStructuralProfile());
     assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile(0));
   }
 
@@ -158,38 +158,28 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
 
   /********************************************************************************************************************/
   /*                                                                                                                  */
-  /*                                      Mock Association Read Service Class                                         */
+  /*                                        Mock ValueSet Read Service Class                                          */
   /*                                                                                                                  */
   /********************************************************************************************************************/
-  private class MockService extends MockBaseService implements AssociationReadService {
+  private class MockService extends MockBaseService implements ValueSetReadService {
 
-    public Association readByExternalStatementId(String externalStatementId, String scopingNamespaceName, ResolvedReadContext readContext) {
-      Association association = new Association();
-      if (externalStatementId.equals("test") && scopingNamespaceName.equals("namespaceTest") && readContext != null) {
-        association.setAssociationID("success");
-      }
-      else {
-        association.setAssociationID("fail");
-      }
-      return association;
-    }
+    @Override
+    public ValueSetCatalogEntry read(NameOrURI identifier, ResolvedReadContext readContext) {
+      ValueSetCatalogEntry entry = new ValueSetCatalogEntry();
+      entry.setAbout("test.about");
 
-    public boolean existsByExternalStatementId(String externalStatementId, String scopingNamespaceName, ResolvedReadContext readContext) {
-      return externalStatementId.equals("test") && scopingNamespaceName.equals("namespaceTest") && readContext != null;
-    }
-
-    public Association read(AssociationReadId identifier, ResolvedReadContext readContext) {
-      Association association = new Association();
       if (identifier.getName().equals("test") && readContext != null) {
-        association.setAssociationID("success");
+        entry.setValueSetName("success");
       }
       else {
-        association.setAssociationID("fail");
+        entry.setValueSetName("fail");
       }
-      return association;
+
+      return entry;
     }
 
-    public boolean exists(AssociationReadId identifier, ReadContext readContext) {
+    @Override
+    public boolean exists(NameOrURI identifier, ReadContext readContext) {
       return identifier.getName().equals("test") && readContext != null;
     }
   }

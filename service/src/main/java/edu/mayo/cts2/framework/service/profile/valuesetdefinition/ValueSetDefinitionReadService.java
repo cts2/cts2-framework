@@ -24,6 +24,9 @@
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
@@ -33,5 +36,15 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ValueSetDefinitionReadService extends
-		ReadService<LocalIdValueSetDefinition, ValueSetDefinitionReadId> {
+    ReadService<LocalIdValueSetDefinition, ValueSetDefinitionReadId> {
+
+  public boolean existsDefinitionForValueSet(
+      NameOrURI valueSet,
+      NameOrURI tag,
+      ReadContext readContext);
+
+  public ValueSetDefinition readDefinitionForValueSet(
+      NameOrURI valueSet,
+      NameOrURI tag,
+      ReadContext readContext);
 }

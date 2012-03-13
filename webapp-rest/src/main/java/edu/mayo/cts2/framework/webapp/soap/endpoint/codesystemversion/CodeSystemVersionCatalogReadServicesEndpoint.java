@@ -115,33 +115,31 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
         this.codeSystemVersionReadService.getCodeSystemVersionForCodeSystem(
             request.getCodeSystem(),
             request.getTag().getName()));
+
     return response;
   }
 
-  /* TODO: Implement Method: getCodeSystemByVersionId */
   @PayloadRoot(localPart = "getCodeSystemByVersionId", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
   @ResponsePayload
   public GetCodeSystemByVersionIdResponse getCodeSystemByVersionId(
       @RequestPayload GetCodeSystemByVersionId request) {
-//    GetCodeSystemByVersionIdResponse response = new GetCodeSystemByVersionIdResponse();
-//    response.setReturn(
-//        this.codeSystemVersionReadService.getCodeSystemByVersionId(
-//            request.getCodeSystem(),
-//            request.getOfficialResourceVersionId(),
-//            request.getReadContext()));
-//    return response;
-    throw new UnsupportedOperationException("Method not implemented");
+    GetCodeSystemByVersionIdResponse response = new GetCodeSystemByVersionIdResponse();
+    response.setReturn(
+        this.codeSystemVersionReadService.getCodeSystemByVersionId(
+            request.getCodeSystem(),
+            request.getOfficialResourceVersionId(),
+            this.resolveReadContext(request.getReadContext())));
+
+    return response;
   }
 
-  /* TODO: Implement Method: getSupportedTag */
   @PayloadRoot(localPart = "getSupportedTag", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices")
   @ResponsePayload
   public GetSupportedTagResponse getSupportedTag(@RequestPayload GetSupportedTag request) {
-//    GetSupportedTagResponse response = new GetSupportedTagResponse();
-//    response.setReturn(this.codeSystemVersionReadService.getSupportedTag());
-//
-//    return response;
-    throw new UnsupportedOperationException("Method not implemented");
+    GetSupportedTagResponse response = new GetSupportedTagResponse();
+    response.setReturn(this.codeSystemVersionReadService.getSupportedTag());
+
+    return response;
   }
 
   /*******************************************************/
@@ -231,7 +229,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetSupportedProfileResponse getSupportedProfile(@RequestPayload GetSupportedProfile request) {
     ProfileElement profile = new ProfileElement();
-    profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM);
+    profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM_VERSION);
 
     FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
     functionalProfiles[0] = FunctionalProfile.FP_READ;
