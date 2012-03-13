@@ -33,6 +33,7 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
 
   @Test
   public void TestRead() throws Exception {
+    fail("Method not implemented");
     MockServiceProvider.cts2Service = new MockService();
     Read readRequest = new Read();
     readRequest.setAssociationID("test");
@@ -43,6 +44,7 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
 
   @Test
   public void TestExists() throws Exception {
+    fail("Method not implemented");
     MockServiceProvider.cts2Service = new MockService();
     Exists existsRequest = new Exists();
     existsRequest.setAssociationID("test");
@@ -53,6 +55,7 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
 
   @Test
   public void TestReadByExternalStatementId() throws Exception {
+    fail("Method not implemented");
     MockServiceProvider.cts2Service = new MockService();
     ReadByExternalStatementId readRequest = new ReadByExternalStatementId();
     readRequest.setExternalStatementId("test");
@@ -64,6 +67,7 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
 
   @Test
   public void TestExistsByExternalStatementId() throws Exception {
+    fail("Method not implemented");
     MockServiceProvider.cts2Service = new MockService();
     ExistsByExternalStatementId existsRequest = new ExistsByExternalStatementId();
     existsRequest.setExternalStatementId("test");
