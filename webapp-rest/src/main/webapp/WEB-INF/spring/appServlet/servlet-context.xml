@@ -67,8 +67,8 @@
         <beans:prop key="soap/service/AssociationReadService">associationReadServiceDispatcher</beans:prop>
 
         <!-- Code System Catalog Services -->
-        <beans:prop key="soap/service/CodeSystemCatalogHistoryService.wsdl">CodeSystemCatalogHistoryService</beans:prop>
-        <beans:prop key="soap/service/CodeSystemCatalogHistoryService">codeSystemCatalogHistoryServiceDispatcher</beans:prop>
+        <!--<beans:prop key="soap/service/CodeSystemCatalogHistoryService.wsdl">CodeSystemCatalogHistoryService</beans:prop>-->
+        <!--<beans:prop key="soap/service/CodeSystemCatalogHistoryService">codeSystemCatalogHistoryServiceDispatcher</beans:prop>-->
         <!--<beans:prop key="soap/service/CodeSystemCatalogMaintenanceService.wsdl">CodeSystemCatalogMaintenanceService</beans:prop>-->
         <!--<beans:prop key="soap/service/CodeSystemCatalogMaintenanceService">codeSystemCatalogMaintenanceServiceDispatcher</beans:prop>-->
         <beans:prop key="soap/service/CodeSystemCatalogQueryService.wsdl">CodeSystemCatalogQueryService</beans:prop>
@@ -77,8 +77,8 @@
         <beans:prop key="soap/service/CodeSystemCatalogReadService">codeSystemCatalogReadServiceDispatcher</beans:prop>
 
         <!-- Code System Version Catalog Services  -->
-        <beans:prop key="soap/service/CodeSystemVersionCatalogHistoryService.wsdl">CodeSystemVersionCatalogHistoryService</beans:prop>
-        <beans:prop key="soap/service/CodeSystemVersionCatalogHistoryService">codeSystemVersionCatalogHistoryServiceDispatcher</beans:prop>
+        <!--<beans:prop key="soap/service/CodeSystemVersionCatalogHistoryService.wsdl">CodeSystemVersionCatalogHistoryService</beans:prop>-->
+        <!--<beans:prop key="soap/service/CodeSystemVersionCatalogHistoryService">codeSystemVersionCatalogHistoryServiceDispatcher</beans:prop>-->
         <!--<beans:prop key="soap/service/CodeSystemVersionCatalogMaintenanceService.wsdl">CodeSystemVersionCatalogMaintenanceService</beans:prop>-->
         <!--<beans:prop key="soap/service/CodeSystemVersionCatalogMaintenanceService">codeSystemVersionCatalogMaintenanceServiceDispatcher</beans:prop>-->
         <!--<beans:prop key="soap/service/CodeSystemVersionCatalogQueryService.wsdl">CodeSystemVersionCatalogQueryService</beans:prop>-->
@@ -227,13 +227,13 @@
   <!-- ================================================ -->
   <!--           Code System Catalog Services           -->
   <!-- ================================================ -->
-  <beans:bean id="codeSystemCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-    <beans:property name="endpointMappings">
-      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
-        <beans:property name="service" value="CodeSystemCatalogHistoryServicesEndpoint"/>
-      </beans:bean>
-    </beans:property>
-  </beans:bean>
+  <!--<beans:bean id="codeSystemCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">-->
+    <!--<beans:property name="endpointMappings">-->
+      <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">-->
+        <!--<beans:property name="service" value="CodeSystemCatalogHistoryServicesEndpoint"/>-->
+      <!--</beans:bean>-->
+    <!--</beans:property>-->
+  <!--</beans:bean>-->
 
   <!--<beans:bean id="codeSystemCatalogMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">-->
     <!--<beans:property name="endpointMappings">-->
@@ -262,13 +262,13 @@
   <!-- ================================================ -->
   <!--       Code System Version Catalog Services       -->
   <!-- ================================================ -->
-  <beans:bean id="codeSystemVersionCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-    <beans:property name="endpointMappings">
-      <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">
-        <beans:property name="service" value="CodeSystemVersionCatalogHistoryServicesEndpoint"/>
-      </beans:bean>
-    </beans:property>
-  </beans:bean>
+  <!--<beans:bean id="codeSystemVersionCatalogHistoryServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">-->
+    <!--<beans:property name="endpointMappings">-->
+      <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.PerUrlPayloadRootAnnotationMethodEndpointMapping">-->
+        <!--<beans:property name="service" value="CodeSystemVersionCatalogHistoryServicesEndpoint"/>-->
+      <!--</beans:bean>-->
+    <!--</beans:property>-->
+  <!--</beans:bean>-->
 
   <!--<beans:bean id="codeSystemVersionCatalogMaintenanceServiceDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">-->
     <!--<beans:property name="endpointMappings">-->
@@ -598,8 +598,8 @@
     location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationReadService.wsdl" />
 
   <!-- Code System Catalog Services -->
-  <sws:static-wsdl id="CodeSystemCatalogHistoryService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogHistoryService.wsdl" />
+  <!--<sws:static-wsdl id="CodeSystemCatalogHistoryService"-->
+    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemCatalogMaintenanceService"-->
     <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogMaintenanceService.wsdl" />-->
 	<sws:static-wsdl id="CodeSystemCatalogQueryService"
@@ -608,8 +608,8 @@
 		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
 
   <!-- Code System Version Catalog Services  -->
-  <sws:static-wsdl id="CodeSystemVersionCatalogHistoryService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />
+  <!--<sws:static-wsdl id="CodeSystemVersionCatalogHistoryService"-->
+    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogMaintenanceService"-->
     <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogQueryService"-->
@@ -720,13 +720,13 @@
   <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.association.AssociationReadServicesEndpoint"/>
 
   <!-- Code System Catalog Services -->
-  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogHistoryServicesEndpoint"/>
+  <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogHistoryServicesEndpoint"/>-->
   <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogMaintenanceServicesEndpoint"/>-->
   <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogQueryServicesEndpoint"/>
   <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.CodeSystemCatalogReadServicesEndpoint"/>
 
   <!-- Code System Version Catalog Services  -->
-  <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogHistoryServicesEndpoint"/>
+  <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogHistoryServicesEndpoint"/>-->
   <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogMaintenanceServicesEndpoint"/>-->
   <!--<beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogQueryServicesEndpoint"/>-->
   <beans:bean class="edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion.CodeSystemVersionCatalogReadServicesEndpoint"/>
