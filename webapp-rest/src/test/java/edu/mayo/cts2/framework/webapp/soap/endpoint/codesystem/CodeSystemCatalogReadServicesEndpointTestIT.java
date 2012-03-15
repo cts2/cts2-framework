@@ -1,8 +1,13 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
+
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
@@ -14,7 +19,24 @@ import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.model.wsdl.baseservice.*;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationTypeResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespace;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetKnownNamespaceResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescription;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceDescriptionResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceName;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceNameResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProvider;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceProviderResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersion;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetServiceVersionResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormat;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedFormatResponse;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfile;
+import edu.mayo.cts2.framework.model.wsdl.baseservice.GetSupportedProfileResponse;
 import edu.mayo.cts2.framework.model.wsdl.codesystemread.Exists;
 import edu.mayo.cts2.framework.model.wsdl.codesystemread.ExistsResponse;
 import edu.mayo.cts2.framework.model.wsdl.codesystemread.Read;
@@ -23,11 +45,6 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class CodeSystemCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
