@@ -33,7 +33,6 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
@@ -45,7 +44,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
  */
 public interface ValueSetDefinitionResolutionService extends Cts2Profile {
 
-	public DirectoryResult<ResolvedValueSetDirectoryEntry> resolveDefinitionAsDirectory(
+	public ResolvedValueSetResult resolveDefinition(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
 			NameOrURI tag,

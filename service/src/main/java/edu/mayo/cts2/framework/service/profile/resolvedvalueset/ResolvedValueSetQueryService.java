@@ -41,4 +41,7 @@ public interface ResolvedValueSetQueryService
 			ResolvedValueSetQuery query,
 			SortCriteria sort,
 			Page page);
+	
+	public int count(ResolvedValueSetQuery query);
+	
 }

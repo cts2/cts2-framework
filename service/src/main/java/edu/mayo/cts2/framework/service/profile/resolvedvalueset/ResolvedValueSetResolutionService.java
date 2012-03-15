@@ -23,17 +23,28 @@
  */
 package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 
 /**
- * The Interface ValueSetDefinitionQueryService.
+ * The Interface ValueSetDefinitionResolutionService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ResolvedValueSetReadService extends Cts2Profile {
+public interface ResolvedValueSetResolutionService extends Cts2Profile {
 
-	public ResolvedValueSet read(ResolvedValueSetReadId identifier);
+	public ResolvedValueSetResult getResolution(
+			ResolvedValueSetReadId identifier,
+			Set<ResolvedFilter> filterComponent, 
+			Page page);
 	
+	public ResolvedValueSet getResolution(
+			ResolvedValueSetReadId identifier);
+
 }

@@ -23,6 +23,7 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService
 
@@ -99,9 +100,13 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def isCalled = false;
 		
 		def rs = [
-			resolveDefinitionAsDirectory:{ p1,p2,p3,p4,p5,p6,p7-> 
+			resolveDefinition:{ p1,p2,p3,p4,p5,p6,p7-> 
 				isCalled = true
-				new DirectoryResult([],true)
+				new ResolvedValueSetResult(new ResolvedValueSetHeader(
+					resolutionOf: new ValueSetDefinitionReference(
+						valueSetDefinition: new NameAndMeaningReference()
+					)
+				),[],true)
 			}
 		] as ValueSetDefinitionResolutionService;
 	
@@ -120,9 +125,13 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def isCalled = false;
 		
 		def rs = [
-			resolveDefinitionAsDirectory:{ p1,p2,p3,p4,p5,p6,p7->
+			resolveDefinition:{ p1,p2,p3,p4,p5,p6,p7-> 
 				isCalled = true
-				new DirectoryResult([],true)
+				new ResolvedValueSetResult(new ResolvedValueSetHeader(
+					resolutionOf: new ValueSetDefinitionReference(
+						valueSetDefinition: new NameAndMeaningReference()
+					)
+				),[],true)
 			}
 		] as ValueSetDefinitionResolutionService;
 	
@@ -130,7 +139,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		
 		MockMvcBuilders
 			.webApplicationContextSetup(context).build()
-			.perform(get("/valueset/vs/definition/1/resolution").param("resolutiontype","directory"))
+			.perform(get("/valueset/vs/definition/1/resolution").param("resolutiontype","iterable"))
 			.andExpect(response().status().isOk())
 			
 		assertTrue isCalled

@@ -517,9 +517,9 @@ public class AssociationController extends AbstractMessageWrappingController {
 		return graph;
 	}
 	
-	@RequestMapping(value=PATH_SOURCEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
+	@RequestMapping(value=PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
 	@ResponseBody
-	public Directory getSourceOfAssociationsOfEntity(
+	public Directory getSubjectOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -531,7 +531,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
 		
-		return this.getSourceOfAssociationsOfEntity(
+		return this.getSubjectOfAssociationsOfEntity(
 				httpServletRequest, 
 				restReadContext,
 				queryControl,
@@ -558,9 +558,9 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @param entityName the entity name
 	 * @return the source of associations of entity
 	 */
-	@RequestMapping(value=PATH_SOURCEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
+	@RequestMapping(value=PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
 	@ResponseBody
-	public Directory getSourceOfAssociationsOfEntity(
+	public Directory getSubjectOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -582,6 +582,140 @@ public class AssociationController extends AbstractMessageWrappingController {
 				readContext);
 		
 		associationRestrictions.setSourceEntity(
+				ModelUtils.entityNameOrUriFromName(
+						this.getScopedEntityName(entityName, codeSystemName)));
+		
+		return this.getAssociationsOfCodeSystemVersion(
+				httpServletRequest, 
+				restReadContext, 
+				queryControl,
+				resolvedFilter,
+				associationRestrictions, 
+				page, 
+				list,
+				codeSystemName,
+				codeSystemVersionName);
+	}
+	
+	@RequestMapping(value=PATH_TARGETOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
+	@ResponseBody
+	public Directory getTargetOfAssociationsOfEntity(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			AssociationQueryServiceRestrictions associationRestrictions,
+			RestFilter resolvedFilter,
+			Page page,
+			boolean list,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@PathVariable(VAR_ENTITYID) String entityName) {
+		
+		return this.getTargetOfAssociationsOfEntity(
+				httpServletRequest, 
+				restReadContext, 
+				queryControl,
+				null,
+				associationRestrictions,
+				resolvedFilter,
+				page,
+				list, 
+				codeSystemName, 
+				codeSystemVersionId, 
+				entityName);
+	}
+	
+	@RequestMapping(value=PATH_TARGETOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
+	@ResponseBody
+	public Directory getTargetOfAssociationsOfEntity(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			@RequestBody Query query,
+			AssociationQueryServiceRestrictions associationRestrictions,
+			RestFilter resolvedFilter,
+			Page page,
+			boolean list,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@PathVariable(VAR_ENTITYID) String entityName) {
+		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, 
+				codeSystemName, 
+				codeSystemVersionId, 
+				readContext);
+		
+		associationRestrictions.setTargetEntity(
+				ModelUtils.entityNameOrUriFromName(
+						this.getScopedEntityName(entityName, codeSystemName)));
+		
+		return this.getAssociationsOfCodeSystemVersion(
+				httpServletRequest, 
+				restReadContext, 
+				queryControl,
+				resolvedFilter,
+				associationRestrictions, 
+				page, 
+				list,
+				codeSystemName,
+				codeSystemVersionName);
+	}
+	
+	@RequestMapping(value=PATH_PREDICATEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
+	@ResponseBody
+	public Directory getPredicateOfAssociationsOfEntity(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			AssociationQueryServiceRestrictions associationRestrictions,
+			RestFilter resolvedFilter,
+			Page page,
+			boolean list,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@PathVariable(VAR_ENTITYID) String entityName) {
+		
+		return this.getPredicateOfAssociationsOfEntity(
+				httpServletRequest, 
+				restReadContext, 
+				queryControl,
+				null,
+				associationRestrictions,
+				resolvedFilter,
+				page,
+				list, 
+				codeSystemName, 
+				codeSystemVersionId, 
+				entityName);
+	}
+	
+	@RequestMapping(value=PATH_PREDICATEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
+	@ResponseBody
+	public Directory getPredicateOfAssociationsOfEntity(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			@RequestBody Query query,
+			AssociationQueryServiceRestrictions associationRestrictions,
+			RestFilter resolvedFilter,
+			Page page,
+			boolean list,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@PathVariable(VAR_ENTITYID) String entityName) {
+		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, 
+				codeSystemName, 
+				codeSystemVersionId, 
+				readContext);
+		
+		associationRestrictions.setPredicate(
 				ModelUtils.entityNameOrUriFromName(
 						this.getScopedEntityName(entityName, codeSystemName)));
 		
