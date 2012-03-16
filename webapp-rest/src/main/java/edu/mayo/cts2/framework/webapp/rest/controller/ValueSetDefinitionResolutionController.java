@@ -270,6 +270,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			@RequestParam(
 					value=RESOLUTION_TYPE, defaultValue=DEFAULT_VALUESETDEFINITION_RESOLUTION) 
 			ResolvedValueSetResolutionTypes resolution,
+			RestFilter restFilter,
 			Page page) {
 		
 		ResolvedValueSetReadId id = 
@@ -280,10 +281,19 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		switch (resolution) {
 			case iterable : {
+				ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
+						restFilter, 
+						this.resolvedValueSetResolutionService);
+				
+				Set<ResolvedFilter> filterSet = new HashSet<ResolvedFilter>();
+				if(filter != null){
+					filterSet.add(filter);
+				}
+				
 				ResolvedValueSetResult directory = 
 						this.resolvedValueSetResolutionService.getResolution(
 							id, 
-							null,//TODO: Possibly want to include filters 
+							filterSet,
 							page);
 				
 				if(directory == null){
@@ -429,11 +439,14 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		final Set<ResolvedFilter> filters = new HashSet<ResolvedFilter>();
 		
-		filters.add(
-				this.getFilterResolver().resolveRestFilter(
-						restFilter,
-						this.resolvedValueSetQueryService));
+		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
+				restFilter,
+				this.resolvedValueSetQueryService);
 		
+		if(filter != null){
+			filters.add(filter);
+		}
+
 		return new ResolvedValueSetQuery() {
 			
 			@Override

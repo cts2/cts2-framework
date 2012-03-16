@@ -24,6 +24,7 @@
 		<test.plugin.properties.name>${project.artifactId}.properties</test.plugin.properties.name>
 		<test.config.dir>${project.build.directory}/testconfigdir</test.config.dir>
 		<test.plugins.dir>${project.build.directory}/test-plugins</test.plugins.dir>
+		<war.file.name>webapp.war</war.file.name>
 	</properties>
 
 	<profiles>
@@ -43,6 +44,10 @@
 			</activation>
 			<build>
 				<plugins>
+
+
+
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
@@ -63,6 +68,15 @@
 											<type>jar</type>
 											<overWrite>true</overWrite>
 											<outputDirectory>${test.plugins.dir}</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>edu.mayo.cts2.framework</groupId>
+											<artifactId>webapp-rest</artifactId>
+											<version>${project.parent.version}</version>
+											<type>war</type>
+											<overWrite>true</overWrite>
+											<outputDirectory>${project.build.directory}/war</outputDirectory>
+											<destFileName>${war.file.name}</destFileName>
 										</artifactItem>
 									</artifactItems>
 								</configuration>
@@ -128,60 +142,50 @@
 					</plugin>
 
 					<plugin>
-						<groupId>org.codehaus.cargo</groupId>
-						<artifactId>cargo-maven2-plugin</artifactId>
-						<version>1.0</version>
-						<configuration>
-							<!-- Container configuration -->
-							<container>
-								<containerId>jetty6x</containerId>
-								<type>embedded</type>
-								<timeout>120000</timeout>
-								<systemProperties>
-									<cts2.config.dir>${test.config.dir}</cts2.config.dir>
-									<cts2.plugins.dir>${test.plugins.dir}</cts2.plugins.dir>
-								</systemProperties>
-							</container>
-							<!-- Configuration to use with the container or the deployer -->
-							<configuration>
-								<deployables>
-									<deployable>
-										<groupId>edu.mayo.cts2.framework</groupId>
-										<artifactId>webapp-rest</artifactId>
-										<type>war</type>
-										<properties>
-											<context>/${webapp.name}</context>
-										</properties>
-									</deployable>
-								</deployables>
-								<properties>
-									<cargo.servlet.port>${webapp.port}</cargo.servlet.port>
-								</properties>
-							</configuration>
-							<!-- Don't wait, execute the tests after the container is started -->
-							<wait>false</wait>
-						</configuration>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>maven-jetty-plugin</artifactId>
+						<version>6.1.22</version>
 						<executions>
 							<execution>
-								<id>start-container</id>
+								<id>start-jetty</id>
 								<phase>pre-integration-test</phase>
 								<goals>
-									<goal>start</goal>
+									<goal>run-war</goal>
 								</goals>
 								<configuration>
-									<timeout>120000</timeout>
+									<connectors>
+										<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+											<port>${webapp.port}</port>
+											<maxIdleTime>120000</maxIdleTime>
+										</connector>
+									</connectors>
+									<systemProperties>
+										<systemProperty>
+											<name>cts2.config.dir</name>
+											<value>${test.config.dir}</value>
+										</systemProperty>
+										<systemProperty>
+											<name>cts2.plugins.dir</name>
+											<value>${test.plugins.dir}</value>
+										</systemProperty>
+									</systemProperties>
+									<contextPath>${webapp.name}</contextPath>
+									<daemon>true</daemon>
+									<webApp>
+										${project.build.directory}/war/${war.file.name}
+									</webApp>
 								</configuration>
 							</execution>
 							<execution>
-								<id>stop-container</id>
+								<id>stop-jetty</id>
 								<phase>post-integration-test</phase>
 								<goals>
 									<goal>stop</goal>
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
 
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
