@@ -7,7 +7,7 @@ import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
-import edu.mayo.cts2.framework.service.profile.valueset.MapQuery;
+import edu.mayo.cts2.framework.service.profile.map.MapQuery;
 import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
 import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
 

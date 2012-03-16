@@ -1,5 +1,14 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
+
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
@@ -13,7 +22,6 @@ import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
-import edu.mayo.cts2.framework.model.service.core.types.ActiveOrAll;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -52,16 +60,6 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class CodeSystemVersionCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
@@ -92,7 +90,7 @@ public class CodeSystemVersionCatalogReadServicesEndpointTestIT extends SoapEndp
     MockServiceProvider.cts2Service = new MockService();
     ExistsCodeSystemVersionForCodeSystem request = new ExistsCodeSystemVersionForCodeSystem();
     request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
-    request.setTag(ModelUtils.nameOrUriFromName("testTag"));
+    request.setTag(ModelUtils.nameOrUriFromName("tag1"));
     ExistsCodeSystemVersionForCodeSystemResponse
         response = (ExistsCodeSystemVersionForCodeSystemResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
@@ -105,10 +103,11 @@ public class CodeSystemVersionCatalogReadServicesEndpointTestIT extends SoapEndp
     request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
     request.setQueryControl(new QueryControl());
     request.setContext(new ReadContext());
-    request.setTag(ModelUtils.nameOrUriFromName("testTag"));
+    request.setTag(ModelUtils.nameOrUriFromName("tag1"));
     GetCodeSystemVersionForCodeSystemResponse
         response = (GetCodeSystemVersionForCodeSystemResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getCodeSystemVersionName());
+    assertEquals(
+    		"success", response.getReturn().getCodeSystemVersionName());
   }
 
   @Test
@@ -236,22 +235,22 @@ public class CodeSystemVersionCatalogReadServicesEndpointTestIT extends SoapEndp
       return entry;
     }
 
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
+    public boolean exists(NameOrURI identifier, ResolvedReadContext readContext) {
       boolean exists = identifier.getName().equals("test") && readContext != null;
       return exists;
     }
 
     @Override
-    public boolean existsCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName) {
-      boolean exists = codeSystem.getName().equals("test") && tagName.equals("testTag");
+    public boolean existsByTag(NameOrURI codeSystem, VersionTagReference tag, ResolvedReadContext readContext) {
+      boolean exists = codeSystem.getName().equals("test") && tag.getContent().equals("tag1");
       return exists;
     }
 
     @Override
-    public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName) {
+    public CodeSystemVersionCatalogEntry readByTag(NameOrURI codeSystem, VersionTagReference tag, ResolvedReadContext readContext) {
       CodeSystemVersionCatalogEntry entry = getMockEntry();
 
-      if (codeSystem.getName().equals("test") && tagName.equals("testTag")) {
+      if (codeSystem.getName().equals("test") && tag.getContent().equals("tag1")) {
         entry.setCodeSystemVersionName("success");
       }
       else {
@@ -263,19 +262,6 @@ public class CodeSystemVersionCatalogReadServicesEndpointTestIT extends SoapEndp
     @Override
     public boolean existsVersionId(NameOrURI codeSystem, String officialResourceVersionId) {
       return codeSystem.getName().equals("test") && officialResourceVersionId.equals("TEST_VERSION");
-    }
-
-    @Override
-    public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName, ResolvedReadContext readContext) {
-      CodeSystemVersionCatalogEntry entry = getMockEntry();
-
-      if (codeSystem.getName().equals("test") && tagName.equals("testTag") && readContext != null) {
-        entry.setCodeSystemVersionName("success");
-      }
-      else {
-        entry.setCodeSystemVersionName("fail");
-      }
-      return entry;
     }
 
     @Override
@@ -291,7 +277,7 @@ public class CodeSystemVersionCatalogReadServicesEndpointTestIT extends SoapEndp
       return entry;
     }
 
-    public List<VersionTagReference> getSupportedTag() {
+    public List<VersionTagReference> getSupportedTags() {
       List<VersionTagReference> tags = new ArrayList<VersionTagReference>(3);
       tags.add(new VersionTagReference("tag1"));
       tags.add(new VersionTagReference("tag2"));

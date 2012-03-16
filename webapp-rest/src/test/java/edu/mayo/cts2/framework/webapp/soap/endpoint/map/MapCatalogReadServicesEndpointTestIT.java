@@ -1,5 +1,11 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
+
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
@@ -9,7 +15,6 @@ import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
-import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
@@ -41,11 +46,6 @@ import edu.mayo.cts2.framework.service.profile.map.MapReadService;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MapCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
@@ -181,7 +181,7 @@ public class MapCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
     }
 
     @Override
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
+    public boolean exists(NameOrURI identifier, ResolvedReadContext readContext) {
       return identifier.getName().equals("test") && readContext != null;
     }
   }

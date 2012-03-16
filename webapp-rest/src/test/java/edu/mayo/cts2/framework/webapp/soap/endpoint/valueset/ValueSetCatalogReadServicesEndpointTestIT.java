@@ -179,7 +179,7 @@ public class ValueSetCatalogReadServicesEndpointTestIT extends SoapEndpointTestB
     }
 
     @Override
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
+    public boolean exists(NameOrURI identifier, ResolvedReadContext readContext) {
       return identifier.getName().equals("test") && readContext != null;
     }
   }

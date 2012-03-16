@@ -25,11 +25,8 @@ package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.service.profile.ReadService;
-
-import java.util.List;
+import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
 
 /**
  * The Interface CodeSystemVersionReadService.
@@ -37,46 +34,30 @@ import java.util.List;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface CodeSystemVersionReadService extends
-		ReadService<CodeSystemVersionCatalogEntry, NameOrURI> {
-
-	/**
-	 * Exists code system version for code system.
-	 *
-	 * @param codeSystemName the code system name
-	 * @param tagName the tag name
-	 * @return true, if successful
-	 */
-	public boolean existsCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName);
-	
-	/**
-	 * Gets the code system version for code system.
-	 *
-	 * @param codeSystemName the code system name
-	 * @param tagName the tag name
-	 * @return the code system version for code system
-	 */
-	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(NameOrURI codeSystem, String tagName);
+	TagAwareReadService<CodeSystemVersionCatalogEntry, NameOrURI> {
 	
 	/**
 	 * Exists version id.
 	 *
-	 * @param codeSystemName the code system name
+	 * @param codeSystem the code system
 	 * @param officialResourceVersionId the official resource version id
 	 * @return true, if successful
 	 */
 	public boolean existsVersionId(NameOrURI codeSystem, String officialResourceVersionId);
 	
-	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
-			NameOrURI codeSystem, 
-			String tagName, 
-			ResolvedReadContext readContext);
-	
+	/**
+	 * Gets the code system by version id.
+	 *
+	 * @param codeSystem the code system
+	 * @param officialResourceVersionId the official resource version id
+	 * @param readContext the read context
+	 * @return the code system by version id
+	 */
 	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(
 			NameOrURI codeSystem, 
 			String officialResourceVersionId, 
 			ResolvedReadContext readContext);
-
-  public List<VersionTagReference> getSupportedTag();
+	
 }
 
 

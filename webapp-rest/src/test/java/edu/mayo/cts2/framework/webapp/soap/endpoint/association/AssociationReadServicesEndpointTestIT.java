@@ -222,7 +222,7 @@ public class AssociationReadServicesEndpointTestIT extends SoapEndpointTestBase 
       return association;
     }
 
-    public boolean exists(AssociationReadId identifier, ReadContext readContext) {
+    public boolean exists(AssociationReadId identifier, ResolvedReadContext readContext) {
       return identifier.getName().equals("test") && readContext != null;
     }
   }

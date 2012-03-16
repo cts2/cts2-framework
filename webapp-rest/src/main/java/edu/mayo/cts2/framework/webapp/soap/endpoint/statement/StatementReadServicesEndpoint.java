@@ -1,11 +1,12 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.statement;
 
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.core.FormatReference;
-import edu.mayo.cts2.framework.model.service.core.ProfileElement;
-import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
-import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
-import edu.mayo.cts2.framework.model.statement.Statement;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
@@ -30,10 +31,6 @@ import edu.mayo.cts2.framework.model.wsdl.statementread.Read;
 import edu.mayo.cts2.framework.model.wsdl.statementread.ReadResponse;
 import edu.mayo.cts2.framework.service.profile.statement.StatementReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint("StatementReadServicesEndpoint")
 public class StatementReadServicesEndpoint extends AbstractReadServiceEndpoint {

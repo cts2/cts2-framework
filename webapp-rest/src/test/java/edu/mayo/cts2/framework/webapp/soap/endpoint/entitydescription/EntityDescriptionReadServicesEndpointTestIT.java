@@ -1,10 +1,25 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.entitydescription;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.EntityReference;
+import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
@@ -67,26 +82,123 @@ import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadByCodeSystem
 import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadEntityDescriptions;
 import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadEntityDescriptionsResponse;
 import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTestBase {
   
   String uri = "http://localhost:8081/webapp-rest/soap/service/EntityDescriptionReadService";
 
+  @Before
+  public void setup(){	  
+	  MockServiceProvider.cts2Services.add(new MockCsvReadService());
+  }
+  
+  private static class MockCsvReadService implements CodeSystemVersionReadService {
+
+		@Override
+		public CodeSystemVersionCatalogEntry readByTag(
+				NameOrURI parentIdentifier, 
+				VersionTagReference tag,
+				ResolvedReadContext readContext) {
+			CodeSystemVersionCatalogEntry entry = new CodeSystemVersionCatalogEntry();
+			entry.setCodeSystemVersionName("test.version");
+			
+			return entry;
+		}
+
+		@Override
+		public boolean existsByTag(NameOrURI parentIdentifier,
+				VersionTagReference tag, ResolvedReadContext readContext) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public List<VersionTagReference> getSupportedTags() {
+			  VersionTagReference ref = new VersionTagReference("success");
+		      VersionTagReference refs[] = new VersionTagReference[1];
+		      refs[0] = ref;
+		      return Arrays.asList(refs);
+		}
+
+		@Override
+		public CodeSystemVersionCatalogEntry read(NameOrURI identifier,
+				ResolvedReadContext readContext) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean exists(NameOrURI identifier,
+				ResolvedReadContext readContext) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public String getServiceName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public OpaqueData getServiceDescription() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getServiceVersion() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public SourceReference getServiceProvider() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<FormatReference> getSupportedFormatList() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public FormatReference getDefaultFormat() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<DocumentedNamespaceReference> getKnownNamespaceList() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean existsVersionId(NameOrURI codeSystem,
+				String officialResourceVersionId) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(
+				NameOrURI codeSystem, String officialResourceVersionId,
+				ResolvedReadContext readContext) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		  
+	  }
+  
   @Test
   public void TestRead() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
@@ -101,7 +213,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
     queryControl.setTimeLimit(10000L);
     request.setQueryControl(queryControl);
     ReadResponse response = (ReadResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getEntityID().getName());
+    assertEquals("success", ModelUtils.getEntity(response.getReturn()).getEntityID().getName());
   }
 
   @Test
@@ -136,7 +248,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
     ReadByCodeSystem request = new ReadByCodeSystem();
     request.setCodeSystem(ModelUtils.nameOrUriFromName("test"));
     ScopedEntityName name = new ScopedEntityName();
-    name.setName("test.name");
+    name.setName("test");
     name.setNamespace("test");
     request.setEntityId(ModelUtils.entityNameOrUriFromName(name));
     request.setContext(new ReadContext());
@@ -145,7 +257,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
     request.setQueryControl(queryControl);
     request.setTag(ModelUtils.nameOrUriFromName("test.tag"));
     ReadByCodeSystemResponse response = (ReadByCodeSystemResponse) this.doSoapCall(uri, request);
-    assertEquals("success", response.getReturn().getEntityID().getName());
+    assertEquals("success", ModelUtils.getEntity(response.getReturn()).getEntityID().getName());
   }
 
   @Test
@@ -289,13 +401,13 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
   private class MockService extends MockBaseService implements EntityDescriptionReadService {
 
     @Override
-    public EntityDescriptionBase read(EntityNameOrURI entityId, NameOrURI codeSystemVersion, ResolvedReadContext resolvedReadContext) {
+    public EntityDescription read(EntityDescriptionReadId identifier, ResolvedReadContext resolvedReadContext) {
       ScopedEntityName name = new ScopedEntityName();
       name.setNamespace("test");
       EntityDescriptionBase entityDescription = createEntityDescription();
 
-      if (entityId.getEntityName().getName().equals("test")
-          && codeSystemVersion.getName().equals("test.version")
+      if (identifier.getEntityName().getName().equals("test")
+          && identifier.getCodeSystemVersion().getName().equals("test.version")
           && resolvedReadContext != null) {
         name.setName("success");
       }
@@ -303,22 +415,18 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
         name.setName("fail");
       }
       entityDescription.setEntityID(name);
-      return entityDescription;
+      
+      return ModelUtils.toEntityDescription(entityDescription);
     }
 
     @Override
-    public boolean exists(EntityNameOrURI entityId, NameOrURI codeSystemVersion, ResolvedReadContext resolvedReadContext) {
-      return entityId.getEntityName().getName().equals("test")
+    public boolean exists(EntityDescriptionReadId identifier, ResolvedReadContext resolvedReadContext) {
+    	ScopedEntityName entityId = identifier.getEntityName();
+    	NameOrURI codeSystemVersion = identifier.getCodeSystemVersion();
+    	
+      return ( ( entityId != null && StringUtils.equals(entityId.getName(), "test") ) || StringUtils.equals(identifier.getUri(), "test.uri"))
           && codeSystemVersion.getName().equals("test.version")
           && resolvedReadContext != null;
-    }
-
-    @Override
-    public boolean existsInCodeSystem(EntityNameOrURI entityId, NameOrURI codeSystem, String tagName, ResolvedReadContext readContext) {
-      return entityId.getUri().equals("test.uri")
-          && codeSystem.getName().equals("test")
-          && tagName.equals("test.tag")
-          && readContext != null;
     }
 
     @Override
@@ -343,31 +451,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
       return ref;
     }
 
-    @Override
-    public EntityDescriptionBase readByCodeSystem(
-        EntityNameOrURI entityId,
-        NameOrURI codeSystem,
-        NameOrURI tag,
-        ResolvedReadContext readContext) {
-
-      ScopedEntityName name = new ScopedEntityName();
-      name.setNamespace("test");
-
-      EntityDescriptionBase entityDescription = createEntityDescription();
-
-
-      if (entityId.getEntityName().getName().equals("test.name")
-          && codeSystem.getName().equals("test")
-          && readContext != null) {
-        name.setName("success");
-      }
-      else {
-        name.setName("fail");
-      }
-      entityDescription.setEntityID(name);
-      return entityDescription;
-    }
-
+   
     @Override
     public EntityList readEntityDescriptions(EntityNameOrURI entityId, ResolvedReadContext readContext) {
       EntityList entities = createEntityList();
@@ -385,39 +469,29 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
     }
 
     @Override
-    public CodeSystemReference[] getKnownCodeSystem() {
+    public List<CodeSystemReference> getKnownCodeSystems() {
       CodeSystemReference ref = new CodeSystemReference("success");
       CodeSystemReference refs[] = new CodeSystemReference[1];
       refs[0] = ref;
-      return refs;
+      return Arrays.asList(refs);
     }
 
     @Override
-    public CodeSystemVersionReference[] getKnownCodeSystemVersion() {
+    public List<CodeSystemVersionReference> getKnownCodeSystemVersions() {
       CodeSystemVersionReference ref = new CodeSystemVersionReference();
       ref.setCodeSystem(new CodeSystemReference("success"));
       ref.setVersion(new NameAndMeaningReference("test.version"));
       CodeSystemVersionReference refs[] = new CodeSystemVersionReference[1];
       refs[0] = ref;
-      return refs;
+      return Arrays.asList(refs);
     }
 
     @Override
-    public VersionTagReference[] getSupportedVersionTag() {
+    public List<VersionTagReference> getSupportedVersionTags() {
       VersionTagReference ref = new VersionTagReference("success");
       VersionTagReference refs[] = new VersionTagReference[1];
       refs[0] = ref;
-      return refs;
-    }
-
-    @Override
-    public EntityDescription read(EntityDescriptionReadId identifier, ResolvedReadContext readContext) {
-      throw new UnsupportedOperationException("Unimplemented Method");
-    }
-
-    @Override
-    public boolean exists(EntityDescriptionReadId identifier, ReadContext readContext) {
-      throw new UnsupportedOperationException("Unimplemented Method");
+      return Arrays.asList(refs);
     }
 
     private EntityDescriptionBase createEntityDescription() {

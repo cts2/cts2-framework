@@ -56,6 +56,13 @@ public class EntityDescriptionReadId extends EntityNameOrURI {
 		this.codeSystemVersion = codeSystemVersion;
 	}
 
+	public EntityDescriptionReadId(EntityNameOrURI entity, NameOrURI codeSystemVersion) {
+		super();
+		this.setEntityName(entity.getEntityName());
+		this.setUri(entity.getUri());
+		this.codeSystemVersion = codeSystemVersion;
+	}
+	
 	public EntityDescriptionReadId(String entityName, String entityNamespace, NameOrURI codeSystemVersion) {
 		super();
 		this.setEntityName(ModelUtils.createScopedEntityName(entityName, entityNamespace));

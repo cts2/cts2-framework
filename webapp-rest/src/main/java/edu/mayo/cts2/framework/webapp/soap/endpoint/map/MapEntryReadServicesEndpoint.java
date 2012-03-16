@@ -1,5 +1,10 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.map;
 
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
@@ -29,11 +34,8 @@ import edu.mayo.cts2.framework.model.wsdl.mapentryread.ExistsResponse;
 import edu.mayo.cts2.framework.model.wsdl.mapentryread.Read;
 import edu.mayo.cts2.framework.model.wsdl.mapentryread.ReadResponse;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
+import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint("MapEntryReadServicesEndpoint")
 public class MapEntryReadServicesEndpoint extends AbstractReadServiceEndpoint {
@@ -45,9 +47,12 @@ public class MapEntryReadServicesEndpoint extends AbstractReadServiceEndpoint {
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
 
-    MapEntry entry = this.mapEntryReadService.read(
-        request.getMapVersion(),
-        request.getMapFrom(),
+	MapEntryReadId id = new MapEntryReadId(
+		     request.getMapFrom(), 
+		     request.getMapVersion());
+   
+	MapEntry entry = this.mapEntryReadService.read(
+        id,
         this.resolveReadContext(request.getContext()));
 
     ReadResponse response = new ReadResponse();
@@ -58,9 +63,12 @@ public class MapEntryReadServicesEndpoint extends AbstractReadServiceEndpoint {
   @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
+	  MapEntryReadId id = new MapEntryReadId(
+			     request.getMapFrom(), 
+			     request.getMapVersion());
+	   
     boolean exists = this.mapEntryReadService.exists(
-        request.getMapVersion(),
-        request.getMapFrom(),
+        id,
         this.resolveReadContext(request.getContext()));
 
     ExistsResponse response = new ExistsResponse();

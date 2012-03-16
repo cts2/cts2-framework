@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
+import java.util.List;
+
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
@@ -32,63 +34,37 @@ import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
-import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.QueryControl;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Interface EntityDescriptionReadService.
- *
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface EntityDescriptionReadService extends
 		ReadService<EntityDescription, EntityDescriptionReadId> {
 
-  public EntityDescriptionBase read(
-      EntityNameOrURI entityId,
-      NameOrURI codeSystemVersion,
-      ResolvedReadContext resolvedReadContext);
-
-  public boolean exists(
-      EntityNameOrURI entityId,
-      NameOrURI codeSystemVersion,
-      ResolvedReadContext resolvedReadContext);
-
-	public boolean existsInCodeSystem(
-			EntityNameOrURI entityId, 
-			NameOrURI codeSystem, 
-			String tagName, 
-			ResolvedReadContext readContext);
-	
 	public DirectoryResult<EntityListEntry> readEntityDescriptions(
 			EntityNameOrURI entityId, 
 			SortCriteria sortCriteria,
-			ResolvedReadContext readContext,
+			ResolvedReadContext readContext, 
 			Page page);
-	
+
 	public EntityReference availableDescriptions(
-			EntityNameOrURI entityId, 
+			EntityNameOrURI entityId,
 			ResolvedReadContext readContext);
 
-  public EntityDescriptionBase readByCodeSystem(
-      EntityNameOrURI entityId,
-      NameOrURI codeSystem,
-      NameOrURI tag,
-      ResolvedReadContext readContext);
+	public EntityList readEntityDescriptions(
+			EntityNameOrURI entityId,
+			ResolvedReadContext readContext);
 
-  public EntityList readEntityDescriptions(
-      EntityNameOrURI entityId,
-      ResolvedReadContext readContext);
+	public List<CodeSystemReference> getKnownCodeSystems();
 
-  public CodeSystemReference[] getKnownCodeSystem();
+	public List<CodeSystemVersionReference> getKnownCodeSystemVersions();
 
-  public CodeSystemVersionReference[] getKnownCodeSystemVersion();
-
-  public VersionTagReference[] getSupportedVersionTag();
+	public List<VersionTagReference> getSupportedVersionTags();
 }

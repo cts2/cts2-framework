@@ -1,10 +1,19 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
+
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.core.ConceptDomainReference;
 import edu.mayo.cts2.framework.model.core.ContextReference;
-import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
@@ -14,7 +23,6 @@ import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -52,14 +60,6 @@ import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.Concept
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
@@ -114,7 +114,7 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
   public void TestExistsURI() throws Exception {
     MockServiceProvider.cts2Service = new MockService();
     ExistsURI request = new ExistsURI();
-    request.setEntity("test");
+    request.setUri("test.uri");
     ExistsURIResponse response = (ExistsURIResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
   }
@@ -213,10 +213,12 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
   private class MockService extends MockBaseService implements ConceptDomainBindingReadService {
 
     public LocalIdConceptDomainBinding read(ConceptDomainBindingReadId identifier, ResolvedReadContext readContext) {
-      ConceptDomainBinding binding = new ConceptDomainBinding();
+      ConceptDomainBinding binding = createBinding();
 
-      if (identifier.getName().equals("test") && readContext != null) {
+      if (StringUtils.equals(identifier.getName(), "test") ) {
         binding.setBindingURI("success");
+      } else if (StringUtils.equals(identifier.getUri(), "test.uri") ) {
+          binding.setBindingURI("success");
       }
       else {
         binding.setBindingURI("fail");
@@ -226,19 +228,15 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
       return entry;
     }
 
-    public boolean exists(ConceptDomainBindingReadId identifier, ReadContext readContext) {
-      return identifier.getName().equals("test");
+    public boolean exists(ConceptDomainBindingReadId identifier, ResolvedReadContext readContext) {
+    	 return (StringUtils.equals(identifier.getName(), "test") || StringUtils.equals(identifier.getUri(), "test.uri"));
     }
 
     public boolean exists(NameOrURI conceptDomain, NameOrURI valueSet, NameOrURI applicableContext, NameOrURI bindingQualifier) {
-      return conceptDomain.getName().equals("test")
+      return StringUtils.equals(conceptDomain.getName(), "test")
           && valueSet.getName().equals("valueSetTest")
           && applicableContext.getName().equals("applicableContextTest")
           && bindingQualifier.getName().equals("bindingQualifierTest");
-    }
-
-    public boolean existsURI(String documentURI) {
-      return documentURI.equals("test");
     }
 
     public ConceptDomainBinding read(
@@ -250,19 +248,6 @@ public class ConceptDomainBindingReadServicesEndpointTestIT extends SoapEndpoint
           && valueSet.getName().equals("valueSetTest")
           && applicableContext.getName().equals("applicableContextTest")
           && bindingQualifier.getName().equals("bindingQualifierTest")) {
-        binding.setBindingURI("success");
-      }
-      else {
-        binding.setBindingURI("fail");
-      }
-
-      return binding;
-    }
-
-    public ConceptDomainBinding readByURI(String documentURI) {
-      ConceptDomainBinding binding = createBinding();
-
-      if (documentURI.equals("test.uri")) {
         binding.setBindingURI("success");
       }
       else {

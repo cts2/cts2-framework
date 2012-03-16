@@ -82,7 +82,9 @@ public class ConceptDomainCatalogReadServicesEndpoint extends AbstractReadServic
   @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.conceptDomainReadService.exists(request.getConceptDomainId(), request.getContext());
+    boolean exists = this.conceptDomainReadService.exists(
+    		request.getConceptDomainId(), 
+    		this.resolveReadContext(request.getContext()));
 
     ExistsResponse response = new ExistsResponse();
     response.setReturn(exists);

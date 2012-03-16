@@ -17,7 +17,7 @@ import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
 public class AbstractEndpoint extends AbstractServiceAwareBean {
 	
 	private ExecutorService executorService = Executors.newCachedThreadPool();
-	
+
 	protected ResolvedReadContext resolveReadContext(ReadContext context){
 		if(context == null){
 			return null;

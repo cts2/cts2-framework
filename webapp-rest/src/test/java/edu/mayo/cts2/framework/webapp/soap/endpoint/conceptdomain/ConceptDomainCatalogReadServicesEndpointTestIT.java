@@ -1,5 +1,11 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomain;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
+
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
@@ -46,12 +52,6 @@ import edu.mayo.cts2.framework.service.profile.conceptdomain.ConceptDomainReadSe
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ConceptDomainCatalogReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
@@ -230,7 +230,7 @@ public class ConceptDomainCatalogReadServicesEndpointTestIT extends SoapEndpoint
       return entry;
     }
 
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
+    public boolean exists(NameOrURI identifier, ResolvedReadContext readContext) {
       return identifier.getName().equals("test") && readContext != null;
     }
   }

@@ -26,7 +26,6 @@ package edu.mayo.cts2.framework.service.profile.map;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.valueset.MapQuery;
 
 /**
  * The Interface MapQueryService.

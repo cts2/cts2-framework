@@ -174,7 +174,7 @@ public class CodeSystemCatalogReadServicesEndpointTestIT extends SoapEndpointTes
       return entry;
     }
 
-    public boolean exists(NameOrURI identifier, ReadContext readContext) {
+    public boolean exists(NameOrURI identifier, ResolvedReadContext readContext) {
       return identifier.getName().equals("test");
     }
 

@@ -1,21 +1,31 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.entitydescription;
 
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import javax.annotation.Resource;
+
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.EntityReference;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
+import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormat;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetDefaultFormatResponse;
 import edu.mayo.cts2.framework.model.wsdl.baseservice.GetImplementationType;
@@ -52,30 +62,34 @@ import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadByCodeSystem
 import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadEntityDescriptions;
 import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadEntityDescriptionsResponse;
 import edu.mayo.cts2.framework.model.wsdl.entitydescriptionread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
-import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean.Cts2Service;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import edu.mayo.cts2.framework.webapp.naming.CodeSystemVersionNameResolver;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
-import java.util.concurrent.Callable;
 
 @Endpoint("EntityDescriptionReadServicesEndpoint")
 public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEndpoint {
+  
   @Cts2Service
   private EntityDescriptionReadService entityDescriptionReadService;
+  
+  @Cts2Service
+  private CodeSystemVersionReadService codeSystemVersionReadService;
+  
+  @Resource
+  private CodeSystemVersionNameResolver codeSystemVersionNameResolver;
 
   @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
   @ResponsePayload
   public ReadResponse read(@RequestPayload Read request) {
-    EntityDescriptionBase base = this.doRead(
-        this.entityDescriptionReadService,
-        request.getEntityId(),
-        request.getCodeSystemVersion(),
-        request.getQueryControl(),
-        request.getContext());
+	EntityDescription base = this.doRead(
+			this.entityDescriptionReadService, 
+			new EntityDescriptionReadId(
+					request.getEntityId(), 
+					request.getCodeSystemVersion()),
+			request.getQueryControl(),
+			request.getContext());
     
     ReadResponse response = new ReadResponse();
     response.setReturn(base);
@@ -87,8 +101,9 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   public ExistsResponse exists(@RequestPayload Exists request) {
     ResolvedReadContext resolvedReadContext = this.resolveReadContext(request.getContext());
     boolean exists = this.entityDescriptionReadService.exists(
-        request.getEntityId(),
-        request.getCodeSystemVersion(),
+        new EntityDescriptionReadId(
+        		request.getEntityId(),
+        		request.getCodeSystemVersion()),
         resolvedReadContext);
 
     ExistsResponse response = new ExistsResponse();
@@ -100,11 +115,20 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public ExistsInCodeSystemResponse existsInCodeSystem(@RequestPayload ExistsInCodeSystem request) {
     ResolvedReadContext resolvedReadContext = this.resolveReadContext(request.getContext());
-    boolean exists = this.entityDescriptionReadService.existsInCodeSystem(
-        request.getEntityId(),
-        request.getCodeSystem(),
-        request.getTag().getName(),
-        resolvedReadContext);
+   
+	String codeSystemVersionName = codeSystemVersionNameResolver.getCodeSystemVersionNameFromTag(
+			codeSystemVersionReadService, 
+			request.getCodeSystem(), 
+			this.resolveTag(request.getTag(), codeSystemVersionReadService), 
+			this.resolveReadContext(request.getContext()));
+	
+	EntityDescriptionReadId id = new EntityDescriptionReadId(
+			request.getEntityId(), 
+			ModelUtils.nameOrUriFromName(codeSystemVersionName));
+    
+	boolean exists = this.entityDescriptionReadService.exists(
+				id,
+		        resolvedReadContext);
 
     ExistsInCodeSystemResponse response = new ExistsInCodeSystemResponse();
     response.setReturn(exists);
@@ -115,13 +139,20 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "readByCodeSystem", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
   @ResponsePayload
   public ReadByCodeSystemResponse readByCodeSystem(@RequestPayload ReadByCodeSystem request) {
-    EntityDescriptionBase base = this.doReadByCodeSystem(
-        this.entityDescriptionReadService,
-        request.getEntityId(),
-        request.getCodeSystem(),
-        request.getTag(),
-        request.getQueryControl(),
-        request.getContext());
+    
+	String codeSystemVersionName = codeSystemVersionNameResolver.getCodeSystemVersionNameFromTag(
+			codeSystemVersionReadService, 
+			request.getCodeSystem(), 
+			this.resolveTag(request.getTag(), codeSystemVersionReadService), 
+			this.resolveReadContext(request.getContext()));
+	  
+	EntityDescription base = this.doRead(
+			this.entityDescriptionReadService, 
+			new EntityDescriptionReadId(
+					request.getEntityId(), 
+					ModelUtils.nameOrUriFromName(codeSystemVersionName)),
+			request.getQueryControl(),
+			request.getContext());
 
     ReadByCodeSystemResponse response = new ReadByCodeSystemResponse();
     response.setReturn(base);
@@ -156,7 +187,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "getKnownCodeSystem", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
   @ResponsePayload
   public GetKnownCodeSystemResponse getKnownCodeSystem(@RequestPayload GetKnownCodeSystem request) {
-    CodeSystemReference ref[] = this.entityDescriptionReadService.getKnownCodeSystem();
+    List<CodeSystemReference> ref = this.entityDescriptionReadService.getKnownCodeSystems();
 
     GetKnownCodeSystemResponse response = new GetKnownCodeSystemResponse();
     response.setReturn(ref);
@@ -166,7 +197,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "getKnownCodeSystemVersion", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
   @ResponsePayload
   public GetKnownCodeSystemVersionResponse getKnownCodeSystemVersion(@RequestPayload GetKnownCodeSystemVersion request) {
-    CodeSystemVersionReference refs[] = this.entityDescriptionReadService.getKnownCodeSystemVersion();
+    List<CodeSystemVersionReference> refs = this.entityDescriptionReadService.getKnownCodeSystemVersions();
 
     GetKnownCodeSystemVersionResponse response = new GetKnownCodeSystemVersionResponse();
     response.setReturn(refs);
@@ -176,7 +207,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "getSupportedVersionTag", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
   @ResponsePayload
   public GetSupportedVersionTagResponse getSupportedVersionTag(@RequestPayload GetSupportedVersionTag request) {
-    VersionTagReference refs[] = this.entityDescriptionReadService.getSupportedVersionTag();
+    List<VersionTagReference> refs = this.entityDescriptionReadService.getSupportedVersionTags();
 
     GetSupportedVersionTagResponse response = new GetSupportedVersionTagResponse();
     response.setReturn(refs);
@@ -285,41 +316,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
     return response;
   }
 
-  private EntityDescriptionBase doRead(
-      final EntityDescriptionReadService readService,
-      final EntityNameOrURI entityId,
-      final NameOrURI codeSystemVersion,
-      final QueryControl queryControl,
-      final ReadContext readContext) {
-    final ResolvedReadContext resolvedReadContext = this.resolveReadContext(readContext);
 
-    return this.doTimedCall(new Callable<EntityDescriptionBase>() {
-
-      @Override
-      public EntityDescriptionBase call() throws Exception {
-        return readService.read(entityId, codeSystemVersion, resolvedReadContext);
-      }
-    }, queryControl);
-  }
-
-  private EntityDescriptionBase doReadByCodeSystem(
-      final EntityDescriptionReadService readService,
-      final EntityNameOrURI entityId,
-      final NameOrURI codeSystem,
-      final NameOrURI tag,
-      final QueryControl queryControl,
-      final ReadContext context) {
-    final ResolvedReadContext resolvedReadContext = this.resolveReadContext(context);
-
-    return this.doTimedCall(new Callable<EntityDescriptionBase>() {
-
-      @Override
-      public EntityDescriptionBase call() throws Exception {
-        return readService.readByCodeSystem(entityId, codeSystem, tag, resolvedReadContext);
-      }
-    }, queryControl);
-  }
-  
   private EntityList doReadEntityDescriptions(
       final EntityDescriptionReadService readService,
       final EntityNameOrURI entityId,
@@ -335,5 +332,25 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
       }
     }, queryControl);
   }
+
+	public CodeSystemVersionNameResolver getCodeSystemVersionNameResolver() {
+		return codeSystemVersionNameResolver;
+	}
+	
+	public void setCodeSystemVersionNameResolver(
+			CodeSystemVersionNameResolver codeSystemVersionNameResolver) {
+		this.codeSystemVersionNameResolver = codeSystemVersionNameResolver;
+	}
+
+	public CodeSystemVersionReadService getCodeSystemVersionReadService() {
+		return codeSystemVersionReadService;
+	}
+
+	public void setCodeSystemVersionReadService(
+			CodeSystemVersionReadService codeSystemVersionReadService) {
+		this.codeSystemVersionReadService = codeSystemVersionReadService;
+	}
+	  
+  
   
 }

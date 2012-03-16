@@ -62,9 +62,9 @@ import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestri
 import edu.mayo.cts2.framework.service.command.restriction.MapQueryServiceRestrictions.ValueSetRestriction;
 import edu.mayo.cts2.framework.service.profile.map.MapHistoryService;
 import edu.mayo.cts2.framework.service.profile.map.MapMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.map.MapQuery;
 import edu.mayo.cts2.framework.service.profile.map.MapQueryService;
 import edu.mayo.cts2.framework.service.profile.map.MapReadService;
-import edu.mayo.cts2.framework.service.profile.valueset.MapQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;

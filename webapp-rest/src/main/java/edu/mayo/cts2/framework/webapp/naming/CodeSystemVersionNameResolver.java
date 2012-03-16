@@ -1,10 +1,12 @@
-package edu.mayo.cts2.framework.webapp.rest.naming;
+package edu.mayo.cts2.framework.webapp.naming;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 
@@ -13,6 +15,23 @@ public class CodeSystemVersionNameResolver {
 
 	private LRUMap nameCache = new LRUMap(200);
 	private LRUMap versionIdCache = new LRUMap(200);
+	
+	//TODO: Add Caching
+	public String getCodeSystemVersionNameFromTag(
+			CodeSystemVersionReadService codeSystemVersionReadService,
+			NameOrURI codeSystem,
+			VersionTagReference tag,
+			ResolvedReadContext readContext){
+		
+		CodeSystemVersionCatalogEntry csv = 
+				codeSystemVersionReadService.readByTag(codeSystem, tag, readContext);
+		
+		if(csv != null){
+			return csv.getCodeSystemVersionName();
+		} else {
+			return null;
+		}
+	}
 	
 	public String getVersionIdFromCodeSystemVersionName(
 			CodeSystemVersionReadService codeSystemVersionReadService,

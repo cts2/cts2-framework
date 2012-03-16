@@ -26,7 +26,6 @@ package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
 import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.valueset.ConceptDomainBindingQuery;
 
 /**
  * The Interface ConceptDomainBindingQueryService.

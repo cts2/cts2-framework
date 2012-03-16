@@ -66,10 +66,10 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
+import edu.mayo.cts2.framework.webapp.naming.CodeSystemVersionNameResolver;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
-import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver;
 import edu.mayo.cts2.framework.webapp.rest.query.CodeSystemVersionQueryBuilder;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 

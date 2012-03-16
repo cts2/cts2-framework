@@ -59,7 +59,9 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.codeSystemReadService.exists(request.getCodeSystemId(), request.getContext());
+    boolean exists = this.codeSystemReadService.exists(
+    		request.getCodeSystemId(), 
+    		this.resolveReadContext(request.getContext()));
 
     ExistsResponse existsResponse = new ExistsResponse();
     existsResponse.setReturn(exists);

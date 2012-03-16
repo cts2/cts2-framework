@@ -59,7 +59,9 @@ public class MapCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint 
   @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.mapReadService.exists(request.getCodeSystemId(), request.getContext());
+    boolean exists = this.mapReadService.exists(
+    		request.getCodeSystemId(), 
+    		this.resolveReadContext(request.getContext()));
 
     ExistsResponse response = new ExistsResponse();
     response.setReturn(exists);

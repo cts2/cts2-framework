@@ -1,5 +1,10 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.valueset;
 
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
@@ -30,10 +35,6 @@ import edu.mayo.cts2.framework.model.wsdl.valuesetread.Read;
 import edu.mayo.cts2.framework.model.wsdl.valuesetread.ReadResponse;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint("ValueSetCatalogReadServicesEndpoint")
 public class ValueSetCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
@@ -58,7 +59,9 @@ public class ValueSetCatalogReadServicesEndpoint extends AbstractReadServiceEndp
   @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.valueSetReadService.exists(request.getValueSetId(), request.getContext());
+    boolean exists = this.valueSetReadService.exists(
+    		request.getValueSetId(), 
+    		this.resolveReadContext(request.getContext()));
 
     ExistsResponse response = new ExistsResponse();
     response.setReturn(exists);

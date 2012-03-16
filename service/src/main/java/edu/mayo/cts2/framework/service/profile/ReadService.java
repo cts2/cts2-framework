@@ -24,7 +24,6 @@
 package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 
 
 /**
@@ -52,6 +51,6 @@ public interface ReadService<R,I> extends BaseService {
 	 * @param readContext the read context
 	 * @return true, if successful
 	 */
-	public boolean exists(I identifier, ReadContext readContext);
+	public boolean exists(I identifier, ResolvedReadContext readContext);
 	
 }

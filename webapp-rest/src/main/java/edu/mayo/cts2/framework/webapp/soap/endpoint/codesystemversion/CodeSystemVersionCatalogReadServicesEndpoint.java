@@ -71,7 +71,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   public ExistsResponse exists(@RequestPayload Exists request) {
     boolean exists = this.codeSystemVersionReadService.exists(
         request.getCodeSystemVersion(),
-        request.getContext());
+        this.resolveReadContext(request.getContext()));
 
     ExistsResponse existsResponse = new ExistsResponse();
     existsResponse.setReturn(exists);
@@ -83,9 +83,11 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public ExistsCodeSystemVersionForCodeSystemResponse existsCodeSystemVersionForCodeSystem(
       @RequestPayload ExistsCodeSystemVersionForCodeSystem request) {
-    boolean exists = this.codeSystemVersionReadService.existsCodeSystemVersionForCodeSystem(
+		  
+    boolean exists = this.codeSystemVersionReadService.existsByTag(
         request.getCodeSystem(),
-        request.getTag().getName());
+        this.resolveTag(request.getTag(), this.codeSystemVersionReadService),
+        this.resolveReadContext(request.getContext()) );
 
     ExistsCodeSystemVersionForCodeSystemResponse response = new ExistsCodeSystemVersionForCodeSystemResponse();
     response.setReturn(exists);
@@ -112,9 +114,10 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
       @RequestPayload GetCodeSystemVersionForCodeSystem request) {
     GetCodeSystemVersionForCodeSystemResponse response = new GetCodeSystemVersionForCodeSystemResponse();
     response.setReturn(
-        this.codeSystemVersionReadService.getCodeSystemVersionForCodeSystem(
+        this.codeSystemVersionReadService.readByTag(
             request.getCodeSystem(),
-            request.getTag().getName()));
+            this.resolveTag(request.getTag(), this.codeSystemVersionReadService),
+            this.resolveReadContext(request.getContext())));
 
     return response;
   }
@@ -137,7 +140,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
   @ResponsePayload
   public GetSupportedTagResponse getSupportedTag(@RequestPayload GetSupportedTag request) {
     GetSupportedTagResponse response = new GetSupportedTagResponse();
-    response.setReturn(this.codeSystemVersionReadService.getSupportedTag());
+    response.setReturn(this.codeSystemVersionReadService.getSupportedTags());
 
     return response;
   }

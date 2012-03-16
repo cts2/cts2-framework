@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.service.profile.mapentry.name;
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
@@ -36,25 +37,32 @@ public class MapEntryReadId extends EntityNameOrURI {
 
 	private static final long serialVersionUID = 2567172778896717738L;
 
-	private String mapVersionName;
+	private NameOrURI mapVersion;
 	
-	public MapEntryReadId(String uri, String mapVersionName) {
+	public MapEntryReadId(String uri, NameOrURI mapVersion) {
 		super();
 		this.setUri(uri);
-		this.mapVersionName = mapVersionName;
+		this.mapVersion = mapVersion;
 	}
 	
-	public MapEntryReadId(ScopedEntityName mapFromName, String mapVersionName) {
+	public MapEntryReadId(EntityNameOrURI mapFromName, NameOrURI mapVersion) {
+		super();
+		this.setEntityName(mapFromName.getEntityName());
+		this.setUri(mapFromName.getUri());
+		this.mapVersion = mapVersion;
+	}
+	
+	public MapEntryReadId(ScopedEntityName mapFromName, NameOrURI mapVersion) {
 		super();
 		this.setEntityName(mapFromName);
-		this.mapVersionName = mapVersionName;
+		this.mapVersion = mapVersion;
 	}
 	
-	public MapEntryReadId(String mapFromName, String mapFromNamespace, String mapVersionName) {
-		this(ModelUtils.createScopedEntityName(mapFromName, mapFromNamespace), mapVersionName);
+	public MapEntryReadId(String mapFromName, String mapFromNamespace, NameOrURI mapVersion) {
+		this(ModelUtils.createScopedEntityName(mapFromName, mapFromNamespace), mapVersion);
 	}
 
-	public String getMapVersionName() {
-		return mapVersionName;
+	public NameOrURI getMapVersion() {
+		return mapVersion;
 	}
 }

@@ -12,7 +12,7 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.core.Message
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
-import edu.mayo.cts2.framework.webapp.rest.naming.CodeSystemVersionNameResolver
+import edu.mayo.cts2.framework.webapp.naming.CodeSystemVersionNameResolver
 
  class CodeSystemVersionControllerTest {
 	

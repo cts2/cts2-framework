@@ -1,5 +1,12 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.mapversion;
 
+import java.util.concurrent.Callable;
+
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
@@ -41,20 +48,19 @@ import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadEntryResponse;
 import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadMapVersionForMap;
 import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadMapVersionForMapResponse;
 import edu.mayo.cts2.framework.model.wsdl.mapversionread.ReadResponse;
+import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryReadService;
+import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
-import java.util.concurrent.Callable;
 
 @Endpoint("MapVersionReadServicesEndpoint")
 public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint {
 
   @Cts2Service
   private MapVersionReadService mapVersionReadService;
+  
+  @Cts2Service
+  private MapEntryReadService mapEntryReadService;
 
   @PayloadRoot(localPart = "read", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
@@ -88,7 +94,11 @@ public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint 
   @PayloadRoot(localPart = "readEntry", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
   public ReadEntryResponse readEntry(@RequestPayload ReadEntry request) {
-    MapEntry entry = this.mapVersionReadService.readEntry(request.getMapVersion(), request.getSourceEntity());
+	  
+	MapEntryReadId id = new MapEntryReadId(request.getSourceEntity(), request.getMapVersion());
+	  
+    MapEntry entry = this.mapEntryReadService.read(
+    		id, null);
 
     ReadEntryResponse response = new ReadEntryResponse();
     response.setReturn(entry);
@@ -98,7 +108,9 @@ public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint 
   @PayloadRoot(localPart = "exists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
   public ExistsResponse exists(@RequestPayload Exists request) {
-    boolean exists = this.mapVersionReadService.exists(request.getMapVersion(), request.getContext());
+    boolean exists = this.mapVersionReadService.exists(
+    		request.getMapVersion(), 
+    		this.resolveReadContext(request.getContext()));
 
     ExistsResponse response = new ExistsResponse();
     response.setReturn(exists);
@@ -108,9 +120,9 @@ public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint 
   @PayloadRoot(localPart = "existsMapVersionForMap", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
   public ExistsMapVersionForMapResponse existsMapVersionForMap(@RequestPayload ExistsMapVersionForMap request) {
-    boolean exists = this.mapVersionReadService.existsMapVersionForMap(
+    boolean exists = this.mapVersionReadService.existsByTag(
         request.getMap(),
-        request.getTag().getName(),
+        this.resolveTag(request.getTag(), this.mapVersionReadService),
         this.resolveReadContext(request.getContext()));
 
     ExistsMapVersionForMapResponse response = new ExistsMapVersionForMapResponse();
@@ -121,9 +133,10 @@ public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint 
   @PayloadRoot(localPart = "entryExists", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices")
   @ResponsePayload
   public EntryExistsResponse entryExists(@RequestPayload EntryExists request) {
-    boolean exists = this.mapVersionReadService.entryExists(
-        request.getMapVersion(),
-        request.getSourceEntity());
+	MapEntryReadId id = new MapEntryReadId(request.getSourceEntity(), request.getMapVersion());
+
+    boolean exists = this.mapEntryReadService.exists(
+        id, null);
 
     EntryExistsResponse response = new EntryExistsResponse();
     response.setReturn(exists);
@@ -244,7 +257,10 @@ public class MapVersionReadServicesEndpoint extends AbstractReadServiceEndpoint 
       
       @Override
       public MapVersion call() throws Exception {
-        return readService.readMapVersionForMap(map, tag.getName(), resolvedReadContext);
+        return readService.readByTag(
+        		map, 
+        		resolveTag(tag, readService),
+        		resolvedReadContext);
       }
     }, queryControl);
   }

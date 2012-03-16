@@ -34,6 +34,7 @@ import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
@@ -42,6 +43,7 @@ import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedPredicate;
+import edu.mayo.cts2.framework.model.service.exception.UnsupportedVersionTag;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 
@@ -123,7 +125,22 @@ public class ExceptionFactory {
 		
 		return ex;
 	}
-	
+
+	public static UnsupportedVersionTag createUnsupportedVersionTag(
+			NameOrURI versionTagReference,
+			Iterable<? extends VersionTagReference> tagReferences) {
+		UnsupportedVersionTag ex = new UnsupportedVersionTag();
+		
+		ex.setSeverity(LoggingLevel.ERROR);
+		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
+		
+		ex.setCts2Message(
+				getPossibleValuesMessageFromNameAndMeaning("VersionTagReference", 
+						versionTagReference.getUri(), tagReferences));
+		
+		return ex;
+	}
+
 	/**
 	 * Creates a new Exception object.
 	 *

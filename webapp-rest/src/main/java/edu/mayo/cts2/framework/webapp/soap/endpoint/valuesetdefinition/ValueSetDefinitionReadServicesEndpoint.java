@@ -65,10 +65,10 @@ public class ValueSetDefinitionReadServicesEndpoint extends AbstractReadServiceE
   @ResponsePayload
   public ReadDefinitionForValueSetResponse readDefinitionForValueSet(@RequestPayload ReadDefinitionForValueSet request) {
     ValueSetDefinition definition =
-        this.valueSetDefinitionReadService.readDefinitionForValueSet(
+        this.valueSetDefinitionReadService.readByTag(
         request.getValueSet(),
-        request.getTag(),
-        request.getContext());
+        this.resolveTag(request.getTag(), this.valueSetDefinitionReadService),
+        this.resolveReadContext(request.getContext())).getResource();
 
     ReadDefinitionForValueSetResponse response = new ReadDefinitionForValueSetResponse();
     response.setReturn(definition);
@@ -92,10 +92,10 @@ public class ValueSetDefinitionReadServicesEndpoint extends AbstractReadServiceE
   @PayloadRoot(localPart = "existsDefinitionForValueSet", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionReadServices")
   @ResponsePayload
   public ExistsDefinitionForValueSetResponse existsDefinitionForValueSet(@RequestPayload ExistsDefinitionForValueSet request) {
-    boolean exists = this.valueSetDefinitionReadService.existsDefinitionForValueSet(
+    boolean exists = this.valueSetDefinitionReadService.existsByTag(
         request.getValueSet(),
-        request.getTag(),
-        request.getContext());
+        this.resolveTag(request.getTag(), this.valueSetDefinitionReadService),
+        this.resolveReadContext(request.getContext()));
 
     ExistsDefinitionForValueSetResponse response = new ExistsDefinitionForValueSetResponse();
     response.setReturn(exists);

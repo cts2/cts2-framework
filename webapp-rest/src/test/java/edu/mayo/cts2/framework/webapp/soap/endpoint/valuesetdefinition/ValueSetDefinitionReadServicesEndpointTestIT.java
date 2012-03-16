@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceAndNotation;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.ValueSetReference;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.core.types.SetOperator;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
@@ -85,7 +89,7 @@ public class ValueSetDefinitionReadServicesEndpointTestIT extends SoapEndpointTe
     MockServiceProvider.cts2Service = new MockService();
     ReadDefinitionForValueSet request = new ReadDefinitionForValueSet();
     request.setValueSet(ModelUtils.nameOrUriFromName("test"));
-    request.setTag(ModelUtils.nameOrUriFromName("test.tag"));
+    request.setTag(ModelUtils.nameOrUriFromName("tag1"));
     request.setContext(new ReadContext());
     ReadDefinitionForValueSetResponse response = (ReadDefinitionForValueSetResponse) this.doSoapCall(uri, request);
     assertEquals("success", response.getReturn().getDocumentURI());
@@ -108,7 +112,7 @@ public class ValueSetDefinitionReadServicesEndpointTestIT extends SoapEndpointTe
     MockServiceProvider.cts2Service = new MockService();
     ExistsDefinitionForValueSet request = new ExistsDefinitionForValueSet();
     request.setValueSet(ModelUtils.nameOrUriFromName("test"));
-    request.setTag(ModelUtils.nameOrUriFromName("test.tag"));
+    request.setTag(ModelUtils.nameOrUriFromName("tag1"));
     request.setContext(new ReadContext());
     ExistsDefinitionForValueSetResponse response = (ExistsDefinitionForValueSetResponse) this.doSoapCall(uri, request);
     assertTrue(response.getReturn());
@@ -205,22 +209,22 @@ public class ValueSetDefinitionReadServicesEndpointTestIT extends SoapEndpointTe
   private class MockService extends MockBaseService implements ValueSetDefinitionReadService {
 
     @Override
-    public boolean existsDefinitionForValueSet(NameOrURI valueSet, NameOrURI tag, ReadContext readContext) {
-      return valueSet.getName().equals("test") && tag.getName().equals("test.tag") && readContext != null;
+    public boolean existsByTag(NameOrURI valueSet, VersionTagReference tag, ResolvedReadContext readContext) {
+      return valueSet.getName().equals("test") && tag.getContent().equals("tag1") && readContext != null;
     }
 
     @Override
-    public ValueSetDefinition readDefinitionForValueSet(NameOrURI valueSet, NameOrURI tag, ReadContext readContext) {
+    public LocalIdValueSetDefinition readByTag(NameOrURI valueSet, VersionTagReference tag, ResolvedReadContext readContext) {
       ValueSetDefinition definition = createValueSetDefinition();
 
-      if (valueSet.getName().equals("test") && tag.getName().equals("test.tag") && readContext != null) {
+      if (valueSet.getName().equals("test") && tag.getContent().equals("tag1") && readContext != null) {
         definition.setDocumentURI("success");
       }
       else {
         definition.setDocumentURI("fail");
       }
 
-      return definition;
+      return new LocalIdValueSetDefinition("test", definition);
     }
 
     @Override
@@ -238,7 +242,7 @@ public class ValueSetDefinitionReadServicesEndpointTestIT extends SoapEndpointTe
     }
 
     @Override
-    public boolean exists(ValueSetDefinitionReadId identifier, ReadContext readContext) {
+    public boolean exists(ValueSetDefinitionReadId identifier, ResolvedReadContext readContext) {
       return identifier.getName().equals("test") && readContext != null;
     }
 
@@ -270,6 +274,15 @@ public class ValueSetDefinitionReadServicesEndpointTestIT extends SoapEndpointTe
 
       return definition;
     }
+
+	@Override
+	public List<VersionTagReference> getSupportedTags() {
+		 List<VersionTagReference> tags = new ArrayList<VersionTagReference>(3);
+	      tags.add(new VersionTagReference("tag1"));
+	      tags.add(new VersionTagReference("tag2"));
+	      tags.add(new VersionTagReference("tag3"));
+	      return tags;
+	}
   }
 
 }

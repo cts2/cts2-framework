@@ -1,7 +1,15 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.conceptdomainbinding;
 
+import java.util.concurrent.Callable;
+
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
@@ -36,13 +44,8 @@ import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURI;
 import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadByURIResponse;
 import edu.mayo.cts2.framework.model.wsdl.conceptdomainbindingread.ReadResponse;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.ConceptDomainBindingReadService;
+import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
-import java.util.concurrent.Callable;
 
 @Endpoint("ConceptDomainBindingReadServicesEndpoint")
 public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServiceEndpoint {
@@ -94,8 +97,15 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public ReadByURIResponse readByURI(@RequestPayload ReadByURI request) {
     ReadByURIResponse response = new ReadByURIResponse();
-    response.setReturn(this.doReadByURI(this.conceptDomainBindingReadService, request.getUri()));
 
+    LocalIdConceptDomainBinding result = this.doReadByURI(
+    					this.conceptDomainBindingReadService, 
+    						new ConceptDomainBindingReadId(request.getUri()));
+
+    if(result != null){
+    	response.setReturn(result.getResource());
+    }
+    
     return response;
   }
 
@@ -103,7 +113,10 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
   @ResponsePayload
   public ExistsURIResponse existsURI(@RequestPayload ExistsURI request) {
     ExistsURIResponse response = new ExistsURIResponse();
-    response.setReturn(this.conceptDomainBindingReadService.existsURI(request.getEntity()));
+    
+    ConceptDomainBindingReadId id = new ConceptDomainBindingReadId(request.getUri());
+    
+    response.setReturn(this.conceptDomainBindingReadService.exists(id, null));
 
     return response;
   }
@@ -235,14 +248,14 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
     }, null);
   }
   
-  private ConceptDomainBinding doReadByURI(
+  private LocalIdConceptDomainBinding doReadByURI(
       final ConceptDomainBindingReadService readService,
-      final String uri) {
-    return this.doTimedCall(new Callable<ConceptDomainBinding>() {
+      final ConceptDomainBindingReadId id) {
+    return this.doTimedCall(new Callable<LocalIdConceptDomainBinding>() {
 
       @Override
-      public ConceptDomainBinding call() throws Exception {
-        return readService.readByURI(uri);
+      public LocalIdConceptDomainBinding call() throws Exception {
+        return readService.read(id, null);
       }
 
     }, null);

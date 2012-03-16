@@ -23,29 +23,17 @@
  */
 package edu.mayo.cts2.framework.service.profile.mapversion;
 
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.mapversion.MapEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
-import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
 
 /**
  * The Interface MapVersionReadService.
- *
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface MapVersionReadService extends
-		ReadService<MapVersion, NameOrURI> {
+		TagAwareReadService<MapVersion, NameOrURI> {
 
-  public boolean entryExists(NameOrURI mapVersion, EntityNameOrURI sourceEntity);
-
-	public boolean existsMapVersionForMap(NameOrURI map, String tagName, ResolvedReadContext readContext);
-
-	public MapVersion readMapVersionForMap(NameOrURI map, String tagName, ResolvedReadContext readContext);
-  
-  public MapEntry readEntry(NameOrURI mapVersion, EntityNameOrURI sourceEntity);
 
 }
-
-

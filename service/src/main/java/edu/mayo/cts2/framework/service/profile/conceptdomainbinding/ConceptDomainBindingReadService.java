@@ -47,16 +47,12 @@ public interface ConceptDomainBindingReadService extends
       final NameOrURI bindingQualifier
   );
   
-  public boolean existsURI(final String documentURI);
-  
   public ConceptDomainBinding read(
       final NameOrURI conceptDomain,
       final NameOrURI valueSet,
       final NameOrURI applicableContext,
       final NameOrURI bindingQualifier);
-  
-  public ConceptDomainBinding readByURI(final String documentURI);
-
+ 
   public List<VersionTagReference> getSupportedTag();
 
 }

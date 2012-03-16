@@ -52,6 +52,7 @@ import edu.mayo.cts2.framework.model.mapversion.MapEntryMsg;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.mapentry.MapEntryQuery;
@@ -134,7 +135,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	
 		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 
-				mapVersionName);
+				ModelUtils.nameOrUriFromName(mapVersionName));
 		
 		this.getUpdateHandler().update(
 				mapEntry, 
@@ -169,7 +170,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 		
 		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 
-				mapVersionName);
+				ModelUtils.nameOrUriFromName(mapVersionName));
 			
 		this.mapEntryMaintenanceService.
 			deleteResource(id, changeseturi);
@@ -215,7 +216,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 
 		MapEntryReadId id = new MapEntryReadId(
 				this.getScopedEntityName(mapsFromName), 
-				mapVersionName);
+				ModelUtils.nameOrUriFromName(mapVersionName));
 		
 		return this.doRead(
 				httpServletRequest, 

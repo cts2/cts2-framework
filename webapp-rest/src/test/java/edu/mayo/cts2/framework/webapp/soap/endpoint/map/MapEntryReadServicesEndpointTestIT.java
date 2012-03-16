@@ -1,19 +1,22 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
+
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MapVersionReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.SourceAndRoleReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
 import edu.mayo.cts2.framework.model.mapversion.types.MapProcessingRule;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
-import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
@@ -48,11 +51,6 @@ import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 import edu.mayo.cts2.framework.webapp.service.MockServiceProvider;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.MockBaseService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.SoapEndpointTestBase;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MapEntryReadServicesEndpointTestIT extends SoapEndpointTestBase {
   
@@ -170,24 +168,21 @@ public class MapEntryReadServicesEndpointTestIT extends SoapEndpointTestBase {
   private class MockService extends MockBaseService implements MapEntryReadService {
 
     @Override
-    public boolean exists(NameOrURI mapVersion, EntityNameOrURI mapFrom, ResolvedReadContext resolvedReadContext) {
-      return mapVersion.getName().equals("test")
-          && mapFrom.getUri().equals("test.version.uri")
+    public boolean exists(MapEntryReadId identifier, ResolvedReadContext resolvedReadContext) {
+      return identifier.getMapVersion().getName().equals("test")
+          && identifier.getUri().equals("test.version.uri")
           && resolvedReadContext != null;
     }
 
     @Override
-    public boolean exists(MapEntryReadId identifier, ReadContext readContext) {
-      throw new UnsupportedOperationException("Method not implemented");
-    }
-
-    @Override
-    public MapEntry read(NameOrURI mapVersion, EntityNameOrURI mapFrom, ResolvedReadContext resolvedReadContext) {
+    public MapEntry read(MapEntryReadId id, ResolvedReadContext resolvedReadContext) {
+      NameOrURI mapVersion = id.getMapVersion();
+     
       MapEntry entry = new MapEntry();
       SourceAndRoleReference sourceAndRoleReference = new SourceAndRoleReference();
       sourceAndRoleReference.setSource(new SourceReference("test.sourceRef"));
 
-      if (mapVersion.getName().equals("test") && mapFrom.getUri().equals("test.version.uri")) {
+      if (mapVersion.getName().equals("test") && id.getUri().equals("test.version.uri")) {
         sourceAndRoleReference.setContent("success");
       }
       else {
@@ -211,12 +206,7 @@ public class MapEntryReadServicesEndpointTestIT extends SoapEndpointTestBase {
 
       return entry;
     }
-
-    @Override
-    public MapEntry read(MapEntryReadId identifier, ResolvedReadContext readContext) {
-      throw new UnsupportedOperationException("Method not implemented");
-    }
-
+    
   }
 
 }
