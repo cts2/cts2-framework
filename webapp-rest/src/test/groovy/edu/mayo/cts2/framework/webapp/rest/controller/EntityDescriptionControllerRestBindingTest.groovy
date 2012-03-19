@@ -7,6 +7,7 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 import javax.annotation.Resource
 
+import org.junit.Ignore
 import org.junit.Test;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 
@@ -20,7 +21,8 @@ import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService
 
- class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTestBase {
+@Ignore
+class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTestBase {
 	
 	@Resource
 	EntityDescriptionController controller

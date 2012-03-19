@@ -45,11 +45,6 @@ public class EntityDescriptionReadId extends EntityNameOrURI {
 		this.codeSystemVersion = codeSystemVersion;
 	}
 	
-	public EntityDescriptionReadId(String uri) {
-		super();
-		this.setUri(uri);
-	}
-	
 	public EntityDescriptionReadId(String uri, NameOrURI codeSystemVersion) {
 		super();
 		this.setUri(uri);

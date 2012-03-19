@@ -315,7 +315,7 @@ public abstract class AbstractMessageWrappingController extends
 			this.populateDirectory(result, page, httpServletRequest, directoryClass);
 	}
 	
-	private SortCriteria resolveSort(QueryControl sort, BaseQueryService queryService) {
+	protected SortCriteria resolveSort(QueryControl sort, BaseQueryService queryService) {
 		if(sort == null || StringUtils.isBlank(sort.getSort())){
 			return null;
 		}
@@ -410,9 +410,34 @@ public abstract class AbstractMessageWrappingController extends
 		R resource = 
 				readService.read(identifier, resolvedContext);
 		
+		return this.doForward(
+				resource, 
+				identifier.toString(), 
+				httpServletRequest, 
+				messageFactory, 
+				byUriTemplate, 
+				byNameTemaplate, 
+				urlBinder, 
+				restReadContext, 
+				exceptionClazz, 
+				redirect);
+	}
+	
+	protected <R extends IsChangeable> ModelAndView doForward(
+			R resource,
+			String identifier,
+			HttpServletRequest httpServletRequest,
+			MessageFactory<R> messageFactory,
+			String byUriTemplate,
+			String byNameTemaplate,
+			UrlTemplateBinder<R> urlBinder,
+			RestReadContext restReadContext,
+			Class<? extends UnknownResourceReference > exceptionClazz,
+			boolean redirect) {
+		
 		if(resource == null){
 			throw ExceptionFactory.createUnknownResourceException(
-					identifier.toString(), 
+					identifier, 
 					exceptionClazz);
 		}
 		
@@ -427,6 +452,7 @@ public abstract class AbstractMessageWrappingController extends
 
 			return this.forward(httpServletRequest, urlBinder, byNameTemaplate, resource, byUriTemplate, redirect);
 		}
+		
 	}
 	
 	private String getForwardOrRedirectString(boolean redirect){

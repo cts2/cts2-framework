@@ -78,10 +78,15 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 			+ VAR_CODESYSTEMID + "}/" + VERSION 
 			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/" + ENTITIES;
 	
-	public static final String PATH_ENTITYBYID = "/" + CODESYSTEM + "/{"
+	public static final String PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID = "/" + CODESYSTEM + "/{"
 			+ VAR_CODESYSTEMID + "}/" + VERSION
 			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/"
 			+ ENTITY + "/{" + VAR_ENTITYID + "}";
+	
+	public static final String PATH_ENTITY_OF_CODESYSTEM_VERSION_BYURI = "/" + CODESYSTEM + "/{"
+			+ VAR_CODESYSTEMID + "}/" + VERSION
+			+ "/{" + VAR_CODESYSTEMVERSIONID + "}/"
+			+ ENTITY_BY_URI;
 	
 	public static final String PATH_ALL_DESCRIPTIONS_OF_ENTITYBYID = "/"
 			+ ENTITY + "/{" + VAR_ENTITYID + "}";
@@ -116,18 +121,18 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 		PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + GRAPH;
 	
 	public static final String PATH_CHILDREN_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + CHILDREN;
+		PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID + "/" + CHILDREN;
 	public static final String PATH_ANCESTOR_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + ANCESTORS;
+		PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID + "/" + ANCESTORS;
 	public static final String PATH_DECENDANT_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + DESCENDANTS;
+		PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID + "/" + DESCENDANTS;
 	
 	public static final String PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + SUBJECTOF;
+		PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID + "/" + SUBJECTOF;
 	public static final String PATH_TARGETOF_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + TARGETOF;
+		PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID + "/" + TARGETOF;
 	public static final String PATH_PREDICATEOF_ASSOCIATIONS_OF_ENTITY = 
-		PATH_ENTITYBYID + "/" + PREDICATEOF;
+		PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID + "/" + PREDICATEOF;
 	
 	/* Statement */
 	public static final String PATH_STATEMENTS = "/" + STATEMENTS;
@@ -401,6 +406,8 @@ interface PathParameters {
 	
 	public static final String PARAM_URI = "uri";
 	public static final String PARAM_TAG = "tag";
+	
+	public static final String PARAM_LIST = "list";
 	
 	public static final String RESOLUTION_TYPE = "resolutiontype";
 

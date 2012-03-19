@@ -21,6 +21,7 @@
 		<develpment.framework.version>${project.parent.version}</develpment.framework.version>
 		<webapp.name>webapp-rest</webapp.name>
 		<webapp.port>5150</webapp.port>
+		<stop.port>${webapp.port}0</stop.port>
 		<test.plugin.properties.name>${project.artifactId}.properties</test.plugin.properties.name>
 		<test.config.dir>${project.build.directory}/testconfigdir</test.config.dir>
 		<test.plugins.dir>${project.build.directory}/test-plugins</test.plugins.dir>
@@ -44,9 +45,6 @@
 			</activation>
 			<build>
 				<plugins>
-
-
-
 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -145,6 +143,10 @@
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
 						<version>6.1.22</version>
+						<configuration>
+				          <stopPort>${stop.port}</stopPort> 
+				          <stopKey>jetty-stop</stopKey>
+				        </configuration>
 						<executions>
 							<execution>
 								<id>start-jetty</id>

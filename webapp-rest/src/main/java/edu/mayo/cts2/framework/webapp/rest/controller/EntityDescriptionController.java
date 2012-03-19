@@ -165,7 +165,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @param codeSystemVersionName the code system version name
 	 * @param entityName the entity name
 	 */
-	@RequestMapping(value=PATH_ENTITYBYID, method=RequestMethod.PUT)
+	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, method=RequestMethod.PUT)
 	@ResponseBody
 	public void updateEntityDescription(
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
@@ -197,12 +197,12 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		return this.getCreateHandler().create(
 				entity,
 				changeseturi, 
-				PATH_ENTITYBYID, 
+				PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, 
 				URL_BINDER, 
 				this.entityDescriptionMaintenanceService);
 	}
 	
-	@RequestMapping(value=PATH_ENTITYBYID, method=RequestMethod.DELETE)
+	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, method=RequestMethod.DELETE)
 	@ResponseBody
 	public void deleteCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
@@ -243,6 +243,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	@ResponseBody
 	public Directory getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			RestReadContext restReadContext,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -254,6 +255,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		return this.getEntityDescriptionsOfCodeSystemVersion(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				null, 
 				restrictions, 
 				restFilter, 
@@ -280,6 +282,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	public Directory getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -302,6 +305,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		return this.getEntityDescriptions(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				query, 
 				restrictions, 
 				restFilter, 
@@ -365,6 +369,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	@ResponseBody
 	public Directory getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			RestReadContext restReadContext,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -374,6 +379,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		return this.getEntityDescriptions(
 				httpServletRequest, 
 				restReadContext,
+				queryControl,
 				null, 
 				restrictions, 
 				restFilter, 
@@ -396,6 +402,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	public Directory getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestBody Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -410,14 +417,14 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 				addRestFilter(restFilter).
 				addRestReadContext(restReadContext).
 				build();
-		
+	
 		return this.doQuery(
 				httpServletRequest,
 				list, 
 				this.entityDescriptionQueryService,
 				resourceQuery,
 				page, 
-				null,//TODO: Sort not yet supported 
+				queryControl,
 				EntityDirectory.class, 
 				EntityList.class);
 	}
@@ -454,6 +461,45 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 
 		this.setCount(count, httpServletResponse);
 	}
+	
+	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYURI, method=RequestMethod.GET)
+	public ModelAndView getEntityDescriptionOfCodeSystemVersionByUri(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
+			@RequestParam(PARAM_URI) String uri,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+		
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
+		
+		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
+				codeSystemVersionReadService, 
+				codeSystemName,
+				codeSystemVersionId,
+				readContext);
+		
+		EntityDescriptionReadId id = new EntityDescriptionReadId(
+				uri,
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		
+		EntityDescription resource = 
+				this.entityDescriptionReadService.read(
+						id, 
+						readContext);
+		
+		return this.doForward(
+				resource, 
+				id.toString(), 
+				httpServletRequest, 
+				MESSAGE_FACTORY, 
+				PATH_ENTITY_OF_CODESYSTEM_VERSION_BYURI, 
+				PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, 
+				URL_BINDER, 
+				restReadContext, 
+				UnknownEntity.class, 
+				redirect);
+	}
 
 	/**
 	 * Gets the entity description by name.
@@ -464,9 +510,9 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @param entityName the entity name
 	 * @return the entity description by name
 	 */
-	@RequestMapping(value=PATH_ENTITYBYID, method=RequestMethod.GET)
+	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, method=RequestMethod.GET)
 	@ResponseBody
-	public Message getEntityDescriptionByName(
+	public Message getEntityDescriptionOfCodeSystemVersionByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
@@ -514,9 +560,9 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 			DirectoryResult<EntityListEntry> entityList = 
 					this.entityDescriptionReadService.readEntityDescriptions(
 							entityId, 
-							null, //TODO
+							this.resolveSort(queryControl, this.entityDescriptionQueryService),
 							readContext, 
-							page); //TODO
+							page);
 			return 
 					this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
 		} else {
@@ -534,23 +580,35 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity description by uri
 	 */
 	@RequestMapping(value=PATH_ENTITYBYURI, method=RequestMethod.GET)
-	public ModelAndView getEntityDescriptionByUri(
+	@ResponseBody
+	public Object getAllEntityDescriptionsByUri(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
+			QueryControl queryControl,
 			@RequestParam(PARAM_URI) String uri,
+			Page page,
+			boolean list,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+
+		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
-		return this.doReadByUri(
-				httpServletRequest, 
-				MESSAGE_FACTORY, 
-				PATH_ENTITYBYURI, 
-				PATH_ENTITYBYID, 
-				URL_BINDER, 
-				this.entityDescriptionReadService, 
-				restReadContext,
-				UnknownEntity.class,
-				new EntityDescriptionReadId(uri,null),
-				redirect);
+		EntityNameOrURI entityId = 
+				ModelUtils.entityNameOrUriFromUri(uri);
+
+		if(list){
+			DirectoryResult<EntityListEntry> entityList = 
+					this.entityDescriptionReadService.readEntityDescriptions(
+							entityId, 
+							this.resolveSort(queryControl, this.entityDescriptionQueryService),
+							readContext, 
+							page);
+			return 
+					this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+		} else {
+			return 
+					//TODO: This probably needs to be a Message
+					this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+		}
 	}
 	
 	@InitBinder
