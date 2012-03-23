@@ -822,13 +822,6 @@
 	<beans:bean id="marshaller"
 		class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller" />
 
-	<!-- <osgi:service id="marshallerService" ref="marshaller">   -->
-	<!-- <osgi:interfaces> -->
-	<!-- <value>org.springframework.oxm.Marshaller</value> -->
-	<!-- <value>org.springframework.oxm.Unmarshaller</value> -->
-	<!-- </osgi:interfaces> -->
-	<!-- </osgi:service> -->
-
 	<beans:bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />

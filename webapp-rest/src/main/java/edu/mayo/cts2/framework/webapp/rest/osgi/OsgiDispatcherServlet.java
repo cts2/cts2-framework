@@ -5,8 +5,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.osgi.util.tracker.ServiceTracker;
 
 public class OsgiDispatcherServlet extends
@@ -30,7 +32,29 @@ public class OsgiDispatcherServlet extends
 		 if(dispatcher == null){
 			 super.noHandlerFound(request, response);
 		 } else {
-			 dispatcher.service(request, response);
+			 //dispatcher.service(request, response);
+			 dispatcher.service(new PathInfoChangingRequest(request), response);
 		 }	 
 	}
+	
+	public class PathInfoChangingRequest extends HttpServletRequestWrapper {
+
+		public PathInfoChangingRequest(HttpServletRequest request) {
+			super(request);
+		}
+
+		@Override
+		public String getPathInfo() {
+			String pathInfo = super.getPathInfo();
+			
+			if (StringUtils.isBlank(pathInfo)) {
+				String servletPath = super.getServletPath();
+				
+				return servletPath;
+			} else {
+				return pathInfo;
+			}
+		}
+	}
+
 }

@@ -84,7 +84,30 @@ public class AcceptHeaderAdjustingFilter implements Filter {
 			
 			return super.getHeaders(name);
 		}
+		
+		@Override
+		public String getPathInfo(){
+			String pathInfo = super.getPathInfo();
+			if(pathInfo == null){
+				return "";
+			} else {
+				return pathInfo;
+			}
+		}
 
+		
+		
+		@Override
+		public String getRequestURI() {
+			String requestUri = super.getRequestURI();
+			if(requestUri == null){
+				return "";
+			} else {
+				return requestUri;
+			}
+		}
+
+		@Override
 		public String getHeader(String name) {
 			if(name.equalsIgnoreCase("accept")){
 				return acceptHeader;
