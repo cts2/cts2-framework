@@ -6,8 +6,14 @@
 <html>
 <head>
 
+<link rel="stylesheet" media="screen,projection" type="text/css" href="resources/beans/beans.css" />
+<!-- <link rel="stylesheet" media="screen,projection" type="text/css" href="resources/home/css/nivo.css" /> -->
+<!-- <link rel="stylesheet" media="screen,projection" type="text/css" href="resources/home/css/skin.css" />	 -->
+
+</head>
 <body>
- 
+
+<div id="navcontainer">
 
  
 <%-- <c:out value="${beans:inspect( testBean) }"></c:out>    --%>
@@ -17,7 +23,8 @@
 
 	<c:set var="map" value="${ bean }" scope="request"/>
 	<jsp:include page="node.jsp"/>
-    
+ 
+ </div>   
     
 </body>   
 

@@ -179,7 +179,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 				restrictions,
 				restFilter, 
 				page, 
-				false, 
+				list, 
 				codeSystemName, 
 				codeSystemVersionId,
 				entityName);
@@ -238,7 +238,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 		DirectoryResult<?> result;
 		Class<? extends Directory> directoryClass;
 		
-		if(list){
+		if(! list){
 			result = this.associationQueryService.getChildrenAssociationsOfEntity(
 					entity,
 					resourceQuery,

@@ -11,15 +11,14 @@
 	<ul>
 		<c:forEach var="i" items="${map}">
 
-			<c:if test="${i.key != null and i.value != null }">
-				<li><c:out value="${i.key}"></c:out> 
-				
-				
+			<c:if test="${i.key != null and i.value != null and i.key != '_anyObject' }">
+				<li><c:out value="${ fn:substring(i.key, 1, -1) }"></c:out>
+
 				<c:if test="${fn:endsWith(i.key, 'List')}">
 				<ul>
 					<c:forEach var="j" items="${i.value}">
 						<li>
-							<c:out value="${fn:substringBefore(i.key, 'List') }"></c:out>
+							<c:out value="${fn:substring( fn:substringBefore(i.key, 'List') , 1, -1) }"></c:out>
 							<c:if test="${beans:shouldRecurse( j )}">
 								<c:set var="map" value="${beans:inspect( j ) }"
 									scope="request" />
@@ -38,8 +37,15 @@
 								scope="request" />
 							<jsp:include page="node.jsp" />
 					</c:if> 
-					<c:if test="${ not beans:shouldRecurse(i.value)}">
-						<c:out value="${i.value}"></c:out>
+					<c:if test="${ not beans:shouldRecurse(i.value)}">					
+						<c:if test="${ i.key eq '_href' }" >
+							<a href="${i.value}">
+							<c:out value="${i.value}"></c:out>
+							</a>
+						</c:if>
+						<c:if test="${ i.key ne '_href' }" >
+							<c:out value="${i.value}"></c:out>
+						</c:if>		
 					</c:if>
 				</c:if>
 				</li>
