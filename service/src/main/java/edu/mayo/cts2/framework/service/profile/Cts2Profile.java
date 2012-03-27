@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.service.profile;
 
 /**
- * The Interface Cts2Profile.
+ * A marker interface for any implementation of CTS2 functionality.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

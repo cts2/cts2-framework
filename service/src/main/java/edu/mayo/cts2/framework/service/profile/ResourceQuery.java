@@ -36,10 +36,25 @@ import edu.mayo.cts2.framework.model.service.core.Query;
  */
 public interface ResourceQuery {
 	
+	/**
+	 * Gets the query.
+	 *
+	 * @return the query
+	 */
 	public Query getQuery();
 	
+	/**
+	 * Gets the filter component.
+	 *
+	 * @return the filter component
+	 */
 	public Set<ResolvedFilter> getFilterComponent();
 	
+	/**
+	 * Gets the read context.
+	 *
+	 * @return the read context
+	 */
 	public ResolvedReadContext getReadContext();
 	
 }

@@ -28,11 +28,19 @@ import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 
 /**
- * The Interface QueryService.
+ * The Interface QueryService allows for querying and counting CTS2 Resources.
+ * CTS2 Resources may be optionally constrained by a "query" object, and represented
+ * as either a "summary" (getResourceSummaries) or a "full" resource (getResourceList).
+ * 
+ * Sub-interfaces will define the CTS2 Resource types returned (both full and summary), as
+ * well as the specific "query" object used.
+ * 
+ * @see edu.mayo.cts2.framework.service.profile.ResourceQuery
  *
- * @param <Resource> the generic type
- * @param <Summary> the generic type
- * @param <Q> the generic type
+ * @param <Resource> the (full) CTS2 Resource type to return
+ * @param <Summary> the (summary) CTS2 Resource type to return
+ * @param <Q> the query object used to specify query parameters
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends BaseQueryService {

@@ -36,11 +36,27 @@ import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadI
 public interface AssociationReadService extends
 		ReadService<Association, AssociationReadId> {
 	
+	/**
+	 * Read by external statement id.
+	 *
+	 * @param exteralStatementId the exteral statement id
+	 * @param scopingNamespaceName the scoping namespace name
+	 * @param readContext the read context
+	 * @return the association
+	 */
 	public Association readByExternalStatementId(
 			String exteralStatementId, 
 			String scopingNamespaceName, 
 			ResolvedReadContext readContext);
 	
+	/**
+	 * Exists by external statement id.
+	 *
+	 * @param exteralStatementId the exteral statement id
+	 * @param scopingNamespaceName the scoping namespace name
+	 * @param readContext the read context
+	 * @return true, if successful
+	 */
 	public boolean existsByExternalStatementId(
 			String exteralStatementId, 
 			String scopingNamespaceName, 

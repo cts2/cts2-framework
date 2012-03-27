@@ -45,6 +45,16 @@ import edu.mayo.cts2.framework.service.profile.QueryService;
 public interface EntityDescriptionQueryService extends 
 	QueryService<EntityDescription, EntityDirectoryEntry, EntityDescriptionQuery>{
 
+	/**
+	 * Checks if is entity in set.
+	 *
+	 * @param entity the entity
+	 * @param query the query
+	 * @param filterComponent the filter component
+	 * @param restrictions the restrictions
+	 * @param readContext the read context
+	 * @return true, if is entity in set
+	 */
 	public boolean isEntityInSet(
 			EntityNameOrURI entity,
 			Query query,
@@ -52,12 +62,31 @@ public interface EntityDescriptionQueryService extends
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			ResolvedReadContext readContext);
 	
+	/**
+	 * Resolve as entity reference list.
+	 *
+	 * @param query the query
+	 * @param filterComponent the filter component
+	 * @param restrictions the restrictions
+	 * @param readContext the read context
+	 * @return the entity reference list
+	 */
 	public EntityReferenceList resolveAsEntityReferenceList(
 			Query query,
 			Set<ResolvedFilter> filterComponent, 
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			ResolvedReadContext readContext);
 	
+	/**
+	 * Intersect entity list.
+	 *
+	 * @param entities the entities
+	 * @param query the query
+	 * @param filterComponent the filter component
+	 * @param restrictions the restrictions
+	 * @param readContext the read context
+	 * @return the entity name or uri list
+	 */
 	public EntityNameOrURIList intersectEntityList(
 			Set<EntityNameOrURI> entities,
 			Query query,
@@ -65,5 +94,10 @@ public interface EntityDescriptionQueryService extends
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			ResolvedReadContext readContext);
 
+	/**
+	 * Gets the supported tags.
+	 *
+	 * @return the supported tags
+	 */
 	public Set<? extends VersionTagReference> getSupportedTags();
 }

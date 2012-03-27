@@ -38,6 +38,13 @@ public class ResolvedValueSetReadId {
 	
 	private NameOrURI valueSetDefinition;
 
+	/**
+	 * Instantiates a new resolved value set read id.
+	 *
+	 * @param localName the local name
+	 * @param valueSet the value set
+	 * @param valueSetDefinition the value set definition
+	 */
 	public ResolvedValueSetReadId(String localName, NameOrURI valueSet, NameOrURI valueSetDefinition) {
 		super();
 		this.localName = localName;
@@ -45,26 +52,56 @@ public class ResolvedValueSetReadId {
 		this.valueSetDefinition = valueSetDefinition;
 	}
 
+	/**
+	 * Gets the local name.
+	 *
+	 * @return the local name
+	 */
 	public String getLocalName() {
 		return localName;
 	}
 
+	/**
+	 * Sets the local name.
+	 *
+	 * @param localName the new local name
+	 */
 	public void setLocalName(String localName) {
 		this.localName = localName;
 	}
 
+	/**
+	 * Gets the value set definition.
+	 *
+	 * @return the value set definition
+	 */
 	public NameOrURI getValueSetDefinition() {
 		return valueSetDefinition;
 	}
 
+	/**
+	 * Sets the value set definition.
+	 *
+	 * @param valueSetDefinition the new value set definition
+	 */
 	public void setValueSetDefinition(NameOrURI valueSetDefinition) {
 		this.valueSetDefinition = valueSetDefinition;
 	}
 
+	/**
+	 * Gets the value set.
+	 *
+	 * @return the value set
+	 */
 	public NameOrURI getValueSet() {
 		return valueSet;
 	}
 
+	/**
+	 * Sets the value set.
+	 *
+	 * @param valueSet the new value set
+	 */
 	public void setValueSet(NameOrURI valueSet) {
 		this.valueSet = valueSet;
 	}

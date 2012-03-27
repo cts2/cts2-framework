@@ -36,21 +36,42 @@ public class StatementReadId extends NameOrURI {
 
 	private NameOrURI codeSystemVersion;
 	
+	/**
+	 * Instantiates a new statement read id.
+	 *
+	 * @param localName the local name
+	 * @param codeSystemVersion the code system version
+	 */
 	public StatementReadId(String localName, NameOrURI codeSystemVersion) {
 		super();
 		this.setName(localName);
 		this.codeSystemVersion = codeSystemVersion;
 	}
 	
+	/**
+	 * Instantiates a new statement read id.
+	 *
+	 * @param uri the uri
+	 */
 	public StatementReadId(String uri) {
 		super();
 		this.setUri(uri);
 	}
 
+	/**
+	 * Gets the code system version.
+	 *
+	 * @return the code system version
+	 */
 	public NameOrURI getCodeSystemVersion() {
 		return codeSystemVersion;
 	}
 
+	/**
+	 * Sets the code system version.
+	 *
+	 * @param codeSystemVersion the new code system version
+	 */
 	public void setCodeSystemVersion(NameOrURI codeSystemVersion) {
 		this.codeSystemVersion = codeSystemVersion;
 	}

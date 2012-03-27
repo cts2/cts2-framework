@@ -39,12 +39,24 @@ public class MapEntryReadId extends EntityNameOrURI {
 
 	private NameOrURI mapVersion;
 	
+	/**
+	 * Instantiates a new map entry read id.
+	 *
+	 * @param uri the uri
+	 * @param mapVersion the map version
+	 */
 	public MapEntryReadId(String uri, NameOrURI mapVersion) {
 		super();
 		this.setUri(uri);
 		this.mapVersion = mapVersion;
 	}
 	
+	/**
+	 * Instantiates a new map entry read id.
+	 *
+	 * @param mapFromName the map from name
+	 * @param mapVersion the map version
+	 */
 	public MapEntryReadId(EntityNameOrURI mapFromName, NameOrURI mapVersion) {
 		super();
 		this.setEntityName(mapFromName.getEntityName());
@@ -52,16 +64,34 @@ public class MapEntryReadId extends EntityNameOrURI {
 		this.mapVersion = mapVersion;
 	}
 	
+	/**
+	 * Instantiates a new map entry read id.
+	 *
+	 * @param mapFromName the map from name
+	 * @param mapVersion the map version
+	 */
 	public MapEntryReadId(ScopedEntityName mapFromName, NameOrURI mapVersion) {
 		super();
 		this.setEntityName(mapFromName);
 		this.mapVersion = mapVersion;
 	}
 	
+	/**
+	 * Instantiates a new map entry read id.
+	 *
+	 * @param mapFromName the map from name
+	 * @param mapFromNamespace the map from namespace
+	 * @param mapVersion the map version
+	 */
 	public MapEntryReadId(String mapFromName, String mapFromNamespace, NameOrURI mapVersion) {
 		this(ModelUtils.createScopedEntityName(mapFromName, mapFromNamespace), mapVersion);
 	}
 
+	/**
+	 * Gets the map version.
+	 *
+	 * @return the map version
+	 */
 	public NameOrURI getMapVersion() {
 		return mapVersion;
 	}

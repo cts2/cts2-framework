@@ -39,18 +39,36 @@ public class EntityDescriptionReadId extends EntityNameOrURI {
 	
 	private NameOrURI codeSystemVersion;
 	
+	/**
+	 * Instantiates a new entity description read id.
+	 *
+	 * @param scopedEntityName the scoped entity name
+	 * @param codeSystemVersion the code system version
+	 */
 	public EntityDescriptionReadId(ScopedEntityName scopedEntityName, NameOrURI codeSystemVersion) {
 		super();
 		this.setEntityName(scopedEntityName);
 		this.codeSystemVersion = codeSystemVersion;
 	}
 	
+	/**
+	 * Instantiates a new entity description read id.
+	 *
+	 * @param uri the uri
+	 * @param codeSystemVersion the code system version
+	 */
 	public EntityDescriptionReadId(String uri, NameOrURI codeSystemVersion) {
 		super();
 		this.setUri(uri);
 		this.codeSystemVersion = codeSystemVersion;
 	}
 
+	/**
+	 * Instantiates a new entity description read id.
+	 *
+	 * @param entity the entity
+	 * @param codeSystemVersion the code system version
+	 */
 	public EntityDescriptionReadId(EntityNameOrURI entity, NameOrURI codeSystemVersion) {
 		super();
 		this.setEntityName(entity.getEntityName());
@@ -58,12 +76,24 @@ public class EntityDescriptionReadId extends EntityNameOrURI {
 		this.codeSystemVersion = codeSystemVersion;
 	}
 	
+	/**
+	 * Instantiates a new entity description read id.
+	 *
+	 * @param entityName the entity name
+	 * @param entityNamespace the entity namespace
+	 * @param codeSystemVersion the code system version
+	 */
 	public EntityDescriptionReadId(String entityName, String entityNamespace, NameOrURI codeSystemVersion) {
 		super();
 		this.setEntityName(ModelUtils.createScopedEntityName(entityName, entityNamespace));
 		this.codeSystemVersion = codeSystemVersion;
 	}
 
+	/**
+	 * Gets the code system version.
+	 *
+	 * @return the code system version
+	 */
 	public NameOrURI getCodeSystemVersion() {
 		return codeSystemVersion;
 	}

@@ -51,26 +51,56 @@ public class UpdateChangeableMetadataRequest {
      */
     private SourceReference changeSource;
 
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
 	public StatusReference getStatus() {
 		return status;
 	}
 
+	/**
+	 * Sets the status.
+	 *
+	 * @param status the new status
+	 */
 	public void setStatus(StatusReference status) {
 		this.status = status;
 	}
 
+	/**
+	 * Gets the change notes.
+	 *
+	 * @return the change notes
+	 */
 	public OpaqueData getChangeNotes() {
 		return changeNotes;
 	}
 
+	/**
+	 * Sets the change notes.
+	 *
+	 * @param changeNotes the new change notes
+	 */
 	public void setChangeNotes(OpaqueData changeNotes) {
 		this.changeNotes = changeNotes;
 	}
 
+	/**
+	 * Gets the change source.
+	 *
+	 * @return the change source
+	 */
 	public SourceReference getChangeSource() {
 		return changeSource;
 	}
 
+	/**
+	 * Sets the change source.
+	 *
+	 * @param changeSource the new change source
+	 */
 	public void setChangeSource(SourceReference changeSource) {
 		this.changeSource = changeSource;
 	}

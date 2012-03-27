@@ -50,10 +50,10 @@ public interface AssociationQueryService extends
 	/**
 	 * Gets the children associations of entity.
 	 *
+	 * @param entity the entity
 	 * @param query the query
-	 * @param filterComponent the filter component
+	 * @param readContext the read context
 	 * @param page the page
-	 * @param id the id
 	 * @return the children associations of entity
 	 */
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
@@ -62,54 +62,135 @@ public interface AssociationQueryService extends
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the children associations of entity list.
+	 *
+	 * @param entity the entity
+	 * @param query the query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the children associations of entity list
+	 */
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntityList(
 			EntityDescriptionReadId entity,
 			EntityDescriptionQuery query,		
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the source entities.
+	 *
+	 * @param associationRestrictions the association restrictions
+	 * @param entityRestrictions the entity restrictions
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the source entities
+	 */
 	public DirectoryResult<EntityDirectoryEntry> getSourceEntities(
 			AssociationQueryServiceRestrictions associationRestrictions,
 			EntityDescriptionQueryServiceRestrictions entityRestrictions,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the source entities list.
+	 *
+	 * @param associationRestrictions the association restrictions
+	 * @param entityRestrictions the entity restrictions
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the source entities list
+	 */
 	public DirectoryResult<EntityList> getSourceEntitiesList(
 			AssociationQueryServiceRestrictions associationRestrictions,
 			EntityDescriptionQueryServiceRestrictions entityRestrictions,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the target entities.
+	 *
+	 * @param associationQuery the association query
+	 * @param entityDescriptionQuery the entity description query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the target entities
+	 */
 	public DirectoryResult<EntityDirectoryEntry> getTargetEntities(
 			AssociationQuery associationQuery,
 			EntityDescriptionQuery entityDescriptionQuery,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the target entities list.
+	 *
+	 * @param associationQuery the association query
+	 * @param entityDescriptionQuery the entity description query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the target entities list
+	 */
 	public DirectoryResult<EntityList> getTargetEntitiesList(
 			AssociationQuery associationQuery,
 			EntityDescriptionQuery entityDescriptionQuery,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the all source and target entities.
+	 *
+	 * @param associationQuery the association query
+	 * @param entityDescriptionQuery the entity description query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the all source and target entities
+	 */
 	public DirectoryResult<EntityDirectoryEntry> getAllSourceAndTargetEntities(
 			AssociationQuery associationQuery,
 			EntityDescriptionQuery entityDescriptionQuery,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the all source and target entities list.
+	 *
+	 * @param associationQuery the association query
+	 * @param entityDescriptionQuery the entity description query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the all source and target entities list
+	 */
 	public DirectoryResult<EntityList> getAllSourceAndTargetEntitiesList(
 			AssociationQuery associationQuery,
 			EntityDescriptionQuery entityDescriptionQuery,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the predicates.
+	 *
+	 * @param associationQuery the association query
+	 * @param entityDescriptionQuery the entity description query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the predicates
+	 */
 	public DirectoryResult<EntityDirectoryEntry> getPredicates(
 			AssociationQuery associationQuery,
 			EntityDescriptionQuery entityDescriptionQuery,	
 			ResolvedReadContext readContext,
 			Page page);
 	
+	/**
+	 * Gets the predicates list.
+	 *
+	 * @param associationQuery the association query
+	 * @param entityDescriptionQuery the entity description query
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the predicates list
+	 */
 	public DirectoryResult<EntityList> getPredicatesList(
 			AssociationQuery associationQuery,
 			EntityDescriptionQuery entityDescriptionQuery,	
@@ -124,7 +205,7 @@ public interface AssociationQueryService extends
 	 * otherwise, it must be null
 	 *
 	 * @param focusType the focus type
-	 * @param focus the focus
+	 * @param focusEntity the focus entity
 	 * @param direction the direction
 	 * @param depth the depth
 	 * @return the association graph

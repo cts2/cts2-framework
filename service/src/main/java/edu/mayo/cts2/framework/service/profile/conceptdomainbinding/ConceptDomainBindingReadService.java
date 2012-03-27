@@ -40,6 +40,15 @@ import java.util.List;
 public interface ConceptDomainBindingReadService extends
 		ReadService<LocalIdConceptDomainBinding, ConceptDomainBindingReadId> {
 
+  /**
+   * Exists.
+   *
+   * @param conceptDomain the concept domain
+   * @param valueSet the value set
+   * @param applicableContext the applicable context
+   * @param bindingQualifier the binding qualifier
+   * @return true, if successful
+   */
   public boolean exists(
       final NameOrURI conceptDomain,
       final NameOrURI valueSet,
@@ -47,12 +56,26 @@ public interface ConceptDomainBindingReadService extends
       final NameOrURI bindingQualifier
   );
   
+  /**
+   * Read.
+   *
+   * @param conceptDomain the concept domain
+   * @param valueSet the value set
+   * @param applicableContext the applicable context
+   * @param bindingQualifier the binding qualifier
+   * @return the concept domain binding
+   */
   public ConceptDomainBinding read(
       final NameOrURI conceptDomain,
       final NameOrURI valueSet,
       final NameOrURI applicableContext,
       final NameOrURI bindingQualifier);
  
+  /**
+   * Gets the supported tag.
+   *
+   * @return the supported tag
+   */
   public List<VersionTagReference> getSupportedTag();
 
 }

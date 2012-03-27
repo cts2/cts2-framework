@@ -37,8 +37,22 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
 public interface ConceptDomainReadService extends
 		ReadService<ConceptDomainCatalogEntry, NameOrURI> {
 
+  /**
+   * Read by defining entity.
+   *
+   * @param entity the entity
+   * @param resolvedReadContext the resolved read context
+   * @return the concept domain catalog entry
+   */
   public ConceptDomainCatalogEntry readByDefiningEntity(EntityNameOrURI entity, ResolvedReadContext resolvedReadContext);
 
+  /**
+   * Exists defining entity.
+   *
+   * @param entity the entity
+   * @param resolvedReadContext the resolved read context
+   * @return true, if successful
+   */
   public boolean existsDefiningEntity(EntityNameOrURI entity, ResolvedReadContext resolvedReadContext);
 
 }

@@ -34,8 +34,19 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedVal
  */
 public interface ResolvedValueSetLoaderService extends Cts2Profile {
 	
+	/**
+	 * Load.
+	 *
+	 * @param resolvedValueSet the resolved value set
+	 * @return the resolved value set reference
+	 */
 	public ResolvedValueSetReference load(ResolvedValueSet resolvedValueSet);
 	
+	/**
+	 * Delete.
+	 *
+	 * @param resolvedValueSetId the resolved value set id
+	 */
 	public void delete(ResolvedValueSetReadId resolvedValueSetId);
 	
 }

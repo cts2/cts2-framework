@@ -44,6 +44,18 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
  */
 public interface ValueSetDefinitionResolutionService extends Cts2Profile {
 
+	/**
+	 * Resolve definition.
+	 *
+	 * @param definitionId the definition id
+	 * @param codeSystemVersions the code system versions
+	 * @param tag the tag
+	 * @param query the query
+	 * @param filterComponent the filter component
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the resolved value set result
+	 */
 	public ResolvedValueSetResult resolveDefinition(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
@@ -53,6 +65,19 @@ public interface ValueSetDefinitionResolutionService extends Cts2Profile {
 			ResolvedReadContext readContext, 
 			Page page);
 	
+	/**
+	 * Resolve definition as entity directory.
+	 *
+	 * @param definitionId the definition id
+	 * @param codeSystemVersions the code system versions
+	 * @param tag the tag
+	 * @param query the query
+	 * @param filterComponent the filter component
+	 * @param restrictions the restrictions
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the directory result
+	 */
 	public DirectoryResult<EntityDirectoryEntry> resolveDefinitionAsEntityDirectory(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
@@ -63,6 +88,15 @@ public interface ValueSetDefinitionResolutionService extends Cts2Profile {
 			ResolvedReadContext readContext, 
 			Page page);
 	
+	/**
+	 * Resolve definition as complete set.
+	 *
+	 * @param definitionId the definition id
+	 * @param codeSystemVersions the code system versions
+	 * @param tag the tag
+	 * @param readContext the read context
+	 * @return the resolved value set
+	 */
 	public ResolvedValueSet resolveDefinitionAsCompleteSet(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,

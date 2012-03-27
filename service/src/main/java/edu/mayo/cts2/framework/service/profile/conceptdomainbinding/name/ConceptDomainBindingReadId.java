@@ -36,21 +36,42 @@ public class ConceptDomainBindingReadId extends NameOrURI {
 
 	private NameOrURI conceptDomain;
 	
+	/**
+	 * Instantiates a new concept domain binding read id.
+	 *
+	 * @param localName the local name
+	 * @param conceptDomain the concept domain
+	 */
 	public ConceptDomainBindingReadId(String localName, NameOrURI conceptDomain) {
 		super();
 		this.setName(localName);
 		this.conceptDomain = conceptDomain;
 	}
 	
+	/**
+	 * Instantiates a new concept domain binding read id.
+	 *
+	 * @param uri the uri
+	 */
 	public ConceptDomainBindingReadId(String uri) {
 		super();
 		this.setUri(uri);
 	}
 
+	/**
+	 * Gets the concept domain.
+	 *
+	 * @return the concept domain
+	 */
 	public NameOrURI getConceptDomain() {
 		return conceptDomain;
 	}
 
+	/**
+	 * Sets the concept domain.
+	 *
+	 * @param conceptDomain the new concept domain
+	 */
 	public void setConceptDomain(NameOrURI conceptDomain){
 		this.conceptDomain = conceptDomain;
 	}

@@ -48,23 +48,61 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
 public interface EntityDescriptionReadService extends
 		ReadService<EntityDescription, EntityDescriptionReadId> {
 
+	/**
+	 * Read entity descriptions.
+	 *
+	 * @param entityId the entity id
+	 * @param sortCriteria the sort criteria
+	 * @param readContext the read context
+	 * @param page the page
+	 * @return the directory result
+	 */
 	public DirectoryResult<EntityListEntry> readEntityDescriptions(
 			EntityNameOrURI entityId, 
 			SortCriteria sortCriteria,
 			ResolvedReadContext readContext, 
 			Page page);
 
+	/**
+	 * Available descriptions.
+	 *
+	 * @param entityId the entity id
+	 * @param readContext the read context
+	 * @return the entity reference
+	 */
 	public EntityReference availableDescriptions(
 			EntityNameOrURI entityId,
 			ResolvedReadContext readContext);
 
+	/**
+	 * Read entity descriptions.
+	 *
+	 * @param entityId the entity id
+	 * @param readContext the read context
+	 * @return the entity list
+	 */
 	public EntityList readEntityDescriptions(
 			EntityNameOrURI entityId,
 			ResolvedReadContext readContext);
 
+	/**
+	 * Gets the known code systems.
+	 *
+	 * @return the known code systems
+	 */
 	public List<CodeSystemReference> getKnownCodeSystems();
 
+	/**
+	 * Gets the known code system versions.
+	 *
+	 * @return the known code system versions
+	 */
 	public List<CodeSystemVersionReference> getKnownCodeSystemVersions();
 
+	/**
+	 * Gets the supported version tags.
+	 *
+	 * @return the supported version tags
+	 */
 	public List<VersionTagReference> getSupportedVersionTags();
 }

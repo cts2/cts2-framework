@@ -42,7 +42,7 @@ public interface TagAwareReadService<R,I> extends ReadService<R,I> {
 	 * Read by tag.
 	 *
 	 * @param parentIdentifier the parent identifier
-	 * @param tagNameOrUri the tag name or uri
+	 * @param tag the tag
 	 * @param readContext the read context
 	 * @return the r
 	 */
@@ -52,7 +52,7 @@ public interface TagAwareReadService<R,I> extends ReadService<R,I> {
 	 * Exists by tag.
 	 *
 	 * @param parentIdentifier the parent identifier
-	 * @param tagNameOrUri the tag name or uri
+	 * @param tag the tag
 	 * @param readContext the read context
 	 * @return the r
 	 */

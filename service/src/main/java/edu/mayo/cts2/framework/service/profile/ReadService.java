@@ -25,12 +25,17 @@ package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 
-
 /**
- * The Interface ReadService.
+ * The Interface ReadService allows for the retrieval or existence test
+ * of a single CTS2 Resource that can be uniquely, unambiguously identified 
+ * by a single 'identifier.'
+ * 
+ * Sub-interfaces will define both the CTS2 Resource type and the Identifier
+ * type to be used, as well as any other retrieval/existence methods as appropriate.
  *
- * @param <R> the generic type
- * @param <I> the generic type
+ * @param <R> the CTS2 Resource Type returned by this Service
+ * @param <I> the Identifier used to uniquely identify the CTS2 Resource
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ReadService<R,I> extends BaseService {
@@ -39,16 +44,16 @@ public interface ReadService<R,I> extends BaseService {
 	 * Reads the specified CTS2 Resource.
 	 *
 	 * @param identifier the identifier
-	 * @param readContext TODO
-	 * @return the r
+	 * @param readContext the change set context
+	 * @return the CTS2 Resource
 	 */
 	public R read(I identifier, ResolvedReadContext readContext);
 	
 	/**
-	 * Exists.
+	 * Check if the specified CTS2 Resource exists.
 	 *
 	 * @param identifier the identifier
-	 * @param readContext the read context
+	 * @param readContext the change set context
 	 * @return true, if successful
 	 */
 	public boolean exists(I identifier, ResolvedReadContext readContext);

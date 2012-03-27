@@ -37,11 +37,25 @@ import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 public interface ResolvedValueSetQueryService 
 	extends BaseQueryService {
 
+	/**
+	 * Gets the resource summaries.
+	 *
+	 * @param query the query
+	 * @param sort the sort
+	 * @param page the page
+	 * @return the resource summaries
+	 */
 	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
 			ResolvedValueSetQuery query,
 			SortCriteria sort,
 			Page page);
 	
+	/**
+	 * Count.
+	 *
+	 * @param query the query
+	 * @return the int
+	 */
 	public int count(ResolvedValueSetQuery query);
 	
 }

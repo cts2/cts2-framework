@@ -23,15 +23,65 @@
  */
 package edu.mayo.cts2.framework.service.profile;
 
+import java.util.List;
+
+import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
+import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 
 /**
- * The Interface BaseServiceService.
+ * This service is to be implemented iff implementers wish to describe metadata
+ * of the service as a whole. If omitted, information will be generated as appropriate.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface BaseServiceService extends Cts2Profile {
 
+	/**
+	 * Gets the base service.
+	 *
+	 * @return the base service
+	 * @deprecated Use the individual 'get' methods of this interface instead
+	 */
+	@Deprecated
 	public BaseService getBaseService();
+	
+	/**
+	 * Gets the service name.
+	 *
+	 * @return the service name
+	 */
+	public String getServiceName();
+	
+	/**
+	 * Gets the service provider.
+	 *
+	 * @return the service provider
+	 */
+	public SourceReference getServiceProvider();
+	
+	/**
+	 * Gets the service version.
+	 *
+	 * @return the service version
+	 */
+	public String getServiceVersion();
+	
+	/**
+	 * Gets the service description.
+	 *
+	 * @return the service description
+	 */
+	public OpaqueData getServiceDescription();
 
+	/**
+	 * Gets the known namespace list for all services of this implementation.
+	 * 
+	 * Individual services may only support a subset of this list, but may not
+	 * support namespaces not returned here.
+	 *
+	 * @return the known namespace list
+	 */
+	public List<DocumentedNamespaceReference> getKnownNamespaceList();
 }

@@ -25,7 +25,6 @@ package edu.mayo.cts2.framework.service.profile;
 
 import java.util.List;
 
-import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
@@ -37,18 +36,39 @@ import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
  */
 public interface BaseService extends Cts2Profile {
 
+	/**
+	 * Gets the service name.
+	 *
+	 * @return the service name
+	 */
 	public String getServiceName();
 
+	/**
+	 * Gets the service description.
+	 *
+	 * @return the service description
+	 */
 	public OpaqueData getServiceDescription();
 
+	/**
+	 * Gets the service version.
+	 *
+	 * @return the service version
+	 */
 	public String getServiceVersion();
 
+	/**
+	 * Gets the service provider.
+	 *
+	 * @return the service provider
+	 */
 	public SourceReference getServiceProvider() ;
 
-	public List<FormatReference> getSupportedFormatList();
-
-	public FormatReference getDefaultFormat();
-
+	/**
+	 * Gets the known namespace list.
+	 *
+	 * @return the known namespace list
+	 */
 	public List<DocumentedNamespaceReference> getKnownNamespaceList();
 
 }

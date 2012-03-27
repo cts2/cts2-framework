@@ -36,12 +36,32 @@ import edu.mayo.cts2.framework.model.core.PropertyReference;
  */
 public interface BaseQueryService extends BaseService {
 
+	/**
+	 * Gets the supported match algorithms.
+	 *
+	 * @return the supported match algorithms
+	 */
 	public Set<? extends MatchAlgorithmReference> getSupportedMatchAlgorithms();
 	
+	/**
+	 * Gets the supported search references.
+	 *
+	 * @return the supported search references
+	 */
 	public Set<? extends PropertyReference> getSupportedSearchReferences();
 	
+	/**
+	 * Gets the supported sort references.
+	 *
+	 * @return the supported sort references
+	 */
 	public Set<? extends PropertyReference> getSupportedSortReferences();
 
+	/**
+	 * Gets the known properties.
+	 *
+	 * @return the known properties
+	 */
 	public Set<PredicateReference> getKnownProperties();
 
 }

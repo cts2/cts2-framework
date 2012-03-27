@@ -47,6 +47,17 @@ public interface MapVersionQueryService extends
 		MapVersionDirectoryEntry, 
 		MapVersionQuery>{
 	
+	/**
+	 * Map version entities.
+	 *
+	 * @param mapVersion the map version
+	 * @param mapRole the map role
+	 * @param mapStatus the map status
+	 * @param query the query
+	 * @param sort the sort
+	 * @param page the page
+	 * @return the directory result
+	 */
 	public DirectoryResult<EntityDirectoryEntry> mapVersionEntities(
 			NameOrURI mapVersion,
 			MapRole mapRole, 
@@ -55,6 +66,17 @@ public interface MapVersionQueryService extends
 			SortCriteria sort,
 			Page page);
 	
+	/**
+	 * Map version entity list.
+	 *
+	 * @param mapVersion the map version
+	 * @param mapRole the map role
+	 * @param mapStatus the map status
+	 * @param query the query
+	 * @param sort the sort
+	 * @param page the page
+	 * @return the directory result
+	 */
 	public DirectoryResult<EntityDescription> mapVersionEntityList(
 			NameOrURI mapVersion,
 			MapRole mapRole, 
@@ -63,6 +85,17 @@ public interface MapVersionQueryService extends
 			SortCriteria sort,
 			Page page);
 	
+	/**
+	 * Map version entity references.
+	 *
+	 * @param mapVersion the map version
+	 * @param mapRole the map role
+	 * @param mapStatus the map status
+	 * @param query the query
+	 * @param sort the sort
+	 * @param page the page
+	 * @return the entity reference list
+	 */
 	public EntityReferenceList mapVersionEntityReferences(
 			NameOrURI mapVersion,
 			MapRole mapRole, 

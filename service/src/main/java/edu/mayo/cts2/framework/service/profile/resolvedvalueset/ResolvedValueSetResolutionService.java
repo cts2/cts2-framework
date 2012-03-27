@@ -39,11 +39,25 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueS
  */
 public interface ResolvedValueSetResolutionService extends BaseQueryService {
 
+	/**
+	 * Gets the resolution.
+	 *
+	 * @param identifier the identifier
+	 * @param filterComponent the filter component
+	 * @param page the page
+	 * @return the resolution
+	 */
 	public ResolvedValueSetResult getResolution(
 			ResolvedValueSetReadId identifier,
 			Set<ResolvedFilter> filterComponent, 
 			Page page);
 	
+	/**
+	 * Gets the resolution.
+	 *
+	 * @param identifier the identifier
+	 * @return the resolution
+	 */
 	public ResolvedValueSet getResolution(
 			ResolvedValueSetReadId identifier);
 
