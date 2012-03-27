@@ -159,7 +159,9 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 		response.setStatus(status);
 		
 		return ExceptionFactory.createUnknownException(
-						"Method not implemented. " + ex.getMessage(), getUrlString(request),getParameterString(request));
+						"Method not implemented. " + ex.getMessage() != null ? ex.getMessage() : "", 
+								getUrlString(request),
+								getParameterString(request));
 	}
 	
 	/**

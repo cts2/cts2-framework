@@ -82,7 +82,7 @@ public class MethodTimingAspect {
 		Future<Object> future = this.executorService.submit(new Callable<Object>(){
 
 			@Override
-			public Object call() throws Exception {
+			public Object call() {
 				try {
 					return pjp.proceed();
 				} catch (Throwable e) {
@@ -91,11 +91,11 @@ public class MethodTimingAspect {
 						throw (Error)e;
 					}
 					
-					if(e instanceof Exception){
-						throw (Exception)e;
+					if(e instanceof RuntimeException){
+						throw (RuntimeException)e;
 					}
 					
-					throw new Exception(e);
+					throw new RuntimeException(e);
 				}
 			}
 		});
