@@ -165,18 +165,6 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
 		}
 
 		@Override
-		public List<FormatReference> getSupportedFormatList() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public FormatReference getDefaultFormat() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
 		public List<DocumentedNamespaceReference> getKnownNamespaceList() {
 			// TODO Auto-generated method stub
 			return null;
