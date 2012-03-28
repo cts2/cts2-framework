@@ -25,15 +25,19 @@ package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntrySummary;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ConceptDomainQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN)
 public interface ConceptDomainQueryService extends 
-	QueryService<ConceptDomainCatalogEntry, ConceptDomainCatalogEntrySummary, ResourceQuery>{
+	QueryService<ConceptDomainCatalogEntry, ConceptDomainCatalogEntrySummary, ResourceQuery>, Cts2Profile {
 
 }

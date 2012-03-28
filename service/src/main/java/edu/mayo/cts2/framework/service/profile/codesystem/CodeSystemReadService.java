@@ -26,15 +26,19 @@ package edu.mayo.cts2.framework.service.profile.codesystem;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface CodeSystemReadService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CODE_SYSTEM)
 public interface CodeSystemReadService extends
-		ReadService<CodeSystemCatalogEntry, NameOrURI> {
+		ReadService<CodeSystemCatalogEntry, NameOrURI>, Cts2Profile {
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object, edu.mayo.cts2.framework.model.command.ResolvedReadContext)

@@ -24,6 +24,9 @@
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
@@ -32,8 +35,9 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_VALUE_SET_DEFINITION)
 public interface ValueSetDefinitionReadService
 		extends
-		TagAwareReadService<LocalIdValueSetDefinition, ValueSetDefinitionReadId> {
+		TagAwareReadService<LocalIdValueSetDefinition, ValueSetDefinitionReadId>, Cts2Profile {
 	
 }

@@ -26,6 +26,9 @@ package edu.mayo.cts2.framework.service.profile.codesystemversion;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
 
 /**
@@ -33,8 +36,9 @@ import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CODE_SYSTEM_VERSION)
 public interface CodeSystemVersionReadService extends
-	TagAwareReadService<CodeSystemVersionCatalogEntry, NameOrURI> {
+	TagAwareReadService<CodeSystemVersionCatalogEntry, NameOrURI>, Cts2Profile {
 	
 	/**
 	 * Exists version id.

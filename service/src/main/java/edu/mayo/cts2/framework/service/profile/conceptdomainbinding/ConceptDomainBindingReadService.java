@@ -27,7 +27,10 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
 
 import java.util.List;
@@ -37,8 +40,9 @@ import java.util.List;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING)
 public interface ConceptDomainBindingReadService extends
-		ReadService<LocalIdConceptDomainBinding, ConceptDomainBindingReadId> {
+		ReadService<LocalIdConceptDomainBinding, ConceptDomainBindingReadId>, Cts2Profile {
 
   /**
    * Exists.

@@ -194,9 +194,7 @@ public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_ASSOCIATION);
 
-    FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
-    functionalProfiles[0] = FunctionalProfile.FP_READ;
-    profile.setFunctionalProfile(functionalProfiles);
+    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

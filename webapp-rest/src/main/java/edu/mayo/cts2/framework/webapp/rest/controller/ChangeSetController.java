@@ -35,6 +35,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -217,6 +219,21 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 		responseHeaders.set("Location", location);
 		
 		return new ResponseEntity<Void>(responseHeaders, HttpStatus.CREATED);
+	}
+	
+	@InitBinder
+	public void initChangeSetRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_FROMDATE, required=false) Date fromDate,
+			 @RequestParam(value=PARAM_TODATE, required=false) Date toDate) {
+		
+		if(binder.getTarget() instanceof ChangeSetQueryExtensionRestrictions){
+			ChangeSetQueryExtensionRestrictions restrictions = 
+					(ChangeSetQueryExtensionRestrictions) binder.getTarget();
+
+			restrictions.setFromDate(fromDate);
+			restrictions.setToDate(toDate);	
+		}
 	}
 	
 	private ChangeSetQuery getChangeSetQuery(

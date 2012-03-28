@@ -34,7 +34,7 @@ import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface BaseService extends Cts2Profile {
+public interface BaseService {
 
 	/**
 	 * Gets the service name.

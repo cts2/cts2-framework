@@ -234,9 +234,7 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM_VERSION);
 
-    FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
-    functionalProfiles[0] = FunctionalProfile.FP_READ;
-    profile.setFunctionalProfile(functionalProfiles);
+    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

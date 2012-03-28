@@ -1,5 +1,10 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.valuesetdefinition;
 
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
@@ -34,10 +39,6 @@ import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ReadDefinitionF
 import edu.mayo.cts2.framework.model.wsdl.valuesetdefinitionread.ReadResponse;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint("ValueSetDefinitionReadServicesEndpoint")
 public class ValueSetDefinitionReadServicesEndpoint extends AbstractReadServiceEndpoint {
@@ -191,9 +192,7 @@ public class ValueSetDefinitionReadServicesEndpoint extends AbstractReadServiceE
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_VALUE_SET_DEFINITION);
 
-    FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
-    functionalProfiles[0] = FunctionalProfile.FP_READ;
-    profile.setFunctionalProfile(functionalProfiles);
+    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

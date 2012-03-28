@@ -1,5 +1,10 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
@@ -30,10 +35,6 @@ import edu.mayo.cts2.framework.model.wsdl.codesystemread.Read;
 import edu.mayo.cts2.framework.model.wsdl.codesystemread.ReadResponse;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
 import edu.mayo.cts2.framework.webapp.soap.endpoint.AbstractReadServiceEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint("CodeSystemCatalogReadServicesEndpoint")
 public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint {
@@ -158,9 +159,7 @@ public class CodeSystemCatalogReadServicesEndpoint extends AbstractReadServiceEn
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM);
 
-    FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
-    functionalProfiles[0] = FunctionalProfile.FP_READ;
-    profile.setFunctionalProfile(functionalProfiles);
+    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

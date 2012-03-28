@@ -26,16 +26,20 @@ package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ValueSetDefinitionQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_VALUE_SET_RESOLUTION)
 public interface ResolvedValueSetQueryService 
-	extends BaseQueryService {
+	extends BaseQueryService, Cts2Profile {
 
 	/**
 	 * Gets the resource summaries.

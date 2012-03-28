@@ -25,6 +25,9 @@ package edu.mayo.cts2.framework.service.profile.mapversion;
 
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
 
 /**
@@ -32,8 +35,9 @@ import edu.mayo.cts2.framework.service.profile.TagAwareReadService;
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_MAP_VERSION)
 public interface MapVersionReadService extends
-		TagAwareReadService<MapVersion, NameOrURI> {
+		TagAwareReadService<MapVersion, NameOrURI>, Cts2Profile {
 
 
 }

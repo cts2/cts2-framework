@@ -23,8 +23,12 @@
  */
 package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.FunctionalConformance;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 
 /**
@@ -32,6 +36,8 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedVal
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_IMPORT)
+@StructuralConformance(StructuralProfile.SP_VALUE_SET_RESOLUTION)
 public interface ResolvedValueSetLoaderService extends Cts2Profile {
 	
 	/**

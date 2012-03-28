@@ -25,15 +25,19 @@ package edu.mayo.cts2.framework.service.profile.mapversion;
 
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.MaintenanceService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface MapVersionMaintenanceService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_MAP_VERSION)
 public interface MapVersionMaintenanceService
 		extends
-		MaintenanceService<MapVersion,NameOrURI> {
+		MaintenanceService<MapVersion,NameOrURI>, Cts2Profile {
 
 }

@@ -24,7 +24,10 @@
 package edu.mayo.cts2.framework.service.profile.association;
 
 import edu.mayo.cts2.framework.model.association.Association;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.MaintenanceService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadId;
 
 /**
@@ -32,8 +35,9 @@ import edu.mayo.cts2.framework.service.profile.association.name.AssociationReadI
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_ASSOCIATION)
 public interface AssociationMaintenanceService
 		extends
-		MaintenanceService<Association,AssociationReadId> {
+		MaintenanceService<Association,AssociationReadId>, Cts2Profile {
 
 }

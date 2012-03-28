@@ -25,15 +25,19 @@ package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.MaintenanceService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ConceptDomainMaintenanceService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN)
 public interface ConceptDomainMaintenanceService
 		extends
-		MaintenanceService<ConceptDomainCatalogEntry,NameOrURI> {
+		MaintenanceService<ConceptDomainCatalogEntry,NameOrURI>, Cts2Profile {
 
 }

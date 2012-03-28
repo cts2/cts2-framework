@@ -24,14 +24,18 @@
 package edu.mayo.cts2.framework.service.profile.valueset;
 
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ValueSetReadService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_VALUE_SET)
 public interface ValueSetReadService extends
-		ReadService<ValueSetCatalogEntry, NameOrURI> {
+		ReadService<ValueSetCatalogEntry, NameOrURI>, Cts2Profile {
 }

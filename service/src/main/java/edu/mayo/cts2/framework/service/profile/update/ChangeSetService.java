@@ -28,14 +28,17 @@ import java.util.Date;
 
 import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.updates.ChangeSet;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.FunctionalConformance;
 
 /**
  * The Interface ChangeSetService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_UPDATE)
 public interface ChangeSetService extends Cts2Profile {
 	
 	/**

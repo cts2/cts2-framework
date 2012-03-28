@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 /**
  * The Interface ReadService allows for the retrieval or existence test
@@ -38,6 +39,7 @@ import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_READ)
 public interface ReadService<R,I> extends BaseService {
 
 	/**

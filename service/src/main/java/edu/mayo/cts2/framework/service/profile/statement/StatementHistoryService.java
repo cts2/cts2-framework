@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.statement;
 
 import edu.mayo.cts2.framework.model.statement.Statement;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.HistoryService;
 
 /**
@@ -32,5 +33,5 @@ import edu.mayo.cts2.framework.service.profile.HistoryService;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface StatementHistoryService extends
-		HistoryService<Statement,String> {
+		HistoryService<Statement,String>, Cts2Profile {
 }

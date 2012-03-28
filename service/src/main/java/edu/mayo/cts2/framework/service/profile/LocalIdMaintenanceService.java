@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.core.IsChangeable;
 import edu.mayo.cts2.framework.model.extension.ChangeableLocalIdResource;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 
 /**
@@ -35,6 +36,7 @@ import edu.mayo.cts2.framework.model.extension.ChangeableLocalIdResource;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_MAINTENANCE)
 public interface LocalIdMaintenanceService< 
 	T extends ChangeableLocalIdResource<R>,
 	R extends IsChangeable,

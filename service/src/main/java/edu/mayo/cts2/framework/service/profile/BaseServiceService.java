@@ -29,6 +29,7 @@ import edu.mayo.cts2.framework.model.core.OpaqueData;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 /**
  * This service is to be implemented iff implementers wish to describe metadata
@@ -36,6 +37,7 @@ import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_READ)
 public interface BaseServiceService extends Cts2Profile {
 
 	/**

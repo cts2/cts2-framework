@@ -219,9 +219,7 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING);
 
-    FunctionalProfile functionalProfiles[] = new FunctionalProfile[1];
-    functionalProfiles[0] = FunctionalProfile.FP_READ;
-    profile.setFunctionalProfile(functionalProfiles);
+    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

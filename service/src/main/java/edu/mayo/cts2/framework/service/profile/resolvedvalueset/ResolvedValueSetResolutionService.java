@@ -27,8 +27,11 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 
@@ -37,7 +40,8 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueS
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ResolvedValueSetResolutionService extends BaseQueryService {
+@StructuralConformance(StructuralProfile.SP_VALUE_SET_RESOLUTION)
+public interface ResolvedValueSetResolutionService extends BaseQueryService, Cts2Profile {
 
 	/**
 	 * Gets the resolution.

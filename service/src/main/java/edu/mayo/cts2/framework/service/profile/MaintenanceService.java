@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile;
 
 import edu.mayo.cts2.framework.model.core.IsChangeable;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 
 /**
@@ -33,6 +34,7 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
  * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_MAINTENANCE)
 public interface MaintenanceService< 
 	R extends IsChangeable,
 	I> extends BaseMaintenanceService<R,R,I> {

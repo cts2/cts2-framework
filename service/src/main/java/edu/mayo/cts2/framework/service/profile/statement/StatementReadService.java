@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.statement;
 
 import edu.mayo.cts2.framework.model.extension.LocalIdStatement;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
 
@@ -33,5 +34,5 @@ import edu.mayo.cts2.framework.service.profile.statement.name.StatementReadId;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface StatementReadService extends
-		ReadService<LocalIdStatement, StatementReadId> {
+		ReadService<LocalIdStatement, StatementReadId>, Cts2Profile {
 }

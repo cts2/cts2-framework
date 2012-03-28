@@ -23,16 +23,20 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ValueSetDefinitionQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_VALUE_SET_DEFINITION)
 public interface ValueSetDefinitionQueryService extends 
-	QueryService<ValueSetDefinition, ValueSetDefinitionDirectoryEntry, ValueSetDefinitionQuery>{
+	QueryService<ValueSetDefinition, ValueSetDefinitionDirectoryEntry, ValueSetDefinitionQuery>, Cts2Profile {
 
 }

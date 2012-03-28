@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import java.util.Date;
+
 
 /**
  * The Class ChangeSetQueryExtensionRestrictions.
@@ -30,4 +32,22 @@ package edu.mayo.cts2.framework.service.command.restriction;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class ChangeSetQueryExtensionRestrictions {
+	
+	private Date fromDate;
+	private Date toDate;
+	
+	public Date getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+	public Date getToDate() {
+		return toDate;
+	}
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
 }
+
+

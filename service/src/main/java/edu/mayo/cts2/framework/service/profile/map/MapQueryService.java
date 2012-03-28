@@ -25,14 +25,18 @@ package edu.mayo.cts2.framework.service.profile.map;
 
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.QueryService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface MapQueryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_MAP)
 public interface MapQueryService extends 
-	QueryService<MapCatalogEntry, MapCatalogEntrySummary, MapQuery>{
+	QueryService<MapCatalogEntry, MapCatalogEntrySummary, MapQuery>, Cts2Profile {
 
 }

@@ -137,7 +137,7 @@ public class MapEntryReadServicesEndpointTestIT extends SoapEndpointTestBase {
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
     assertEquals(StructuralProfile.SP_MAP, profile.getStructuralProfile());
-    assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile(0));
+    assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile());
   }
 
   @Test

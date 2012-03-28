@@ -25,7 +25,10 @@ package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.LocalIdMaintenanceService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.ConceptDomainBindingReadId;
 
 /**
@@ -33,8 +36,9 @@ import edu.mayo.cts2.framework.service.profile.conceptdomainbinding.name.Concept
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING)
 public interface ConceptDomainBindingMaintenanceService
 		extends
-		LocalIdMaintenanceService<LocalIdConceptDomainBinding,ConceptDomainBinding,ConceptDomainBindingReadId> {
+		LocalIdMaintenanceService<LocalIdConceptDomainBinding,ConceptDomainBinding,ConceptDomainBindingReadId>, Cts2Profile {
 	
 }

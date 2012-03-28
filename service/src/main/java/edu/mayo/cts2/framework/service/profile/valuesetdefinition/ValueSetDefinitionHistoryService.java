@@ -23,14 +23,18 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.HistoryService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ValueSetDefinitionHistoryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_VALUE_SET_DEFINITION)
 public interface ValueSetDefinitionHistoryService extends
-		HistoryService<ValueSetDefinition,String> {
+		HistoryService<ValueSetDefinition,String>, Cts2Profile {
 }

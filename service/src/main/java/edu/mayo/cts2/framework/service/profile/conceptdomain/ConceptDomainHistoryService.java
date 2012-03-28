@@ -25,13 +25,17 @@ package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.HistoryService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 
 /**
  * The Interface ConceptDomainHistoryService.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN)
 public interface ConceptDomainHistoryService extends
-		HistoryService<ConceptDomainCatalogEntry,NameOrURI> {
+		HistoryService<ConceptDomainCatalogEntry,NameOrURI>, Cts2Profile {
 }

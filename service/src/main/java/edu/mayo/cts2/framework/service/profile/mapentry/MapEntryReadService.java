@@ -24,7 +24,10 @@
 package edu.mayo.cts2.framework.service.profile.mapentry;
 
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
 
 /**
@@ -32,8 +35,9 @@ import edu.mayo.cts2.framework.service.profile.mapentry.name.MapEntryReadId;
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_MAP_VERSION)
 public interface MapEntryReadService extends
-		ReadService<MapEntry, MapEntryReadId> {
+		ReadService<MapEntry, MapEntryReadId>, Cts2Profile {
 
 
 }

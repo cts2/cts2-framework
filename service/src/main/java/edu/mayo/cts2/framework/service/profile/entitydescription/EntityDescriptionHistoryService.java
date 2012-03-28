@@ -24,7 +24,10 @@
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.HistoryService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
@@ -32,6 +35,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_ENTITY_DESCRIPTION)
 public interface EntityDescriptionHistoryService extends
-		HistoryService<EntityDescription,EntityDescriptionReadId> {
+		HistoryService<EntityDescription,EntityDescriptionReadId>, Cts2Profile {
 }

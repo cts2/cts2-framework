@@ -37,7 +37,10 @@ import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.ReadService;
+import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
@@ -45,8 +48,9 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@StructuralConformance(StructuralProfile.SP_ENTITY_DESCRIPTION)
 public interface EntityDescriptionReadService extends
-		ReadService<EntityDescription, EntityDescriptionReadId> {
+		ReadService<EntityDescription, EntityDescriptionReadId>, Cts2Profile {
 
 	/**
 	 * Read entity descriptions.

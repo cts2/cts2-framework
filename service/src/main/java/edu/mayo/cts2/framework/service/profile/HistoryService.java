@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.service.profile;
 import java.util.Date;
 
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 /**
  * The Interface HistoryService.
@@ -35,6 +36,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@FunctionalConformance(FunctionalProfile.FP_TEMPORAL)
 public interface HistoryService<R,I> extends BaseQueryService {
 
 	/**

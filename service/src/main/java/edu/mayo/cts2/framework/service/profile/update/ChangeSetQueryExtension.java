@@ -33,13 +33,14 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.updates.ChangeSetDirectoryEntry;
 import edu.mayo.cts2.framework.service.command.restriction.ChangeSetQueryExtensionRestrictions;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
+import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
  * The Interface ChangeSetQueryExtension.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface ChangeSetQueryExtension extends BaseQueryService {
+public interface ChangeSetQueryExtension extends BaseQueryService, Cts2Profile {
 
 	/**
 	 * Gets the resource summaries.
