@@ -50,7 +50,7 @@
 		<module>filter</module>
 		<module>service</module>
 		<module>webapp-rest-extensions</module>
-		<module>webapp-rest</module>
+		<module>webapp</module>
 		<module>base-service-plugin</module>
 		<module>plugin-util</module>
 	</modules>

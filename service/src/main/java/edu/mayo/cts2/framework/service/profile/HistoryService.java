@@ -29,10 +29,11 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 /**
- * The Interface HistoryService.
+ * The task of the HistoryService is to report on changes of content within the system,
+ * specifically, when a resource has changed and what changes have taken place.
  *
- * @param <R> the generic type
- * @param <I> the generic type
+ * @param <R> the CTS2 Resource Type returned by this Service
+ * @param <I> the Identifier used to uniquely identify the CTS2 Resource
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

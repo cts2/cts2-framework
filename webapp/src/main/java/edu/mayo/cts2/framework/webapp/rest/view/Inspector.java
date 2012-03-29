@@ -21,31 +21,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile;
+package edu.mayo.cts2.framework.webapp.rest.view;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
+import org.springframework.beans.BeanUtils;
 
 /**
- * An annotation to assign a Structural Conformance to a CTS2 Interface.
+ * JSP tag lib for various bean introspection utilities.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface StructuralConformance {
-	
-	/**
-	 * Value.
-	 *
-	 * @return the structural profile
-	 */
-	StructuralProfile value();
+public class Inspector {
 
+	/**
+	 * Should recurse.
+	 *
+	 * @param bean the bean
+	 * @return true, if successful
+	 */
+	public static boolean shouldRecurse(Object bean) {
+		return !BeanUtils.isSimpleProperty(bean.getClass()) && !bean.getClass().isEnum();
+	}
+
+	/**
+	 * Inspect.
+	 *
+	 * @param bean the bean
+	 * @return the list
+	 */
+	public static List<Map.Entry<String, Object>> inspect(Object bean) {
+		Map<String, Object> props = new LinkedHashMap<String, Object>();
+
+		Class<?> clazz = bean.getClass();
+		
+		while(clazz != null){
+			for(Field field : clazz.getDeclaredFields()){
+				field.setAccessible(true);
+				String name = field.getName();
+				
+				Object value;
+				try {
+					value = field.get(bean);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+	
+				if(value != null){
+					props.put(name, value);
+				}
+			}
+			clazz = clazz.getSuperclass();
+		}
+
+		return new ArrayList<Map.Entry<String, Object>>(props.entrySet());
+	}
 }
