@@ -2,87 +2,33 @@ package edu.mayo.cts2.framework.service.provider;
 
 import static org.junit.Assert.*
 
-import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test
+import org.springframework.context.ApplicationContext
 
-import edu.mayo.cts2.framework.core.config.option.Option;
-import edu.mayo.cts2.framework.core.plugin.PluginConfig;
-import edu.mayo.cts2.framework.core.plugin.PluginReference;
-import edu.mayo.cts2.framework.service.profile.Cts2Profile
+import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 
 class ServiceProviderFactoryTest {
 	
-	def classLoader = new URLClassLoader()
-/*
-	def pluginManager = [
-		getActivePlugin : { new PluginReference("test","test") },
-		getPluginServiceProviderClassName : { pluginName,pluginVersion -> TestServiceProvider.class.getName() },
-		createClassLoaderForPlugin : { pluginName,pluginVersion -> classLoader }
-	] as PluginManager
-
-	@Test
-	void "Test service provider not null"(){
-		def factory = new ServiceProviderFactory()
-		factory.pluginManager = pluginManager
-		
-		def serviceProvider = factory.createServiceProvider();
-		
-		assertNotNull serviceProvider
-	}
+	def factory
 	
-	@Test( expected = InfoException.class)
-	void "Test service provider is right one"(){
-		def factory = new ServiceProviderFactory()
-		factory.pluginManager = pluginManager
-		
-		def serviceProvider = factory.createServiceProvider();
-
-		def returnClazz = serviceProvider.getService(Cts2Profile.class)
+	@Before
+	void setup(){
+		factory = new ServiceProviderFactory()
 	}
 	
 	@Test
-	void "Test service provider has right class loader for getService"(){
-		def factory = new ServiceProviderFactory()
-		factory.pluginManager = pluginManager
+	void testClassPathApplicationContext(){
+		System.setProperty(ServiceProviderFactory.USE_CLASSPATH_PROVIDER_PROP, "true")
+		def ac = {
+			getBean : { [] as ServiceProvider }
+		} as ApplicationContext
+	
+		factory.setApplicationContext(ac)
 		
-		def serviceProvider = factory.createServiceProvider();
-
-		try {
-			serviceProvider.getService(Cts2Profile.class)
-		} catch (e) {
-			assertEquals e.classLoader, classLoader
-			return
-		}
-		
-		fail
-	}
-}
-
-class InfoException extends RuntimeException {
-	def classLoader	
-}
-
-class TestServiceProvider implements ServiceProvider {
-
-	@Override
-	public <T extends Cts2Profile> T getService(Class<T> serviceClass) {
-		throw new InfoException(classLoader: Thread.currentThread().contextClassLoader)
+		assertNotNull factory.getServiceProvider()
+	
 	}
 
-	@Override
-	public void initialize(PluginConfig config) {
-		//
-	}
-
-	@Override
-	public void destroy() {
-		//
-	}
-
-	@Override
-	public Set<Option> getPluginOptions() {
-		return null;
-	}
-*/	
 }

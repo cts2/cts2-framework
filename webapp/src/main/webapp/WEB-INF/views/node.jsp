@@ -12,13 +12,13 @@
 		<c:forEach var="i" items="${map}">
 
 			<c:if test="${i.key != null and i.value != null and i.key != '_anyObject' }">
-				<li><c:out value="${ fn:substring(i.key, 1, -1) }"></c:out>
+				<li><span class="name"><c:out value="${ fn:substring(i.key, 1, -1) }"></c:out>:</span>
 
 				<c:if test="${fn:endsWith(i.key, 'List')}">
 				<ul>
 					<c:forEach var="j" items="${i.value}">
 						<li>
-							<c:out value="${fn:substring( fn:substringBefore(i.key, 'List') , 1, -1) }"></c:out>
+							<span class="name"><c:out value="${fn:substring( fn:substringBefore(i.key, 'List') , 1, -1) }"></c:out>:</span>
 							<c:if test="${beans:shouldRecurse( j )}">
 								<c:set var="map" value="${beans:inspect( j ) }"
 									scope="request" />

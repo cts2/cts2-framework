@@ -1,0 +1,69 @@
+package edu.mayo.cts2.framework.util.spring;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before
+import org.junit.Test
+import org.springframework.context.ApplicationContext
+
+import edu.mayo.cts2.framework.service.profile.Cts2Profile
+import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
+import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
+
+class AbstractSpringServiceProviderTest {
+	
+	def provider
+	
+	@Before
+	void setup(){
+		provider = new AbstractSpringServiceProvider(){}
+	}
+	
+	@Test
+	void testBeanNotPresent(){
+		provider.applicationContext = {
+			getBean : { null as Cts2Profile }
+		} as ApplicationContext
+	
+		assertNull provider.getService(CodeSystemReadService.class)
+	
+	}
+	
+	@Test
+	void testBeanPresent(){
+		provider.applicationContext = {
+			getBean : { 
+		
+				if(it.name.equals(CodeSystemReadService.class.name)){
+					//this is good
+				 } else {
+				 	fail()
+				 }
+			
+				 [] as Cts2Profile
+			}
+		} as ApplicationContext
+	
+		assertNotNull provider.getService(CodeSystemReadService.class)
+	
+	}
+	
+	@Test
+	void testBeanPresentWrongName(){
+		provider.applicationContext = {
+			getBean : {
+		
+				if(it.name.equals(CodeSystemReadService.class.name)){
+					[] as Cts2Profile
+				 } else {
+					null as Cts2Profile
+				 }
+ 
+			}
+		} as ApplicationContext
+	
+		assertNull provider.getService(CodeSystemQueryService.class)
+	
+	}
+
+}

@@ -1,10 +1,12 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.collect.Iterables;
 
 import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
@@ -46,31 +49,48 @@ public class BaseController extends AbstractMessageWrappingController{
 	@RequestMapping(value="/service", method=RequestMethod.GET)
 	public Object getServiceInfo(HttpServletRequest request) {
 		
-		if(this.baseServiceService != null){
+		BaseService service = this.getBaseServiceFromService();
+		
+		if(service == null){
+			service = new BaseService();
 			try {
-				BaseService baseService = baseServiceService.getBaseService();
-				
-				if(baseService != null){
-					//return baseService;
-				}
-			} catch (Exception e){
-				e.printStackTrace();
+				service.setServiceName(this.baseServiceService.getServiceName());
+			} catch (UnsupportedOperationException e) {
+				service.setServiceName(buildName);
 			}
+			
+			try {
+				service.setServiceDescription(this.baseServiceService.getServiceDescription());
+			} catch (UnsupportedOperationException e) {
+				service.setServiceDescription(ModelUtils.createOpaqueData(buildDescription));
+			}
+			
+			try {
+				service.setServiceVersion(this.baseServiceService.getServiceVersion());
+			} catch (UnsupportedOperationException e) {
+				service.setServiceVersion(buildVersion);
+			}
+			
+			try {
+				service.setServiceProvider(this.baseServiceService.getServiceProvider());
+			} catch (UnsupportedOperationException e) {
+				service.setServiceProvider(new SourceReference("Unspecified"));
+			}
+
+			Set<ProfileElement> supportedProfiles = this.conformanceFactory.getProfileElements();
+			if(CollectionUtils.isEmpty(supportedProfiles)){
+				throw new UnsupportedOperationException("This CTS2 Instance has no Supported Profiles.");
+			}
+			
+			service.setSupportedProfile(Iterables.toArray(
+					this.conformanceFactory.getProfileElements(), ProfileElement.class));
+			
+			service.setImplementationType(ImplementationProfile.IP_REST);
+	
+			service.setDefaultFormat(new FormatReference(MediaType.TEXT_XML_VALUE));
+			service.addSupportedFormat(new FormatReference(MediaType.APPLICATION_JSON_VALUE));
+			service.addKnownNamespace(new NamespaceReference());
 		}
-		
-		BaseService service = new BaseService();
-		service.setServiceName(buildName);
-		service.setServiceDescription(ModelUtils.createOpaqueData(buildDescription));
-		service.setServiceVersion(buildVersion);
-		service.setServiceProvider(new SourceReference());
-		service.addSupportedFormat(new FormatReference());
-
-		service.setSupportedProfile(Iterables.toArray(
-				this.conformanceFactory.getProfileElements(), ProfileElement.class));
-		
-		service.setImplementationType(ImplementationProfile.IP_REST);
-
-		service.setDefaultFormat(new FormatReference());
 		
 		String acceptHeader = request.getHeader("Accept");
 	
@@ -80,13 +100,24 @@ public class BaseController extends AbstractMessageWrappingController{
 		MediaType type = types.get(0);
 				
 		if(type.isCompatibleWith(MediaType.TEXT_HTML)){
-			ModelAndView mav = new ModelAndView("test");
-			mav.addObject("testBean", service);
+			ModelAndView mav = new ModelAndView("baseService");
+			mav.addObject("baseService", service);
 			return mav;
 		} else {
 			return new ResponseEntity<BaseService>(service, HttpStatus.OK);
 		}
 		
+	}
+	
+	private BaseService getBaseServiceFromService(){
+		BaseService baseService;
+		try {
+			baseService = baseServiceService.getBaseService();
+		} catch (UnsupportedOperationException e) {
+			return null;
+		}
+		
+		return baseService;
 	}
 	
 }

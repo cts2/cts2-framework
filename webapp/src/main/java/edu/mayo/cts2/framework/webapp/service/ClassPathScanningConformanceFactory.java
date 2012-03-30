@@ -25,11 +25,15 @@ public class ClassPathScanningConformanceFactory implements ConformanceFactory {
 	private ServiceProviderFactory serviceProviderFactory;
 	
 	@Override
-	public Iterable<ProfileElement> getProfileElements(){
+	public Set<ProfileElement> getProfileElements(){
 		Set<ProfileElement> returnSet = new HashSet<ProfileElement>();
 		
 		ServiceProvider provider = 
 			this.serviceProviderFactory.getServiceProvider();
+		
+		if(provider == null){
+			return returnSet;
+		}
 	
 		Set<Class<? extends Cts2Profile>> profiles = this.doScan();
 		
