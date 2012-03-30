@@ -19,9 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.collect.Iterables;
 
 import edu.mayo.cts2.framework.model.core.FormatReference;
-import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
+import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -89,7 +89,7 @@ public class BaseController extends AbstractMessageWrappingController{
 	
 			service.setDefaultFormat(new FormatReference(MediaType.TEXT_XML_VALUE));
 			service.addSupportedFormat(new FormatReference(MediaType.APPLICATION_JSON_VALUE));
-			service.addKnownNamespace(new NamespaceReference());
+			service.addKnownNamespace(new DocumentedNamespaceReference());
 		}
 		
 		String acceptHeader = request.getHeader("Accept");
