@@ -384,8 +384,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getAssociationOfCodeSystemVersionByLocalName(
+	public Object getAssociationOfCodeSystemVersionByLocalName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -405,8 +404,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_ASSOCIATION_OF_CODESYSTEMVERSION_BY_URI, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getAssociationOfCodeSystemVersionByUri(
+	public Object getAssociationOfCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,

@@ -10,3 +10,18 @@
 	font-weight:bold;
 }
 
+.collapsibleList li{
+  list-style-image:url('images/button.png');
+  cursor:auto;
+}
+
+li.collapsibleListOpen{
+  list-style-image:url('images/button-open.png');
+  cursor:pointer;
+}
+
+li.collapsibleListClosed{
+  list-style-image:url('images/button-closed.png');
+  cursor:pointer;
+}
+

@@ -275,8 +275,7 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	 * @return the code system by name
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getCodeSystemByName(
+	public Object getCodeSystemByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

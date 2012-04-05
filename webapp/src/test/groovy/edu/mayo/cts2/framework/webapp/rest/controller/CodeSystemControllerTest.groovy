@@ -11,7 +11,6 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 
 import edu.mayo.cts2.framework.core.config.ServerContext
-import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
@@ -39,27 +38,23 @@ import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver
 		getServerRootWithAppName: { "http://test/webapp" }
 	] as ServerContext
 
-	def serviceConfigManager = [
-		getServerContext: { serverContext }
-	] as ServiceConfigManager
-	
 	@Before
 	void setup(){
 		controller = new CodeSystemController()
 		controller.codeSystemReadService = codeSystemReadService
-		controller.serviceConfigManager = serviceConfigManager
+		controller.serverContext = serverContext
 	}
 	
 	@Test
 	void testGetCodeSystemByNameInstanceOfMessage(){
-		def result = controller.getCodeSystemByName(httpServletRequest, null, new QueryControl(), "id")
+		def result = controller.getCodeSystemByName(httpServletRequest, null, new QueryControl(), "id").getBody()
 		
 		assert result instanceof Message	
 	}
 	
 	@Test
 	void testGetCodeSystemByNameHasEverything(){
-		def result = controller.getCodeSystemByName(httpServletRequest, null, new QueryControl(), "id")
+		def result = controller.getCodeSystemByName(httpServletRequest, null, new QueryControl(), "id").getBody()
 	
 		assertNotNull result.heading
 		assertNotNull result.heading.resourceRoot

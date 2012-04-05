@@ -37,12 +37,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.option.OptionHolder;
 import edu.mayo.cts2.framework.core.plugin.AbstractExtensionPoint;
 import edu.mayo.cts2.framework.core.plugin.ExtensionPoint;
-import edu.mayo.cts2.framework.core.plugin.PluginConfigChangeObserver;
 import edu.mayo.cts2.framework.core.plugin.PluginManager;
-import edu.mayo.cts2.framework.core.plugin.PluginReference;
 
 /**
  * A factory for creating ServiceProvider objects.
@@ -51,7 +48,7 @@ import edu.mayo.cts2.framework.core.plugin.PluginReference;
  */
 @Component
 public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvider> 
-	implements PluginConfigChangeObserver, 
+	implements
 	ServiceProviderChangeObservable, 
 	ExtensionPoint,
 	ApplicationContextAware {
@@ -97,40 +94,12 @@ public class ServiceProviderFactory extends AbstractExtensionPoint<ServiceProvid
 		return serviceProvider;
 	}
 
-	private void fireServiceProviderChangeEvent() {
-		for (ServiceProviderChangeObserver observer : this.observers) {
-			observer.onServiceProviderChange();
-		}
-	}
-
 	public void registerListener(ServiceProviderChangeObserver observer) {
 		this.observers.add(observer);
 	}
 
 	public void unregisterListener(ServiceProviderChangeObserver observer) {
 		this.observers.remove(observer);
-	}
-	
-	@Override
-	public void onPluginActivated(PluginReference ref) {
-	
-		this.fireServiceProviderChangeEvent();
-	}
-
-	@Override
-	public void onPluginRemoved(PluginReference ref) {
-		//
-	}
-
-	@Override
-	public void onPluginAdded(PluginReference ref) {
-		//no-op
-	}
-
-	@Override
-	public void onPluginSpecificConfigPropertiesChange(OptionHolder newOptions) {
-
-		this.fireServiceProviderChangeEvent();
 	}
 
 	@Override

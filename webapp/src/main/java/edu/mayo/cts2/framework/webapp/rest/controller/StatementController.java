@@ -285,8 +285,7 @@ public class StatementController extends AbstractMessageWrappingController {
 			PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getStatementOfCodeSystemVersionByLocalId(
+	public Object getStatementOfCodeSystemVersionByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,

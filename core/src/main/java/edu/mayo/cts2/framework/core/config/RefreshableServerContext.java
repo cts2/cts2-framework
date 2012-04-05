@@ -23,9 +23,17 @@
  */
 package edu.mayo.cts2.framework.core.config;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
-import edu.mayo.cts2.framework.core.config.option.OptionHolder;
+import org.apache.commons.lang.StringUtils;
+import org.osgi.framework.Constants;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedService;
+import org.osgi.service.metatype.MetaTypeProvider;
+import org.springframework.stereotype.Component;
+
+import edu.mayo.cts2.framework.core.plugin.ExportedService;
 
 
 /**
@@ -33,28 +41,39 @@ import edu.mayo.cts2.framework.core.config.option.OptionHolder;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class RefreshableServerContext implements ServerContext, ConfigChangeObserver {
+@ExportedService( { ServerContext.class, MetaTypeProvider.class, ManagedService.class })
+@Component
+public class RefreshableServerContext extends AbstractConfigurableExportedService 
+	implements ServerContext {
 
-	private String serverRoot = "http://informatics.mayo.edu/exist/cts2";
+	private String serverRoot = "http://localhost:8080";
 
-	private String appName = "rest";
+	private String appName = "webapp";
+	
 
-	/**
-	 * Instantiates a new server context.
-	 */
-	protected RefreshableServerContext(){
-		super();
+	@Override
+	@SuppressWarnings("rawtypes") 
+	public void updated(Dictionary properties) throws ConfigurationException {
+		if(properties != null){
+			String newServerRoot = (String) properties.get(ConfigConstants.SERVER_ROOT_PROPERTY);
+			if(newServerRoot != null) {
+				this.serverRoot = newServerRoot;
+			}
+			String newAppName = (String) properties.get(ConfigConstants.APP_NAME_PROPERTY);
+			if(newAppName != null) {
+				this.appName = newAppName;
+			}
+		}
 	}
 
-	/**
-	 * Instantiates a new server context.
-	 *
-	 * @param cts2Config the cts2 config
-	 */
-	protected RefreshableServerContext(String serverRoot, String appName) {
-		super();
-		this.serverRoot = serverRoot;
-		this.appName = appName;
+	@Override
+	public String[] getLocales() {
+		return null;
+	}
+
+	@Override
+	protected String getMetatypeXmlPath() {
+		return "/server-context-metatype.xml";
 	}
 
 	/**
@@ -91,14 +110,11 @@ public class RefreshableServerContext implements ServerContext, ConfigChangeObse
 	}
 
 	@Override
-	public void onGlobalConfigPropertiesChange(OptionHolder newOptions) {
-		//
-	}
-
-	@Override
-	public void onContextConfigPropertiesChange(OptionHolder newOptions) {
-		this.appName = newOptions.getStringOption(ConfigConstants.APP_NAME_PROPERTY).getOptionValue();
-		this.serverRoot = newOptions.getStringOption(ConfigConstants.SERVER_ROOT_PROPERTY).getOptionValue();
+	public Hashtable<String, Object> getMetadata() {
+		Hashtable<String, Object> table = new Hashtable<String, Object>();
+		table.put(Constants.SERVICE_PID, ServerContext.class.getSimpleName());
+		
+		return table;
 	}
 
 }

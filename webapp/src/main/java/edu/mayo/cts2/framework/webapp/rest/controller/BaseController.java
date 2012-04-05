@@ -29,7 +29,7 @@ import edu.mayo.cts2.framework.service.profile.BaseServiceService;
 import edu.mayo.cts2.framework.webapp.service.ConformanceFactory;
 
 @Controller
-public class BaseController extends AbstractMessageWrappingController{
+public class BaseController extends AbstractMessageWrappingController {
 	
 	@Cts2Service
 	private BaseServiceService baseServiceService;

@@ -58,8 +58,6 @@ public class ConfigInitializer {
 			+ ConfigConstants.PLUGINS_DIRECTORY;
 	
 	private File configDirectory;
-	private File globalConfigPropsFile;
-	private File contextConfigPropsFile;
 	private File contextConfigDirectory;
 	private File pluginsDirectory;
 
@@ -86,10 +84,6 @@ public class ConfigInitializer {
 		
 		//create plugin directory if its not there
 		this.pluginsDirectory = ConfigUtils.createDirectory(this.pluginsDirectoryPath);
-
-		//create global properties file if not there
-		this.globalConfigPropsFile = ConfigUtils.createFile(this.configDirectoryPath
-				+ "/global.properties");
 		
 		log.info("Webapp registered with service identifier: "
 				+ this.context);
@@ -98,9 +92,6 @@ public class ConfigInitializer {
 
 		this.contextConfigDirectory = ConfigUtils.createDirectory(
 				this.getContextDirectoryPath(this.context));
-		
-		this.contextConfigPropsFile = ConfigUtils.createFile(
-				this.getContextPropertiesFilePath(this.context));
 	}
 	
 	/**
@@ -205,13 +196,5 @@ public class ConfigInitializer {
 
 	protected File getConfigDirectory() {
 		return this.configDirectory;
-	}
-
-	protected File getGlobalConfigFile() {
-		return this.globalConfigPropsFile;
-	}
-	
-	public File getContextConfigFile() {
-		return this.contextConfigPropsFile;
 	}
 }

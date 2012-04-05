@@ -284,8 +284,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	 * @return the value set by name
 	 */
 	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getValueSetByName(
+	public Object getValueSetByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

@@ -177,8 +177,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getMapEntryOfMapVersionByName(
+	public Object getMapEntryOfMapVersionByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
@@ -205,8 +204,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	 * @return the map entry by maps from name
 	 */
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.POST)
-	@ResponseBody
-	public Message getMapEntryOfMapVersionByName(
+	public Object getMapEntryOfMapVersionByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,

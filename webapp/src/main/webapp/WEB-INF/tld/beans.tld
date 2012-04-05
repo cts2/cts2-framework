@@ -11,16 +11,23 @@
     <uri>http://informatics.mayo.edu/cts2/framework#beans</uri>
     <function>
         <name>inspect</name>
-        <function-class>edu.mayo.cts2.framework.webapp.rest.view.Inspector</function-class>
+        <function-class>edu.mayo.cts2.framework.webapp.rest.view.Beans</function-class>
         <function-signature>
                 java.util.List inspect(java.lang.Object)
         </function-signature>
     </function>
     <function>
         <name>shouldRecurse</name>
-        <function-class>edu.mayo.cts2.framework.webapp.rest.view.Inspector</function-class>
+        <function-class>edu.mayo.cts2.framework.webapp.rest.view.Beans</function-class>
         <function-signature>
                 boolean shouldRecurse(java.lang.Object)
+        </function-signature>
+    </function>
+   <function>
+        <name>capitalize</name>
+        <function-class>edu.mayo.cts2.framework.webapp.rest.view.Beans</function-class>
+        <function-signature>
+                java.lang.String capitalize(java.lang.String)
         </function-signature>
     </function>
 </taglib>

@@ -511,8 +511,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity description by name
 	 */
 	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getEntityDescriptionOfCodeSystemVersionByName(
+	public Object getEntityDescriptionOfCodeSystemVersionByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,

@@ -7,8 +7,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -27,6 +29,8 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.slf4j.LoggerFactory;
@@ -51,9 +55,11 @@ import edu.mayo.cts2.framework.core.config.ConfigUtils;
  */
 @Component
 public class FelixPluginManager implements 
-	InitializingBean, PluginManager, ServletContextAware, ApplicationContextAware {
+	InitializingBean, OsgiPluginManager, ServletContextAware, ApplicationContextAware {
     public static final String OSGI_FRAMEWORK_BUNDLES_ZIP = "osgi-framework-bundles.zip";
     public static final int REFRESH_TIMEOUT = 10;
+
+    public static final String CONFIG_DIR = "config";
     
     private ServletContext servletContext;
     
@@ -61,6 +67,9 @@ public class FelixPluginManager implements
     
 	@Resource
 	private ConfigInitializer configInitializer;
+	
+	@Resource
+	private SupplementalPropetiesLoader supplementalPropetiesLoader;
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(FelixPluginManager.class);
     private static final String OSGI_BOOTDELEGATION = "org.osgi.framework.bootdelegation";
@@ -136,7 +145,7 @@ public class FelixPluginManager implements
         		".osgi-felix-cache");
         
         configMap.put(FelixConstants.FRAMEWORK_STORAGE, felixCache.getPath());
-
+       
         configMap.put(FelixConstants.LOG_LEVEL_PROP, String.valueOf(felixLogger.getLogLevel()));
         configMap.put(FelixConstants.LOG_LOGGER_PROP, felixLogger);
         configMap.put(FelixConstants.FRAGMENT_ATTACHMENT_RESOLVETIME, felixLogger);
@@ -159,6 +168,8 @@ public class FelixPluginManager implements
                              "org.springframework.stereotype,"+
                              "org.springframework.web.bind.annotation," +
                              "javax.*," +
+                             "org.osgi.*," +
+                             "org.apache.felix.*," +
                              "sun.*," +
                              "com.sun.*," +
                              "com.sun.xml.bind.v2," +
@@ -211,7 +222,54 @@ public class FelixPluginManager implements
 				}
             	
             };
+            
+        
+            ServiceTracker tracker = new ServiceTracker(
+            		felix.getBundleContext(),
+            		ConfigurationAdmin.class.getName(), new ServiceTrackerCustomizer(){
 
+						@Override
+						public Object addingService(ServiceReference reference) {
+							  	ConfigurationAdmin cm = (ConfigurationAdmin) felix.getBundleContext().getService(reference);
+
+					            try {
+									
+									for(Entry<String, Properties> entrySet : 
+										supplementalPropetiesLoader.getOverriddenProperties().entrySet()){
+            	
+										Configuration config = 
+												cm.getConfiguration(entrySet.getKey());
+										
+										config.update(entrySet.getValue());
+										
+            						}
+									
+								} catch (IOException e) {
+									throw new RuntimeException(e);
+								}
+					            
+					            return cm;
+						}
+
+						@Override
+						public void modifiedService(ServiceReference reference,
+								Object service) {
+							//
+						}
+
+						@Override
+						public void removedService(ServiceReference reference,
+								Object service) {
+							//
+						}
+            			
+            		});
+            
+            tracker.open();
+            
+            this.trackers.add(tracker);
+          
+            
             for(File bundle : this.configInitializer.getPluginsDirectory().listFiles(fileOnlyFilter)){
             	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());
             	try {
@@ -265,18 +323,30 @@ public class FelixPluginManager implements
         	this.interfaces = (Class<?>[]) ArrayUtils.clone(interfaces);
         }
 
-        public void start(BundleContext context)
+        @SuppressWarnings({ "rawtypes" })
+		public void start(BundleContext context)
         {
             // Save a reference to the bundle context.
             m_context = context;
            
             // Register the property lookup service and save
             // the service registration.
+            Hashtable prefs = null;
+            if(this.service instanceof ServiceMetadataAware){
+            	prefs = new Hashtable();
+            	
+            	prefs = ((ServiceMetadataAware) this.service).getMetadata();
+            }
+            
+            if(this.service instanceof BundleContextAware){
+            	((BundleContextAware) this.service).setBundleContext(this.m_context);
+            }
+ 
             m_registration = m_context.registerService(
                 this.classesToStrings(
                 		this.interfaces),
                 this.service, 
-                null);
+                prefs);
         }
 
         public void stop(BundleContext context)
@@ -518,6 +588,11 @@ public class FelixPluginManager implements
 			}
 			
 		});
+	}
+	
+	@Override
+	public BundleContext getBundleContext() {
+		return felix.getBundleContext();
 	}
 
 	@Override

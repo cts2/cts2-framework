@@ -16,7 +16,6 @@ import org.springframework.test.web.server.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
 import edu.mayo.cts2.framework.core.config.ServerContext
-import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.model.core.MapReference
 import edu.mayo.cts2.framework.model.directory.DirectoryResult
 import edu.mayo.cts2.framework.model.mapversion.MapVersion

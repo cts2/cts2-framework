@@ -419,8 +419,7 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 			PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getConceptDomainBindingByLocalId(
+	public Object getConceptDomainBindingByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,

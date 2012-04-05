@@ -29,27 +29,5 @@ class TestPluginConfigSpringFactory implements FactoryBean {
 	public boolean isSingleton() {
 		true
 	}		
-}
 
-class TestServerContext implements ServerContext {
-	
-	def serverRoot = "http://test.org"
-	def appName = "testApp"
-
-	@Override
-	public String getServerRoot() {
-		serverRoot
-	}
-
-	@Override
-	public String getServerRootWithAppName() {
-		getServerRoot() + "/" + getAppName()
-	}
-
-	@Override
-	public String getAppName() {
-		appName
-	}
-	
-	
 }

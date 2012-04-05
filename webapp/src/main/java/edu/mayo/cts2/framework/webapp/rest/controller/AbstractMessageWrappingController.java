@@ -28,6 +28,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -36,12 +37,16 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.core.config.ServiceConfigManager;
+import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
@@ -77,10 +82,7 @@ import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
  */
 public abstract class AbstractMessageWrappingController extends
 		AbstractController {
-	
-	@Resource
-	private ServiceConfigManager serviceConfigManager;
-	
+
 	@Resource
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 
@@ -93,8 +95,15 @@ public abstract class AbstractMessageWrappingController extends
 	@Resource 
 	private FilterResolver filterResolver;
 	
+	@Resource
+	private ServerContext serverContext;
+	
 	@Resource 
 	private ReadContextResolver readContextResolver;
+	
+	private static String BEANS_VIEW = "beans";
+	private static String BEANS_MODEL_OBJECT = "bean";
+	private static String URLBASE_MODEL_OBJECT = "urlBase";
 
 	/*
 	 * (non-Javadoc)
@@ -187,8 +196,7 @@ public abstract class AbstractMessageWrappingController extends
 			throw new RuntimeException(e);
 		}
 
-		String urlRoot = this.getServiceConfigManager().getServerContext()
-				.getServerRootWithAppName();
+		String urlRoot = this.serverContext.getServerRootWithAppName();
 
 		if (!urlRoot.endsWith("/")) {
 			urlRoot = urlRoot + "/";
@@ -263,7 +271,7 @@ public abstract class AbstractMessageWrappingController extends
 		return mav;
 	}
 	
-	protected <R,I> Message doRead(
+	protected <R,I> Object doRead(
 			HttpServletRequest httpServletRequest,
 			MessageFactory<R> messageFactory,
 			ReadService<R,I> readService, 
@@ -283,7 +291,30 @@ public abstract class AbstractMessageWrappingController extends
 		
 		msg = this.wrapMessage(msg, httpServletRequest);
 		
-		return msg;
+		return this.buildResponse(httpServletRequest, msg);
+	}
+	
+	protected Object buildResponse(HttpServletRequest request, Object bean){
+		String acceptHeader = request.getHeader("Accept");
+		
+		List<MediaType> types = MediaType.parseMediaTypes(acceptHeader);
+		
+		if(CollectionUtils.isEmpty(types)){
+			return new ResponseEntity<Object>(bean, HttpStatus.OK);
+		}
+		
+		MediaType.sortByQualityValue(types);
+		
+		MediaType type = types.get(0);
+				
+		if(type.isCompatibleWith(MediaType.TEXT_HTML)){
+			ModelAndView mav = new ModelAndView(BEANS_VIEW);
+			mav.addObject(BEANS_MODEL_OBJECT, bean);
+			mav.addObject(URLBASE_MODEL_OBJECT, this.serverContext.getServerRootWithAppName());
+			return mav;
+		} else {
+			return new ResponseEntity<Object>(bean, HttpStatus.OK);
+		}
 	}
 	
 	protected <R,S,Q extends ResourceQuery> Directory doQuery(
@@ -496,8 +527,7 @@ public abstract class AbstractMessageWrappingController extends
 
 		resource.setAccessDate(new Date());
 
-		String urlRoot = this.getServiceConfigManager().getServerContext()
-				.getServerRootWithAppName();
+		String urlRoot = this.serverContext.getServerRootWithAppName();
 
 		if (!urlRoot.endsWith("/")) {
 			urlRoot = urlRoot + "/";
@@ -604,15 +634,6 @@ public abstract class AbstractMessageWrappingController extends
 		this.createHandler = createHandler;
 	}
 
-	protected ServiceConfigManager getServiceConfigManager() {
-		return serviceConfigManager;
-	}
-
-	protected void setServiceConfigManager(
-			ServiceConfigManager serviceConfigManager) {
-		this.serviceConfigManager = serviceConfigManager;
-	}
-
 	protected UpdateHandler getUpdateHandler() {
 		return updateHandler;
 	}
@@ -635,6 +656,14 @@ public abstract class AbstractMessageWrappingController extends
 
 	protected void setReadContextResolver(ReadContextResolver readContextResolver) {
 		this.readContextResolver = readContextResolver;
+	}
+
+	public ServerContext getServerContext() {
+		return serverContext;
+	}
+
+	public void setServerContext(ServerContext serverContext) {
+		this.serverContext = serverContext;
 	}
 
 }

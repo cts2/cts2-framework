@@ -281,8 +281,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	 * @return the concept domain by name
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getConceptDomainByName(
+	public Object getConceptDomainByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

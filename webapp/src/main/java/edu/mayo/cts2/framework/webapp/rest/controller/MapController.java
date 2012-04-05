@@ -298,8 +298,7 @@ public class MapController extends AbstractMessageWrappingController {
 	 * @return the map by name
 	 */
 	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.GET)
-	@ResponseBody
-	public Message getMapByName(
+	public Object getMapByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

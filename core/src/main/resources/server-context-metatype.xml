@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaData xmlns="http://www.osgi.org/xmlns/metatype/v1.0.0">
+	<OCD description="ServerContext Configuration" name="ServerContext" id="ServerContext">
+		<AD name="Webapp Root" id="server.root" required="false" type="String"  />
+	</OCD>
+	<Designate pid="ServerContext">
+        <Object ocdref="ServerContext"/>
+    </Designate>
+	
+</MetaData>

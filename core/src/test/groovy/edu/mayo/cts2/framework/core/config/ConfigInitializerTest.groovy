@@ -63,15 +63,5 @@ class ConfigInitializerTest {
 	void "Check context dir created"(){
 		assertTrue new File(configDir + File.separator + contextDir).exists()
 	}
-	
-	@Test
-	void "Check global config props file created"(){
-		assertTrue new File(configDir + File.separator + "global.properties").exists()
-	}
-	
-	@Test
-	void "Check context config props file created"(){
-		assertTrue new File(configDir + File.separator + 
-			contextDir + File.separator + ConfigConstants.CONTEXT_PROPERTIES_FILE).exists()
-	}
+
 }

@@ -363,8 +363,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getValueSetDefinitionByLocalId(
+	public Object getValueSetDefinitionByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,

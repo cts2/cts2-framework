@@ -473,7 +473,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 			},
 		method=RequestMethod.GET)
 	@ResponseBody
-	public Message getMapVersionByName(
+	public Object getMapVersionByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,

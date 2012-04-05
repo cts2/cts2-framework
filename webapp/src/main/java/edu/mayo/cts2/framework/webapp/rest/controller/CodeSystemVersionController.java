@@ -438,8 +438,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 			PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getCodeSystemVersionByNameOrOfficialResourceVersionId(
+	public Object getCodeSystemVersionByNameOrOfficialResourceVersionId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -455,7 +454,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 						versionId,
 						readContext);
 		
-		Message msg = this.doRead(
+		Object msg = this.doRead(
 					httpServletRequest, 
 					MESSAGE_FACTORY, 
 					this.codeSystemVersionReadService, 
@@ -470,8 +469,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 			PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Message getCodeSystemVersionOfCodeSystemByTag(
+	public Object getCodeSystemVersionOfCodeSystemByTag(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

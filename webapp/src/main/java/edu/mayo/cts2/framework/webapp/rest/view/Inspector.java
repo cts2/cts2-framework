@@ -25,10 +25,13 @@ package edu.mayo.cts2.framework.webapp.rest.view;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -37,6 +40,24 @@ import org.springframework.beans.BeanUtils;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class Inspector {
+	
+	private static final String HEADING_FIELD = "_heading";
+	
+	private static final Comparator<Map.Entry<String, Object>> BEAN_COMPARATOR = new Comparator<Map.Entry<String, Object>>(){
+
+		@Override
+		public int compare(Map.Entry<String, Object> val1, Map.Entry<String, Object> val2) {
+			if(val1.getKey().equals(HEADING_FIELD)){
+				return -1;
+			}
+			if(val2.getKey().equals(HEADING_FIELD)){
+				return 1;
+			}
+			
+			return 0;
+		}
+		
+	};
 
 	/**
 	 * Should recurse.
@@ -46,6 +67,10 @@ public class Inspector {
 	 */
 	public static boolean shouldRecurse(Object bean) {
 		return !BeanUtils.isSimpleProperty(bean.getClass()) && !bean.getClass().isEnum();
+	}
+	
+	public static String capitalize(String string) {
+		return WordUtils.capitalize(string);
 	}
 
 	/**
@@ -77,7 +102,11 @@ public class Inspector {
 			}
 			clazz = clazz.getSuperclass();
 		}
+		
+		List<Map.Entry<String, Object>> list = new ArrayList<Map.Entry<String, Object>>(props.entrySet());
+		
+		Collections.sort(list, BEAN_COMPARATOR);
 
-		return new ArrayList<Map.Entry<String, Object>>(props.entrySet());
+		return list;
 	}
 }

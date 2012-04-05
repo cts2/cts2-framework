@@ -6,8 +6,9 @@
 <html>
 <head>
 
-	<script type="text/javascript" src="resources/common/include/js/jquery-1.7.1.min.js"></script>
-	<link rel="stylesheet" media="screen,projection" type="text/css" href="resources/beans/beans.css" />
+	<script type="text/javascript" src="${urlBase}/resources/common/include/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="${urlBase}/resources/beans/include/js/CollapsibleLists.compressed.js"></script>
+	<link rel="stylesheet" media="screen,projection" type="text/css" href="${urlBase}/resources/beans/beans.css" />
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -19,7 +20,13 @@ $(document).ready(function() {
     $("#json").click(function() {
     	redirect(url,"json");
     });
+    
+    CollapsibleLists.apply(true);
 });
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
 
 function redirect(url,format){
 	window.location.href = url + (url.indexOf("?") < 0 ? "?" : "&") + "format="+format;
@@ -31,14 +38,14 @@ function redirect(url,format){
 
 <div id="navcontainer">
 	
-	<h1>${ baseService.getClass().getSimpleName() }</h1>
+	<h1>${ bean.getClass().getSimpleName() }</h1>
 	Show in: 
 	<button id="xml">XML</button>
 	<button id="json">JSON</button>
 	
-	<c:set var="bean" value="${beans:inspect( baseService) }" scope="request"/>
+	<c:set var="mappedBean" value="${beans:inspect( bean) }" scope="request"/>
 
-	<c:set var="map" value="${ bean }" scope="request"/>
+	<c:set var="map" value="${ mappedBean }" scope="request"/>
 	<jsp:include page="node.jsp"/>
  
  </div>   

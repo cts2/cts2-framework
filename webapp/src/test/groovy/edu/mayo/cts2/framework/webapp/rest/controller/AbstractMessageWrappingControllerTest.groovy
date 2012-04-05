@@ -8,7 +8,6 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockServletContext
 
 import edu.mayo.cts2.framework.core.config.ServerContext
-import edu.mayo.cts2.framework.core.config.ServiceConfigManager
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory
 import edu.mayo.cts2.framework.model.command.Page;
@@ -21,17 +20,13 @@ class AbstractMessageWrappingControllerTest {
 		getServerRootWithAppName: { "http://test/webapp" }
 	] as ServerContext
 
-	def serviceConfigManager = [ 
-		getServerContext: { serverContext } 
-	] as ServiceConfigManager
-
 	def controller = new AbstractMessageWrappingController(){}
 
 	MockHttpServletRequest httpServletRequest
 	
 	@Before
 	void init(){
-		controller.serviceConfigManager = serviceConfigManager
+		controller.serverContext = serverContext
 		httpServletRequest = new MockHttpServletRequest("GET", "test/codesystems")
 	}
 

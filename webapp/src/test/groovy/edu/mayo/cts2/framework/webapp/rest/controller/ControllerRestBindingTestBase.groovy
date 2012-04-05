@@ -16,12 +16,6 @@ import org.springframework.test.web.server.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
 import edu.mayo.cts2.framework.core.config.ServerContext
-import edu.mayo.cts2.framework.core.config.ServiceConfigManager
-import edu.mayo.cts2.framework.model.core.MapReference
-import edu.mayo.cts2.framework.model.directory.DirectoryResult
-import edu.mayo.cts2.framework.model.mapversion.MapVersion
-import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionQueryService
-import edu.mayo.cts2.framework.service.profile.mapversion.MapVersionReadService
 
 @RunWith(SpringJUnit4ClassRunner)
 @ContextConfiguration(
@@ -36,13 +30,9 @@ abstract class ControllerRestBindingTestBase {
 		getServerRootWithAppName: { "http://test/webapp" }
 	] as ServerContext
 
-	def serviceConfigManager = [
-		getServerContext: { serverContext }
-	] as ServiceConfigManager
-	
 	@Before
 	void setup(){
-		getController().setServiceConfigManager(serviceConfigManager)
+		getController().setServerContext(serverContext)
 	}
 	
 	abstract getByUriUrl()

@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>cts2-framework</artifactId>
 		<groupId>edu.mayo.cts2</groupId>
-		<version>0.6.5-SNAPSHOT</version>
+		<version>0.7.0-SNAPSHOT</version>
 	</parent>
 	<groupId>edu.mayo.cts2.framework</groupId>
 
@@ -69,7 +69,7 @@
 										</artifactItem>
 										<artifactItem>
 											<groupId>edu.mayo.cts2.framework</groupId>
-											<artifactId>webapp-rest</artifactId>
+											<artifactId>webapp</artifactId>
 											<version>${project.parent.version}</version>
 											<type>war</type>
 											<overWrite>true</overWrite>
@@ -124,7 +124,7 @@
 									<goal>copy-resources</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>${test.config.dir}/${webapp.name}</outputDirectory>
+									<outputDirectory>${test.config.dir}/${webapp.name}/config</outputDirectory>
 									<resources>
 										<resource>
 											<directory>${basedir}/src/test/resources</directory>
@@ -196,7 +196,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>webapp-rest</artifactId>
+			<artifactId>webapp</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 			<type>war</type>
