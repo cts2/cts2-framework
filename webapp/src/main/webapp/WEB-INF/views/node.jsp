@@ -6,21 +6,42 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-
 <c:if test="${map != null}">
 	
 		<c:forEach var="i" items="${map}">
 
 			<c:if test="${i.key != null and i.value != null and i.key != '_anyObject' and i.key != '_choiceValue' }">
-		
-				<c:if test="${fn:endsWith(i.key, 'List')}">
-					<c:if test="${i.value.size() > 0}">
+				<c:if test="${i.key == '_entryList'}">
+					<table border="1">
+						<tbody>
+							<c:set var="count" value="0" scope="page" />
+								<c:forEach var="j" items="${ i.value }">
+									<tr class="parent" id="${ count }">
+										<c:forEach var="entry" items="${ beans:summary( j ) }">
+												<td>${entry.value}</td>
+										</c:forEach>
+									</tr>
+									
+									<tr class="child-${ count }">
+										<td colspan="100%">											
+											<c:set var="map" value="${beans:inspect( j ) }"
+												scope="request" />
+											<jsp:include page="node.jsp" />			
+										</td>
+									</tr>
+									<c:set var="count" value="${count + 1}" scope="page"/>	
+								</c:forEach>	
+						</tbody>
+					</table>
+				</c:if>
+				<c:if test="${i.key != '_entryList' and fn:endsWith(i.key, 'List')}">
+					<c:if test="${ fn:length(i.value) > 0}">
 						<ul class="collapsibleList">
-							<li><span class="name"><c:out value="${ beans:capitalize( fn:substring(i.key, 1, -1) ) }"></c:out> ( <c:out value="${ i.value.size() }"/>
-							<c:if test="${ i.value.size() == 1 }">
+							<li><span class="name"><c:out value="${ beans:capitalize( fn:substring(i.key, 1, -1) ) }"></c:out> ( <c:out value="${ fn:length(i.value) }"/>
+							<c:if test="${ fn:length(i.value) == 1 }">
 							entry
 							</c:if>
-							<c:if test="${ i.value.size() > 1 }">
+							<c:if test="${ fn:length(i.value) > 1 }">
 							entries
 							</c:if>
 							)

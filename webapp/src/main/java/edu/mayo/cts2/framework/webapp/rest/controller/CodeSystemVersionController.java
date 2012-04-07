@@ -53,7 +53,6 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -258,8 +257,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	 */
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS_OF_CODESYSTEM}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getCodeSystemVersionsOfCodeSystem(
+	public Object getCodeSystemVersionsOfCodeSystem(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -333,8 +331,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getCodeSystemVersions(
+	public Object getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -375,8 +372,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	 */
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getCodeSystemVersions(
+	public Object getCodeSystemVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

@@ -1,6 +1,5 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -8,13 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.collect.Iterables;
 
@@ -92,21 +88,7 @@ public class BaseController extends AbstractMessageWrappingController {
 			service.addKnownNamespace(new DocumentedNamespaceReference());
 		}
 		
-		String acceptHeader = request.getHeader("Accept");
-	
-		List<MediaType> types = MediaType.parseMediaTypes(acceptHeader);
-		MediaType.sortByQualityValue(types);
-		
-		MediaType type = types.get(0);
-				
-		if(type.isCompatibleWith(MediaType.TEXT_HTML)){
-			ModelAndView mav = new ModelAndView("baseService");
-			mav.addObject("baseService", service);
-			return mav;
-		} else {
-			return new ResponseEntity<BaseService>(service, HttpStatus.OK);
-		}
-		
+		return this.buildResponse(request, service);
 	}
 	
 	private BaseService getBaseServiceFromService(){

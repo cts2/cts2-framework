@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -121,8 +120,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	 */
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS_OF_VALUESET}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getValueSetDefinitionsOfValueSet(
+	public Object getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -157,8 +155,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	 */
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS_OF_VALUESET}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getValueSetDefinitionsOfValueSet(
+	public Object getValueSetDefinitionsOfValueSet(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -230,8 +227,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getValueSetDefinitions(
+	public Object getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -263,8 +259,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	 */
 	@RequestMapping(value={
 			PATH_VALUESETDEFINITIONS}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getValueSetDefinitions(
+	public Object getValueSetDefinitions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

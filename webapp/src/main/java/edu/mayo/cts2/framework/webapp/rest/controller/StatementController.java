@@ -41,7 +41,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.extension.LocalIdStatement;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -125,8 +124,7 @@ public class StatementController extends AbstractMessageWrappingController {
 	 * @return the statements
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getStatements(
+	public Object getStatements(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -154,8 +152,7 @@ public class StatementController extends AbstractMessageWrappingController {
 	 * @return the statements
 	 */
 	@RequestMapping(value=PATH_STATEMENTS, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getStatements(
+	public Object getStatements(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

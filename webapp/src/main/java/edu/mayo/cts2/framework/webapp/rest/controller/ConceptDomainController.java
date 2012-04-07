@@ -45,7 +45,6 @@ import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryList;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryMsg;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -168,8 +167,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	 * @return the concept domains
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAINS, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getConceptDomains(
+	public Object getConceptDomains(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -198,8 +196,7 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	 * @return the concept domains
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAINS, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getConceptDomains(
+	public Object getConceptDomains(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

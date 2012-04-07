@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.webapp.rest.view;
+package edu.mayo.cts2.framework.webapp.rest.view.jsp;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,23 +34,30 @@ import java.util.Map;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.BeanUtils;
 
+import edu.mayo.cts2.framework.model.core.DirectoryEntry;
+import edu.mayo.cts2.framework.model.core.ResourceDescriptionDirectoryEntry;
+import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+
 /**
  * JSP tag lib for various bean introspection utilities.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class Inspector {
+@SuppressWarnings( {"rawtypes", "unchecked"} )
+public class Beans {
 	
 	private static final String HEADING_FIELD = "_heading";
+	
+	private static final String ENTRY_LIST_FIELD = "_entryList";
 	
 	private static final Comparator<Map.Entry<String, Object>> BEAN_COMPARATOR = new Comparator<Map.Entry<String, Object>>(){
 
 		@Override
 		public int compare(Map.Entry<String, Object> val1, Map.Entry<String, Object> val2) {
-			if(val1.getKey().equals(HEADING_FIELD)){
+			if(val1.getKey().equals(HEADING_FIELD) || !val1.getKey().equals(ENTRY_LIST_FIELD)){
 				return -1;
 			}
-			if(val2.getKey().equals(HEADING_FIELD)){
+			if(val2.getKey().equals(HEADING_FIELD) || !val2.getKey().equals(ENTRY_LIST_FIELD)){
 				return 1;
 			}
 			
@@ -71,6 +78,41 @@ public class Inspector {
 	
 	public static String capitalize(String string) {
 		return WordUtils.capitalize(string);
+	}
+
+	public static Map summary(Object bean) {
+		Map returnMap = new LinkedHashMap();
+		if(bean instanceof ResourceDescriptionDirectoryEntry){
+			return buildSummary( ( ResourceDescriptionDirectoryEntry ) bean, returnMap);
+		}
+		if(bean instanceof DirectoryEntry){
+			return buildSummary( ( DirectoryEntry ) bean, returnMap);
+		}
+		if(bean instanceof EntityDirectoryEntry){
+			return buildSummary( (EntityDirectoryEntry) bean, returnMap);
+		}
+		
+		throw new IllegalStateException("Unknown type of Directory Entry: " + bean.getClass().getName());
+	}
+	
+	private static Map buildSummary(EntityDirectoryEntry bean, Map returnMap) {
+		returnMap.put("Namespace", bean.getName().getNamespace());
+		returnMap.put("Name", bean.getName().getName());
+		returnMap.put("About", bean.getAbout());
+	
+		return returnMap;
+	}
+	
+	private static Map buildSummary(ResourceDescriptionDirectoryEntry bean, Map returnMap) {
+		buildSummary( (DirectoryEntry) bean, returnMap).put("About", bean.getAbout());
+		
+		return returnMap;
+	}
+	
+	private static Map buildSummary(DirectoryEntry bean, Map returnMap) {
+		returnMap.put("Name", bean.getResourceName());
+		
+		return returnMap;
 	}
 
 	/**

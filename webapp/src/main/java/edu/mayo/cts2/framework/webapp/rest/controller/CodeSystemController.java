@@ -45,7 +45,6 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryList;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -115,8 +114,8 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	 * @return the code systems
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMS, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getCodeSystems(
+	//@ResponseBody
+	public Object getCodeSystems(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -196,8 +195,7 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	 * @return the code systems
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMS, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getCodeSystems(
+	public Object getCodeSystems(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

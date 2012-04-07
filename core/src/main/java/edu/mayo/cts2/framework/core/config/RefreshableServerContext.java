@@ -26,11 +26,14 @@ package edu.mayo.cts2.framework.core.config;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import org.osgi.service.metatype.MetaTypeProvider;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.core.plugin.ExportedService;
@@ -41,27 +44,57 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-@ExportedService( { ServerContext.class, MetaTypeProvider.class, ManagedService.class })
+@ExportedService( { ServerContext.class, MetaTypeProvider.class, ManagedService.class  })
 @Component
 public class RefreshableServerContext extends AbstractConfigurableExportedService 
-	implements ServerContext {
-
-	private String serverRoot = "http://localhost:8080";
-
-	private String appName = "webapp";
+	implements InitializingBean, ServerContext {
 	
+	private static final String DEFAULT_APPNAME = "webapp";
+	private static final String DEFAULT_SERVERROOT = "http://localhost:8080";
 
+	private String serverRoot = DEFAULT_SERVERROOT;
+
+	private String appName = DEFAULT_APPNAME;
+
+	@Resource
+	private ConfigInitializer configInitializer;
+	
+	private Boolean appNameUpdated = false;
+	
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		//set this to default to the context
+		String context = this.configInitializer.getContext();
+
+		synchronized(this.appNameUpdated){
+			
+			if(! this.appNameUpdated){
+			
+				if(StringUtils.equals(ConfigInitializer.DEFAULT_CONTEXT, context)){
+					context = "";
+				}
+				
+				this.appName = context;
+			}
+		}
+	}
+	
 	@Override
 	@SuppressWarnings("rawtypes") 
 	public void updated(Dictionary properties) throws ConfigurationException {
+		
 		if(properties != null){
 			String newServerRoot = (String) properties.get(ConfigConstants.SERVER_ROOT_PROPERTY);
 			if(newServerRoot != null) {
 				this.serverRoot = newServerRoot;
 			}
 			String newAppName = (String) properties.get(ConfigConstants.APP_NAME_PROPERTY);
-			if(newAppName != null) {
-				this.appName = newAppName;
+			
+			synchronized(this.appNameUpdated){
+				if(newAppName != null) {
+					this.appName = newAppName;
+					appNameUpdated = true;
+				}
 			}
 		}
 	}

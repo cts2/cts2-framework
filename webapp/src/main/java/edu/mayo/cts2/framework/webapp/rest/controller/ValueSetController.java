@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -163,8 +162,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getValueSets(
+	public Object getValueSets(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -196,8 +194,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	 * @return the value sets
 	 */
 	@RequestMapping(value=PATH_VALUESETS, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getValueSets(
+	public Object getValueSets(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

@@ -222,7 +222,6 @@ public class FelixPluginManager implements
 				}
             	
             };
-            
         
             ServiceTracker tracker = new ServiceTracker(
             		felix.getBundleContext(),
@@ -268,7 +267,6 @@ public class FelixPluginManager implements
             tracker.open();
             
             this.trackers.add(tracker);
-          
             
             for(File bundle : this.configInitializer.getPluginsDirectory().listFiles(fileOnlyFilter)){
             	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());

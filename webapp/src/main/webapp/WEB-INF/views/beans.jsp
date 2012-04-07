@@ -22,6 +22,15 @@ $(document).ready(function() {
     });
     
     CollapsibleLists.apply(true);
+    
+    $('tr.parent')
+	.css("cursor","pointer")
+	.attr("title","Click to expand/collapse")
+	.click(function(){
+		$(this).siblings('.child-'+this.id).toggle();
+	});
+    
+	$('tr[class^=child-]').hide().children('td');
 });
 
 String.prototype.capitalize = function() {
@@ -38,7 +47,7 @@ function redirect(url,format){
 
 <div id="navcontainer">
 	
-	<h1>${ bean.getClass().getSimpleName() }</h1>
+	<h1>${ bean['class'].simpleName }</h1>
 	Show in: 
 	<button id="xml">XML</button>
 	<button id="json">JSON</button>

@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.mapversion.MapEntry;
 import edu.mayo.cts2.framework.model.mapversion.MapEntryDirectory;
@@ -239,8 +238,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	 */
 	@RequestMapping(value={
 			PATH_MAPENTRIES}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getMapEntries(
+	public Object getMapEntries(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -278,8 +276,7 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	 */
 	@RequestMapping(value={
 			PATH_MAPENTRIES}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getMapEntries(
+	public Object getMapEntries(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

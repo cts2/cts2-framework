@@ -20,7 +20,7 @@
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<spring-security.version>3.1.0.RC3</spring-security.version>
-		<jetty.version>6.1.22</jetty.version>
+		<jetty.version>6.1.26</jetty.version>
 	</properties>
 
 	<dependencies>
@@ -371,7 +371,7 @@
 			<plugin>
 				<groupId>org.simplericity.jettyconsole</groupId>
 				<artifactId>jetty-console-maven-plugin</artifactId>
-				<version>1.43</version>
+				<version>1.45</version>
 				<executions>
 					<execution>
 						<goals>

@@ -49,7 +49,6 @@ import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -240,8 +239,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity descriptions of code system version
 	 */
 	@RequestMapping(value=PATH_ENTITIES_OF_CODESYSTEM_VERSION, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getEntityDescriptionsOfCodeSystemVersion(
+	public Object getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			RestReadContext restReadContext,
@@ -278,8 +276,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity descriptions of code system version
 	 */
 	@RequestMapping(value=PATH_ENTITIES_OF_CODESYSTEM_VERSION, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getEntityDescriptionsOfCodeSystemVersion(
+	public Object getEntityDescriptionsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -366,8 +363,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity descriptions
 	 */
 	@RequestMapping(value=PATH_ENTITIES, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getEntityDescriptions(
+	public Object getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			RestReadContext restReadContext,
@@ -398,8 +394,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity descriptions
 	 */
 	@RequestMapping(value=PATH_ENTITIES, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getEntityDescriptions(
+	public Object getEntityDescriptions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

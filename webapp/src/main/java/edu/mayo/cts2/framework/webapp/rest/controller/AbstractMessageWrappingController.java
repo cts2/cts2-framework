@@ -317,7 +317,7 @@ public abstract class AbstractMessageWrappingController extends
 		}
 	}
 	
-	protected <R,S,Q extends ResourceQuery> Directory doQuery(
+	protected <R,S,Q extends ResourceQuery> Object doQuery(
 			HttpServletRequest httpServletRequest,
 			boolean isList,
 			QueryService<R,S,Q> queryService, 
@@ -342,8 +342,10 @@ public abstract class AbstractMessageWrappingController extends
 			directoryClass = summaryDirectory;
 		}
 		
-		return 
+		Directory dir = 
 			this.populateDirectory(result, page, httpServletRequest, directoryClass);
+		
+		return this.buildResponse(httpServletRequest, dir);
 	}
 	
 	protected SortCriteria resolveSort(QueryControl sort, BaseQueryService queryService) {

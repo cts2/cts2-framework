@@ -45,7 +45,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.mapversion.MapVersion;
@@ -240,8 +239,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	 */
 	@RequestMapping(value={
 			PATH_MAPVERSIONS_OF_MAP}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getMapVersionsOfMap(
+	public Object getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -276,8 +274,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	 */
 	@RequestMapping(value={
 			PATH_MAPVERSIONS_OF_MAP}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getMapVersionsOfMap(
+	public Object getMapVersionsOfMap(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -312,8 +309,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	 */
 	@RequestMapping(value={
 			PATH_MAPVERSIONS}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getMapVersions(
+	public Object getMapVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -345,8 +341,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	 */
 	@RequestMapping(value={
 			PATH_MAPVERSIONS}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getMapVersions(
+	public Object getMapVersions(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

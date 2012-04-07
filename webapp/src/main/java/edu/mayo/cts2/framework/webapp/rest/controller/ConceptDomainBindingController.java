@@ -47,7 +47,6 @@ import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectory;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingList;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -177,8 +176,7 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getConceptDomainBindingsOfConceptDomain(
+	public Object getConceptDomainBindingsOfConceptDomain(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
@@ -211,8 +209,7 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getConceptDomainBindingsOfConceptDomain(
+	public Object getConceptDomainBindingsOfConceptDomain(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
@@ -291,8 +288,7 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS}, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getConceptDomainBindings(
+	public Object getConceptDomainBindings(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			ConceptDomainBindingQueryServiceRestrictions restrictions,
@@ -322,8 +318,7 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS}, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getConceptDomainBindings(
+	public Object getConceptDomainBindings(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			Query query,

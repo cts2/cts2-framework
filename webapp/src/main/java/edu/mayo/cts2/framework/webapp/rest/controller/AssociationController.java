@@ -276,8 +276,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the associations of code system version
 	 */
 	@RequestMapping(value=PATH_ASSOCIATIONS_OF_CODESYSTEMVERSION, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getAssociationsOfCodeSystemVersion(
+	public Object getAssociationsOfCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -320,8 +319,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the associations
 	 */
 	@RequestMapping(value=PATH_ASSOCIATIONS, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getAssociations(
+	public Object getAssociations(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -361,8 +359,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the associations
 	 */
 	@RequestMapping(value=PATH_ASSOCIATIONS, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getAssociations(
+	public Object getAssociations(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -516,8 +513,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getSubjectOfAssociationsOfEntity(
+	public Object getSubjectOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -557,8 +553,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the source of associations of entity
 	 */
 	@RequestMapping(value=PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getSubjectOfAssociationsOfEntity(
+	public Object getSubjectOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -596,8 +591,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_TARGETOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getTargetOfAssociationsOfEntity(
+	public Object getTargetOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -624,8 +618,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_TARGETOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getTargetOfAssociationsOfEntity(
+	public Object getTargetOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -663,8 +656,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_PREDICATEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getPredicateOfAssociationsOfEntity(
+	public Object getPredicateOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -691,8 +683,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_PREDICATEOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getPredicateOfAssociationsOfEntity(
+	public Object getPredicateOfAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

@@ -45,7 +45,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
@@ -178,8 +177,7 @@ public class MapController extends AbstractMessageWrappingController {
 	 * @return the maps
 	 */
 	@RequestMapping(value=PATH_MAPS, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getMaps(
+	public Object getMaps(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -210,8 +208,7 @@ public class MapController extends AbstractMessageWrappingController {
 	 * @return the maps
 	 */
 	@RequestMapping(value=PATH_MAPS, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getMaps(
+	public Object getMaps(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,

@@ -45,7 +45,7 @@ public class ConfigInitializer {
 
 	private static ConfigInitializer instance;
 	
-	private static final String DEFAULT_CONTEXT = "default";
+	protected static final String DEFAULT_CONTEXT = "default";
 
 	private String context;
 
@@ -196,5 +196,9 @@ public class ConfigInitializer {
 
 	protected File getConfigDirectory() {
 		return this.configDirectory;
+	}
+	
+	protected String getContext(){
+		return this.context;
 	}
 }
