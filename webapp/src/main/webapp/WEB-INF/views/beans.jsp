@@ -32,13 +32,7 @@ $(document).ready(function() {
 	});
     
 	$('tr[class^=child-]').hide().children('td');
-	
-	if( "${isDirectory}" == 'true' ){
-		$('#directorySearch').show();
-	} else {
-		$('#directorySearch').hide();
-	}
-	
+
 	$('#directorySearch').submit(function() {
 	  var matchValue = $('#matchtext').val();
 	  
@@ -74,15 +68,17 @@ function getSearchUrl(url,search){
 	Show in: 
 	<button id="xml">XML</button>
 	<button id="json">JSON</button>
-	
-	<form id="directorySearch" 
-		action=""
-        method="get">
-         Find <input type="text" id="matchtext">
-         <input type="submit" value="search">
-    </form>
+	<br/>
 	
 	<c:if test="${isDirectory eq 'true'}">
+		<form id="directorySearch" 
+			action=""
+	        method="get">
+	         Search <input type="text" id="matchtext">
+	         <input type="submit" value="search">
+	         <button id="clearSearch" onclick=" $('#matchtext').val('') ">clear search</button>
+	    </form>
+	    <br/>
 		<c:set var="directory" value="${ bean }" scope="request"/>
 		<jsp:include page="directory.jsp"/>
 	</c:if>
@@ -93,7 +89,6 @@ function getSearchUrl(url,search){
 		<jsp:include page="node.jsp"/>
 	</c:if>
 
- 
  </div>   
     
 </body>   

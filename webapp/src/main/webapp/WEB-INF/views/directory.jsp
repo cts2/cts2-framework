@@ -8,6 +8,8 @@
 
 <c:if test="${directory != null}">
 
+	<span>${directory.numEntries} results returned (${ directory.complete }).</span>
+	
 	<table border="1">
 		<tbody>
 			<c:set var="count" value="0" scope="page" />
@@ -29,5 +31,12 @@
 			</c:forEach>	
 		</tbody>
 	</table>
+	
+	<c:if test="${ directory.prev ne null }">
+		<a href="${ directory.prev }">%3C%3C%3C Previous</a>
+	</c:if>
+	<c:if test="${ directory.next ne null }">
+		<a href="${ directory.next }">Next %3E%3E%3E</a>
+	</c:if>
 
 </c:if>

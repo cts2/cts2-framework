@@ -56,15 +56,26 @@
 									scope="request" />
 								<jsp:include page="node.jsp" />
 						</c:if> 
-						<c:if test="${ not beans:shouldRecurse(i.value)}">					
-							<c:if test="${ i.key eq '_href' }" >
-								<a href="${i.value}">
-								<c:out value="${i.value}"></c:out>
-								</a>
-							</c:if>
-							<c:if test="${ i.key ne '_href' }" >
-								<c:out value="${i.value}"></c:out>
-							</c:if>		
+						<c:if test="${ not beans:shouldRecurse(i.value)}">	
+							<c:choose>
+								<c:when test="${ i.key eq '_href' }" >
+									<a href="${i.value}">
+									<c:out value="${i.value}"></c:out>
+									</a>
+								</c:when>
+								<c:when test="${ i.key eq '_versions' or 
+									i.key eq '_entityDescriptions' or
+									i.key eq '_associations' or
+									i.key eq '_subjectOf' or
+									i.key eq '_children'}" >
+									<a href="${i.value}">
+									<c:out value="${i.value}"></c:out>
+									</a>
+								</c:when>
+								<c:otherwise>
+									<c:out value="${i.value}"></c:out>
+								</c:otherwise>	
+							</c:choose>	
 						</c:if>
 						</li>
 					</ul>
