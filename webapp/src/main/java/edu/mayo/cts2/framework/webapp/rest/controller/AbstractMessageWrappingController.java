@@ -103,6 +103,7 @@ public abstract class AbstractMessageWrappingController extends
 	
 	private static String BEANS_VIEW = "beans";
 	private static String BEANS_MODEL_OBJECT = "bean";
+	private static String IS_DIRECTORY_MODEL_OBJECT = "isDirectory";
 	private static String URLBASE_MODEL_OBJECT = "urlBase";
 
 	/*
@@ -311,6 +312,7 @@ public abstract class AbstractMessageWrappingController extends
 			ModelAndView mav = new ModelAndView(BEANS_VIEW);
 			mav.addObject(BEANS_MODEL_OBJECT, bean);
 			mav.addObject(URLBASE_MODEL_OBJECT, this.serverContext.getServerRootWithAppName());
+			mav.addObject(IS_DIRECTORY_MODEL_OBJECT, bean instanceof Directory);
 			return mav;
 		} else {
 			return new ResponseEntity<Object>(bean, HttpStatus.OK);

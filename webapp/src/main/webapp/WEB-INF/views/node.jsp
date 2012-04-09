@@ -10,30 +10,12 @@
 	
 		<c:forEach var="i" items="${map}">
 
-			<c:if test="${i.key != null and i.value != null and i.key != '_anyObject' and i.key != '_choiceValue' }">
-				<c:if test="${i.key == '_entryList'}">
-					<table border="1">
-						<tbody>
-							<c:set var="count" value="0" scope="page" />
-								<c:forEach var="j" items="${ i.value }">
-									<tr class="parent" id="${ count }">
-										<c:forEach var="entry" items="${ beans:summary( j ) }">
-												<td>${entry.value}</td>
-										</c:forEach>
-									</tr>
-									
-									<tr class="child-${ count }">
-										<td colspan="100%">											
-											<c:set var="map" value="${beans:inspect( j ) }"
-												scope="request" />
-											<jsp:include page="node.jsp" />			
-										</td>
-									</tr>
-									<c:set var="count" value="${count + 1}" scope="page"/>	
-								</c:forEach>	
-						</tbody>
-					</table>
-				</c:if>
+			<c:if test="${i.key != null and 
+				i.value != null and 
+				i.key != '_anyObject' and 
+				i.key != '_choiceValue' and
+				i.key != '_heading' }">
+
 				<c:if test="${i.key != '_entryList' and fn:endsWith(i.key, 'List')}">
 					<c:if test="${ fn:length(i.value) > 0}">
 						<ul class="collapsibleList">
