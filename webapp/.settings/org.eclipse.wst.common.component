@@ -6,19 +6,19 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/groovy"/>
-        <dependent-module archiveName="service-0.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/service/service">
+        <dependent-module archiveName="service-0.7.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/service/service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="filter-0.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/filter/filter">
+        <dependent-module archiveName="filter-0.7.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/filter/filter">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="webapp-rest-extensions-0.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/webapp-rest-extensions/webapp-rest-extensions">
+        <dependent-module archiveName="webapp-rest-extensions-0.7.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/webapp-rest-extensions/webapp-rest-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="core-0.7.0-SNAPSHOT-tests.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/core/core">
+        <dependent-module archiveName="core-0.7.1-SNAPSHOT-tests.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/core/core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="model-0.7.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/model/model">
+        <dependent-module archiveName="model-0.7.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/model/model">
             <dependency-type>uses</dependency-type>
         </dependent-module>
 		<property name="java-output-path" value="target/classes"/>
