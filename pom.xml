@@ -58,6 +58,7 @@
 	<properties>
 		<java-version>1.6</java-version>
 		<org.springframework-version>3.1.0.RELEASE</org.springframework-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<distributionManagement>
@@ -237,6 +238,9 @@
 						<plugin>
 							<artifactId>maven-javadoc-plugin</artifactId>
 							<version>2.8</version>
+							<configuration>
+					          <maxmemory>512M</maxmemory>
+					        </configuration>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
