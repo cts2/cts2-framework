@@ -31,11 +31,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.BeanUtils;
 
 import edu.mayo.cts2.framework.model.core.DirectoryEntry;
 import edu.mayo.cts2.framework.model.core.ResourceDescriptionDirectoryEntry;
+import edu.mayo.cts2.framework.model.core.ResourceVersionDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 
 /**
@@ -82,17 +84,38 @@ public class Beans {
 
 	public static Map summary(Object bean) {
 		Map returnMap = new LinkedHashMap();
+		
+		if(bean instanceof ResourceVersionDescriptionDirectoryEntry){
+			return 
+					returnSummary(
+							buildSummary( ( ResourceVersionDescriptionDirectoryEntry ) bean, returnMap), bean);
+		}
+		
 		if(bean instanceof ResourceDescriptionDirectoryEntry){
-			return buildSummary( ( ResourceDescriptionDirectoryEntry ) bean, returnMap);
+			return 
+					returnSummary(
+							buildSummary( ( ResourceDescriptionDirectoryEntry ) bean, returnMap), bean);
 		}
 		if(bean instanceof DirectoryEntry){
-			return buildSummary( ( DirectoryEntry ) bean, returnMap);
+			return 
+					returnSummary(
+							buildSummary( ( DirectoryEntry ) bean, returnMap), bean);
 		}
 		if(bean instanceof EntityDirectoryEntry){
-			return buildSummary( (EntityDirectoryEntry) bean, returnMap);
+			return 
+					returnSummary(
+							buildSummary( (EntityDirectoryEntry) bean, returnMap), bean);
 		}
 		
 		throw new IllegalStateException("Unknown type of Directory Entry: " + bean.getClass().getName());
+	}
+	
+	private static Map returnSummary(Map summary, Object bean){
+		if(summary.isEmpty()){
+			summary.put("Entry", bean.getClass().getSimpleName());
+		}
+		
+		return summary;
 	}
 	
 	private static Map buildSummary(EntityDirectoryEntry bean, Map returnMap) {
@@ -103,6 +126,12 @@ public class Beans {
 		return returnMap;
 	}
 	
+	private static Map buildSummary(ResourceVersionDescriptionDirectoryEntry bean, Map returnMap) {
+		buildSummary( (ResourceDescriptionDirectoryEntry) bean, returnMap).put("Version", bean.getOfficialResourceVersionId());
+		
+		return returnMap;
+	}
+	
 	private static Map buildSummary(ResourceDescriptionDirectoryEntry bean, Map returnMap) {
 		buildSummary( (DirectoryEntry) bean, returnMap).put("About", bean.getAbout());
 		
@@ -110,7 +139,10 @@ public class Beans {
 	}
 	
 	private static Map buildSummary(DirectoryEntry bean, Map returnMap) {
-		returnMap.put("Name", bean.getResourceName());
+		String resourceName = bean.getResourceName();
+		if(StringUtils.isNotBlank(resourceName)){
+			returnMap.put("Name", bean.getResourceName());
+		}
 		
 		return returnMap;
 	}

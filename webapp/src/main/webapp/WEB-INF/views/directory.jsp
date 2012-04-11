@@ -10,33 +10,43 @@
 
 	<span>${directory.numEntries} results returned (${ directory.complete }).</span>
 	
-	<table border="1">
-		<tbody>
-			<c:set var="count" value="0" scope="page" />
-			<c:forEach var="j" items="${ directory.entry }">
-				<tr class="parent" id="${ count }">
-					<c:forEach var="entry" items="${ beans:summary( j ) }">
-							<td>${entry.value}</td>
+	<c:if test="${ fn:length(directory.entry) > 0 }">
+		<table>
+			<thead>
+				<tr>
+					<c:forEach var="headerKey" items="${ beans:summary( directory.entry[0] ) }">
+							<th scope="col">${headerKey.key}</th>
 					</c:forEach>
 				</tr>
-				
-				<tr class="child-${ count }">
-					<td colspan="100%">											
-						<c:set var="map" value="${beans:inspect( j ) }"
-							scope="request" />
-						<jsp:include page="node.jsp" />			
-					</td>
-				</tr>
-				<c:set var="count" value="${count + 1}" scope="page"/>	
-			</c:forEach>	
-		</tbody>
-	</table>
-	
-	<c:if test="${ directory.prev ne null }">
-		<a href="${ directory.prev }">%3C%3C%3C Previous</a>
-	</c:if>
-	<c:if test="${ directory.next ne null }">
-		<a href="${ directory.next }">Next %3E%3E%3E</a>
+			</thead>
+			<tbody>
+				<c:set var="count" value="0" scope="page" />
+
+				<c:forEach var="j" items="${ directory.entry }">
+					<tr class="parent" id="${ count }">
+						<c:forEach var="entry" items="${ beans:summary( j ) }">
+								<td>${entry.value}</td>
+						</c:forEach>
+					</tr>
+					
+					<tr class="child-${ count }">
+						<td colspan="100%" class="tdContent">											
+							<c:set var="map" value="${beans:inspect( j ) }"
+								scope="request" />
+							<jsp:include page="node.jsp" />			
+						</td>
+					</tr>
+					<c:set var="count" value="${count + 1}" scope="page"/>	
+				</c:forEach>	
+			</tbody>
+		</table>
+		
+		<c:if test="${ directory.prev ne null }">
+			<a href="${ directory.prev }"><<< Previous</a>
+		</c:if>
+		<c:if test="${ directory.next ne null }">
+			<a href="${ directory.next }">Next >>></a>
+		</c:if>
 	</c:if>
 
 </c:if>

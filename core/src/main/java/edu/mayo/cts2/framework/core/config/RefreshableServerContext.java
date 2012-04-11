@@ -85,7 +85,7 @@ public class RefreshableServerContext extends AbstractConfigurableExportedServic
 		
 		if(properties != null){
 			String newServerRoot = (String) properties.get(ConfigConstants.SERVER_ROOT_PROPERTY);
-			if(newServerRoot != null) {
+			if(StringUtils.isNotBlank(newServerRoot)) {
 				this.serverRoot = newServerRoot;
 			}
 			String newAppName = (String) properties.get(ConfigConstants.APP_NAME_PROPERTY);

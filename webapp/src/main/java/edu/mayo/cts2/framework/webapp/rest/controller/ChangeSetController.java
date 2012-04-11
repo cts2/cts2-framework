@@ -85,8 +85,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 	
 	@RequestMapping(value="/changesets", method=RequestMethod.GET)
-	@ResponseBody
-	public ChangeSetDirectory getChangSets(
+	public Object getChangSets(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			ChangeSetQueryExtensionRestrictions restrictions,
@@ -102,8 +101,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value="/changesets", method=RequestMethod.POST)
-	@ResponseBody
-	public ChangeSetDirectory getChangSets(
+	public Object getChangSets(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			@RequestBody Query query,
@@ -127,7 +125,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 				httpServletRequest, 
 				ChangeSetDirectory.class);
 
-		return directory;
+		return this.buildResponse(httpServletRequest, directory);
 	}
 
 	@RequestMapping(value="/changeset", method=RequestMethod.POST, params="changeseturi")
@@ -148,10 +146,13 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.GET)
-	@ResponseBody
-	public ChangeSet readChangeSet(@PathVariable String changeSetUri) {
+	public Object readChangeSet(
+			HttpServletRequest httpServletRequest,
+			@PathVariable String changeSetUri) {
 		
-		return this.changeSetService.readChangeSet(changeSetUri);
+		return this.buildResponse(
+				httpServletRequest,
+				this.changeSetService.readChangeSet(changeSetUri));
 	}
 	
 	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.DELETE)

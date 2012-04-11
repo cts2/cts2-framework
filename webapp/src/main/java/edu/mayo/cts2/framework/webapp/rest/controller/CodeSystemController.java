@@ -30,14 +30,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
@@ -47,6 +45,7 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystem;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -134,7 +133,6 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEM_CHANGEHISTORY, method=RequestMethod.GET)
-	@ResponseBody
 	public CodeSystemCatalogEntryList getChangeHistory(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
@@ -156,7 +154,6 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEM_EARLIESTCHANGE, method=RequestMethod.GET)
-	@ResponseBody
 	public CodeSystemCatalogEntryMsg getEarliesChange(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
@@ -171,7 +168,6 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEM_LATESTCHANGE, method=RequestMethod.GET)
-	@ResponseBody
 	public CodeSystemCatalogEntryMsg getLastChange(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
@@ -229,7 +225,6 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	 * @param codeSystemName the code system name
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void doesCodeSystemExist(
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName) {
@@ -249,7 +244,6 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	 * @return the code systems count
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMS, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void getCodeSystemsCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
@@ -297,12 +291,14 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	 * @param codeSystemName the code system name
 	 */
 	@RequestMapping(value=PATH_CODESYSTEM, method=RequestMethod.POST)
-	public ResponseEntity<Void> createCodeSystem(
+	public Object createCodeSystem(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody CodeSystemCatalogEntry codeSystem,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				codeSystem, 
 				changeseturi, 
 				PATH_CODESYSTEMBYID,
@@ -311,13 +307,14 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	}
 
 	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateCodeSystem(
+	public Object updateCodeSystem(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody CodeSystemCatalogEntry codeSystem,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				codeSystem, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(codeSystem.getCodeSystemName()),
@@ -325,17 +322,19 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMBYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteCodeSystem(
+	public Object deleteCodeSystem(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
-		this.codeSystemMaintenanceService.
-			deleteResource(
-					ModelUtils.nameOrUriFromName(
-							codeSystemName), 
-							changeseturi);
+		NameOrURI identifier = ModelUtils.nameOrUriFromName(codeSystemName);
+
+		return this.doDelete(
+				httpServletResponse,
+				identifier, 
+				changeseturi, 
+				this.codeSystemMaintenanceService);
 	}
 	
 	/**
@@ -367,14 +366,12 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 	}
 
 	@RequestMapping(value=PATH_CODESYSTEMQUERYSERVICE, method=RequestMethod.GET)
-	@ResponseBody
 	public edu.mayo.cts2.framework.model.service.codesystem.CodeSystemQueryService getCodeSystemCatalogQueryService() {
 		return null;
 		//
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMREADSERVICE, method=RequestMethod.GET)
-	@ResponseBody
 	public edu.mayo.cts2.framework.model.service.codesystem.CodeSystemReadService getCodeSystemCatalogReadService() {
 		return null;
 		//

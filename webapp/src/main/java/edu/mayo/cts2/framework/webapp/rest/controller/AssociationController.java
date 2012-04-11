@@ -30,14 +30,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.association.Association;
@@ -51,7 +49,6 @@ import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
-import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
@@ -61,6 +58,8 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.HierarchyRestriction;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.HierarchyRestriction.HierarchyType;
 import edu.mayo.cts2.framework.service.profile.association.AssociationMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQuery;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
@@ -158,8 +157,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the children associations of entity
 	 */
 	@RequestMapping(value=PATH_CHILDREN_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
-	@ResponseBody
-	public Directory getChildrenAssociationsOfEntity(
+	public Object getChildrenAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -198,8 +196,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the children associations of entity
 	 */
 	@RequestMapping(value=PATH_CHILDREN_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.POST)
-	@ResponseBody
-	public Directory getChildrenAssociationsOfEntity(
+	public Object getChildrenAssociationsOfEntity(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			QueryControl queryControl,
@@ -211,6 +208,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
+		
 		
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
@@ -225,6 +223,12 @@ public class AssociationController extends AbstractMessageWrappingController {
 						this.getScopedEntityName(entityName, codeSystemName), 
 						ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
+		HierarchyRestriction hierarchyRestriction = new HierarchyRestriction();
+		hierarchyRestriction.setEntity(entity);
+		hierarchyRestriction.setHierarchyType(HierarchyType.CHILDREN);
+	
+		restrictions.setHierarchyRestriction(hierarchyRestriction);
+		
 		EntityQueryBuilder builder = 
 				this.getNewEntityQueryBuilder();
 		
@@ -234,34 +238,17 @@ public class AssociationController extends AbstractMessageWrappingController {
 				addRestFilter(restFilter).
 				addRestReadContext(restReadContext).
 				build();
+
+		return this.doQuery(
+				httpServletRequest, 
+				list, 
+				this.entityDescriptionQueryService,
+				resourceQuery, 
+				page, 
+				queryControl, 
+				EntityDirectory.class,
+				EntityList.class);
 		
-		DirectoryResult<?> result;
-		Class<? extends Directory> directoryClass;
-		
-		if(! list){
-			result = this.associationQueryService.getChildrenAssociationsOfEntity(
-					entity,
-					resourceQuery,
-					readContext, 
-					page);
-			
-			directoryClass = EntityDirectory.class;
-		} else {
-			result = this.associationQueryService.getChildrenAssociationsOfEntityList(
-					entity,
-					resourceQuery, 
-					readContext, 
-					page);
-			
-			directoryClass = EntityList.class;
-		}
-		
-		return 
-				this.populateDirectory(
-						result, 
-						page,
-						httpServletRequest, 
-						directoryClass);
 	}
 	
 	/**
@@ -454,9 +441,8 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @return the graph code system version
 	 */
 	@RequestMapping(value=PATH_GRAPH_OF_CODESYSTEMVERSION, method=RequestMethod.GET)
-	@ResponseBody
 	//TODO: Not complete
-	public AssociationGraph getGraphCodeSystemVersion(
+	public Object getGraphCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			AssociationQueryServiceRestrictions associationRestrictions,
@@ -509,7 +495,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 		//in, but we need to resolve the URI/name.
 		//graph.setFocusEntity(focusEntity)
 		
-		return graph;
+		return this.buildResponse(httpServletRequest, graph);
 	}
 	
 	@RequestMapping(value=PATH_SUBJECTOF_ASSOCIATIONS_OF_ENTITY, method=RequestMethod.GET)
@@ -731,12 +717,14 @@ public class AssociationController extends AbstractMessageWrappingController {
 	 * @param associationName the association name
 	 */
 	@RequestMapping(value=PATH_ASSOCIATION, method=RequestMethod.POST)
-	public ResponseEntity<Void> createAssociation(
+	public Object createAssociation(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody Association association,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 		
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				association,
 				changeseturi,
 				PATH_ASSOCIATIONBYID, 
@@ -745,16 +733,17 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateAssociation(
+	public Object updateAssociation(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody Association association,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ASSOCIATIONID) String associationLocalName) {
 			
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				association, 
 				changeseturi,
 				new AssociationReadId(
@@ -764,8 +753,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_ASSOCIATIONBYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteAssociation(
+	public Object deleteAssociation(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
@@ -774,13 +762,18 @@ public class AssociationController extends AbstractMessageWrappingController {
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_ASSOCIATIONID) String associationLocalName,
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
+		
+		AssociationReadId id = new AssociationReadId(
+				associationLocalName, 
+				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 	
-		this.associationMaintenanceService.
-			deleteResource(
-					new AssociationReadId(
-							associationLocalName, 
-							ModelUtils.nameOrUriFromName(codeSystemVersionName)), 
-							changeseturi);
+		return 
+				this.doDelete(
+						httpServletResponse, 
+						id, 
+						changeseturi, 
+						this.associationMaintenanceService);
+	
 	}
 	
 	private AssociationQueryBuilder getNewResourceQueryBuilder(){

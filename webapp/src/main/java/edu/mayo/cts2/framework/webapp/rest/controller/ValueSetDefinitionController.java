@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -388,15 +387,16 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	 * @param valueSetDefinitionDocumentUri the value set definition document uri
 	 */
 	@RequestMapping(value=PATH_VALUESETDEFINITION_OF_VALUESET_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateValueSetDefinition(
+	public Object updateValueSetDefinition(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ValueSetDefinition valueSetDefinition,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionLocalId) {
 			
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				new LocalIdValueSetDefinition(valueSetDefinitionLocalId, valueSetDefinition),
 				changeseturi, 
 				new ValueSetDefinitionReadId(
@@ -406,13 +406,14 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	}
 	
 	@RequestMapping(value=PATH_VALUESETDEFINITION, method=RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Void> createValueSetDefinition(
+	public Object createValueSetDefinition(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ValueSetDefinition valueSetDefinition,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 	
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				valueSetDefinition,
 				changeseturi, 
 				PATH_VALUESETDEFINITION_OF_VALUESET_BYID, 
@@ -421,9 +422,9 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	}
 	
 	@RequestMapping(value=PATH_VALUESETDEFINITION_OF_VALUESET_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteValueSetDefinition(
+	public Object deleteValueSetDefinition(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String valueSetDefinitionLocalId,
@@ -434,8 +435,11 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 						valueSetDefinitionLocalId,
 						ModelUtils.nameOrUriFromName(valueSetName));
 			
-		this.valueSetDefinitionMaintenanceService.
-			deleteResource(id, changeseturi);
+		return this.doDelete(
+				httpServletResponse, 
+				id,
+				changeseturi,
+				this.valueSetDefinitionMaintenanceService);
 	}
 	
 	private ValueSetDefinitionQueryBuilder getNewResourceQueryBuilder(){

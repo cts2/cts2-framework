@@ -55,7 +55,9 @@ import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
+import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
+import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
@@ -99,6 +101,13 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	@ResponseBody
 	public CTS2Exception handleException(HttpServletResponse response, CTS2Exception ex) {
 		int status = this.cts2RestExceptionCodeMapper.getErrorCode(ex);
+		
+		if(ex.getExceptionType() == null){
+			ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
+		}
+		if(ex.getSeverity() == null){
+			ex.setSeverity(LoggingLevel.ERROR);
+		}
 		
 		response.setStatus(status);
 		

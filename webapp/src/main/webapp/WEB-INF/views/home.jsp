@@ -7,8 +7,6 @@ pageEncoding="UTF-8"%>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
-	<meta name="description" content="[HERE PASTE YOUR DESCRIPTION]" />
-	<meta name="author" content="Template:TemplatesDock [www.templatesdock.com]; e-mail:hello@templatesdock.com" />
 	<link rel="stylesheet" media="screen,projection" type="text/css" href="resources/home/css/main.css" />
 	<link rel="stylesheet" media="screen,projection" type="text/css" href="resources/home/css/nivo.css" />
 	<link rel="stylesheet" media="screen,projection" type="text/css" href="resources/home/css/skin.css" />	
@@ -52,7 +50,6 @@ pageEncoding="UTF-8"%>
 	<div id="header" class="box">
 
 		<p id="logo"><a href="./" title="[Go to homepage]"></a></p>
-		<!-- INFO: Used font is named "BALLPARK", you can download it for free here: http://www.fontsquirrel.com/fonts/Ballpark -->
 
 		<img src="resources/images/dflogo-small.png" alt="" />
 
@@ -60,6 +57,7 @@ pageEncoding="UTF-8"%>
 		<ul id="nav">
 			<li class="current"><a href="http://informatics.mayo.edu/cts2/framework"><span>WebSite</span></a></li>
 			<li><a href="system/console"><span>Admin Console</span></a></li>
+			<li><a href="service"><span>Services</span></a></li>
 			<li><a href="http://informatics.mayo.edu/cts2"><span>CTS2</span></a></li>
 			<li><a href="http://informatics.mayo.edu/cts2/framework/forum"><span>Get Help</span></a></li>
 			
@@ -121,7 +119,7 @@ pageEncoding="UTF-8"%>
 					<div class="products-img"><img src="resources/home/images/cts2.png" alt="" /></div>
 					<!-- Photo: (c) Nic McPhee -->
 					<div class="products-desc">
-						<h3><a href="#">CTS2</a></h3>
+						<h3><a href="http://informatics.mayo.edu/cts2">CTS2</a></h3>
 						<p>Common Terminology Services 2 (CTS2) is an Object Management Group (OMG) specification for representing, accessing and disseminating terminological content.
 						Learn more about CTS2, the specification, and what it can do for you.</p>
 					</div> <!-- /products-desc -->
@@ -129,7 +127,7 @@ pageEncoding="UTF-8"%>
 				<li class="box">
 					<div class="products-img"><img src="resources/home/images/dflogo.png" alt="" /></div>
 					<div class="products-desc">
-						<h3><a href="#">CTS2 Development Framework</a></h3>
+						<h3><a href="http://informatics.mayo.edu/cts2/framework">CTS2 Development Framework</a></h3>
 						<p>The CTS2 Development Framework is a development kit for rapidly creating CTS2 compliant applications. The Development Framework allows for users to create plugins which may be loaded into the 
 						Development Framework to provide REST and SOAP Web Services that use CTS2 compliant paths and model objects.</p>
 					</div> <!-- /products-desc -->
@@ -137,7 +135,7 @@ pageEncoding="UTF-8"%>
 				<li class="last box">
 					<div class="products-img"><img src="resources/home/images/omg.jpg" alt="" /></div>
 					<div class="products-desc">
-						<h3><a href="#">Official OMG© Specification</a></h3>
+						<h3><a href="http://www.omg.org/spec/CTS2/1.0/Beta1/">Official OMG© Specification</a></h3>
 						<p>CTS2 is an Official Object Management Group© (OMG) Specification. Go here to see the specification, which includes Platfrom Independent UML® Models, as well as Platform Specific bindings
 						to REST and SOAP implementations.</p>
 					</div> <!-- /products-desc -->
@@ -153,16 +151,16 @@ pageEncoding="UTF-8"%>
 			
 			<ul class="articles">
 				<li>
-					<h3><a href="#">Admin Console</a></h3>
+					<h3><a href="system/console">Admin Console</a></h3>
 					<p>The Admin Console is where the CTS2 Development Framework may be configured. Go here to add new plugins and extensions,
 					activate/deactivate components. Note that this is an administrative page and will require a login.</p>
 				</li>
 				<li>
-					<h3><a href="#">Learn more about this service</a></h3>
+					<h3><a href="service">Learn more about this service</a></h3>
 					<p>Learn more about this CTS2 Implementation, what it provides, and what parts of CTS2 it implements.</p>
 				</li>
 				<li class="last">
-					<h3><a href="#">Join the Community</a></h3>
+					<h3><a href="http://informatics.mayo.edu/cts2/framework">Join the Community</a></h3>
 					<p>Interact with users and developers of the CTS2 Development Framework, get help, or take a tutorial.</p>
 				</li>
 			</ul>

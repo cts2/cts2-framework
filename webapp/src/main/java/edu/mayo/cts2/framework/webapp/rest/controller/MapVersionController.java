@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -185,15 +184,16 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	 * @param mapVersionName the map version name
 	 */
 	@RequestMapping(value=PATH_MAPVERSION_OF_MAP_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateMapVersion(
+	public Object updateMapVersion(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
 	
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				mapVersion, 
 				changeseturi,
 				ModelUtils.nameOrUriFromName(mapVersionName), 
@@ -201,12 +201,14 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_MAPVERSION, method=RequestMethod.POST)
-	public ResponseEntity<Void> createMapVersion(
+	public Object createMapVersion(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody MapVersion mapVersion) {
 
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				mapVersion,
 				changeseturi,
 				PATH_MAPVERSION_OF_MAP_BYID,
@@ -215,17 +217,18 @@ public class MapVersionController extends AbstractMessageWrappingController {
 	}
 
 	@RequestMapping(value=PATH_MAPVERSION_OF_MAP_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteMapVersion(
+	public Object deleteMapVersion(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,	
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
-			this.mapVersionMaintenanceService.
-				deleteResource(
-						ModelUtils.nameOrUriFromName(
-								mapVersionName), changeseturi);
+			return this.doDelete(httpServletResponse,
+				ModelUtils.nameOrUriFromName(
+						mapVersionName), 
+						changeseturi, 
+						this.mapVersionMaintenanceService);
 	}
 	/**
 	 * Gets the map versions of map.

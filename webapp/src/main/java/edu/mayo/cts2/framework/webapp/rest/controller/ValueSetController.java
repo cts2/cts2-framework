@@ -30,7 +30,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -326,14 +325,15 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	 * @param valueSetName the value set name
 	 */
 	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateValueSet(
+	public Object updateValueSet(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ValueSetCatalogEntry valueSet,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_VALUESETID) String valueSetName) {
 	
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				valueSet, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(valueSetName), 
@@ -341,12 +341,14 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_VALUESET, method=RequestMethod.POST)
-	public ResponseEntity<Void> createValueSet(
+	public Object createValueSet(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ValueSetCatalogEntry valueSet,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 	
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				valueSet, 
 				changeseturi, 
 				PATH_VALUESETBYID, 
@@ -355,17 +357,18 @@ public class ValueSetController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_VALUESETBYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteValueSet(
+	public Object deleteValueSet(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
-		this.valueSetMaintenanceService.
-			deleteResource(
-					ModelUtils.nameOrUriFromName(
-							valueSetName), 
-							changeseturi);
+		return this.doDelete(
+			httpServletResponse,
+			ModelUtils.nameOrUriFromName(
+					valueSetName), 
+					changeseturi,
+					this.valueSetMaintenanceService);
 	}
 	
 	private ValueSetQueryBuilder getNewResourceQueryBuilder(){

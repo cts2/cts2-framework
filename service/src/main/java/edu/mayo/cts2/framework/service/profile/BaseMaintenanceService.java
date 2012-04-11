@@ -27,11 +27,17 @@ import edu.mayo.cts2.framework.model.core.IsChangeable;
 
 
 /**
- * The Interface MaintenanceService.
+ * The BaseMaintenanceService exposes basic Create, Read, Update and Delete (CRUD)
+ * functionality.
+ * 
+ * Note that is is acceptable for the service to return a Resource of a different type
+ * during the Create request. This is to facilitate cases where the service may add extra
+ * metadata to the Resource upon create (such as an auto-generated id, etc).
  *
- * @param <T> the generic type
- * @param <R> the generic type
- * @param <I> the generic type
+ * @param <T> The Resouce Type to be input to the Service in an Update request, and 
+ * output in a Create request
+ * @param <R> The Resource Type supplied by the client to the Create request.
+ * @param <I> The Identifier that will uniquely define the CTS2 REsource
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -41,7 +47,7 @@ public interface BaseMaintenanceService<
 	I> extends BaseService {
 
 	/**
-	 * Update changeable metadata.
+	 * Updates only the Resource's ChangeableMetadata
 	 *
 	 * @param identifier the identifier
 	 * @param request the request
@@ -49,22 +55,27 @@ public interface BaseMaintenanceService<
 	public void updateChangeableMetadata(I identifier, UpdateChangeableMetadataRequest request);
 	
 	/**
-	 * Update resource.
+	 * Updates the supplied Resource. It is assumed that the supplied Resource will carry
+	 * enough identity to uniquely identify it within the service.
 	 *
 	 * @param resource the resource
 	 */
 	public void updateResource(T resource);
 	
 	/**
-	 * Creates the resource.
+	 * Creates and persists the resource into the service.
+	 * Note that is is acceptable for the service to return a Resource of a different type
+	 * during the Create request. This is to facilitate cases where the service may add extra
+	 * metadata to the Resource upon create (such as an auto-generated id, etc).
 	 *
 	 * @param resource the resource
-	 * @return the t
+	 * @return The actual resource created and persisted by the service.
 	 */
 	public T createResource(R resource);
 	
 	/**
-	 * Delete resource.
+	 * Deletes the Resource identified by the identifier in the ChangeSet identified by the
+	 * provided changeSetUri.
 	 *
 	 * @param identifier the identifier
 	 * @param changeSetUri the change set uri

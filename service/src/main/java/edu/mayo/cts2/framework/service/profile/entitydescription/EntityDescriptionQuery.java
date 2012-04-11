@@ -33,8 +33,20 @@ import edu.mayo.cts2.framework.service.profile.ResourceQuery;
  */
 public interface EntityDescriptionQuery extends ResourceQuery {
 	
+
 	/**
-	 * Gets the restrictions.
+	 * If the EntityDescription Query is the result of an 'Association' Query,
+	 * those details will be returned here. For example, if the Query is intended
+	 * to represent all "SOURCE" Entities of a group of Associations, and so forth.
+	 * 
+	 * If this Query is not the result of an 'Association' Query, this should return null.
+	 *
+	 * @return the entities from associations query
+	 */
+	public EntitiesFromAssociationsQuery getEntitiesFromAssociationsQuery();
+	 
+	/**
+	 * EntityDescription Query restrictions to narrow/filter the result set.
 	 *
 	 * @return the restrictions
 	 */

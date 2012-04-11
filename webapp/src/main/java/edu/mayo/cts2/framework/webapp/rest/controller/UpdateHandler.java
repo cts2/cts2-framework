@@ -10,6 +10,7 @@ import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.types.ChangeType;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2Exception;
 import edu.mayo.cts2.framework.model.service.exception.UnknownChangeSet;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.UpdateChangeableMetadataRequest;
 
@@ -38,7 +39,11 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 		}
 
 		if(StringUtils.isBlank(group.getChangeDescription().getContainingChangeSet())){
-			throw new UnknownChangeSet();
+			UnknownChangeSet ex = new UnknownChangeSet();
+			ex.setCts2Message(ModelUtils.createOpaqueData(
+					"A 'ContainingChangeSet' is required to UPDATE a Resource. Please supply one and retry your request."));
+		
+			throw ex;
 		}
 		
 		ChangeType type = group.getChangeDescription().getChangeType();

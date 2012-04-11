@@ -31,7 +31,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -123,9 +122,9 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	 * @param mapsFromName the maps from name
 	 */
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateMapEntry(
+	public Object updateMapEntry(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody MapEntry mapEntry,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_MAPID) String mapName,
@@ -136,7 +135,8 @@ public class MapEntryController extends AbstractMessageWrappingController {
 				this.getScopedEntityName(mapsFromName), 
 				ModelUtils.nameOrUriFromName(mapVersionName));
 		
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				mapEntry, 
 				changeseturi, 
 				id, 
@@ -144,12 +144,14 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY, method=RequestMethod.POST)
-	public ResponseEntity<Void> createMapEntry(
+	public Object createMapEntry(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody MapEntry mapEntry,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 		
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				mapEntry,
 				changeseturi, 
 				PATH_MAPENTRY_OF_MAPVERSION_BYID, 
@@ -158,9 +160,9 @@ public class MapEntryController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteMapEntry(
+	public Object deleteMapEntry(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName,
@@ -171,8 +173,12 @@ public class MapEntryController extends AbstractMessageWrappingController {
 				this.getScopedEntityName(mapsFromName), 
 				ModelUtils.nameOrUriFromName(mapVersionName));
 			
-		this.mapEntryMaintenanceService.
-			deleteResource(id, changeseturi);
+		return 
+				this.doDelete(
+						httpServletResponse, 
+						id, 
+						changeseturi, 
+						this.mapEntryMaintenanceService);
 	}
 	
 	@RequestMapping(value=PATH_MAPENTRY_OF_MAPVERSION_BYID, method=RequestMethod.GET)

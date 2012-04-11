@@ -43,6 +43,8 @@ public class EntityDescriptionQueryServiceRestrictions {
 	
 	private TaggedCodeSystemRestriction taggedCodeSystem;
 	
+	private HierarchyRestriction hierarchyRestriction;
+	
 	public Set<EntityNameOrURI> getEntities() {
 		return entities;
 	}
@@ -67,6 +69,14 @@ public class EntityDescriptionQueryServiceRestrictions {
 		this.taggedCodeSystem = taggedCodeSystem;
 	}
 
+	public HierarchyRestriction getHierarchyRestriction() {
+		return hierarchyRestriction;
+	}
+
+	public void setHierarchyRestriction(HierarchyRestriction hierarchyRestriction) {
+		this.hierarchyRestriction = hierarchyRestriction;
+	}
+
 	public static class TaggedCodeSystemRestriction {
 		
 		private NameOrURI codeSystem;
@@ -89,5 +99,33 @@ public class EntityDescriptionQueryServiceRestrictions {
 			this.tag = tag;
 		}
 		
+	}
+	
+	public static class HierarchyRestriction {
+		
+		public enum HierarchyType {CHILDREN,DESCENDANTS,ANCESTORS}
+		
+		private HierarchyType hierarchyType;
+		
+		private EntityNameOrURI entity;
+
+		public EntityNameOrURI getEntity() {
+			return entity;
+		}
+
+		public void setEntity(EntityNameOrURI entity) {
+			this.entity = entity;
+		}
+
+		public HierarchyType getHierarchyType() {
+			return hierarchyType;
+		}
+
+		public void setHierarchyType(HierarchyType hierarchyType) {
+			this.hierarchyType = hierarchyType;
+		}
+		
+		
+	
 	}
 }

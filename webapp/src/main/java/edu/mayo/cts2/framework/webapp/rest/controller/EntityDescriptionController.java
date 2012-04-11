@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -165,8 +164,8 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @param entityName the entity name
 	 */
 	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateEntityDescription(
+	public Object updateEntityDescription(
+			HttpServletResponse httpServletResponse,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody EntityDescription entity,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
@@ -181,7 +180,8 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	
 		ScopedEntityName name = getScopedEntityName(entityName, codeSystemName);
 		
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				entity, 
 				changeseturi, 
 				new EntityDescriptionReadId(name, ModelUtils.nameOrUriFromName(codeSytemVersionName)),
@@ -189,11 +189,13 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_ENTITY, method=RequestMethod.POST)
-	public ResponseEntity<Void> createEntityDescription(
+	public Object createEntityDescription(
+			HttpServletResponse httpServletResponse,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody EntityDescription entity) {
 
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				entity,
 				changeseturi, 
 				PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, 
@@ -202,9 +204,9 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_ENTITY_OF_CODESYSTEM_VERSION_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteCodeSystemVersion(
+	public Object deleteCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName,
@@ -223,8 +225,12 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 				getScopedEntityName(entityName, codeSystemName),
 				ModelUtils.nameOrUriFromName(codeSystemVersionName));
 
-			this.entityDescriptionMaintenanceService.
-				deleteResource(id, changeseturi);
+			
+			return this.doDelete(
+					httpServletResponse, 
+					id, 
+					changeseturi, 
+					this.entityDescriptionMaintenanceService);
 	}
 
 	/**

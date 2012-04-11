@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +65,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
+import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.ReadService;
@@ -91,6 +93,9 @@ public abstract class AbstractMessageWrappingController extends
 	
 	@Resource
 	private UpdateHandler updateHandler;
+	
+	@Resource
+	private DeleteHandler deleteHandler;
 	
 	@Resource 
 	private FilterResolver filterResolver;
@@ -150,6 +155,25 @@ public abstract class AbstractMessageWrappingController extends
 
 		return message;
 	}
+	
+	private void setDirectoryEntries(Directory directory, List<?> entries){
+		try {
+			final Field field = ReflectionUtils.findField(directory.getClass(),
+					"_entryList");
+
+			AccessController.doPrivileged(new PrivilegedAction<Void>() {
+				public Void run() {
+					field.setAccessible(true);
+
+					return null;
+				}
+			});
+
+			ReflectionUtils.setField(field, directory, entries);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	/**
 	 * Populate directory.
@@ -172,31 +196,24 @@ public abstract class AbstractMessageWrappingController extends
 			Page page,
 			HttpServletRequest httpServletRequest, 
 			Class<T> directoryClazz) {
-
-		boolean atEnd = result.isAtEnd();
 		
-		boolean isComplete = atEnd && ( page.getPage() == 0 );
-
 		T directory;
+		
 		try {
 			directory = directoryClazz.newInstance();
-
-			final Field field = ReflectionUtils.findField(directoryClazz,
-					"_entryList");
-
-			AccessController.doPrivileged(new PrivilegedAction<Void>() {
-				public Void run() {
-					field.setAccessible(true);
-
-					return null;
-				}
-			});
-
-			ReflectionUtils.setField(field, directory, result.getEntries());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		}
+		}	
 
+		if(result == null){
+			result = new DirectoryResult<Void>(new ArrayList<Void>(), true);
+		}
+		
+		this.setDirectoryEntries(directory, result.getEntries());
+		
+		boolean atEnd = result.isAtEnd();
+		boolean isComplete = atEnd && ( page.getPage() == 0 );
+		
 		String urlRoot = this.serverContext.getServerRootWithAppName();
 
 		if (!urlRoot.endsWith("/")) {
@@ -350,6 +367,75 @@ public abstract class AbstractMessageWrappingController extends
 		return this.buildResponse(httpServletRequest, dir);
 	}
 	
+	protected <I> Object doDelete(
+			HttpServletResponse response,
+			I identifier,
+			String changeSetUri,
+			BaseMaintenanceService<?,?,I> service) {
+		
+		this.deleteHandler.delete(identifier, changeSetUri, service);
+		
+		response.setStatus(HttpStatus.NO_CONTENT.value());
+		
+		//TODO: Add a ModelAndView return type
+		return null;
+	}
+	
+	protected <T extends IsChangeable,R extends IsChangeable,I> Object doUpdate(
+			HttpServletResponse response,
+			T resource, 
+			String changeSetUri, 
+			I identifier,
+			BaseMaintenanceService<T,R,I> service) {
+		
+		this.updateHandler.update(
+				resource, 
+				changeSetUri, 
+				identifier, 
+				service);
+		
+		response.setStatus(HttpStatus.NO_CONTENT.value());
+		
+		//TODO: Add a ModelAndView return type
+		return null;
+	}
+	
+	protected <T extends IsChangeable,R extends IsChangeable> Object doCreate(
+			HttpServletResponse response,
+			R resource, 
+			String changeSetUri, 
+			String urlTemplate,
+			UrlTemplateBinder<T> template,
+			BaseMaintenanceService<T,R,?> service){
+		
+		T returnedResource = this.createHandler.create(
+				resource,
+				changeSetUri, 
+				urlTemplate, 
+				template, 
+				service);
+		
+		String location = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
+				template,
+				returnedResource, 
+				urlTemplate);
+		
+		if(StringUtils.isNotBlank(changeSetUri)){
+			location = location + ("?" + URIHelperInterface.PARAM_CHANGESETCONTEXT + "=" +  changeSetUri);
+		}
+		
+		this.setLocation(response, location);
+		
+		//TODO: Add a ModelAndView return type
+		return null;
+	}
+	
+	protected void setLocation(HttpServletResponse response, String location){
+		location = StringUtils.removeStart(location, "/");
+		
+		response.setHeader("Location", location);
+	}
+
 	protected SortCriteria resolveSort(QueryControl sort, BaseQueryService queryService) {
 		if(sort == null || StringUtils.isBlank(sort.getSort())){
 			return null;
@@ -630,22 +716,6 @@ public abstract class AbstractMessageWrappingController extends
 		return parameterValueToString(value);
 	}
 
-	protected CreateHandler getCreateHandler() {
-		return createHandler;
-	}
-
-	protected void setCreateHandler(CreateHandler createHandler) {
-		this.createHandler = createHandler;
-	}
-
-	protected UpdateHandler getUpdateHandler() {
-		return updateHandler;
-	}
-
-	protected void setUpdateHandler(UpdateHandler updateHandler) {
-		this.updateHandler = updateHandler;
-	}
-
 	protected FilterResolver getFilterResolver() {
 		return filterResolver;
 	}
@@ -669,5 +739,4 @@ public abstract class AbstractMessageWrappingController extends
 	public void setServerContext(ServerContext serverContext) {
 		this.serverContext = serverContext;
 	}
-
 }

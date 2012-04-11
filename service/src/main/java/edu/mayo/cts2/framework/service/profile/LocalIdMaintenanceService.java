@@ -29,11 +29,9 @@ import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 
 /**
- * The Interface MaintenanceService.
+ * An extension of the {@BaseMaintenanceService} that allows for a Local ID to be
+ * assigned to CTS2 Resources that are normally only identified by a URI.
  *
- * @param <T> the generic type
- * @param <R> the generic type
- * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @FunctionalConformance(FunctionalProfile.FP_MAINTENANCE)

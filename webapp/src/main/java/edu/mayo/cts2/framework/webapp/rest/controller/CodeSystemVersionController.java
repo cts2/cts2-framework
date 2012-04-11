@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
@@ -44,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
@@ -55,6 +53,7 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -133,7 +132,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	};
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSION_CHANGEHISTORY, method=RequestMethod.GET)
-	@ResponseBody
 	public CodeSystemVersionCatalogEntryList getChangeHistory(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
@@ -155,7 +153,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSION_EARLIESTCHANGE, method=RequestMethod.GET)
-	@ResponseBody
 	public CodeSystemVersionCatalogEntryMsg getEarliesChange(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
@@ -170,7 +167,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSION_LATESTCHANGE, method=RequestMethod.GET)
-	@ResponseBody
 	public CodeSystemVersionCatalogEntryMsg getLastChange(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemName) {
@@ -193,11 +189,13 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	 * @param codeSystemVersionName the code system version name
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMVERSION, method=RequestMethod.POST)
-	public ResponseEntity<Void> createCodeSystemVersion(
+	public Object createCodeSystemVersion(
+			HttpServletResponse httpServletResponse,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion) {
 	
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				codeSystemVersion, 
 				changeseturi, 
 				PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID,
@@ -206,14 +204,15 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateCodeSystemVersion(
+	public Object updateCodeSystemVersion(
+			HttpServletResponse httpServletResponse,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@RequestBody CodeSystemVersionCatalogEntry codeSystemVersion,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
 	
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				codeSystemVersion, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(codeSystemVersionName), 
@@ -221,9 +220,9 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteCodeSystemVersion(
+	public Object deleteCodeSystemVersion(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId,	
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
@@ -238,11 +237,15 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 								versionId,
 								readContext);
 
-			this.codeSystemVersionMaintenanceService.
-				deleteResource(
-						ModelUtils.nameOrUriFromName(
-								codeSystemVersionName), 
-								changeseturi);
+			NameOrURI identifier = 
+					ModelUtils.nameOrUriFromName(
+					codeSystemVersionName);
+					
+			return this.doDelete(
+					httpServletResponse, 
+					identifier,
+					changeseturi,
+					this.codeSystemVersionMaintenanceService);
 	}
 	
 	/**
@@ -287,7 +290,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	 * @param codeSystemVersionName the code system version name
 	 */
 	@RequestMapping(value=PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void doesCodeSystemVersionExist(
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
@@ -311,7 +313,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	 */
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS_OF_CODESYSTEM}, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void getCodeSystemVersionsOfCodeSystemCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
@@ -402,7 +403,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	 */
 	@RequestMapping(value={
 			PATH_CODESYSTEMVERSIONS}, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void getCodeSystemVersionsCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
@@ -504,14 +504,12 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONQUERYSERVICE, method=RequestMethod.GET)
-	@ResponseBody
 	public Void getCodeSystemVersionCatalogQueryService() {
 		return null;
 		//TODO
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONREADSERVICE, method=RequestMethod.GET)
-	@ResponseBody
 	public Void getCodeSystemVersionCatalogReadService() {
 		return null;
 		//TODO

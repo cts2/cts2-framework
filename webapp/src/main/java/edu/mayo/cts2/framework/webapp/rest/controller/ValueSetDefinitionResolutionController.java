@@ -31,8 +31,9 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
@@ -332,8 +334,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION, method=RequestMethod.GET)
-	@ResponseBody
-	public ResolvedValueSetDirectory getResolvedValueSetsOfValueSetDefinition(
+	public Object getResolvedValueSetsOfValueSetDefinition(
 			HttpServletRequest httpServletRequest,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
@@ -355,8 +356,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS, method=RequestMethod.GET)
-	@ResponseBody
-	public ResolvedValueSetDirectory getResolvedValueSets(
+	public Object getResolvedValueSets(
 			HttpServletRequest httpServletRequest,
 			ResolvedValueSetQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
@@ -371,8 +371,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS, method=RequestMethod.POST)
-	@ResponseBody
-	public ResolvedValueSetDirectory getResolvedValueSets(
+	public Object getResolvedValueSets(
 			HttpServletRequest httpServletRequest,
 			ResolvedValueSetQueryServiceRestrictions restrictions,
 			@RequestBody Query query,
@@ -389,11 +388,13 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 					null,//TODO: add Sorting
 				page);
 		
-		return this.populateDirectory(
+		Directory directory = this.populateDirectory(
 				result, 
 				page, 
 				httpServletRequest, 
 				ResolvedValueSetDirectory.class);
+		
+		return this.buildResponse(httpServletRequest, directory);
 	}
 	
 	@RequestMapping(value={	
@@ -418,18 +419,25 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESET, method=RequestMethod.POST)
-	public ResponseEntity<Void> loadResolvedValueSet(
+	public Object loadResolvedValueSet(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ResolvedValueSet resolvedValueSet) {
 		
 		ResolvedValueSetReference id = this.resolvedValueSetLoaderService.load(resolvedValueSet);
 
-		String localtion = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
+		String location = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(
 				URL_BINDER, 
 				id, 
 				PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID);
 		
-		return this.getCreateHandler().createResponseEntity(localtion);
+		this.setLocation(httpServletResponse, location);
+		
+		httpServletResponse.setStatus(HttpStatus.CREATED.value());
+		
+		//TODO: Add ModelAndView
+		
+		return null;
 	}
 	
 	private ResolvedValueSetQuery getResolvedValueSetQuery(

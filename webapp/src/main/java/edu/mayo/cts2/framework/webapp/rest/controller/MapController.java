@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -320,12 +319,14 @@ public class MapController extends AbstractMessageWrappingController {
 	 * @return 
 	 */
 	@RequestMapping(value=PATH_MAP, method=RequestMethod.POST)
-	public ResponseEntity<Void> createMap(
+	public Object createMap(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody MapCatalogEntry map,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				map,
 				changeseturi,
 				PATH_MAP_BYID,
@@ -334,14 +335,15 @@ public class MapController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateMap(
+	public Object updateMap(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody MapCatalogEntry map,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_MAPID) String mapName) {
 		
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				map, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(mapName),
@@ -349,18 +351,19 @@ public class MapController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_MAP_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteMap(
+	public Object deleteMap(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_MAPID) String mapName,
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 			
-		this.mapMaintenanceService.
-		deleteResource(
+		return this.doDelete(
+				httpServletResponse,
 				ModelUtils.nameOrUriFromName(
-						mapName), 
-						changeseturi);
+					mapName), 
+					changeseturi,
+					this.mapMaintenanceService);
 	}
 	
 	/**

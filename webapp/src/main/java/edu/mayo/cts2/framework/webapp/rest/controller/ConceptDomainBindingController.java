@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
@@ -116,12 +114,14 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 * @return 
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING, method=RequestMethod.POST)
-	public ResponseEntity<Void> createConceptDomainBinding(
+	public Object createConceptDomainBinding(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ConceptDomainBinding conceptDomainBinding,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 				
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				conceptDomainBinding, 
 				changeseturi,
 				PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, 
@@ -130,15 +130,16 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	}
 	
 	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateConceptDomainBinding(
+	public Object updateConceptDomainBinding(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ConceptDomainBinding conceptDomainBinding,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
 			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingLocalId,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				new LocalIdConceptDomainBinding(conceptDomainBindingLocalId, conceptDomainBinding),
 				changeseturi, 
 				new ConceptDomainBindingReadId(
@@ -148,9 +149,9 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	}
 	
 	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteCodeSystem(
+	public Object deleteConceptDomainBinding(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
 			@PathVariable(VAR_CONCEPTDOMAINBINDINGID) String conceptDomainBindingLocalId,
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
@@ -160,8 +161,11 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 						conceptDomainBindingLocalId,
 						ModelUtils.nameOrUriFromName(conceptDomainName));
 
-		this.conceptDomainBindingMaintenanceService.
-			deleteResource(id, changeseturi);
+		return this.doDelete(
+				httpServletResponse, 
+				id, 
+				changeseturi, 
+				this.conceptDomainBindingMaintenanceService);
 	}
 	
 	/**
@@ -239,7 +243,6 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 * @param conceptDomainBindingName the concept domain binding name
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAINBINDING_OF_CONCEPTDOMAIN_BYID, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void doesConceptDomainBindingExist(
 			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
@@ -260,7 +263,6 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS_OF_CONCEPTDOMAIN}, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void getConceptDomainBindingsOfConceptDomainCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
@@ -357,7 +359,6 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 	 */
 	@RequestMapping(value={
 			PATH_CONCEPTDOMAINBINDINGS}, method=RequestMethod.HEAD)
-	@ResponseBody
 	public void getConceptDomainBindingsCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,

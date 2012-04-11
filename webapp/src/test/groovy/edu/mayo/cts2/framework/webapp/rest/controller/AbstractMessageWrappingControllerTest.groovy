@@ -5,12 +5,11 @@ import static org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockServletContext
 
 import edu.mayo.cts2.framework.core.config.ServerContext
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory
 import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.core.types.CompleteDirectory
 import edu.mayo.cts2.framework.model.directory.DirectoryResult
 
 
@@ -81,5 +80,20 @@ class AbstractMessageWrappingControllerTest {
 		assertEquals 2, restResource.numEntries
 	}
 	
+	@Test
+	void Test_Populate_Directory_With_NULL(){
+
+		def dirResult = null
+
+		def restResource = controller.
+			populateDirectory(
+				dirResult,
+				new Page(),
+				httpServletRequest,
+				CodeSystemCatalogEntryDirectory.class )
+
+		assertEquals 0, restResource.numEntries
+		assertEquals CompleteDirectory.COMPLETE, restResource.complete
+	}
 
 }

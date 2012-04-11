@@ -30,7 +30,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -303,12 +302,14 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	 * @return 
 	 */
 	@RequestMapping(value=PATH_CONCEPTDOMAIN, method=RequestMethod.POST)
-	public ResponseEntity<Void> createConceptDomain(
+	public Object createConceptDomain(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 			
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				conceptDomain, 
 				changeseturi, 
 				PATH_CONCEPTDOMAIN_BYID, 
@@ -317,14 +318,15 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateConceptDomain(
+	public Object updateConceptDomain(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody ConceptDomainCatalogEntry conceptDomain,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName) {
 	
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				conceptDomain, 
 				changeseturi, 
 				ModelUtils.nameOrUriFromName(conceptDomainName), 
@@ -332,17 +334,18 @@ public class ConceptDomainController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_CONCEPTDOMAIN_BYID, method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteCodeSystemVersion(
+	public Object deleteConceptDomain(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@PathVariable(VAR_CONCEPTDOMAINID) String conceptDomainName,
 			@RequestParam(PARAM_CHANGESETCONTEXT) String changeseturi) {
 
-			this.conceptDomainMaintenanceService.
-				deleteResource(
-						ModelUtils.nameOrUriFromName(
-								conceptDomainName), 
-								changeseturi);
+			return this.doDelete(
+					httpServletResponse,
+					ModelUtils.nameOrUriFromName(
+							conceptDomainName), 
+							changeseturi,
+					this.conceptDomainMaintenanceService);
 	}
 	
 	/**

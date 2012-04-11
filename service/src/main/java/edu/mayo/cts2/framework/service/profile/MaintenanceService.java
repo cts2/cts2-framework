@@ -28,10 +28,10 @@ import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 
 /**
- * The Interface MaintenanceService.
+ * The default extension of the {@BaseMaintenanceService}. This service 
+ * expects the input and output of a Create request to be of the same 
+ * type. This will be the most typical case for extensions of {@BaseMaintenanceService}
  *
- * @param <R> the generic type
- * @param <I> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @FunctionalConformance(FunctionalProfile.FP_MAINTENANCE)

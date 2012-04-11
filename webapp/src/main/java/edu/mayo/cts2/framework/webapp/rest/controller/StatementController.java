@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -217,12 +216,14 @@ public class StatementController extends AbstractMessageWrappingController {
 	 * @return 
 	 */
 	@RequestMapping(value=PATH_STATEMENT, method=RequestMethod.POST)
-	public ResponseEntity<Void> createStatement(
+	public Object createStatement(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody Statement statement,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 	
-		return this.getCreateHandler().create(
+		return this.doCreate(
+				httpServletResponse,
 				statement,
 				changeseturi, 
 				PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, 
@@ -231,16 +232,17 @@ public class StatementController extends AbstractMessageWrappingController {
 	}
 	
 	@RequestMapping(value=PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID, method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateStatement(
+	public Object updateStatement(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			@RequestBody Statement statement,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
 			@PathVariable(VAR_STATEMENTID) String statementLocalName,
 			@RequestParam(value=PARAM_CHANGESETCONTEXT, required=false) String changeseturi) {
 				
-		this.getUpdateHandler().update(
+		return this.doUpdate(
+				httpServletResponse,
 				new LocalIdStatement(statementLocalName, statement),
 				changeseturi, 
 				new StatementReadId(
@@ -307,9 +309,9 @@ public class StatementController extends AbstractMessageWrappingController {
 			PATH_STATEMENT_OF_CODESYSTEMVERSION_BYID
 			},
 		method=RequestMethod.DELETE)
-	@ResponseBody
-	public void deleteStatement(
+	public Object deleteStatement(
 			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName,
@@ -321,8 +323,11 @@ public class StatementController extends AbstractMessageWrappingController {
 						statementLocalName,
 						ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
-		this.statementMaintenanceService.
-			deleteResource(id, changeseturi);
+		return this.doDelete(
+				httpServletResponse, 
+				id, 
+				changeseturi,
+				this.statementMaintenanceService);
 	}
 	
 	private ResourceQueryBuilder getNewResourceQueryBuilder(){

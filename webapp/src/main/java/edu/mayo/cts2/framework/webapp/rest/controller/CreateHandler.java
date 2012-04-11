@@ -21,7 +21,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 	@Resource
 	private UrlTemplateBindingCreator urlTemplateBindingCreator;
 	
-	protected <T extends IsChangeable,R extends IsChangeable> ResponseEntity<Void> create(
+	protected <T extends IsChangeable,R extends IsChangeable> T create(
 			R resource, 
 			String changeSetUri, 
 			String urlTemplate,
@@ -45,11 +45,7 @@ public class CreateHandler extends AbstractMainenanceHandler {
 		
 		T returnedResource = service.createResource(resource);
 		
-		return this.createResponseEntity(
-				returnedResource, 
-				changeSetUri, 
-				urlTemplate, 
-				template);
+		return returnedResource;
 	}
 	
 	protected <R> ResponseEntity<Void> createResponseEntity(
