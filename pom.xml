@@ -85,6 +85,7 @@
 				<configuration>
 					<minmemory>128m</minmemory>
 					<maxmemory>512m</maxmemory>
+					<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -92,6 +93,17 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>512m</maxmemory>
+					<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>
+				</configuration>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -254,7 +266,9 @@
 							<artifactId>maven-javadoc-plugin</artifactId>
 							<version>2.8</version>
 							<configuration>
-					          <maxmemory>512M</maxmemory>
+					          	<minmemory>128m</minmemory>
+								<maxmemory>512m</maxmemory>
+								<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>
 					        </configuration>
 						</plugin>
 						<plugin>
