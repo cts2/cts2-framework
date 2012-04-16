@@ -11,6 +11,7 @@ import org.reflections.Reflections;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.FunctionalConformance;
@@ -41,16 +42,20 @@ public class ClassPathScanningConformanceFactory implements ConformanceFactory {
 			Cts2Profile service = provider.getService(profile);
 			
 			if(service != null){
-				Collection<FunctionalConformance> functionalConformances =
-						this.findAnnotations(profile, FunctionalConformance.class);
-				
 				Collection<StructuralConformance> structuralConformances = 
 						this.findAnnotations(profile, StructuralConformance.class);
-			
-				for(FunctionalConformance functional : functionalConformances){
-					for(StructuralConformance structural : structuralConformances){
+				
+				Collection<FunctionalConformance> functionalConformances =
+						this.findAnnotations(profile, FunctionalConformance.class);
+
+				for(StructuralConformance structural : structuralConformances){
+					for(FunctionalConformance functional : functionalConformances){
 						ProfileElement element = new ProfileElement();
-						element.setFunctionalProfile(functional.value());
+						
+						FunctionalProfileEntry entry = new FunctionalProfileEntry();
+						entry.setContent(functional.value().name());
+
+						element.addFunctionalProfile(entry);
 						element.setStructuralProfile(structural.value());
 						
 						returnSet.add(element);

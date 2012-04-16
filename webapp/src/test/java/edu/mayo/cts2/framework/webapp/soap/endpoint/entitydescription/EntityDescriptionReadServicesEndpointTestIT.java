@@ -19,7 +19,6 @@ import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.EntityReference;
-import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.NamespaceReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
@@ -358,7 +357,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
     assertEquals(StructuralProfile.SP_ENTITY_DESCRIPTION, profile.getStructuralProfile());
-    assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile());
+    assertEquals(FunctionalProfile.FP_READ.name(), profile.getFunctionalProfile()[0].getContent());
   }
 
   @Test

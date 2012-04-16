@@ -3,6 +3,7 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint.association;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
@@ -194,7 +195,9 @@ public class AssociationReadServicesEndpoint extends AbstractReadServiceEndpoint
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_ASSOCIATION);
 
-    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
+    FunctionalProfileEntry entry = new FunctionalProfileEntry();
+	entry.setContent(FunctionalProfile.FP_READ.name());
+    profile.addFunctionalProfile(entry);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

@@ -19,6 +19,7 @@ import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
@@ -303,7 +304,9 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_ENTITY_DESCRIPTION);
 
-    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
+    FunctionalProfileEntry entry = new FunctionalProfileEntry();
+	entry.setContent(FunctionalProfile.FP_READ.name());
+    profile.addFunctionalProfile(entry);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

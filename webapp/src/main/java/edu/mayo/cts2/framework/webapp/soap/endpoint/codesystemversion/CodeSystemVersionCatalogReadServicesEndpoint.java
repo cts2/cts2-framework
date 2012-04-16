@@ -2,6 +2,7 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystemversion;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
@@ -234,7 +235,9 @@ public class CodeSystemVersionCatalogReadServicesEndpoint extends AbstractReadSe
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_CODE_SYSTEM_VERSION);
 
-    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
+    FunctionalProfileEntry entry = new FunctionalProfileEntry();
+	entry.setContent(FunctionalProfile.FP_READ.name());
+    profile.addFunctionalProfile(entry);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

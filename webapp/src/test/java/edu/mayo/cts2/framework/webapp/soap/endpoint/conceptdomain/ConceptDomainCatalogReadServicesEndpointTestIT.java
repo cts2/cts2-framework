@@ -166,7 +166,7 @@ public class ConceptDomainCatalogReadServicesEndpointTestIT extends SoapEndpoint
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
     assertEquals(StructuralProfile.SP_CONCEPT_DOMAIN, profile.getStructuralProfile());
-    assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile());
+    assertEquals(FunctionalProfile.FP_READ.name(), profile.getFunctionalProfile()[0].getContent());
   }
 
   @Test

@@ -10,6 +10,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding;
+import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
@@ -219,7 +220,9 @@ public class ConceptDomainBindingReadServicesEndpoint extends AbstractReadServic
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING);
 
-    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
+    FunctionalProfileEntry entry = new FunctionalProfileEntry();
+	entry.setContent(FunctionalProfile.FP_READ.name());
+    profile.addFunctionalProfile(entry);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;

@@ -129,7 +129,7 @@ public class CodeSystemCatalogReadServicesEndpointTestIT extends SoapEndpointTes
     GetSupportedProfileResponse response = (GetSupportedProfileResponse) this.doSoapCall(uri, request);
     ProfileElement profile = response.getReturn()[0];
     assertEquals(StructuralProfile.SP_CODE_SYSTEM, profile.getStructuralProfile());
-    assertEquals(FunctionalProfile.FP_READ, profile.getFunctionalProfile());
+    assertEquals(FunctionalProfile.FP_READ.name(), profile.getFunctionalProfile()[0].getContent());
   }
 
   @Test

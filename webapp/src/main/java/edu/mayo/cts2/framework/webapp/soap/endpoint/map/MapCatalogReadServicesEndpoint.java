@@ -2,6 +2,7 @@ package edu.mayo.cts2.framework.webapp.soap.endpoint.map;
 
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
@@ -157,7 +158,9 @@ public class MapCatalogReadServicesEndpoint extends AbstractReadServiceEndpoint 
     ProfileElement profile = new ProfileElement();
     profile.setStructuralProfile(StructuralProfile.SP_MAP);
 
-    profile.setFunctionalProfile(FunctionalProfile.FP_READ);
+    FunctionalProfileEntry entry = new FunctionalProfileEntry();
+	entry.setContent(FunctionalProfile.FP_READ.name());
+    profile.addFunctionalProfile(entry);
 
     ProfileElement profiles[] = new ProfileElement[1];
     profiles[0] = profile;
