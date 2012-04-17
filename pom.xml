@@ -490,7 +490,7 @@
 
 		<repository>
 			<id>edu.informatics.maven.releases</id>
-			<name>Informatics Maven Snapshot Repository</name>
+			<name>Informatics Maven Release Repository</name>
 			<url>http://informatics.mayo.edu/maven/content/repositories/releases</url>
 			<releases>
 				<enabled>true</enabled>

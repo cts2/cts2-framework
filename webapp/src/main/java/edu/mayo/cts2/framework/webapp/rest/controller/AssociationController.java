@@ -53,6 +53,7 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -208,8 +209,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@PathVariable(VAR_ENTITYID) String entityName) {
-		
-		
+
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
 		String codeSystemVersionName = this.codeSystemVersionNameResolver.getCodeSystemVersionNameFromVersionId(
@@ -218,16 +218,19 @@ public class AssociationController extends AbstractMessageWrappingController {
 				codeSystemVersionId,
 				readContext);
 			
+		NameOrURI codeSystemVersionNameOrUri = ModelUtils.nameOrUriFromName(codeSystemVersionName);
+		
 		EntityDescriptionReadId entity = 
 				new EntityDescriptionReadId(
 						this.getScopedEntityName(entityName, codeSystemName), 
-						ModelUtils.nameOrUriFromName(codeSystemVersionName));
+						codeSystemVersionNameOrUri);
 		
 		HierarchyRestriction hierarchyRestriction = new HierarchyRestriction();
 		hierarchyRestriction.setEntity(entity);
 		hierarchyRestriction.setHierarchyType(HierarchyType.CHILDREN);
 	
 		restrictions.setHierarchyRestriction(hierarchyRestriction);
+		restrictions.setCodeSystemVersion(codeSystemVersionNameOrUri);
 		
 		EntityQueryBuilder builder = 
 				this.getNewEntityQueryBuilder();

@@ -4,8 +4,7 @@
             xsi:schemaLocation="http://www.castor.org/SourceGenerator/Binding
                 http://castor.org/binding.xsd" defaultBindingType="type">
 		
-		
-		<elementBinding name="/IteratableChangeSet/entry">
+		<elementBinding name="/complexType:IteratableChangeSet/entry">
 			<member name="changeSetEntry"/>
 		</elementBinding>
 		
