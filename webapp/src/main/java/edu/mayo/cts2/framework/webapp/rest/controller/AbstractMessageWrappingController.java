@@ -447,7 +447,7 @@ public abstract class AbstractMessageWrappingController extends
 		}
 		Set<? extends PropertyReference> predicates = queryService.getSupportedSortReferences();
 		PropertyReference ref = 
-				ControllerUtils.getPropertyReference(null, sort.getSort(), predicates);
+				ControllerUtils.getPropertyReference(sort.getSort(), predicates);
 
 		SortCriterion sortCriterion = new SortCriterion();
 		sortCriterion.setSortDirection(this.getSortDirection(sort.getSortdirection()));

@@ -1,5 +1,6 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -88,10 +89,10 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
 		
 		if(CollectionUtils.isNotEmpty(filters)){
 			for(FilterComponent filter : filters){
-				ResolvedFilter resolvedFilter = 
+				Collection<ResolvedFilter> resolvedFilterCollection = 
 						filterResolver.resolveFilter(filter, this.codeSystemQueryService);
 				
-				resolvedFilters.add(resolvedFilter);
+				resolvedFilters.addAll(resolvedFilterCollection);
 			}
 		}
 

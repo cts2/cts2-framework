@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.command;
 
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 
 /**
@@ -36,7 +35,6 @@ public class RestFilter {
 	private String matchalgorithm = ExternalCts2Constants.MATCH_CONTAINS_NAME;
 	private String filtercomponent = ExternalCts2Constants.MA_RESOURCE_SYNOPSIS_NAME;
 	private String matchvalue;
-	private TargetReferenceType referencetype = TargetReferenceType.ATTRIBUTE;
 	
 	public String getMatchalgorithm() {
 		return matchalgorithm;
@@ -55,11 +53,5 @@ public class RestFilter {
 	}
 	public void setMatchvalue(String matchvalue) {
 		this.matchvalue = matchvalue;
-	}
-	public TargetReferenceType getReferencetype() {
-		return referencetype;
-	}
-	public void setReferencetype(TargetReferenceType referencetype) {
-		this.referencetype = referencetype;
 	}
 }

@@ -1,11 +1,14 @@
 package edu.mayo.cts2.framework.webapp.soap.resolver;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.service.core.FilterComponent;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
@@ -13,32 +16,38 @@ import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 
 public class FilterResolver {
 
-	public ResolvedFilter resolveFilter(FilterComponent restFilter, BaseQueryService service){
-		if(restFilter == null ||
-				StringUtils.isBlank(restFilter.getMatchValue())){
+	public Collection<ResolvedFilter> resolveFilter(FilterComponent filter, BaseQueryService service){
+		if(filter == null ||
+				StringUtils.isBlank(filter.getMatchValue())){
 			return null;
 		}
 		
-		NameOrURI matchAlgorithmReference = restFilter.getMatchAlgorithm();
+		NameOrURI matchAlgorithmReference = filter.getMatchAlgorithm();
 		
 		MatchAlgorithmReference matchRef = 
 			ControllerUtils.getReference(matchAlgorithmReference, service.getSupportedMatchAlgorithms());
 			
-		ResolvedFilter resolvedFilter = new ResolvedFilter();
-		resolvedFilter.setMatchAlgorithmReference(matchRef);
+		List<ResolvedFilter> returnList = new ArrayList<ResolvedFilter>();
 		
-		//TODO: Check for a URI here
-		String name = restFilter.getEntityName().getName();
+		if(filter.getFilterComponents() != null){
+			for(NameOrURI nameOrURI : filter.getFilterComponents().getEntry()){
+				ResolvedFilter resolvedFilter = new ResolvedFilter();
+				resolvedFilter.setMatchAlgorithmReference(matchRef);
 
-		TargetReferenceType type = restFilter.getReferenceType();
+				//TODO: Check for a URI here
+				String name = nameOrURI.getName();
 
-		PropertyReference propertyReference = 
-				ControllerUtils.getPropertyReference(type, name, service.getSupportedSearchReferences());
+				PropertyReference propertyReference = 
+						ControllerUtils.getPropertyReference(name, service.getSupportedSearchReferences());
+				
+				resolvedFilter.setPropertyReference(propertyReference);
+
+				resolvedFilter.setMatchValue(filter.getMatchValue());
+				
+				returnList.add(resolvedFilter);
+			}
+		}
 		
-		resolvedFilter.setPropertyReference(propertyReference);
-
-		resolvedFilter.setMatchValue(restFilter.getMatchValue());
-		
-		return resolvedFilter;
+		return returnList;
 	}
 }

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
@@ -29,10 +28,9 @@ public class FilterResolver {
 		resolvedFilter.setMatchAlgorithmReference(matchRef);
 		
 		String nameOrUri = restFilter.getFiltercomponent();
-		TargetReferenceType type = restFilter.getReferencetype();
 
 		PropertyReference propertyReference = 
-				ControllerUtils.getPropertyReference(type, nameOrUri, service.getSupportedSearchReferences());
+				ControllerUtils.getPropertyReference(nameOrUri, service.getSupportedSearchReferences());
 		
 		resolvedFilter.setPropertyReference(propertyReference);
 
