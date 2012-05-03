@@ -293,6 +293,8 @@ public class MapEntryController extends AbstractMessageWrappingController {
 			boolean list,
 			@PathVariable(VAR_MAPID) String mapName,
 			@PathVariable(VAR_MAPVERSIONID) String mapVersionName) {
+		
+		restrictions.setMapVersion(ModelUtils.nameOrUriFromName(mapVersionName));
 
 		MapEntryQueryBuilder builder = this.getNewResourceQueryBuilder();
 		

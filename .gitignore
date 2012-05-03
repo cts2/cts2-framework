@@ -2,6 +2,7 @@ target/
 .scala_dependencies
 .cache
 .DS_Store
+.cache
 
 ### Intellij Idea ###
 *.ids
