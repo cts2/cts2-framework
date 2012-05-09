@@ -237,7 +237,7 @@
       schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionReadServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionResolution"
+      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionResolutionServices"
       schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/xsd/ValueSetDefinitionResolutionTypes.xsd" />
 
 </schema>

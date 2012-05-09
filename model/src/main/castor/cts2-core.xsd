@@ -3,25 +3,25 @@
 	targetNamespace="http://schema.omg.org/spec/CTS2/1.0/cts2-core" xmlns:tns="http://schema.omg.org/spec/CTS2/1.0/cts2-core"
 	elementFormDefault="qualified">
 
-	<xs:import namespace="http://cts2.org/schema/2010/01/Updates"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/Updates"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/schema/Updates.xsd" />
 		
-	<xs:import namespace="http://cts2.org/schema/2010/01/CoreService"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/CoreService"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/CoreService.xsd" />
 		
-	<xs:import namespace="http://cts2.org/schema/2010/01/AssociationServices"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/AssociationServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/AssociationServices.xsd" />
 
-	<xs:import namespace="http://cts2.org/schema/2010/01/CodeSystemServices"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/CodeSystemServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/CodeSystemServices.xsd" />
 
-	<xs:import namespace="http://cts2.org/schema/2010/01/CodeSystemVersionServices"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/CodeSystemVersionServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/CodeSystemVersionServices.xsd" />
 	
 	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/EntityDescriptionServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/EntityDescriptionServices.xsd" />
 		
-	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/MapCatalogServices"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/MapServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/MapServices.xsd" />
 		
 	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/MapVersionServices"
@@ -45,7 +45,7 @@
 	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/StatementServices"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/StatementServices.xsd" />
 		
-	<xs:import namespace="http://cts2.org/schema/2010/01/Exceptions"
+	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/Exceptions"
 		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/Exceptions.xsd" />
 
 </schema>
