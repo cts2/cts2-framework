@@ -492,6 +492,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
       URIAndEntityName uriAndEntityName = new URIAndEntityName();
       uriAndEntityName.setName("test.urientityname");
       uriAndEntityName.setNamespace("test");
+      uriAndEntityName.setUri("http://my/uri");
       URIAndEntityName uriAndEntityNames[] = new URIAndEntityName[1];
       uriAndEntityNames[0] = uriAndEntityName;
       entityDescription.setEntityType(uriAndEntityNames);
@@ -529,6 +530,7 @@ public class EntityDescriptionReadServicesEndpointTestIT extends SoapEndpointTes
       URIAndEntityName uriAndEntityName = new URIAndEntityName();
       uriAndEntityName.setName("test.entityType");
       uriAndEntityName.setNamespace("test.namespace");
+      uriAndEntityName.setUri("http://my/uri");
 
       List<URIAndEntityName> uriAndEntityNameList = new ArrayList<URIAndEntityName>(1);
       uriAndEntityNameList.add(uriAndEntityName);

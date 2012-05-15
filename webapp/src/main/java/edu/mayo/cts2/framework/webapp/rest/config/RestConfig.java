@@ -36,5 +36,7 @@ public interface RestConfig {
 	 * @return to allow html rendering
 	 */
 	public boolean getAllowHtmlRendering();
+	
+	public boolean getShowStackTraceOnError();
 
 }

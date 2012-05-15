@@ -72,7 +72,6 @@ import edu.mayo.cts2.framework.service.profile.ReadService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
-import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
 import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
@@ -106,9 +105,6 @@ public abstract class AbstractMessageWrappingController extends
 	
 	@Resource 
 	private ReadContextResolver readContextResolver;
-	
-	@Resource
-	private RestConfig restConfig;
 	
 	private static String BEANS_VIEW = "beans";
 	private static String BEANS_MODEL_OBJECT = "bean";
@@ -329,7 +325,7 @@ public abstract class AbstractMessageWrappingController extends
 		
 		MediaType type = types.get(0);
 		
-		if(this.restConfig.getAllowHtmlRendering() && 
+		if(this.getRestConfig().getAllowHtmlRendering() && 
 				type.isCompatibleWith(MediaType.TEXT_HTML)){
 			ModelAndView mav = new ModelAndView(BEANS_VIEW);
 			mav.addObject(BEANS_MODEL_OBJECT, bean);

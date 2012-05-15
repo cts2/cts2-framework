@@ -57,9 +57,13 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider, 
 		
 	}
 	
+	protected ApplicationContext decorateApplicationContext(ApplicationContext context) {
+		return context;
+	}
+	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
-		this.applicationContext = applicationContext;
+		this.applicationContext = this.decorateApplicationContext(applicationContext);
 	}
 }

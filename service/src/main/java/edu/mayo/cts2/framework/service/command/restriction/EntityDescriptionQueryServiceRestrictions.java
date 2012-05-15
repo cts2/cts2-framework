@@ -77,30 +77,6 @@ public class EntityDescriptionQueryServiceRestrictions {
 		this.hierarchyRestriction = hierarchyRestriction;
 	}
 
-	public static class TaggedCodeSystemRestriction {
-		
-		private NameOrURI codeSystem;
-		
-		private String tag;
-
-		public NameOrURI getCodeSystem() {
-			return codeSystem;
-		}
-
-		public void setCodeSystem(NameOrURI codeSystem) {
-			this.codeSystem = codeSystem;
-		}
-
-		public String getTag() {
-			return tag;
-		}
-
-		public void setTag(String tag) {
-			this.tag = tag;
-		}
-		
-	}
-	
 	public static class HierarchyRestriction {
 		
 		public enum HierarchyType {CHILDREN,DESCENDANTS,ANCESTORS}

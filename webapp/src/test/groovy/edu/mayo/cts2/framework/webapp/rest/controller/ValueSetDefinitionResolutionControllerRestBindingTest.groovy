@@ -16,7 +16,6 @@ import edu.mayo.cts2.framework.model.core.SourceAndNotation
 import edu.mayo.cts2.framework.model.core.ValueSetDefinitionReference
 import edu.mayo.cts2.framework.model.core.ValueSetReference
 import edu.mayo.cts2.framework.model.core.types.SetOperator
-import edu.mayo.cts2.framework.model.directory.DirectoryResult
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition
 import edu.mayo.cts2.framework.model.valuesetdefinition.CompleteCodeSystemReference
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet
@@ -53,19 +52,13 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 	@Override
 	public getController() {
 		def vsdef = createEntry(getUriToTest())
-		
-		def rs = [
-			resolveDefinitionAsDirectory:{o,t,th,f,fi,s,se -> null}
-		] as ValueSetDefinitionResolutionService;
 	
 		def readService = [
 			read:{o,t -> vsdef}
 		] as ValueSetDefinitionReadService;
-	
-		controller.setValueSetDefinitionResolutionService(rs)
+
 		vsdcontroller.setValueSetDefinitionReadService(readService)
 
-		
 		controller
 	}
 	
@@ -174,9 +167,9 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		def isCalled = false;
 		
 		def rs = [
-			resolveDefinitionAsEntityDirectory:{ p1,p2,p3,p4,p5,p6,p7,p8-> 
+			resolveDefinitionAsEntityDirectory:{ p1,p2,p3,p4,p5,p6,p7 -> 
 				isCalled = true
-				new DirectoryResult([],true)
+				new ResolvedValueSetResult(null,[],true)
 			}
 		] as ValueSetDefinitionResolutionService;
 	

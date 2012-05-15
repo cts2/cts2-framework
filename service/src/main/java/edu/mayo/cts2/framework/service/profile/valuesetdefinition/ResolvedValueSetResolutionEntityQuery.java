@@ -23,50 +23,38 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
-import java.util.List;
+import java.util.Set;
 
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetResolutionEntityRestrictions;
 
 /**
- * The Class ResolvedValueSetResult.
+ * The Interface ResolvedValueSetQuery.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ResolvedValueSetResult<T> extends DirectoryResult<T>{
+public interface ResolvedValueSetResolutionEntityQuery {
 	
-	private ResolvedValueSetHeader resolvedValueSetHeader;
-
 	/**
-	 * Instantiates a new resolved value set result.
+	 * Gets the query.
 	 *
-	 * @param resolvedValueSetHeader the resolved value set header
-	 * @param entries the entries
-	 * @param atEnd the at end
+	 * @return the query
 	 */
-	public ResolvedValueSetResult(
-			ResolvedValueSetHeader resolvedValueSetHeader,
-			List<T> entries, 
-			boolean atEnd) {
-		super(entries, atEnd);
-		this.setResolvedValueSetHeader(resolvedValueSetHeader);
-	}
-
+	public Query getQuery();
+	
 	/**
-	 * Gets the resolved value set header.
+	 * Gets the filter component.
 	 *
-	 * @return the resolved value set header
+	 * @return the filter component
 	 */
-	public ResolvedValueSetHeader getResolvedValueSetHeader() {
-		return resolvedValueSetHeader;
-	}
-
+	public Set<ResolvedFilter> getFilterComponent();
+	
 	/**
-	 * Sets the resolved value set header.
+	 * Gets the resolved value set query service restrictions.
 	 *
-	 * @param resolvedValueSetHeader the new resolved value set header
+	 * @return the resolved value set query service restrictions
 	 */
-	public void setResolvedValueSetHeader(ResolvedValueSetHeader resolvedValueSetHeader) {
-		this.resolvedValueSetHeader = resolvedValueSetHeader;
-	}
+	public ResolvedValueSetResolutionEntityRestrictions getResolvedValueSetResolutionEntityRestrictions();
+
 }

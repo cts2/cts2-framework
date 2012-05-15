@@ -58,6 +58,7 @@ import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
+import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
@@ -70,6 +71,9 @@ import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
 public abstract class AbstractController extends AbstractServiceAwareBean implements URIHelperInterface, ModelAndViewInterface {
 	
 	protected Log log = LogFactory.getLog(getClass());
+	
+	@Resource
+	private RestConfig restConfig;
 
 	@Resource
 	private Cts2RestExceptionCodeMapper cts2RestExceptionCodeMapper;
@@ -144,8 +148,11 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 		response.setStatus(status);
 		
 		return 
-				ExceptionFactory.createUnknownException(ex, 
-						getUrlString(request),getParameterString(request));
+				ExceptionFactory.createUnknownException(
+						ex, 
+						getUrlString(request),
+						getParameterString(request),
+						this.getRestConfig().getShowStackTraceOnError());
 	}
 	
 	
@@ -369,5 +376,13 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 
 	protected UrlPathHelper getUrlPathHelper() {
 		return urlPathHelper;
+	}
+
+	protected RestConfig getRestConfig() {
+		return restConfig;
+	}
+
+	protected void setRestConfig(RestConfig restConfig) {
+		this.restConfig = restConfig;
 	}
 }

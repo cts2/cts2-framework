@@ -195,8 +195,16 @@ public class ExceptionFactory {
 	 * @return the unspecified cts2 exception
 	 */
 	public static UnspecifiedCts2Exception createUnknownException(
-			Exception exception, String url, String paramString) {
-		String message = ExceptionUtils.getFullStackTrace(exception);
+			Exception exception, 
+			String url, 
+			String paramString,
+			boolean showStackTrace) {
+		String message;
+		if(showStackTrace){
+			message = ExceptionUtils.getFullStackTrace(exception);
+		} else {
+			message = exception.getMessage();
+		}
 		
 		return createUnknownException(message, url, paramString);
 	}

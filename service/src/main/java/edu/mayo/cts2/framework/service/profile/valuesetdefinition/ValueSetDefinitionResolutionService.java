@@ -26,15 +26,13 @@ package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.core.EntitySynopsis;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.StructuralConformance;
@@ -60,12 +58,12 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * @param page the page
 	 * @return the resolved value set result
 	 */
-	public ResolvedValueSetResult resolveDefinition(
+	public ResolvedValueSetResult<EntitySynopsis> resolveDefinition(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
 			NameOrURI tag,
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria,
 			ResolvedReadContext readContext, 
 			Page page);
 	
@@ -82,13 +80,12 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * @param page the page
 	 * @return the directory result
 	 */
-	public DirectoryResult<EntityDirectoryEntry> resolveDefinitionAsEntityDirectory(
+	public ResolvedValueSetResult<EntityDirectoryEntry> resolveDefinitionAsEntityDirectory(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
 			NameOrURI tag,
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria,
 			ResolvedReadContext readContext, 
 			Page page);
 	

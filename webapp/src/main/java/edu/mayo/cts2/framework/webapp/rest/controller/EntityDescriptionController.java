@@ -62,7 +62,7 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.TaggedCodeSystemRestriction;
+import edu.mayo.cts2.framework.service.command.restriction.TaggedCodeSystemRestriction;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionMaintenanceService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;

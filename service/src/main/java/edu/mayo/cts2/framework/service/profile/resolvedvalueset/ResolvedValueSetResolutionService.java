@@ -27,42 +27,63 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.EntitySynopsis;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 
 /**
  * The Interface ValueSetDefinitionResolutionService.
- *
+ * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @StructuralConformance(StructuralProfile.SP_VALUE_SET_RESOLUTION)
-public interface ResolvedValueSetResolutionService extends BaseQueryService, Cts2Profile {
+public interface ResolvedValueSetResolutionService extends BaseQueryService,
+		Cts2Profile {
 
 	/**
 	 * Gets the resolution.
-	 *
-	 * @param identifier the identifier
-	 * @param filterComponent the filter component
-	 * @param page the page
+	 * 
+	 * @param identifier
+	 *            the identifier
+	 * @param filterComponent
+	 *            the filter component
+	 * @param page
+	 *            the page
 	 * @return the resolution
 	 */
-	public ResolvedValueSetResult getResolution(
+	public ResolvedValueSetResult<EntitySynopsis> getResolution(
 			ResolvedValueSetReadId identifier,
 			Set<ResolvedFilter> filterComponent, 
 			Page page);
-	
+
 	/**
 	 * Gets the resolution.
-	 *
-	 * @param identifier the identifier
+	 * 
+	 * @param identifier
+	 *            the identifier
 	 * @return the resolution
 	 */
-	public ResolvedValueSet getResolution(
-			ResolvedValueSetReadId identifier);
+	public ResolvedValueSet getResolution(ResolvedValueSetReadId identifier);
 
+	public ResolvedValueSetResult<EntityDirectoryEntry> getEntities(
+			ResolvedValueSetReadId identifier,
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria, 
+			Page page);
+
+	public DirectoryResult<EntityDescription> getEntityList(
+			ResolvedValueSetReadId identifier,
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria, 
+			Page page);
 }

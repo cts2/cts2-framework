@@ -198,6 +198,7 @@ public class MapEntryReadServicesEndpointTestIT extends SoapEndpointTestBase {
       entry.setAssertedBy(versionReference);
 
       URIAndEntityName uriAndEntityName = new URIAndEntityName();
+      uriAndEntityName.setUri("http://my/uri");
       uriAndEntityName.setName("test.name");
       uriAndEntityName.setNamespace("test");
       entry.setMapFrom(uriAndEntityName);

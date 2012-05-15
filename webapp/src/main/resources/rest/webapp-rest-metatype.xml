@@ -2,6 +2,7 @@
 <MetaData xmlns="http://www.osgi.org/xmlns/metatype/v1.0.0">
 	<OCD description="REST Webapp Configuration" name="REST Webapp Configuration" id="edu.mayo.cts2.framework.webapp.rest.config">
 		<AD name="Allow HTML Rendering" id="allowHtmlRendering" required="true" default="false" type="Boolean"  />
+		<AD name="Show Stack Trace on Error" id="showStackTrace" required="true" default="false" type="Boolean"  />
 	</OCD>
 	<Designate pid="edu.mayo.cts2.framework.webapp.rest.config">
         <Object ocdref="edu.mayo.cts2.framework.webapp.rest.config"/>

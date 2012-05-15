@@ -33,8 +33,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +50,7 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Directory;
+import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
@@ -61,17 +66,19 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectory;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetMsg;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetResolutionEntityRestrictions;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetLoaderService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetReference;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetResolutionService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
@@ -137,8 +144,9 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	@ResponseBody
 	public Object getValueSetDefinitionResolution(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			RestReadContext restReadContext,
-			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedValueSetResolutionEntityRestrictions restrictions,
 			RestFilter restFilter,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
@@ -151,6 +159,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		return this.getValueSetDefinitionResolution(
 				httpServletRequest,
+				queryControl,
 				restReadContext,
 				null,
 				restrictions, 
@@ -170,9 +179,10 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	@ResponseBody
 	public Object getValueSetDefinitionResolution(
 			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
 			RestReadContext restReadContext,
 			@RequestBody Query query,
-			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedValueSetResolutionEntityRestrictions restrictions,
 			RestFilter restFilter,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
@@ -188,9 +198,6 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 						definitionLocalId,
 						ModelUtils.nameOrUriFromName(valueSetName));
 
-		ResolvedFilter filterComponent = this.getFilterResolver().resolveRestFilter(
-				restFilter, this.resolvedValueSetQueryService);
-		
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
 		Set<NameOrURI> codeSystemVersions = 
@@ -200,14 +207,17 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		switch (resolution) {
 			case iterable : {
-				ResolvedValueSetResult directory = this.valueSetDefinitionResolutionService.
+				ResolvedValueSetResolutionEntityQuery entityQuery = 
+						this.getResolvedValueSetResolutionEntityQuery(query, restFilter, restrictions);
+				
+				ResolvedValueSetResult<EntitySynopsis> directory = this.valueSetDefinitionResolutionService.
 						resolveDefinition(
 								definitionId, 
 								codeSystemVersions, 
 								tag, 
-								query, 
-								createSet(filterComponent), 
-								readContext, 
+								entityQuery,
+								this.resolveSort(queryControl, this.valueSetDefinitionResolutionService), 
+								readContext,
 								page);
 				
 				IteratableResolvedValueSet iterable = this.populateDirectory(
@@ -221,14 +231,16 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 				return iterable;
 			}
 			case entitydirectory : {
+				ResolvedValueSetResolutionEntityQuery entityQuery = 
+						this.getResolvedValueSetResolutionEntityQuery(query, restFilter, restrictions);
+				
 				DirectoryResult<EntityDirectoryEntry> entityDirectory = this.valueSetDefinitionResolutionService.
 						resolveDefinitionAsEntityDirectory(
 								definitionId, 
 								codeSystemVersions, 
 								tag,
-								query, 
-								createSet(filterComponent), 
-								restrictions,
+								entityQuery,
+								this.resolveSort(queryControl, this.valueSetDefinitionResolutionService), 
 								readContext, 
 								page);
 				
@@ -292,7 +304,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 					filterSet.add(filter);
 				}
 				
-				ResolvedValueSetResult directory = 
+				ResolvedValueSetResult<EntitySynopsis> directory = 
 						this.resolvedValueSetResolutionService.getResolution(
 							id, 
 							filterSet,
@@ -438,6 +450,66 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		//TODO: Add ModelAndView
 		
 		return null;
+	}
+	
+	@InitBinder
+	public void initEntityDescriptionRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) String codesystem,
+			 @RequestParam(value=PARAM_CODESYSTEMTAG, required=false) String tag,
+			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codesystemversion,
+			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity) {
+		
+		if(binder.getTarget() instanceof ResolvedValueSetResolutionEntityRestrictions){
+			ResolvedValueSetResolutionEntityRestrictions restrictions = 
+					(ResolvedValueSetResolutionEntityRestrictions) binder.getTarget();
+
+			if(StringUtils.isNotBlank(codesystemversion)){
+				restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromEither(codesystemversion));
+			}		
+			
+			if(CollectionUtils.isNotEmpty(entity)){
+				restrictions.setEntities(
+						ControllerUtils.idsToEntityNameOrUriSet(entity));
+			}		
+			
+			//TODO: Allow for tags?
+		}
+	}
+	
+	private ResolvedValueSetResolutionEntityQuery getResolvedValueSetResolutionEntityQuery(
+			final Query query, 
+			final RestFilter restFilter,
+			final ResolvedValueSetResolutionEntityRestrictions restrictions){
+		
+		final Set<ResolvedFilter> filters = new HashSet<ResolvedFilter>();
+		
+		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
+				restFilter,
+				this.resolvedValueSetResolutionService);
+		
+		if(filter != null){
+			filters.add(filter);
+		}
+
+		return new ResolvedValueSetResolutionEntityQuery() {
+			
+			@Override
+			public Query getQuery() {
+				return query;
+			}
+
+			@Override
+			public Set<ResolvedFilter> getFilterComponent() {
+				return filters;
+			}
+
+			@Override
+			public ResolvedValueSetResolutionEntityRestrictions getResolvedValueSetResolutionEntityRestrictions() {
+				return restrictions;
+			}
+
+		};
 	}
 	
 	private ResolvedValueSetQuery getResolvedValueSetQuery(

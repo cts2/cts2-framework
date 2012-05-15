@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.webapp.rest.config;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
@@ -45,9 +46,11 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
 public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig{
 	
 	private static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
+	private static final String SHOW_STACK_TRACE = "showStackTrace";
 	private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
 	private boolean allowHtmlRendering;
+	private boolean showStackTrace;
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.webapp.rest.config.RestConfig#getAllowHtmlRendering()
@@ -80,9 +83,11 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	@Override
 	public void updated(@SuppressWarnings("rawtypes") Dictionary properties) throws ConfigurationException {
 		if(properties != null){
-			boolean allow = (Boolean) properties.get(ALLOW_HTML_RENDERING);
-			
+			boolean allow = BooleanUtils.toBoolean( (Boolean) properties.get(ALLOW_HTML_RENDERING) );
 			this.allowHtmlRendering = allow;
+			
+			boolean show = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_STACK_TRACE) );
+			this.showStackTrace = show;
 		}		
 	}
 
@@ -103,5 +108,10 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	@Override
 	protected String getMetatypeXmlPath() {
 		return "/rest/webapp-rest-metatype.xml";
+	}
+
+	@Override
+	public boolean getShowStackTraceOnError() {
+		return this.showStackTrace;
 	}
 }
