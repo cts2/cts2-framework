@@ -52,6 +52,7 @@ import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Directory;
 import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.Message;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
@@ -271,21 +272,15 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	}
 	
 	@RequestMapping(value={	
-			PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID
+			PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_COMPLETE
 			},
 		method=RequestMethod.GET)
-	@ResponseBody
-	public Object getResolvedValueSetResolutionByLocalId(
+	public Object getResolvedValueSetResolutionByLocalIdIterable(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
-			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId,
-			@RequestParam(
-					value=RESOLUTION_TYPE, defaultValue=DEFAULT_VALUESETDEFINITION_RESOLUTION) 
-			ResolvedValueSetResolutionTypes resolution,
-			RestFilter restFilter,
-			Page page) {
+			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId) {
 		
 		ResolvedValueSetReadId id = 
 				new ResolvedValueSetReadId(
@@ -293,56 +288,124 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 						ModelUtils.nameOrUriFromName(valueSetName),
 						ModelUtils.nameOrUriFromName(definitionLocalId));
 		
-		switch (resolution) {
-			case iterable : {
-				ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
-						restFilter, 
-						this.resolvedValueSetResolutionService);
-				
-				Set<ResolvedFilter> filterSet = new HashSet<ResolvedFilter>();
-				if(filter != null){
-					filterSet.add(filter);
-				}
-				
-				ResolvedValueSetResult<EntitySynopsis> directory = 
-						this.resolvedValueSetResolutionService.getResolution(
-							id, 
-							filterSet,
-							page);
-				
-				if(directory == null){
-					throw ExceptionFactory.createUnknownResourceException(id.toString(), UnknownResourceReference.class);
-				}
-				
-				IteratableResolvedValueSet iterable = this.populateDirectory(
+		ResolvedValueSet resolvedValueSet = 
+				this.resolvedValueSetResolutionService.getResolution(id);
+		
+		if(resolvedValueSet == null){
+			throw ExceptionFactory.createUnknownResourceException(
+					resolvedValueSetLocalId, 
+					UnknownResourceReference.class);
+		}
+		
+		ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
+		msg.setResolvedValueSet(resolvedValueSet);
+		
+		return this.buildResponse(
+				httpServletRequest, 
+				this.wrapMessage(msg, httpServletRequest));
+	}
+	
+	@RequestMapping(value={	
+			PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_ENTITIES
+			},
+		method=RequestMethod.GET)
+	public Object getResolvedValueSetResolutionByLocalIdEntities(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			Query query,
+			QueryControl queryControl,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
+			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId,
+			ResolvedValueSetResolutionEntityRestrictions restrictions,
+			RestFilter restFilter,
+			Page page) {
+		
+		ResolvedValueSetReadId id = new ResolvedValueSetReadId(
+				resolvedValueSetLocalId,
+				ModelUtils.nameOrUriFromName(valueSetName),
+				ModelUtils.nameOrUriFromName(definitionLocalId));
+
+		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
+				restFilter, this.resolvedValueSetResolutionService);
+
+		Set<ResolvedFilter> filterSet = new HashSet<ResolvedFilter>();
+		if (filter != null) {
+			filterSet.add(filter);
+		}
+
+		SortCriteria sortCriteria = 
+			this.resolveSort(queryControl, this.resolvedValueSetResolutionService);
+		
+		ResolvedValueSetResolutionEntityQuery entityQuery = 
+			this.getResolvedValueSetResolutionEntityQuery(
+					query, 
+					filterSet, 
+					restrictions);
+		
+		ResolvedValueSetResult<EntityDirectoryEntry> directory =
+				this.resolvedValueSetResolutionService.getEntities(
+						id, 
+						entityQuery,
+						sortCriteria, 
+						page);
+
+		if (directory == null) {
+			throw ExceptionFactory.createUnknownResourceException(
+					id.toString(), UnknownResourceReference.class);
+		}
+
+		Directory dir = 
+				this.populateDirectory(
 						directory, 
 						page, 
 						httpServletRequest, 
-						IteratableResolvedValueSet.class);
-				
-				iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
-				
-				return iterable;
-			}
-			case complete : {
-				ResolvedValueSet resolvedValueSet = 
-						this.resolvedValueSetResolutionService.getResolution(id);
-				
-				if(resolvedValueSet == null){
-					throw ExceptionFactory.createUnknownResourceException(
-							resolvedValueSetLocalId, 
-							UnknownResourceReference.class);
-				}
-				
-				ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
-				msg.setResolvedValueSet(resolvedValueSet);
-				
-				return this.wrapMessage(msg, httpServletRequest);
-			}
-			default : {
-				throw new IllegalStateException();
-			}
-		}	
+						EntityDirectory.class);
+			
+		return this.buildResponse(httpServletRequest, dir);
+	}
+	
+	@RequestMapping(value = { PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID }, method = RequestMethod.GET)
+	public Object getResolvedValueSetResolutionByLocalId(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
+			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId,
+			RestFilter restFilter, 
+			Page page) {
+
+		ResolvedValueSetReadId id = new ResolvedValueSetReadId(
+				resolvedValueSetLocalId,
+				ModelUtils.nameOrUriFromName(valueSetName),
+				ModelUtils.nameOrUriFromName(definitionLocalId));
+
+		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
+				restFilter, this.resolvedValueSetResolutionService);
+
+		Set<ResolvedFilter> filterSet = new HashSet<ResolvedFilter>();
+		if (filter != null) {
+			filterSet.add(filter);
+		}
+
+		ResolvedValueSetResult<EntitySynopsis> directory =
+				this.resolvedValueSetResolutionService
+				.getResolution(
+						id, 
+						filterSet,
+						page);
+
+		if (directory == null) {
+			throw ExceptionFactory.createUnknownResourceException(
+					id.toString(), UnknownResourceReference.class);
+		}
+
+		IteratableResolvedValueSet iterable = this.populateDirectory(directory,
+				page, httpServletRequest, IteratableResolvedValueSet.class);
+
+		iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
+
+		return this.buildResponse(httpServletRequest, iterable);
 	}
 	
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION, method=RequestMethod.GET)
@@ -544,6 +607,31 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 				return restrictions;
 			}
 
+		};
+	}
+	
+	private ResolvedValueSetResolutionEntityQuery getResolvedValueSetResolutionEntityQuery(
+			final Query query,
+			final Set<ResolvedFilter> filterSet,
+			final ResolvedValueSetResolutionEntityRestrictions restrictions){
+		
+		return new ResolvedValueSetResolutionEntityQuery(){
+
+			@Override
+			public Query getQuery() {
+				return query;
+			}
+
+			@Override
+			public Set<ResolvedFilter> getFilterComponent() {
+				return filterSet;
+			}
+
+			@Override
+			public ResolvedValueSetResolutionEntityRestrictions getResolvedValueSetResolutionEntityRestrictions() {
+				return restrictions;
+			}
+			
 		};
 	}
 

@@ -220,6 +220,12 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}";
 	
+	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_COMPLETE =
+			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}/" + COMPLETE;
+	
+	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_ENTITIES =
+			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}/" + ENTITIES;
+	
 	public static final String PATH_RESOLUTIONS_OF_VALUESETDEFINITION =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT;
 	
@@ -294,6 +300,7 @@ interface PathKeywords {
 	public static final String DELIMITEDFILE = "delimitedfile";
 
 	public static final String VALUESET = "valueset";
+	public static final String COMPLETE = "complete";
 	public static final String VALUESET_BY_URI = "valuesetbyuri";
 	public static final String VALUESETS = "valuesets";
 	public static final String VALUESETDEFINITION_SHORT = "definition";
