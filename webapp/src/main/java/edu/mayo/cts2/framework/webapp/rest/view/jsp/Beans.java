@@ -39,6 +39,7 @@ import edu.mayo.cts2.framework.model.core.DirectoryEntry;
 import edu.mayo.cts2.framework.model.core.ResourceDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.ResourceVersionDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 
 /**
  * JSP tag lib for various bean introspection utilities.
@@ -101,6 +102,11 @@ public class Beans {
 					returnSummary(
 							buildSummary( ( DirectoryEntry ) bean, returnMap), bean);
 		}
+		if(bean instanceof ResolvedValueSetDirectoryEntry){
+			return 
+					returnSummary(
+							buildSummary( (ResolvedValueSetDirectoryEntry) bean, returnMap), bean);
+		}
 		if(bean instanceof EntityDirectoryEntry){
 			return 
 					returnSummary(
@@ -134,6 +140,14 @@ public class Beans {
 	
 	private static Map buildSummary(ResourceDescriptionDirectoryEntry bean, Map returnMap) {
 		buildSummary( (DirectoryEntry) bean, returnMap).put("About", bean.getAbout());
+		
+		return returnMap;
+	}
+	
+	private static Map buildSummary(ResolvedValueSetDirectoryEntry bean, Map returnMap) {
+		returnMap.put("Name", bean.getResourceName());
+		returnMap.put("URI", bean.getResolvedValueSetURI());
+		returnMap.put("Header", bean.getResolvedHeader());
 		
 		return returnMap;
 	}

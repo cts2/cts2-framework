@@ -35,7 +35,6 @@ import java.util.List;
 public class DirectoryResult<T> {
 
 	private List<T> entries;
-	private boolean complete;
 	private boolean atEnd;
 
 	/**

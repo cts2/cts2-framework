@@ -61,6 +61,7 @@ import edu.mayo.cts2.framework.model.extension.LocalIdValueSetResolution;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valuesetdefinition.IteratableResolvedValueSet;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
@@ -227,9 +228,14 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 						httpServletRequest, 
 						IteratableResolvedValueSet.class);
 				
-				iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
-				
-				return iterable;
+				if(iterable == null){
+					throw ExceptionFactory.createUnknownResourceException(
+							definitionLocalId.toString(), UnknownValueSetDefinition.class);
+				} else {
+					iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
+					
+					return iterable;
+				}
 			}
 			case entitydirectory : {
 				ResolvedValueSetResolutionEntityQuery entityQuery = 
