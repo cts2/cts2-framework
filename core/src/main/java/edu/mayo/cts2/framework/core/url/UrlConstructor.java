@@ -95,6 +95,15 @@ public class UrlConstructor {
 		return this.createCodeSystemVersionUrl(codeSystemName, codeSystemVersionName) + "/" +
 			URIHelperInterface.ENTITY + "/" + EncodingUtils.encodeScopedEntityName(entityName);
 	}
+	
+	public String createEntityUrl(ScopedEntityName entityName){
+		return this.createEntityUrl(EncodingUtils.encodeScopedEntityName(entityName));
+	}
+	
+	public String createEntityUrl(String entityName){
+		return this.addServerContext(
+				URIHelperInterface.ENTITY + "/" + entityName);
+	}
 
 	/**
 	 * Creates the source url.
