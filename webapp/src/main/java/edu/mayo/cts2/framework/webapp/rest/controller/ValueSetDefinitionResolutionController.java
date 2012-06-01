@@ -417,16 +417,14 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION, method=RequestMethod.GET)
 	public Object getResolvedValueSetsOfValueSetDefinition(
 			HttpServletRequest httpServletRequest,
+			ResolvedValueSetQueryServiceRestrictions restrictions,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
 			RestFilter restFilter,
 			Page page) {
-		
-		ResolvedValueSetQueryServiceRestrictions restrictions = 
-				new ResolvedValueSetQueryServiceRestrictions();
-		
-		restrictions.setValueSet(ModelUtils.nameOrUriFromName(valueSetName));
-		restrictions.setValueSetDefinition(ModelUtils.nameOrUriFromName(definitionLocalId));
+
+		restrictions.getValueSets().add(ModelUtils.nameOrUriFromName(valueSetName));
+		restrictions.getValueSetDefinitions().add(ModelUtils.nameOrUriFromName(definitionLocalId));
 		
 		return this.getResolvedValueSets(
 				httpServletRequest, 
@@ -519,6 +517,41 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		//TODO: Add ModelAndView
 		
 		return null;
+	}
+	
+	@InitBinder
+	public void initResolvedValueSetQueryServiceRestrictionsBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> valueset,
+			 @RequestParam(value=PARAM_DEFINITION, required=false) List<String> definition,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) List<String>  codesystem,
+			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String>  codesystemversion,
+			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity) {
+		
+		if(binder.getTarget() instanceof ResolvedValueSetQueryServiceRestrictions){
+			ResolvedValueSetQueryServiceRestrictions restrictions = 
+					(ResolvedValueSetQueryServiceRestrictions) binder.getTarget();
+
+			if(CollectionUtils.isNotEmpty(valueset)){
+				restrictions.setValueSets(ControllerUtils.idsToNameOrUriSet(valueset));
+			}		
+			
+			if(CollectionUtils.isNotEmpty(definition)){
+				restrictions.setValueSetDefinitions(ControllerUtils.idsToNameOrUriSet(definition));
+			}		
+			
+			if(CollectionUtils.isNotEmpty(codesystem)){
+				restrictions.setCodeSystems(ControllerUtils.idsToNameOrUriSet(codesystem));
+			}	
+			
+			if(CollectionUtils.isNotEmpty(codesystemversion)){
+				restrictions.setCodeSystemVersions(ControllerUtils.idsToNameOrUriSet(codesystemversion));
+			}
+			
+			if(CollectionUtils.isNotEmpty(entity)){
+				restrictions.setEntities(ControllerUtils.idsToEntityNameOrUriSet(entity));
+			}
+		}
 	}
 	
 	@InitBinder

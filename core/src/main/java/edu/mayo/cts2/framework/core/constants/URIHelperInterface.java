@@ -379,6 +379,7 @@ interface PathParameters {
 	public static final String PARAM_ENTITYNAME = "entityname";
 	
 	public static final String PARAM_VALUESET = "valueset";
+	public static final String PARAM_DEFINITION = "definition";
 	
 	public static final String PARAM_ENTITIES_MAPROLE = "entitiesmaprole";
 	public static final String PARAM_VALUESETS_MAPROLE = "valuesetsmaprole";

@@ -23,6 +23,10 @@
  */
 package edu.mayo.cts2.framework.service.command.restriction;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 
@@ -33,24 +37,53 @@ import edu.mayo.cts2.framework.model.service.core.NameOrURI;
  */
 public class ResolvedValueSetQueryServiceRestrictions {
 	
-	private NameOrURI valueSet;
+	private Set<NameOrURI> valueSets = new HashSet<NameOrURI>();
 
-	private NameOrURI valueSetDefinition;
+	private Set<NameOrURI> valueSetDefinitions = new HashSet<NameOrURI>();
 
-	public NameOrURI getValueSetDefinition() {
-		return valueSetDefinition;
-	}
+	private Set<NameOrURI> codeSystems = new HashSet<NameOrURI>();
 
-	public void setValueSetDefinition(NameOrURI valueSetDefinition) {
-		this.valueSetDefinition = valueSetDefinition;
-	}
-
-	public NameOrURI getValueSet() {
-		return valueSet;
-	}
-
-	public void setValueSet(NameOrURI valueSet) {
-		this.valueSet = valueSet;
-	}
+	private Set<NameOrURI> codeSystemVersions = new HashSet<NameOrURI>();
 	
+	private Set<EntityNameOrURI> entities = new HashSet<EntityNameOrURI>();
+
+	public Set<NameOrURI> getValueSets() {
+		return valueSets;
+	}
+
+	public void setValueSets(Set<NameOrURI> valueSets) {
+		this.valueSets = valueSets;
+	}
+
+	public Set<NameOrURI> getValueSetDefinitions() {
+		return valueSetDefinitions;
+	}
+
+	public void setValueSetDefinitions(Set<NameOrURI> valueSetDefinitions) {
+		this.valueSetDefinitions = valueSetDefinitions;
+	}
+
+	public Set<NameOrURI> getCodeSystems() {
+		return codeSystems;
+	}
+
+	public void setCodeSystems(Set<NameOrURI> codeSystems) {
+		this.codeSystems = codeSystems;
+	}
+
+	public Set<NameOrURI> getCodeSystemVersions() {
+		return codeSystemVersions;
+	}
+
+	public void setCodeSystemVersions(Set<NameOrURI> codeSystemVersions) {
+		this.codeSystemVersions = codeSystemVersions;
+	}
+
+	public Set<EntityNameOrURI> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(Set<EntityNameOrURI> entities) {
+		this.entities = entities;
+	}
 }
