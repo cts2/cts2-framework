@@ -48,6 +48,7 @@ import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.core.EntityReference;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -57,6 +58,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownEntity;
@@ -541,7 +543,6 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	}
 	
 	@RequestMapping(value=PATH_ALL_DESCRIPTIONS_OF_ENTITYBYID, method=RequestMethod.GET)
-	@ResponseBody
 	public Object getAllEntityDescriptionsByName(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
@@ -554,8 +555,9 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 
 		EntityNameOrURI entityId = 
 				ModelUtils.entityNameOrUriFromName(this.getScopedEntityName(entityName));
-		
 	
+		Object response;
+		
 		if(list){
 			DirectoryResult<EntityListEntry> entityList = 
 					this.entityDescriptionReadService.readEntityDescriptions(
@@ -563,12 +565,15 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 							this.resolveSort(queryControl, this.entityDescriptionQueryService),
 							readContext, 
 							page);
-			return 
-					this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+			response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
 		} else {
-			return 
-					//TODO: This probably needs to be a Message
-					this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+			response = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+		}
+		
+		if(response == null) {
+			throw ExceptionFactory.createUnknownResourceException(entityId.toString(), UnknownEntity.class);
+		} else {
+			return this.buildResponse(httpServletRequest, response);
 		}
 	}
 	
@@ -580,7 +585,6 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @return the entity description by uri
 	 */
 	@RequestMapping(value=PATH_ENTITYBYURI, method=RequestMethod.GET)
-	@ResponseBody
 	public Object getAllEntityDescriptionsByUri(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
@@ -595,6 +599,9 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		EntityNameOrURI entityId = 
 				ModelUtils.entityNameOrUriFromUri(uri);
 
+		Object response;
+		ScopedEntityName name = null;
+		
 		if(list){
 			DirectoryResult<EntityListEntry> entityList = 
 					this.entityDescriptionReadService.readEntityDescriptions(
@@ -602,12 +609,24 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 							this.resolveSort(queryControl, this.entityDescriptionQueryService),
 							readContext, 
 							page);
-			return 
-					this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+			response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
 		} else {
-			return 
-					//TODO: This probably needs to be a Message
-					this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+			EntityReference descriptions = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+			name = descriptions.getName();
+			
+			response = descriptions;
+		}
+		
+		if(response == null) {
+			throw ExceptionFactory.createUnknownResourceException(entityId.toString(), UnknownEntity.class);
+		} else {
+			
+			if(redirect && name != null) {
+				String redirectUrl = PATH_ENTITY + "/" + name.toString();
+				return this.redirect(redirectUrl, httpServletRequest);
+			} else {
+				return this.buildResponse(httpServletRequest, response);
+			}
 		}
 	}
 	
