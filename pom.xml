@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>0.7.2-SNAPSHOT</version>
+	<version>0.7.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
