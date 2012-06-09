@@ -822,8 +822,19 @@
 	<beans:bean id="marshaller"
 		class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller" />
 
+	<beans:bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	  <beans:property name="order" value="1" />
+	  <beans:property name="mediaTypes">
+	    <beans:map>
+	      <beans:entry key="json" value="application/json" />
+	      <beans:entry key="xml" value="application/xml" />
+	    </beans:map>
+	  </beans:property>
+	</beans:bean>
+
 	<beans:bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="order" value="2" />
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
