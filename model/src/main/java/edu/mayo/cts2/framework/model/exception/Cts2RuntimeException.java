@@ -23,12 +23,14 @@
  */
 package edu.mayo.cts2.framework.model.exception;
 
+import edu.mayo.cts2.framework.model.Cts2Model;
+
 /**
  * The Class Cts2RuntimeException.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class Cts2RuntimeException extends RuntimeException {
+public class Cts2RuntimeException extends RuntimeException implements Cts2Model {
 
 	private static final long serialVersionUID = -8567312912032789588L;
 	

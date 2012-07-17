@@ -4,6 +4,7 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 
+import edu.mayo.cts2.framework.core.json.JsonConverter
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
 import edu.mayo.cts2.framework.model.core.types.FinalizableState
@@ -16,7 +17,17 @@ class MappingGsonHttpMessageConverterTest {
 	
 	def converter = new MappingGsonHttpMessageConverter()
 	
-	def gson = converter.gson;
+	def gson = converter.jsonConverter = new JsonConverter()
+	
+	@Test
+	void TestGetJsonSimple(){
+		
+		def cs = new CodeSystemCatalogEntry()
+		
+		def json = gson.toJson(cs)
+		
+		assertNotNull json
+	}
 	
 	@Test
 	void TestGetJson(){
@@ -37,7 +48,7 @@ class MappingGsonHttpMessageConverterTest {
 		
 		assertNotNull json
 		
-		assertEquals '{"Result":"OK","Records":["hi","there"]}', json
+		assertEquals '{"JTablesResponse":{"Result":"OK","Records":["hi","there"]}}', json
 	}
 	
 	@Test
@@ -104,19 +115,5 @@ class MappingGsonHttpMessageConverterTest {
 		
 		assertEquals returned.getNamedEntity().entityID.namespace, "ns"
 	}
-	
-	@Test
-	void TestSetChoiceValue(){
-		
-		def ed = new NamedEntityDescription(entityID:new ScopedEntityName(name:"n",namespace:"ns"))
-		
-		def des = new EntityDescription()
-		des.setNamedEntity(ed)
-		
-		converter.setChoiceValue(des);
-		
-		assertNotNull des.namedEntity;
-		assertNotNull des.choiceValue;
 
-	}
 }

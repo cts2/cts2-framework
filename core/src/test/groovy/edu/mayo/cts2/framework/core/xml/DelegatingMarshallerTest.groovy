@@ -18,6 +18,7 @@ import edu.mayo.cts2.framework.model.core.RESTResource
 import edu.mayo.cts2.framework.model.core.ValueSetReference
 import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding
 import edu.mayo.cts2.framework.model.service.core.UpdateResourceVersionDescription
+import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 
 class DelegatingMarshallerTest {
 	 

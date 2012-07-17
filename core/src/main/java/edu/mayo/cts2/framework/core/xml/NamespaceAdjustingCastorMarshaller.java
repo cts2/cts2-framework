@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import edu.mayo.cts2.framework.core.xml.PatchedCastorMarshaller;
+
 /**
  * The Class NamespaceAdjustingCastorMarshaller.
  *

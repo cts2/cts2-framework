@@ -1,8 +1,9 @@
 package edu.mayo.cts2.framework.model.service.core;
 
+import edu.mayo.cts2.framework.model.BaseCts2ModelObject;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 
-public abstract class AbstractEntityNameToString {
+public abstract class AbstractEntityNameToString extends BaseCts2ModelObject {
 
 	public String toString(){
 		String returnString;

@@ -1,9 +1,9 @@
 package edu.mayo.cts2.framework.model.core;
 
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
+import edu.mayo.cts2.framework.model.BaseCts2ModelObject;
 import edu.mayo.cts2.framework.model.core.types.EntryState;
 
-public abstract class AbstractIsChangeableChoice implements IsChangeable{
+public abstract class AbstractIsChangeableChoice extends BaseCts2ModelObject implements IsChangeable {
 	
 	@Override
 	public ChangeableElementGroup getChangeableElementGroup() {

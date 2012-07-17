@@ -37,6 +37,33 @@
 				<version>1.3.9</version>
 				<executions>
 					<execution>
+						<id>remove content</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/*</include>
+							</includes>
+							<excludes>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/NameAndMeaningReference.java</exclude>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/SourceAndRoleReference.java</exclude>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/TsAnyType.java</exclude>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/service/core/FunctionalProfileEntry.java</exclude>
+							</excludes>
+							<replacements>
+								<replacement>
+									<token>private java.lang.String _content = "";</token>
+									<value></value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+					
+					<execution>
 						<id>set content null</id>
 						<phase>process-resources</phase>
 						<goals>
@@ -50,7 +77,7 @@
 							<replacements>
 								<replacement>
 									<token>private java.lang.String _content = "";</token>
-									<value>private java.lang.String _content = null;</value>
+									<value>protected java.lang.String _content = null;</value>
 								</replacement>
 							</replacements>
 						</configuration>
@@ -70,7 +97,7 @@
 							</includes>
 							<replacements>
 								<replacement>
-									<token>class NameOrURI</token>
+									<token>class NameOrURI extends edu.mayo.cts2.framework.model.BaseCts2ModelObject </token>
 									<value>class NameOrURI extends
 										edu.mayo.cts2.framework.model.service.core.AbstractNameToString </value>
 								</replacement>
@@ -92,7 +119,7 @@
 							</includes>
 							<replacements>
 								<replacement>
-									<token>class EntityNameOrURI</token>
+									<token>class EntityNameOrURI extends edu.mayo.cts2.framework.model.BaseCts2ModelObject </token>
 									<value>class EntityNameOrURI extends
 										edu.mayo.cts2.framework.model.service.core.AbstractEntityNameToString </value>
 								</replacement>
@@ -114,7 +141,7 @@
 							</includes>
 							<replacements>
 								<replacement>
-									<token>class EntityDescription</token>
+									<token>class EntityDescription extends edu.mayo.cts2.framework.model.BaseCts2ModelObject </token>
 									<value>class EntityDescription extends
 										edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
 								</replacement>
@@ -136,7 +163,7 @@
 							</includes>
 							<replacements>
 								<replacement>
-									<token>class CTS2Exception</token>
+									<token>class CTS2Exception extends edu.mayo.cts2.framework.model.BaseCts2ModelObject </token>
 									<value>class CTS2Exception extends
 										edu.mayo.cts2.framework.model.exception.AbstractCTS2Exception </value>
 								</replacement>
@@ -158,7 +185,7 @@
 							</includes>
 							<replacements>
 								<replacement>
-									<token>class ChangeableResource</token>
+									<token>class ChangeableResource extends edu.mayo.cts2.framework.model.BaseCts2ModelObject </token>
 									<value>class ChangeableResource extends
 										edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice </value>
 								</replacement>
@@ -191,6 +218,13 @@
 	</build>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.codehaus.castor</groupId>
 			<artifactId>castor-xml</artifactId>

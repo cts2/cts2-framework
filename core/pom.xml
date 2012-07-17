@@ -33,7 +33,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.metatype</artifactId>
@@ -45,7 +45,7 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.apache.felix</groupId>
-					<artifactId>org.osgi.compendium</artifactId>	
+					<artifactId>org.osgi.compendium</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -285,11 +285,19 @@
 			<version>1.1.1</version>
 		</dependency>
 
+
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20070829</version>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

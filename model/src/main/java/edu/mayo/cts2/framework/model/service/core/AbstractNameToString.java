@@ -2,7 +2,9 @@ package edu.mayo.cts2.framework.model.service.core;
 
 import org.apache.commons.lang.StringUtils;
 
-public abstract class AbstractNameToString {
+import edu.mayo.cts2.framework.model.BaseCts2ModelObject;
+
+public abstract class AbstractNameToString extends BaseCts2ModelObject {
 
 	public String toString() {
 		String returnString;
