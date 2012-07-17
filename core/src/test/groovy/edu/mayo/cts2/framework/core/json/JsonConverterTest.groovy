@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Test
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
+import edu.mayo.cts2.framework.model.core.EntryDescription
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
+import edu.mayo.cts2.framework.model.core.TsAnyType
 import edu.mayo.cts2.framework.model.entity.EntityDescription
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 
@@ -32,6 +34,20 @@ class JsonConverterTest {
 		
 		assertEquals "csname", converter.fromJson(json, CodeSystemCatalogEntry).codeSystemName
 	}
+	
+	@Test
+	void TestObjectToJsonSpecialChars(){
+		def converter = new JsonConverter()
+		def cs = new CodeSystemCatalogEntry(resourceSynopsis: new EntryDescription(value: new TsAnyType()));
+		cs.resourceSynopsis.value.content = '&lt;a href="http://obo.cvs.sourceforge.net/*checkout*/song/ontology/sofa.obo"&gt;SOFA&lt;/a&gt; '
+		
+		def json = converter.toJson(cs);
+		
+		def cs_return = converter.fromJson(json)
+		
+		assertEquals cs, cs_return
+	}
+	
 	
 	
 	@Test
