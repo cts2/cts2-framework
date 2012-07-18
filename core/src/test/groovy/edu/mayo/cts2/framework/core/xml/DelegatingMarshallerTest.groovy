@@ -54,6 +54,24 @@ class DelegatingMarshallerTest {
 		marshaller.unmarshal(new StreamSource(stream))
 	}
 	
+	@Test
+	void "Test Unmarshall InValid With NON_VALIDATING"(){
+		def stream = invalid.getInputStream()
+		
+		def m = new DelegatingMarshaller(false)
+		
+		m.unmarshal(new StreamSource(stream))
+	}
+	
+	
+	@Test(expected=UnmarshallingFailureException.class)
+	void "Test Unmarshall InValid With WITH_VALIDATING"(){
+		def stream = invalid.getInputStream()
+		
+		def m = new DelegatingMarshaller(true)
+		
+		m.unmarshal(new StreamSource(stream))
+	}
 	@Test(expected=ValidationFailureException.class)
 	void "Test Marshall InValid"(){
 		marshaller.marshal(new CodeSystemCatalogEntry(), new StreamResult(new StringWriter()))

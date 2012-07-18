@@ -70,12 +70,16 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 	private Properties namespaceLocationProperties;
 	private Properties namespaceMappingProperties;
 
+	public DelegatingMarshaller(){
+		this(true);
+	}
+	
 	/**
 	 * Instantiates a new delgating marshaller.
 	 *
 	 * @throws Exception the exception
 	 */
-	public DelegatingMarshaller() throws Exception {
+	public DelegatingMarshaller(boolean validate){
 		super();
 		this.castorBuilderProperties = this.modelXmlPropertiesHandler.getCastorBuilderProperties();
 		this.namespaceLocationProperties = this.modelXmlPropertiesHandler.getNamespaceLocationProperties();
@@ -98,7 +102,7 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 			String ns = StringUtils.substringBefore(entry, "=");
 			String pkg = StringUtils.substringAfter(entry, "=");
 	
-			packageToMarshallerMap.put(pkg, createNewMarshaller(ns));
+			packageToMarshallerMap.put(pkg, createNewMarshaller(ns, validate));
 			allPackages.add(pkg);
 			
 			namespacePackageMapping.put(ns, pkg);
@@ -108,9 +112,13 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 		this.defaultMarshaller.setNamespaceMappings(this.namespaceMap);
 		this.defaultMarshaller.setTargetPackages(Iterables.toArray(allPackages, String.class));
 		this.defaultMarshaller.setNamespaceToPackageMapping(namespacePackageMapping);
-		this.defaultMarshaller.setValidating(true);
+		this.defaultMarshaller.setValidating(validate);
 	
-		this.defaultMarshaller.afterPropertiesSet();
+		try {
+			this.defaultMarshaller.afterPropertiesSet();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
 	}
 
 	/**
@@ -119,7 +127,7 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 	 * @param namespace the namespace
 	 * @return the castor marshaller
 	 */
-	protected CastorMarshaller createNewMarshaller(String namespace){
+	protected CastorMarshaller createNewMarshaller(String namespace, boolean validate){
 
 		CastorMarshaller marshaller =
 			new NamespaceAdjustingCastorMarshaller(namespace, this.namespaceMap);
@@ -130,7 +138,7 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 			marshaller.setSchemaLocation(namespace + " " + location);
 		}
 
-		marshaller.setValidating(true);
+		marshaller.setValidating(validate);
 		
 		try {
 			marshaller.afterPropertiesSet();
