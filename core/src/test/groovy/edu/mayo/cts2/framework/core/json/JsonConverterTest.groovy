@@ -25,6 +25,23 @@ class JsonConverterTest {
 	}
 	
 	@Test
+	void TestFromObjectWithExtra(){
+		def converter = new JsonConverter()
+		
+		def json = """
+		{"CodeSystemCatalogEntry":{"somethingElse" : "aDifferentThing", "codeSystemName":"csname","about":"urn:oid:about","entryState":"ACTIVE"}}
+		"""
+		
+		def cs = converter.fromJson(json);
+		assertEquals "CodeSystemCatalogEntry", cs.class.getSimpleName()
+		assertEquals "urn:oid:about", cs.about
+		assertEquals "csname", cs.codeSystemName
+		assertEquals "ACTIVE", cs.entryState.toString()
+	}
+
+	
+	
+	@Test
 	void TestJsonToObject(){
 		def converter = new JsonConverter()
 		
@@ -71,8 +88,10 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def cs = new CodeSystemCatalogEntry()
+		cs.addKeyword("test1");
+		cs.addKeyword("test2");
 		
-		print converter.toJson(cs)
+		assertTrue converter.toJson(cs).contains("\"keywords\":[\"test1\",\"test2\"]");
 	}
 
 }

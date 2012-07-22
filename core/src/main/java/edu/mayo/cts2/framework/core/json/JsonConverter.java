@@ -140,8 +140,6 @@ public class JsonConverter {
 	protected Gson buildGson(){
 		GsonBuilder gson = new GsonBuilder();
 		
-		gson = gson.disableHtmlEscaping();
-		
 		gson.setExclusionStrategies(new ExclusionStrategy(){
 
 			@Override
@@ -162,7 +160,9 @@ public class JsonConverter {
 
 			@Override
 			public String translateName(Field field) {
-				char[] array = field.getName().toCharArray();
+				String fieldName = field.getName();
+				
+				char[] array = fieldName.toCharArray();
 
 				if(array[0] == '_'){
 					array = ArrayUtils.remove(array, 0);
@@ -172,7 +172,7 @@ public class JsonConverter {
 			}
 			
 		});
-		
+	
 		return gson.create();
 	}
 
