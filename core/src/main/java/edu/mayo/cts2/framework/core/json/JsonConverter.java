@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -64,7 +65,7 @@ public class JsonConverter {
 				.getSubTypesOf(Cts2Model.class);
 
 		for (Class<? extends Cts2Model> type : types) {
-			String name = type.getSimpleName();
+			String name = StringUtils.uncapitalize(type.getSimpleName());
 			cache.put(name, type);
 		}
 
@@ -74,7 +75,9 @@ public class JsonConverter {
 	public String toJson(Object cts2Object) {
 		JsonElement element = this.gson.toJsonTree(cts2Object);
 		JsonObject object = new JsonObject();
-		object.add(cts2Object.getClass().getSimpleName(), element);
+		object.add(
+			StringUtils.uncapitalize(
+					cts2Object.getClass().getSimpleName()), element);
 
 		return object.toString();
 	}

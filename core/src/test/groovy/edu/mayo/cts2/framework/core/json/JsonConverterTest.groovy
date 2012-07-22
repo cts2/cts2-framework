@@ -18,10 +18,10 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def json = """
-		{"CodeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTaskList":[],"usedOntologyEngineeringToolList":[],"releaseFormatList":[],"about":"urn:oid:about","keywordList":[],"resourceTypeList":[],"additionalDocumentationList":[],"sourceAndRoleList":[],"noteList":[],"propertyList":[],"alternateIDList":[],"entryState":"ACTIVE"}}
+		{"codeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTaskList":[],"usedOntologyEngineeringToolList":[],"releaseFormatList":[],"about":"urn:oid:about","keywordList":[],"resourceTypeList":[],"additionalDocumentationList":[],"sourceAndRoleList":[],"noteList":[],"propertyList":[],"alternateIDList":[],"entryState":"ACTIVE"}}
 		"""	
 		
-		assertEquals "CodeSystemCatalogEntry", converter.getJsonClass(json).getSimpleName()
+		assertEquals CodeSystemCatalogEntry, converter.getJsonClass(json)
 	}
 	
 	@Test
@@ -29,11 +29,11 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def json = """
-		{"CodeSystemCatalogEntry":{"somethingElse" : "aDifferentThing", "codeSystemName":"csname","about":"urn:oid:about","entryState":"ACTIVE"}}
+		{"codeSystemCatalogEntry":{"somethingElse" : "aDifferentThing", "codeSystemName":"csname","about":"urn:oid:about","entryState":"ACTIVE"}}
 		"""
 		
 		def cs = converter.fromJson(json);
-		assertEquals "CodeSystemCatalogEntry", cs.class.getSimpleName()
+		assertEquals CodeSystemCatalogEntry, cs.class
 		assertEquals "urn:oid:about", cs.about
 		assertEquals "csname", cs.codeSystemName
 		assertEquals "ACTIVE", cs.entryState.toString()
@@ -46,7 +46,7 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def json = """
-		{"CodeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTaskList":[],"usedOntologyEngineeringToolList":[],"releaseFormatList":[],"about":"urn:oid:about","keywordList":[],"resourceTypeList":[],"additionalDocumentationList":[],"sourceAndRoleList":[],"noteList":[],"propertyList":[],"alternateIDList":[],"entryState":"ACTIVE"}}
+		{"codeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTaskList":[],"usedOntologyEngineeringToolList":[],"releaseFormatList":[],"about":"urn:oid:about","keywordList":[],"resourceTypeList":[],"additionalDocumentationList":[],"sourceAndRoleList":[],"noteList":[],"propertyList":[],"alternateIDList":[],"entryState":"ACTIVE"}}
 		"""
 		
 		assertEquals "csname", converter.fromJson(json, CodeSystemCatalogEntry).codeSystemName
@@ -91,7 +91,8 @@ class JsonConverterTest {
 		cs.addKeyword("test1");
 		cs.addKeyword("test2");
 		
-		assertTrue converter.toJson(cs).contains("\"keywords\":[\"test1\",\"test2\"]");
+		println converter.toJson(cs)
+		assertTrue converter.toJson(cs).contains("\"keywordList\":[\"test1\",\"test2\"]");
 	}
 
 }
