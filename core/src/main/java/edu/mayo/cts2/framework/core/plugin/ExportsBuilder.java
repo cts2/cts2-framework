@@ -14,10 +14,12 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.twdata.pkgscanner.DefaultOsgiVersionConverter;
 import org.twdata.pkgscanner.ExportPackage;
+import org.twdata.pkgscanner.ExportPackageListBuilder;
 import org.twdata.pkgscanner.PackageScanner;
 
 import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
@@ -167,6 +169,9 @@ class ExportsBuilder
         if (log.isDebugEnabled())
         {
             scanner.enableDebug();
+        } else {
+        	org.apache.log4j.Logger.getLogger(
+        		ExportPackageListBuilder.class).setLevel(Level.ERROR);
         }
 
         Collection<ExportPackage> exports = scanner.scan();
