@@ -59,14 +59,16 @@ public class RefreshableServerContext extends AbstractConfigurableExportedServic
 	@Resource
 	private ConfigInitializer configInitializer;
 	
-	private Boolean appNameUpdated = false;
+	private boolean appNameUpdated = false;
+	
+	private Object mutex = new Object();
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//set this to default to the context
 		String context = this.configInitializer.getContext();
 
-		synchronized(this.appNameUpdated){
+		synchronized(this.mutex){
 			
 			if(! this.appNameUpdated){
 			
@@ -90,7 +92,7 @@ public class RefreshableServerContext extends AbstractConfigurableExportedServic
 			}
 			String newAppName = (String) properties.get(ConfigConstants.APP_NAME_PROPERTY);
 			
-			synchronized(this.appNameUpdated){
+			synchronized(this.mutex){
 				if(newAppName != null) {
 					this.appName = newAppName;
 					appNameUpdated = true;
