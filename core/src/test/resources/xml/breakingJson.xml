@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptionMsg xmlns="http://schema.omg.org/spec/CTS2/1.0/Entity"
+    xmlns:core="http://schema.omg.org/spec/CTS2/1.0/Core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.omg.org/spec/CTS2/1.0/Entity http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/schema/Entity.xsd">
+    <core:heading>
+        <core:resourceRoot>codesystem/MSH/version/MSH2012_2011_09_09/entity/D015060</core:resourceRoot>
+        <core:resourceURI>http://localhost:8080/webapp/codesystem/MSH/version/MSH2012_2011_09_09/entity/D015060</core:resourceURI>
+        <core:accessDate>2012-07-27T17:17:07.602-05:00</core:accessDate>
+    </core:heading>
+    <EntityDescription>
+
+        <namedEntity about="http://test/org" entryState="ACTIVE">
+            <entityID>
+                <core:namespace>MSH</core:namespace>
+                <core:name>D015060</core:name>
+            </entityID>
+            <describingCodeSystemVersion>
+                <core:version>MSH</core:version>
+
+                <core:codeSystem>MSH</core:codeSystem>
+            </describingCodeSystemVersion>
+            <designation designationRole="ALTERNATIVE">
+                <core:value>Dipalmitoyl Phosphatidylcholine</core:value>
+            </designation>
+            <designation designationRole="ALTERNATIVE">
+                <core:value>Phosphatidylcholine, Dipalmitoyl</core:value>
+
+            </designation>
+            <designation designationRole="ALTERNATIVE">
+                <core:value>DPPC</core:value>
+            </designation>
+            <designation designationRole="ALTERNATIVE">
+                <core:value>DIPALMITOYLPHOSPHATIDYLCHOLINE 0102</core:value>
+            </designation>
+            <entityType uri="http://www.w3.org/2002/07/owl#Class">
+
+                <core:namespace>owl</core:namespace>
+                <core:name>Class</core:name>
+            </entityType>
+        </namedEntity>
+    </EntityDescription>
+</EntityDescriptionMsg>

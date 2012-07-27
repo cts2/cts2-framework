@@ -1,9 +1,14 @@
 package edu.mayo.cts2.framework.core.json;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*
+
+import javax.xml.transform.stream.StreamSource
 
 import org.junit.Test
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
 
+import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.EntryDescription
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
@@ -94,6 +99,21 @@ class JsonConverterTest {
 		
 		println converter.toJson(cs)
 		assertTrue converter.toJson(cs).contains("\"keywordList\":[\"test1\",\"test2\"]");
+	}
+	
+	@Test
+	void TestGetJsonFromComplexObject(){
+		def converter = new JsonConverter()
+		
+		DelegatingMarshaller marshaller = new DelegatingMarshaller()
+		
+		Resource xml = new ClassPathResource("xml/breakingJson.xml")
+		
+		def stream = xml.getInputStream()
+		
+		def cs = marshaller.unmarshal(new StreamSource(stream))
+		
+		println converter.toJson(cs)
 	}
 	
 	@Test
