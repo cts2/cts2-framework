@@ -634,7 +634,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	public void initEntityDescriptionRestrictionBinder(
 			 WebDataBinder binder,
 			 @RequestParam(value=PARAM_CODESYSTEM, required=false) String codesystem,
-			 @RequestParam(value=PARAM_CODESYSTEMTAG, required=false) String tag,
+			 @RequestParam(value=PARAM_TAG, required=false) String tag,
 			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codesystemversion,
 			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity) {
 		

@@ -268,7 +268,6 @@ public abstract class AbstractMessageWrappingController extends
 	}
 
 	protected <R> ModelAndView forward(
-			HttpServletRequest request, 
 			Message message,
 			R resource, 	
 			UrlTemplateBinder<R> urlBinder,
@@ -569,7 +568,7 @@ public abstract class AbstractMessageWrappingController extends
 
 			msg = this.wrapMessage(msg, byNameTemaplate, urlBinder, resource, httpServletRequest);
 			
-			return this.forward(httpServletRequest, msg, resource, urlBinder, byNameTemaplate, redirect);
+			return this.forward(msg, resource, urlBinder, byNameTemaplate, redirect);
 		} else {
 
 			return this.forward(httpServletRequest, urlBinder, byNameTemaplate, resource, byUriTemplate, redirect);
@@ -646,7 +645,7 @@ public abstract class AbstractMessageWrappingController extends
 	 *            the page size
 	 * @return the parameters string
 	 */
-	private String getParametersString(Map<String, Object> parameters,
+	protected String getParametersString(Map<String, Object> parameters,
 			int page, int pageSize) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("?");

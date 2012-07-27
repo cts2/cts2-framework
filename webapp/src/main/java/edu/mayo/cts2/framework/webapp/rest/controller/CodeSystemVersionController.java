@@ -52,7 +52,9 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.Message;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownCodeSystemVersion;
@@ -422,6 +424,76 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		this.setCount(count, httpServletResponse);
 	}
 	
+	@RequestMapping(value={
+	          PATH_CODESYSTEMBYID + "/" + ENTITY + "/" + ALL_WILDCARD,
+	          PATH_CODESYSTEMBYID + "/" + ENTITIES
+			},
+			method=RequestMethod.GET)
+	public ModelAndView getCodeSystemVersionOfCodeSystemByTagRedirect(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@RequestParam(value=PARAM_TAG, defaultValue=DEFAULT_TAG) String tag,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+		
+		//TODO: Accept tag URIs here
+		VersionTagReference tagReference = new VersionTagReference(tag);
+
+		String codeSystemVersionName = 
+			this.codeSystemVersionNameResolver.
+				getCodeSystemVersionNameFromTag(
+					codeSystemVersionReadService, 
+					ModelUtils.nameOrUriFromName(codeSystemName), 
+					tagReference, 
+					this.resolveRestReadContext(restReadContext));
+		
+		String contextPath = this.getUrlPathHelper().getContextPath(httpServletRequest);
+		
+		String requestUri = StringUtils.removeStart(httpServletRequest.getRequestURI(),contextPath);
+		
+		requestUri = StringUtils.removeStart(requestUri, "/");
+		
+		requestUri = StringUtils.replaceOnce(
+				requestUri, 
+				CODESYSTEM + "/" + codeSystemName + "/", 
+				CODESYSTEM + "/" + codeSystemName + "/" + 
+						VERSION + "/" + codeSystemVersionName + "/");
+		
+		String queryParams = httpServletRequest.getQueryString();
+		if(StringUtils.isNotBlank(queryParams)){
+			requestUri = requestUri + queryParams;
+		}
+
+		return new ModelAndView(
+				"forward:"+ "/" + requestUri);
+	}
+	
+	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYTAG,
+			method=RequestMethod.GET)
+	public Object getCodeSystemVersionOfCodeSystemByTag(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
+			@RequestParam(value=PARAM_TAG, defaultValue=DEFAULT_TAG) String tag) {
+
+		//TODO: Accept tag URIs here
+		VersionTagReference tagReference = new VersionTagReference(tag);
+
+		CodeSystemVersionCatalogEntry codeSystemVersion = this.codeSystemVersionReadService.readByTag(
+				ModelUtils.nameOrUriFromName(codeSystemName), 
+				tagReference, 
+				this.resolveRestReadContext(restReadContext));
+		
+		if(codeSystemVersion == null){
+			throw ExceptionFactory.createUnknownResourceException(codeSystemName, UnknownCodeSystemVersion.class); 
+		}
+
+		return this.buildResponse(httpServletRequest, 
+			MESSAGE_FACTORY.createMessage(codeSystemVersion));
+	}
+	
 	/**
 	 * Gets the code system version by name.
 	 *
@@ -461,27 +533,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		return msg;
 	}
 	
-	@RequestMapping(value={	
-			PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG
-			},
-		method=RequestMethod.GET)
-	public Object getCodeSystemVersionOfCodeSystemByTag(
-			HttpServletRequest httpServletRequest,
-			RestReadContext restReadContext,
-			QueryControl queryControl,
-			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
-			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionName) {
-		
-		//TODO: redirect this
-		return this.doRead(
-				httpServletRequest, 
-				MESSAGE_FACTORY, 
-				this.codeSystemVersionReadService, 
-				restReadContext,
-				UnknownCodeSystemVersion.class,
-				ModelUtils.nameOrUriFromName(codeSystemVersionName));
-	}
-	
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI, method=RequestMethod.GET)
 	public ModelAndView getCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,
@@ -489,7 +540,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 			QueryControl queryControl,
 			@RequestParam(PARAM_URI) String uri,
 			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
-	
+
 		return this.doReadByUri(
 				httpServletRequest, 
 				MESSAGE_FACTORY, 

@@ -28,6 +28,6 @@ package edu.mayo.cts2.framework.model;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface Cts2Model {
+public interface Cts2ModelObject {
 
 }

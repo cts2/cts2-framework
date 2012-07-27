@@ -8,6 +8,7 @@ import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.model.core.EntryDescription
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
 import edu.mayo.cts2.framework.model.core.TsAnyType
+import edu.mayo.cts2.framework.model.entity.Designation
 import edu.mayo.cts2.framework.model.entity.EntityDescription
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 
@@ -93,6 +94,32 @@ class JsonConverterTest {
 		
 		println converter.toJson(cs)
 		assertTrue converter.toJson(cs).contains("\"keywordList\":[\"test1\",\"test2\"]");
+	}
+	
+	@Test
+	void TestGetJsonFromDesignation(){
+		def converter = new JsonConverter()
+		
+		def d = new Designation()
+		d.value = new TsAnyType(content: "test")
+		
+		println converter.toJson(d)
+		assertTrue ! converter.toJson(d).contains("anyObject")
+		assertTrue converter.toJson(d).contains("\"value\":\"test\"")
+	}
+	
+	@Test
+	void TestGetJsonFromDesignationRoundTrip(){
+		def converter = new JsonConverter()
+		
+		def d = new Designation()
+		d.value = new TsAnyType(content: "test")
+		
+		def json = converter.toJson(d)
+		
+		def retD = converter.fromJson(json)
+		
+		assertEquals d, retD
 	}
 
 }

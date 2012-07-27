@@ -23,13 +23,18 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import edu.mayo.cts2.framework.model.Cts2Model;
+import edu.mayo.cts2.framework.model.Cts2ModelObject;
+import edu.mayo.cts2.framework.model.core.TsAnyType;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 
 @Component
@@ -42,7 +47,7 @@ public class JsonConverter {
 
 	private JsonParser jsonParser = new JsonParser();
 
-	private Map<String, Class<? extends Cts2Model>> classNameCache;
+	private Map<String, Class<? extends Cts2ModelObject>> classNameCache;
 
 	public JsonConverter() {
 		super();
@@ -51,8 +56,8 @@ public class JsonConverter {
 		this.classNameCache = this.cacheClasses();
 	}
 
-	protected Map<String, Class<? extends Cts2Model>> cacheClasses() {
-		Map<String, Class<? extends Cts2Model>> cache = new HashMap<String, Class<? extends Cts2Model>>();
+	protected Map<String, Class<? extends Cts2ModelObject>> cacheClasses() {
+		Map<String, Class<? extends Cts2ModelObject>> cache = new HashMap<String, Class<? extends Cts2ModelObject>>();
 
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 				.filterInputsBy(
@@ -61,10 +66,10 @@ public class JsonConverter {
 								WSDL_PACKAGE)).setUrls(
 						ClasspathHelper.forPackage(MODEL_PACKAGE)));
 
-		Set<Class<? extends Cts2Model>> types = reflections
-				.getSubTypesOf(Cts2Model.class);
+		Set<Class<? extends Cts2ModelObject>> types = reflections
+				.getSubTypesOf(Cts2ModelObject.class);
 
-		for (Class<? extends Cts2Model> type : types) {
+		for (Class<? extends Cts2ModelObject> type : types) {
 			String name = StringUtils.uncapitalize(type.getSimpleName());
 			cache.put(name, type);
 		}
@@ -158,6 +163,7 @@ public class JsonConverter {
 		});
 		
 		gson.registerTypeAdapter(List.class, new EmptyCollectionSerializer());
+		gson.registerTypeAdapter(TsAnyType.class, new TsAnyTypeSerializer());
 		
 		gson.setFieldNamingStrategy(new FieldNamingStrategy(){
 
@@ -188,6 +194,38 @@ public class JsonConverter {
 				return context.serialize(collection);
 			} else {
 				return null;
+			}
+		}
+
+	}
+	
+	public static class TsAnyTypeSerializer 
+		implements JsonSerializer<TsAnyType>, JsonDeserializer<TsAnyType> {
+
+		@Override
+		public JsonElement serialize(TsAnyType tsAnyType, Type typeOfSrc,
+				JsonSerializationContext context) {
+			return new JsonPrimitive(tsAnyType.getContent());
+		}
+
+		@Override
+		public TsAnyType deserialize(JsonElement json, Type typeOfT,
+				JsonDeserializationContext context) throws JsonParseException {
+			if(json == null){
+				return null;
+			}
+			
+			if(! json.isJsonPrimitive()){
+				throw new IllegalStateException("TsAnytype is not a JSON Primitive.");
+			}
+			
+			if(json.getAsJsonPrimitive().getAsString() == null){
+				return null;
+			} else {
+				TsAnyType tsAnyType = new TsAnyType();
+				tsAnyType.setContent(json.getAsJsonPrimitive().getAsString());
+				
+				return tsAnyType;
 			}
 		}
 

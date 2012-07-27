@@ -156,7 +156,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 					value=RESOLUTION_TYPE, defaultValue=DEFAULT_VALUESETDEFINITION_RESOLUTION) 
 			ValueSetDefinitionResolutionTypes resolution,
 			@RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
-			@RequestParam(value=PARAM_CODESYSTEMTAG, required=false) String tagName,
+			@RequestParam(value=PARAM_TAG, required=false) String tagName,
 			Page page) {
 		
 		return this.getValueSetDefinitionResolution(
@@ -192,7 +192,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 					value=RESOLUTION_TYPE) 
 			ValueSetDefinitionResolutionTypes resolution,
 			@RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
-			@RequestParam(value=PARAM_CODESYSTEMTAG, required=false) String tagName,
+			@RequestParam(value=PARAM_TAG, required=false) String tagName,
 			Page page) {
 		
 		ValueSetDefinitionReadId definitionId = 
@@ -558,7 +558,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 	public void initEntityDescriptionRestrictionBinder(
 			 WebDataBinder binder,
 			 @RequestParam(value=PARAM_CODESYSTEM, required=false) String codesystem,
-			 @RequestParam(value=PARAM_CODESYSTEMTAG, required=false) String tag,
+			 @RequestParam(value=PARAM_TAG, required=false) String tag,
 			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codesystemversion,
 			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity) {
 		

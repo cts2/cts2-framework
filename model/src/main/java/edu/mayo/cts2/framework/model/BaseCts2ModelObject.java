@@ -31,7 +31,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class BaseCts2ModelObject implements Cts2Model {
+public class BaseCts2ModelObject implements Cts2ModelObject {
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

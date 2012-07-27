@@ -46,11 +46,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CODESYSTEM_LATESTCHANGE = PATH_CODESYSTEMBYID + "/" + LATESTCHANGE;
 	
 	public static final String PATH_CODESYSTEMBYURI = "/" + CODESYSTEM_BY_URI + "/" + ALL_WILDCARD;
-	
-	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYTAG = 
-		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
-		+ TAG + "/{"+ PARAM_TAG + "}";
-	
+
 	public static final String PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID = 
 			"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" 
 			+ VERSION + "/{"+ VAR_CODESYSTEMVERSIONID + "}";
@@ -62,6 +58,9 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CODESYSTEMVERSION_LATESTCHANGE = PATH_CODESYSTEMVERSION_OF_CODESYSTEM_BYID + "/" + LATESTCHANGE;
 	
 	public static final String PATH_CODESYSTEMVERSIONBYURI = "/" + CODESYSTEMVERSION_BY_URI + "/" + ALL_WILDCARD;
+	
+	public static final String PATH_CODESYSTEMVERSIONBYTAG = "/" + CODESYSTEM + "/{"
+			+ VAR_CODESYSTEMID + "}/" + VERSION;
 	
 	public static final String PATH_CODESYSTEMVERSIONS = "/" + CODESYSTEMVERSIONS;
 	
@@ -260,7 +259,6 @@ interface PathKeywords {
 	public static final String CODESYSTEMVERSION = "codesystemversion";
 	public static final String CODESYSTEMVERSION_BY_URI = "codesystemversionbyuri";
 
-
 	public static final String ENTITIES = "entities";
 	public static final String ENTITY = "entity";
 	public static final String ENTITY_BY_URI = "entitybyuri";
@@ -338,7 +336,6 @@ interface PathKeywords {
 	
 	public static final String SERVICE = "service";
 	public static final String URI = "uri";
-	public static final String TAG = "tag";
 	
 	public static final String CHANGEHISTORY = "changehistory";
 	public static final String EARLIESTCHANGE = "earliestchange";
@@ -369,7 +366,6 @@ interface PathVariables {
 
 interface PathParameters {
 	public static final String PARAM_CODESYSTEMVERSION = "codesystemversion";
-	public static final String PARAM_CODESYSTEMTAG = "tag";
 	public static final String PARAM_CODESYSTEM = "codesystem";
 	
 	public static final String PARAM_CONCEPTDOMAIN = "conceptdomain";
@@ -435,6 +431,7 @@ interface PathParameters {
 	}
 	
 	public static final String DEFAULT_VALUESETDEFINITION_RESOLUTION = "iterable";
+	public static final String DEFAULT_TAG = "CURRENT";
 
 }
 
