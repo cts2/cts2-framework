@@ -276,16 +276,20 @@ public abstract class AbstractMessageWrappingController extends
 		ModelAndView mav;
 		
 		if(!redirect){
-			mav = new ModelAndView(
-				"forward:"+ UriResolutionController.FORWARDING_URL, 
-				UriResolutionController.ATTRIBUTE_NAME, 
-				message);
+			mav = this.buildUriForwardingModelAndView(message);
 		} else {
 			mav = new ModelAndView(
 				"redirect:"+ this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate));
 		}
 		
 		return mav;
+	}
+	
+	protected ModelAndView buildUriForwardingModelAndView(Object payload){
+		return new ModelAndView(
+				"forward:"+ UriResolutionController.FORWARDING_URL, 
+				UriResolutionController.ATTRIBUTE_NAME, 
+				payload);
 	}
 	
 	protected <R,I> Object doRead(

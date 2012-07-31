@@ -7,13 +7,13 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 import javax.annotation.Resource
 
-import org.junit.Ignore
-import org.junit.Test;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.junit.Test
+import org.springframework.test.web.server.setup.MockMvcBuilders
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry
 import edu.mayo.cts2.framework.model.core.CodeSystemReference
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference
+import edu.mayo.cts2.framework.model.core.EntityReference
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
 import edu.mayo.cts2.framework.model.entity.EntityDescription
@@ -21,7 +21,6 @@ import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService
 
-@Ignore
 class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTestBase {
 	
 	@Resource
@@ -37,7 +36,7 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 	
 	@Override
 	public getByNameUrl() {
-		"/codesystem/TESTCS/version/v1/entity/ns:entityName"
+		"/entity/ns:entityName"
 	}
 
 	@Override
@@ -60,7 +59,10 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 		ed.setNamedEntity(entry)
 		
 		def rs = [
-			read:{id,readcontext -> ed }
+			read:{id,readcontext -> ed },
+			availableDescriptions:{id,cxt -> new EntityReference(
+				about: "http://test/about",
+				name: new ScopedEntityName(name:"entityName", namespace:"ns")) }
 		] as EntityDescriptionReadService;
 	
 		def csv = new CodeSystemVersionCatalogEntry(
@@ -70,7 +72,8 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 	
 		def csvrs = [
 			getCodeSystemByVersionId:{csn,versionid,readcontext -> csv },
-			read:{csvn,readcontext -> csv }
+			read:{csvn,readcontext -> csv },
+			readByTag:{o,t,th -> csv}
 		] as CodeSystemVersionReadService;
 
 		controller.setEntityDescriptionReadService(rs)
@@ -90,6 +93,24 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 			.perform(get("/codesystemversionbyuri/entity/ns:code").param("uri","http://some/uri.org").param("redirect","true"))
 			.andExpect(response().status().isOk())
 			.andExpect(response().redirectedUrl("/codesystem/TESTCS/version/v1/entity/ns:code"))
+	}
+	
+	@Test
+	void testGetByTag(){
+
+		MockMvcBuilders
+			.webApplicationContextSetup(context).build()
+			.perform(get("/codesystem/TESTCS/entity/ns:code"))
+			.andExpect(response().status().isOk())
+	}
+	
+	@Test
+	void testGetByTagJson(){
+
+		MockMvcBuilders
+			.webApplicationContextSetup(context).build()
+			.perform(get("/codesystem/TESTCS/entity/ns:code").param("format", "json"))
+			.andExpect(response().status().isOk())
 	}
 
 }

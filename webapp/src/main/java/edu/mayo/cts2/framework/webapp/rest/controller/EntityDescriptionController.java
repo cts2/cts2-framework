@@ -622,10 +622,10 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		} else {
 			
 			if(redirect && name != null) {
-				String redirectUrl = PATH_ENTITY + "/" + name.toString();
+				String redirectUrl = PATH_ENTITY + "/" + EncodingUtils.encodeScopedEntityName(name);
 				return this.redirect(redirectUrl, httpServletRequest);
 			} else {
-				return this.buildResponse(httpServletRequest, response);
+				return this.buildUriForwardingModelAndView(response);
 			}
 		}
 	}

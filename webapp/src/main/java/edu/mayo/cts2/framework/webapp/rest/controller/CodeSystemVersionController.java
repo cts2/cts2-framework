@@ -460,11 +460,6 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 				CODESYSTEM + "/" + codeSystemName + "/" + 
 						VERSION + "/" + codeSystemVersionName + "/");
 		
-		String queryParams = httpServletRequest.getQueryString();
-		if(StringUtils.isNotBlank(queryParams)){
-			requestUri = requestUri + queryParams;
-		}
-
 		return new ModelAndView(
 				"forward:"+ "/" + requestUri);
 	}
