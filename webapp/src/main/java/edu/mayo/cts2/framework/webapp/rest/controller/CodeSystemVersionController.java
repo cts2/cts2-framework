@@ -442,7 +442,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 
 		String codeSystemVersionName = 
 			this.codeSystemVersionNameResolver.
-				getCodeSystemVersionNameFromTag(
+				getVersionNameFromTag(
 					codeSystemVersionReadService, 
 					ModelUtils.nameOrUriFromName(codeSystemName), 
 					tagReference, 

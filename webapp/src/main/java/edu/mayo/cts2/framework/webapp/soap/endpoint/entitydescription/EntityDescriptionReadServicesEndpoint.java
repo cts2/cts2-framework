@@ -117,7 +117,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   public ExistsInCodeSystemResponse existsInCodeSystem(@RequestPayload ExistsInCodeSystem request) {
     ResolvedReadContext resolvedReadContext = this.resolveReadContext(request.getContext());
    
-	String codeSystemVersionName = codeSystemVersionNameResolver.getCodeSystemVersionNameFromTag(
+	String codeSystemVersionName = codeSystemVersionNameResolver.getVersionNameFromTag(
 			codeSystemVersionReadService, 
 			request.getCodeSystem(), 
 			this.resolveTag(request.getTag(), codeSystemVersionReadService), 
@@ -141,7 +141,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @ResponsePayload
   public ReadByCodeSystemResponse readByCodeSystem(@RequestPayload ReadByCodeSystem request) {
     
-	String codeSystemVersionName = codeSystemVersionNameResolver.getCodeSystemVersionNameFromTag(
+	String codeSystemVersionName = codeSystemVersionNameResolver.getVersionNameFromTag(
 			codeSystemVersionReadService, 
 			request.getCodeSystem(), 
 			this.resolveTag(request.getTag(), codeSystemVersionReadService), 

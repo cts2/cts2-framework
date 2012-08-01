@@ -26,9 +26,11 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.Message;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownValueSetDefinition;
@@ -55,6 +58,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import edu.mayo.cts2.framework.webapp.naming.TagResolver;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
@@ -79,6 +83,9 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	
 	@Cts2Service
 	private ValueSetDefinitionResolutionService valueSetDefinitionResolutionService;
+	
+	@Resource
+	private TagResolver tagResolver;
 
 	private final static UrlTemplateBinder<LocalIdValueSetDefinition> URL_BINDER =
 			new UrlTemplateBinder<LocalIdValueSetDefinition>(){
@@ -375,6 +382,46 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 				restReadContext, 
 				UnknownValueSetDefinition.class, 
 				id);
+	}
+	
+	@RequestMapping(value={
+	          PATH_VALUESETBYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/" + ALL_WILDCARD,
+	          PATH_VALUESETBYID + "/" + VALUE_SET_RESOLUTION_SHORT
+			},
+			method=RequestMethod.GET)
+	public ModelAndView getValueSetDefinitionOfValueSetByTagRedirect(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			@PathVariable(VAR_VALUESETID) String valueSetName,
+			@RequestParam(value=PARAM_TAG, defaultValue=DEFAULT_TAG) String tag,
+			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+		
+		//TODO: Accept tag URIs here
+		VersionTagReference tagReference = new VersionTagReference(tag);
+
+		String valueSetDefinitionLocalId = 
+			this.tagResolver.
+				getVersionNameFromTag(
+					this.valueSetDefinitionReadService, 
+					ModelUtils.nameOrUriFromName(valueSetName), 
+					tagReference, 
+					this.resolveRestReadContext(restReadContext));
+		
+		String contextPath = this.getUrlPathHelper().getContextPath(httpServletRequest);
+		
+		String requestUri = StringUtils.removeStart(httpServletRequest.getRequestURI(),contextPath);
+		
+		requestUri = StringUtils.removeStart(requestUri, "/");
+		
+		requestUri = StringUtils.replaceOnce(
+				requestUri, 
+				VALUESET + "/" + valueSetName + "/", 
+				VALUESET + "/" + valueSetName + "/" + 
+						VALUESETDEFINITION_SHORT + "/" + valueSetDefinitionLocalId + "/");
+		
+		return new ModelAndView(
+				"forward:"+ "/" + requestUri);
 	}
 	
 	/**
