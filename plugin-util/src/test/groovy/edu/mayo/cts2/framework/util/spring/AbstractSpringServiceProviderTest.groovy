@@ -22,7 +22,7 @@ class AbstractSpringServiceProviderTest {
 	@Test
 	void testBeanNotPresent(){
 		provider.applicationContext = {
-			getBean : { null as Cts2Profile }
+			getBeansOfType : { null as Map }
 		} as ApplicationContext
 	
 		assertNull provider.getService(CodeSystemReadService.class)
@@ -32,7 +32,7 @@ class AbstractSpringServiceProviderTest {
 	@Test
 	void testBeanPresent(){
 		provider.applicationContext = {
-			getBean : { 
+			getBeansOfType : { 
 		
 				if(it.name.equals(CodeSystemReadService.class.name)){
 					//this is good
@@ -40,7 +40,7 @@ class AbstractSpringServiceProviderTest {
 				 	fail()
 				 }
 			
-				 [] as Cts2Profile
+				 [ "test":{} as CodeSystemReadService ]
 			}
 		} as ApplicationContext
 	
@@ -51,12 +51,12 @@ class AbstractSpringServiceProviderTest {
 	@Test
 	void testBeanPresentWrongName(){
 		provider.applicationContext = {
-			getBean : {
+			getBeansOfType : {
 		
 				if(it.name.equals(CodeSystemReadService.class.name)){
-					[] as Cts2Profile
+					[ "test":{} as CodeSystemReadService ]
 				 } else {
-					null as Cts2Profile
+					null as Map
 				 }
  
 			}

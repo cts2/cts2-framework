@@ -23,6 +23,10 @@
  */
 package edu.mayo.cts2.framework.util.spring;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -48,12 +52,36 @@ public abstract class AbstractSpringServiceProvider implements ServiceProvider, 
 	 */
 	public <T extends Cts2Profile> T getService(Class<T> serviceClass) {
 
+		T bean = null;
 		try {
-			return this.applicationContext.getBean(serviceClass);
+			Map<String, T> beans = applicationContext.getBeansOfType(serviceClass);
+			if(beans != null && !beans.isEmpty()){
+				if(beans.size() == 1){
+					bean = beans.values().iterator().next();
+				} else {
+					List<T> candidates = new ArrayList<T>();
+					
+					for(T service : beans.values()){
+						if(service.getClass().isAnnotationPresent(AggregateService.class)){
+							candidates.add(service);
+						}
+					}
+					
+					if(candidates.size() != 1){
+						throw new RuntimeException(
+								"Cannot have more than one Service Implementation without" +
+								" annotating one as an 'AggreateService.'");
+					} else {
+						bean = candidates.get(0);
+					}
+				}
+			}
+			
 		} catch (BeansException e) {
 			log.warn(e);
-			return null;
 		}
+		
+		return bean;
 		
 	}
 	
