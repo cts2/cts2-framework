@@ -2,6 +2,9 @@ target/
 .scala_dependencies
 .cache
 .DS_Store
+.settings
+.classpath
+.project
 
 ### Intellij Idea ###
 *.ids
