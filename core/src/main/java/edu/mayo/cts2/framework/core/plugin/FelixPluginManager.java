@@ -167,6 +167,7 @@ public class FelixPluginManager implements
                              "org.apache.xml.serializer," +
                              "org.springframework.stereotype,"+
                              "org.springframework.web.bind.annotation," +
+                             "org.springframework.web.servlet," +
                              "javax.*," +
                              "org.osgi.*," +
                              "org.apache.felix.*," +
