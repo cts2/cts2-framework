@@ -55,11 +55,11 @@ public class OsgiExtensionPointFilterProxy implements Filter, ExtensionPoint {
 
 	@Override
 	public void destroy() {
-		Filter[] filters = (Filter[]) this.osgiFilterTracker.getServices();
+		Object[] filters = (Object[]) this.osgiFilterTracker.getServices();
 
 		if(filters != null){
-			for (Filter filter : filters) {
-				filter.destroy();
+			for (Object filter : filters) {
+				( (Filter)filter ).destroy();
 			}
 		}
 

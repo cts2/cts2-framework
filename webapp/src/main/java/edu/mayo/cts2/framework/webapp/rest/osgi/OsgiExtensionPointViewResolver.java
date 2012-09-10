@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.webapp.rest.osgi;
 import java.util.Locale;
 
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
@@ -39,7 +40,9 @@ import edu.mayo.cts2.framework.core.plugin.AbstractExtensionPoint;
  */
 public class OsgiExtensionPointViewResolver 
 	extends AbstractExtensionPoint<ViewResolver> 
-	implements ViewResolver {
+	implements ViewResolver, Ordered {
+	
+	private int order = Integer.MAX_VALUE;
 
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.ViewResolver#resolveViewName(java.lang.String, java.util.Locale)
@@ -75,5 +78,14 @@ public class OsgiExtensionPointViewResolver
 	@Override
 	public ServiceTrackerCustomizer addServiceTrackerCustomizer() {
 		return null;
+	}
+
+	@Override
+	public int getOrder() {
+		return this.order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
 	}
 }

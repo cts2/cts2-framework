@@ -26,6 +26,11 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	
+	<bean
+		class="edu.mayo.cts2.framework.webapp.rest.osgi.OsgiExtensionPointViewResolver">
+		<property name="order" value="3" />
+	</bean>
+	
 	<bean id="jsonpCallbackFilter" class="edu.mayo.cts2.framework.webapp.rest.filter.jsonp.JsonpCallbackFilter"/>
 
 	<util:properties id="errorCodes" location="classpath:exceptionErrorCodes.properties"/>
