@@ -32,10 +32,14 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.Lifecycle;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
@@ -50,6 +54,8 @@ import edu.mayo.cts2.framework.webapp.rest.extensions.controller.ControllerProvi
 
 public class OsgiAnnotationHandlerMapping extends DefaultAnnotationHandlerMapping 
 	implements ExtensionPoint, InitializingBean {
+	
+	protected Log log = LogFactory.getLog(getClass());
 	
 	private final Map<Class<?>, RequestMapping> cachedMappings = new HashMap<Class<?>, RequestMapping>();
 	
@@ -148,6 +154,24 @@ public class OsgiAnnotationHandlerMapping extends DefaultAnnotationHandlerMappin
 			@Override
 			public void removedService(ServiceReference reference,
 					Object service) {	
+				ApplicationContext context = 
+					OsgiAnnotationHandlerMapping.this.getApplicationContext();
+				
+				if(context instanceof Lifecycle){
+					boolean running = ((Lifecycle) context).isRunning();
+					if(running){
+						this.clearAndDetect();
+					} else {
+						log.warn("Application is not running - no REST URL Annotations will be processed.");
+					}
+				} else {
+					log.warn("ApplicationContext does not implement the Lifecycle interface... cannot determine if it is shutting down.");
+					this.clearAndDetect();
+				}
+				
+			}
+			
+			private void clearAndDetect(){
 				OsgiAnnotationHandlerMapping.this.clearHandlerMappings();
 				OsgiAnnotationHandlerMapping.this.detectHandlers();
 			}
