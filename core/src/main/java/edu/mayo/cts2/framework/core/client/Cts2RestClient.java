@@ -24,8 +24,14 @@
 package edu.mayo.cts2.framework.core.client;
 
 import java.net.URI;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -49,17 +55,11 @@ public class Cts2RestClient {
 	
 	private static Cts2RestClient instance;
 	
-	private RestTemplate template;
+	private RestTemplate nonSecureTemplate;
 	
 	private Cts2Marshaller marshaller;
 	private HttpMessageConverter<Object> converter;
 	
-	/**
-	 * Instance.
-	 *
-	 * @return the cts2 rest client
-	 */
-	@Deprecated
 	public static synchronized Cts2RestClient instance(){
 		if(instance == null){
 			try {
@@ -76,26 +76,46 @@ public class Cts2RestClient {
 	 *
 	 * @throws Exception the exception
 	 */
-	private Cts2RestClient() throws Exception {
-		this(new DelegatingMarshaller());
+	private Cts2RestClient() {
+		this(new DelegatingMarshaller(), true);
 	}
 	
-	public Cts2RestClient(Cts2Marshaller marshaller) throws Exception {
+	public Cts2RestClient(boolean trustSelfSignedSsl) {
+		this(new DelegatingMarshaller(), trustSelfSignedSsl);
+	}
+	
+	public Cts2RestClient(Cts2Marshaller marshaller, boolean trustSelfSignedSsl) {
 		this.marshaller = marshaller;
 		this.converter = new MarshallingHttpMessageConverter(marshaller);
-		this.template = createRestTemplate(null);
+		
+		if(trustSelfSignedSsl){
+			trustSelfSignedSSL();
+		}
+		this.nonSecureTemplate = this.doGetRestTemplate();
 	}
 
+	protected RestTemplate doGetRestTemplate() {
+		return this.doGetRestTemplate(null, null);
+	}
+	
+	protected final RestTemplate doGetRestTemplate(String username, String password) {
+		if(username != null && password != null){
+			return this.createRestTemplate(username, password);
+		} else {
+			return this.nonSecureTemplate;
+		}
+	}
+	
 	/**
 	 * Creates the rest template.
 	 *
 	 * @param requestFactory the request factory
 	 * @return the rest template
 	 */
-	protected RestTemplate createRestTemplate(ClientHttpRequestFactory requestFactory) {
+	protected RestTemplate createRestTemplate(String username, String password) {
 		RestTemplate restTemplate;
-		if(requestFactory != null){
-			restTemplate = new RestTemplate(requestFactory);
+		if(username != null && password != null){
+			restTemplate = new RestTemplate(this.createSecureTransport(username, password));
 		} else {
 			restTemplate = new RestTemplate();
 		}
@@ -108,59 +128,76 @@ public class Cts2RestClient {
 		
 		return restTemplate;
 	}
-	
-	/**
-	 * Gets the cts2 resource.
-	 *
-	 * @param <T> the generic type
-	 * @param url the url
-	 * @param clazz the clazz
-	 * @return the cts2 resource
-	 */
+
 	public <T> T getCts2Resource(String url, Class<T> clazz){
-		return this.template.getForObject(url, clazz, new Object[0]);
+		return this.getCts2Resource(url, null, null, clazz);
 	}
 	
-	public <T> T getCts2Resource(String url, Class<T> clazz, String... queryParameters){
-		return this.template.getForObject(url, clazz, (Object[])queryParameters);
+	public <T> T getCts2Resource(String url, String username, String password, Class<T> clazz){
+		return this.getCts2Resource(url, username, password, clazz, new String[0]);
 	}
 	
-	/**
-	 * Put cts2 resource.
-	 *
-	 * @param url the url
-	 * @param cts2Resource the cts2 resource
-	 */
-	public void putCts2Resource(String url, Object cts2Resource){
-		this.template.put(url, cts2Resource);
+	public <T> T getCts2Resource(String url, String username, String password, Class<T> clazz, String... queryParameters){
+		return this.doGetRestTemplate(username, password).getForObject(url, clazz, (Object[])queryParameters);
 	}
-	
+
 	public URI postCts2Resource(String url, Object cts2Resource){
-		return this.template.postForLocation(url, cts2Resource);
+		return this.postCts2Resource(url, null, null, cts2Resource);
+	}
+	
+	public URI postCts2Resource(String url, String username, String password, Object cts2Resource){
+		return this.doGetRestTemplate().postForLocation(url, cts2Resource);
 	}
 	
 	public void deleteCts2Resource(String url){
-		this.template.delete(url);
+		this.deleteCts2Resource(null, null, url);
 	}
 	
-	/**
-	 * Put cts2 resource.
-	 *
-	 * @param url the url
-	 * @param cts2Resource the cts2 resource
-	 * @param username the username
-	 * @param password the password
-	 */
-	public void putCts2Resource(String url, Object cts2Resource, String username, String password){
+	public void deleteCts2Resource(String username, String password, String url){
+		this.doGetRestTemplate(username, password).delete(url);
+	}
+
+	public void putCts2Resource(String url, Object cts2Resource){
+		this.putCts2Resource(url, null, null, cts2Resource);
+	}
+	
+	public void putCts2Resource(String url, String username, String password, Object cts2Resource){
+		this.doGetRestTemplate(username,password).put(url, cts2Resource);
+	}
+	
+	protected ClientHttpRequestFactory createSecureTransport(String username, String password){
 		HttpClient client = new HttpClient();
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username,password);
 		client.getState().setCredentials(AuthScope.ANY, credentials);
 		CommonsClientHttpRequestFactory commons = new CommonsClientHttpRequestFactory(client);
 
-		
-		this.createRestTemplate(commons).put(url, cts2Resource);
+		return commons;
 	}
+	
+	protected void trustSelfSignedSSL() {
+		try {
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			X509TrustManager tm = new X509TrustManager() {
 
+				public void checkClientTrusted(X509Certificate[] xcs,
+						String string) throws CertificateException {
+				}
+
+				public void checkServerTrusted(X509Certificate[] xcs,
+						String string) throws CertificateException {
+				}
+
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+			};
+			ctx.init(null, new TrustManager[] { tm }, null);
+			SSLContext.setDefault(ctx);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public Cts2Marshaller getMarshaller() {
 		return marshaller;
 	}
