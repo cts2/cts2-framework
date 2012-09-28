@@ -35,6 +35,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
@@ -45,12 +47,13 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Aspect
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class MethodTimingAspect {
 	
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 	
 	/**
-	 * Profile.
+	 * Execute.
 	 *
 	 * @param pjp the pjp
 	 * @return the object
@@ -58,7 +61,7 @@ public class MethodTimingAspect {
 	 */
 	@Around("execution(public *"
 	        + " edu.mayo.cts2.framework.webapp.rest.controller.*.*(..,edu.mayo.cts2.framework.webapp.rest.command.QueryControl,..))")
-	    public Object profile(final ProceedingJoinPoint pjp) throws Throwable {
+	    public Object execute(final ProceedingJoinPoint pjp) throws Throwable {
 
 		QueryControl queryControl = null;
 		

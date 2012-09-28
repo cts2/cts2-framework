@@ -1,9 +1,11 @@
 package edu.mayo.cts2.framework.webapp.rest.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -114,6 +116,17 @@ public class AcceptHeaderAdjustingFilter implements Filter {
 			}
 			
 			return super.getHeader(name);
+		}
+		
+		@Override
+		@SuppressWarnings("unchecked")
+		public Enumeration<String> getHeaderNames() {
+			List<String> headers = new ArrayList<String>();
+			
+			headers.addAll(Collections.list(super.getHeaderNames()));
+			headers.add("Accept");
+			
+			return Collections.enumeration(headers);
 		}
 		
 	}

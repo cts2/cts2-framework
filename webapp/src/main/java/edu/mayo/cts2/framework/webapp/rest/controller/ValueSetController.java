@@ -57,6 +57,7 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.ValueSetQueryBuilder;
 
@@ -166,7 +167,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 			RestReadContext restReadContext,
 			QueryControl queryControl,
 			ValueSetQueryServiceRestrictions restrictions,
-			RestFilter restFilter,
+			RestFilters restFilters,
 			Page page,
 			boolean list) {
 		
@@ -176,7 +177,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 				queryControl,
 				null, 
 				restrictions, 
-				restFilter, 
+				restFilters, 
 				page,
 				list);
 	}
@@ -199,7 +200,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 			QueryControl queryControl,
 			@RequestBody Query query,
 			ValueSetQueryServiceRestrictions restrictions,
-			RestFilter restFilter,
+			RestFilters restFilters,
 			Page page,
 			boolean list) {
 		
@@ -208,7 +209,7 @@ public class ValueSetController extends AbstractMessageWrappingController {
 		ValueSetQuery resourceQuery = builder.
 				addQuery(query).
 				addRestrictions(restrictions).
-				addRestFilter(restFilter).
+				addRestFilters(restFilters).
 				addRestReadContext(restReadContext).
 				build();
 		

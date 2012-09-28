@@ -54,10 +54,12 @@ import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.service.core.QueryControl;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
@@ -298,18 +300,40 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	 * @param binder the binder
 	 */
 	@InitBinder
-	 public void initBinder(WebDataBinder binder) {
+	 public void initTargetReferenceTypeBinder(WebDataBinder binder) {
 
 	  binder.registerCustomEditor(TargetReferenceType.class,
 	    new TargetReferenceTypeEditor());
 	 }
 	
 	@InitBinder
-	 public void initotherBinder(WebDataBinder binder) {
+	 public void initQueryControlBinder(WebDataBinder binder) {
 		
 		binder.registerCustomEditor(QueryControl.class,
 			    new QueryControlTypeEditor());
 	 }
+	
+	@InitBinder
+	public void initEntityDescriptionRestrictionBinder(
+			 WebDataBinder binder,
+			 @RequestParam(value=PARAM_FILTERCOMPONENT, required=false) String filterComponent,
+			 @RequestParam(value=PARAM_MATCHINGALGORITHM, required=false) String matchAlgorithm,
+			 @RequestParam(value=PARAM_MATCHVALUE, required=false) String matchValue) {
+		
+		if(binder.getTarget() instanceof RestFilters){
+			RestFilters filters = 
+					(RestFilters) binder.getTarget();
+
+			if(StringUtils.isNotBlank(matchValue)){
+				RestFilter filter = new RestFilter();
+				filter.setFiltercomponent(filterComponent);
+				filter.setMatchalgorithm(matchAlgorithm);
+				filter.setMatchvalue(matchValue);
+				
+				filters.getRestFilters().add(filter);
+			}
+		}
+	}
 	
 	/**
 	 * The Class TargetReferenceTypeEditor.

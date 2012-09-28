@@ -399,7 +399,7 @@ interface PathParameters {
 	public static final String PARAM_PREDICATEID = "predicate";
 
 	public static final String PARAM_MATCHINGALGORITHM = "matchingalgorithm";
-	public static final String PARAM_MATCHTEXT = "matchtext";
+	public static final String PARAM_MATCHVALUE = "matchvalue";
 	
 	public static final String PARAM_PAGE = "page";
 	public static final String PARAM_MAXTORETURN = "maxtoreturn";

@@ -3,12 +3,15 @@ package edu.mayo.cts2.framework.webapp.rest.query;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
 import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
@@ -42,6 +45,15 @@ public abstract class AbstractResourceQueryBuilder<T,Q extends ResourceQuery> {
 	public T addRestReadContext(RestReadContext restReadContext){
 		this.restReadContext = restReadContext;
 		
+		return this.getThis();
+	}
+	
+	public T addRestFilters(RestFilters restFilters){
+		if(restFilters != null && CollectionUtils.isNotEmpty(restFilters.getRestFilters()))
+		for(RestFilter filter : restFilters.getRestFilters()){
+			this.restFilter.add(filter);
+		}
+
 		return this.getThis();
 	}
 	

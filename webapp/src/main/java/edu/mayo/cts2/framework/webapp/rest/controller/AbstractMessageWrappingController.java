@@ -27,7 +27,9 @@ import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -336,8 +339,21 @@ public abstract class AbstractMessageWrappingController extends
 			mav.addObject(IS_DIRECTORY_MODEL_OBJECT, bean instanceof Directory);
 			return mav;
 		} else {
-			return new ResponseEntity<Object>(bean, HttpStatus.OK);
+			return new ResponseEntity<Object>(bean, this.getHeaders(request), HttpStatus.OK);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected HttpHeaders getHeaders(HttpServletRequest request){
+		HttpHeaders httpHeaders = new HttpHeaders();
+
+		Enumeration<String> headers = request.getHeaderNames();
+		while(headers.hasMoreElements()){
+			String headerName = headers.nextElement();
+			httpHeaders.put(headerName, Collections.list(request.getHeaders(headerName)));
+		}
+
+		return httpHeaders;
 	}
 	
 	protected <R,S,Q extends ResourceQuery> Object doQuery(
