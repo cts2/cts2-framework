@@ -317,7 +317,7 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	public void initEntityDescriptionRestrictionBinder(
 			 WebDataBinder binder,
 			 @RequestParam(value=PARAM_FILTERCOMPONENT, required=false) String filterComponent,
-			 @RequestParam(value=PARAM_MATCHINGALGORITHM, required=false) String matchAlgorithm,
+			 @RequestParam(value=PARAM_MATCHALGORITHM, required=false) String matchAlgorithm,
 			 @RequestParam(value=PARAM_MATCHVALUE, required=false) String matchValue) {
 		
 		if(binder.getTarget() instanceof RestFilters){

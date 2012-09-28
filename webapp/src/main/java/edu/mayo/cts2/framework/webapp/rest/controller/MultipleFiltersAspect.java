@@ -90,17 +90,17 @@ public class MultipleFiltersAspect {
 			if(this.isGroupedParam(param, URIHelperInterface.PARAM_FILTERCOMPONENT)){
 				String groupId = this.getGroupId(param, URIHelperInterface.PARAM_FILTERCOMPONENT);
 				FilterTuple tuple = this.getFilterTuple(groupId, filters);
-				tuple.filterComponent = param;
+				tuple.filterComponent = httpServletRequest.getParameter(param);
 			}
-			if(this.isGroupedParam(param, URIHelperInterface.PARAM_MATCHINGALGORITHM)){
-				String groupId = this.getGroupId(param, URIHelperInterface.PARAM_MATCHINGALGORITHM);
+			if(this.isGroupedParam(param, URIHelperInterface.PARAM_MATCHALGORITHM)){
+				String groupId = this.getGroupId(param, URIHelperInterface.PARAM_MATCHALGORITHM);
 				FilterTuple tuple = this.getFilterTuple(groupId, filters);
-				tuple.matchAlgorithm = param;
+				tuple.matchAlgorithm = httpServletRequest.getParameter(param);
 			}
 			if(this.isGroupedParam(param, URIHelperInterface.PARAM_MATCHVALUE)){
 				String groupId = this.getGroupId(param, URIHelperInterface.PARAM_MATCHVALUE);
 				FilterTuple tuple = this.getFilterTuple(groupId, filters);
-				tuple.matchValue = param;
+				tuple.matchValue = httpServletRequest.getParameter(param);
 			}
 		}
 		

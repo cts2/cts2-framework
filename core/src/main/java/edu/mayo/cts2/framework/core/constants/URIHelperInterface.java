@@ -398,7 +398,7 @@ interface PathParameters {
 	public static final String PARAM_SOURCEORTARGETENTITYID = "sourceortargetentity";
 	public static final String PARAM_PREDICATEID = "predicate";
 
-	public static final String PARAM_MATCHINGALGORITHM = "matchingalgorithm";
+	public static final String PARAM_MATCHALGORITHM = "matchalgorithm";
 	public static final String PARAM_MATCHVALUE = "matchvalue";
 	
 	public static final String PARAM_PAGE = "page";
