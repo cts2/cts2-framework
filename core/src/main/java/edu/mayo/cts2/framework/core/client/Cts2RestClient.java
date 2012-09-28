@@ -91,12 +91,9 @@ public class Cts2RestClient {
 		if(trustSelfSignedSsl){
 			trustSelfSignedSSL();
 		}
-		this.nonSecureTemplate = this.doGetRestTemplate();
+		this.nonSecureTemplate = this.createRestTemplate(null,null);
 	}
 
-	protected RestTemplate doGetRestTemplate() {
-		return this.doGetRestTemplate(null, null);
-	}
 	
 	protected final RestTemplate doGetRestTemplate(String username, String password) {
 		if(username != null && password != null){
