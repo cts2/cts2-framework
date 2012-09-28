@@ -146,7 +146,7 @@ public class Cts2RestClient {
 	}
 	
 	public URI postCts2Resource(String url, String username, String password, Object cts2Resource){
-		return this.doGetRestTemplate().postForLocation(url, cts2Resource);
+		return this.doGetRestTemplate(username, password).postForLocation(url, cts2Resource);
 	}
 	
 	public void deleteCts2Resource(String url){
