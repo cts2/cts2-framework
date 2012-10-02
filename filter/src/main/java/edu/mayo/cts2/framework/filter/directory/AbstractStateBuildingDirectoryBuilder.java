@@ -148,9 +148,6 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 							state, 
 							matchAlgorithmReference, 
 							queryString);
-					break;
-		
-	
 		}
 		
 		for(StateBuildingRestriction<S> restriction : this.getRestrictions()){
@@ -227,9 +224,5 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	protected void setRestrictions(List<StateBuildingRestriction<S>> restrictions) {
 		this.restrictions = restrictions;
 	}
-	
-	
-	
-	
 	
 }
