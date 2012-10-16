@@ -326,8 +326,12 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 
 			if(StringUtils.isNotBlank(matchValue)){
 				RestFilter filter = new RestFilter();
-				filter.setFiltercomponent(filterComponent);
-				filter.setMatchalgorithm(matchAlgorithm);
+				if(StringUtils.isNotBlank(filterComponent)){
+					filter.setFiltercomponent(filterComponent);
+				}
+				if(StringUtils.isNotBlank(matchAlgorithm)){
+					filter.setMatchalgorithm(matchAlgorithm);
+				}
 				filter.setMatchvalue(matchValue);
 				
 				filters.getRestFilters().add(filter);

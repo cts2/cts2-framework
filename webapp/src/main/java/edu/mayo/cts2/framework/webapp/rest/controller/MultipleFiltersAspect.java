@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -111,8 +112,12 @@ public class MultipleFiltersAspect {
 	
 	private RestFilter toRestFilter(FilterTuple tuple){
 		RestFilter filter = new RestFilter();
-		filter.setFiltercomponent(tuple.filterComponent);
-		filter.setMatchalgorithm(tuple.matchAlgorithm);
+		if(StringUtils.isNotBlank(tuple.filterComponent)){
+			filter.setFiltercomponent(tuple.filterComponent);
+		}
+		if(StringUtils.isNotBlank(tuple.matchAlgorithm)){
+			filter.setMatchalgorithm(tuple.matchAlgorithm);
+		}
 		filter.setMatchvalue(tuple.matchValue);
 		
 		return filter;
