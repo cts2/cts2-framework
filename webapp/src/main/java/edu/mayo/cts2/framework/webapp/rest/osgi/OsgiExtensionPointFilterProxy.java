@@ -1,6 +1,8 @@
 package edu.mayo.cts2.framework.webapp.rest.osgi;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -9,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
@@ -21,6 +24,38 @@ public class OsgiExtensionPointFilterProxy implements Filter, ExtensionPoint {
 	private ServiceTracker osgiFilterTracker;
 
 	private FilterConfig filterConfig;
+	
+	public final static String ORDER_PROPERTY = "ORDER";
+	public final static String ORDER_FIRST = "FIRST";
+	public final static String ORDER_LAST = "LAST";
+
+	
+	private static Comparator<ServiceReference>
+		SERVICE_REF_COMPARATOR = new Comparator<ServiceReference>(){
+
+			@Override
+			public int compare(ServiceReference o1, ServiceReference o2) {
+				String prop1 = (String)o1.getProperty(ORDER_PROPERTY);
+				String prop2 = (String)o2.getProperty(ORDER_PROPERTY);
+
+				if(prop1 == null && prop2 == null){
+					return 0;
+				} else if(StringUtils.equalsIgnoreCase(prop1, prop2)){
+					throw new IllegalStateException("More than one Filter registered with ORDER: " + prop1);
+				} else if(StringUtils.equals(prop1, ORDER_FIRST) ||
+						StringUtils.equals(prop2, ORDER_LAST)
+						){
+					return -1;
+				} else if(StringUtils.equals(prop2, ORDER_FIRST) ||
+						StringUtils.equals(prop1, ORDER_LAST)
+						){
+					return 1;
+				}
+				
+				throw new IllegalStateException("Illegal Filter ORDER combination.");
+			}
+		
+	};
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -36,16 +71,22 @@ public class OsgiExtensionPointFilterProxy implements Filter, ExtensionPoint {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		Object[] services = this.osgiFilterTracker.getServices();
-
+		ServiceReference[] refs = this.osgiFilterTracker.getServiceReferences();
+		
 		FilterChain chainToUse;
 		
-		if (services != null) {
-			Filter[] filters = new Filter[services.length];
-			for(int i=0;i<services.length;i++) {
-				filters[i] = (Filter) services[i];
+		if (refs != null && refs.length > 0) {
+
+			Arrays.sort(refs, SERVICE_REF_COMPARATOR);
+			
+			Filter[] filters = new Filter[refs.length];
+			for(int i=0;i<refs.length;i++) {
+				filters[i] = (Filter) this.osgiFilterTracker.getService(refs[i]);
 			}
-			chainToUse = new DelegatingFilterChain(chain, filters);
+			
+			chainToUse = 
+				new DelegatingFilterChain(
+						chain, filters);
 		} else {
 			chainToUse = chain;
 		}
