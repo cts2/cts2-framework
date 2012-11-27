@@ -111,7 +111,7 @@
 				<version>2.2.2</version>
 				<configuration>
 					<goals>deploy</goals>
-					<autoversionsubmodules>true</autoversionsubmodules>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
 				</configuration>
 			</plugin>
 
@@ -172,7 +172,8 @@
 				<version>1.2</version>
 				<configuration>
 					<providerSelection>1.7</providerSelection>
-				</configuration>
+                    <source/>
+                </configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -234,8 +235,8 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
-							<argline>-Xmx1028m</argline>
-							<argline>-XX:MaxPermSize=${test.permgen.max}</argline>
+							<argLine>-Xmx1028m</argLine>
+							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
 							<excludes>
 								<exclude>**/*IT.*</exclude>
 							</excludes>
@@ -254,8 +255,8 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
-							<argline>-Xmx1028m</argline>
-							<argline>-XX:MaxPermSize=${test.permgen.max}</argline>
+							<argLine>-Xmx1028m</argLine>
+							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
 							<includes>
 								<include>**/*IT.*</include>
 							</includes>
