@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import edu.mayo.cts2.framework.filter.match.Matcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
@@ -135,17 +137,13 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 		this.verifyRange();
 		
 		for(Restriction<F> restriction : this.getRestrictions()){
-			
 			allPossibleResults.retainAll(
 					doProcessRestriction(restriction));
 		}
 	
 		for(final ResolvedFilter filter : this.getFilterComponents()){
-			
-			
-						allPossibleResults.retainAll(
-								doRestrict(filter, DEFAULT_SCORE_THRESHOLD));
-				
+			allPossibleResults.retainAll(
+					doRestrict(filter, DEFAULT_SCORE_THRESHOLD));
 		}
 		
 		return this.createDirectoryResult(new ArrayList<F>(allPossibleResults));
@@ -157,11 +155,8 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	public int count() {
 	
 		for(final ResolvedFilter filter : this.getFilterComponents()){
-			
-			
-						allPossibleResults.retainAll(
-								doRestrict(filter, DEFAULT_SCORE_THRESHOLD));
-				
+			allPossibleResults.retainAll(
+					doRestrict(filter, DEFAULT_SCORE_THRESHOLD));	
 		}
 		
 		return this.allPossibleResults.size();
@@ -259,12 +254,14 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 			Iterable<String> candidates = 
 				this.getCandidateText(filterComponent.getPropertyReference(), candidate);
 			
-			for(String candidateText : candidates){
-				float score = algorithm.matchScore(matchText, candidateText);
-				
-				if(score != 0 && score >= minScore){
-					returnSet.add(candidate);
-					break;
+			if(candidates != null){
+				for(String candidateText : candidates){
+					float score = algorithm.matchScore(matchText, candidateText);
+					
+					if(score != 0 && score >= minScore){
+						returnSet.add(candidate);
+						break;
+					}
 				}
 			}
 		}
