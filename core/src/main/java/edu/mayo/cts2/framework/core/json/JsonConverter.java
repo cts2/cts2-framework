@@ -1,3 +1,26 @@
+/*
+ * Copyright: (c) 2004-2012 Mayo Foundation for Medical Education and 
+ * Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
+ * triple-shield Mayo logo are trademarks and service marks of MFMER.
+ *
+ * Except as contained in the copyright notice above, or as used to identify 
+ * MFMER as the author of this software, the trade names, trademarks, service
+ * marks, or product names of the copyright holder shall not be used in
+ * advertising, promotion or otherwise in connection with this software without
+ * prior written authorization of the copyright holder.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.mayo.cts2.framework.core.json;
 
 import java.lang.reflect.Field;
@@ -37,6 +60,11 @@ import edu.mayo.cts2.framework.model.Cts2ModelObject;
 import edu.mayo.cts2.framework.model.core.TsAnyType;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 
+/**
+ * Responsible for converting CTS2 Model output into JSON.
+ *
+ * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
+ */
 @Component
 public class JsonConverter {
 
@@ -49,6 +77,9 @@ public class JsonConverter {
 
 	private Map<String, Class<? extends Cts2ModelObject>> classNameCache;
 
+	/**
+	 * Instantiates a new json converter.
+	 */
 	public JsonConverter() {
 		super();
 		this.gson = this.buildGson();
@@ -56,6 +87,11 @@ public class JsonConverter {
 		this.classNameCache = this.cacheClasses();
 	}
 
+	/**
+	 * Cache classes.
+	 *
+	 * @return the map< string, class<? extends cts2 model object>>
+	 */
 	protected Map<String, Class<? extends Cts2ModelObject>> cacheClasses() {
 		Map<String, Class<? extends Cts2ModelObject>> cache = new HashMap<String, Class<? extends Cts2ModelObject>>();
 
@@ -77,6 +113,12 @@ public class JsonConverter {
 		return cache;
 	}
 
+	/**
+	 * Convert a CTS2 Model Object to JSON.
+	 *
+	 * @param cts2Object the cts2 object
+	 * @return the string
+	 */
 	public String toJson(Object cts2Object) {
 		JsonElement element = this.gson.toJsonTree(cts2Object);
 		JsonObject object = new JsonObject();
@@ -87,6 +129,14 @@ public class JsonConverter {
 		return object.toString();
 	}
 
+	/**
+	 * Convert JSON to a CTS2 Model Object.
+	 *
+	 * @param <T> the generic type
+	 * @param json the json
+	 * @param clazz the clazz
+	 * @return the t
+	 */
 	public <T> T fromJson(String json, Class<T> clazz) {
 		JsonElement element = this.jsonParser.parse(json);
 
@@ -104,12 +154,24 @@ public class JsonConverter {
 		return obj;
 	}
 
+	/**
+	 * Convert JSON to a CTS2 Model Object.
+	 *
+	 * @param json the json
+	 * @return the object
+	 */
 	public Object fromJson(String json) {
 		Class<?> clazz = this.getJsonClass(json);
 
 		return this.fromJson(json, clazz);
 	}
 
+	/**
+	 * Gets the json class.
+	 *
+	 * @param json the json
+	 * @return the json class
+	 */
 	protected Class<?> getJsonClass(String json) {
 		JsonElement element = this.jsonParser.parse(json);
 
@@ -121,6 +183,11 @@ public class JsonConverter {
 		return this.classNameCache.get(entrySet.iterator().next().getKey());
 	}
 
+	/**
+	 * Sets the choice value.
+	 *
+	 * @param obj the new choice value
+	 */
 	protected void setChoiceValue(Object obj) {
 		try {
 			for (Field f : obj.getClass().getDeclaredFields()) {
@@ -145,6 +212,11 @@ public class JsonConverter {
 		}
 	}
 
+	/**
+	 * Builds the gson.
+	 *
+	 * @return the gson
+	 */
 	protected Gson buildGson(){
 		GsonBuilder gson = new GsonBuilder();
 		
@@ -185,8 +257,16 @@ public class JsonConverter {
 		return gson.create();
 	}
 
+	/**
+	 * The Class EmptyCollectionSerializer.
+	 *
+	 * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
+	 */
 	public static class EmptyCollectionSerializer implements JsonSerializer<List<?>> {
 
+		/* (non-Javadoc)
+		 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type, com.google.gson.JsonSerializationContext)
+		 */
 		@Override
 		public JsonElement serialize(List<?> collection, Type typeOfSrc,
 				JsonSerializationContext context) {
@@ -199,15 +279,30 @@ public class JsonConverter {
 
 	}
 	
+	/**
+	 * The Class TsAnyTypeSerializer.
+	 *
+	 * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
+	 */
 	public static class TsAnyTypeSerializer 
 		implements JsonSerializer<TsAnyType>, JsonDeserializer<TsAnyType> {
 
+		/* (non-Javadoc)
+		 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type, com.google.gson.JsonSerializationContext)
+		 */
 		@Override
 		public JsonElement serialize(TsAnyType tsAnyType, Type typeOfSrc,
 				JsonSerializationContext context) {
+			if(tsAnyType == null || tsAnyType.getContent() == null){
+				return null;
+			}
+			
 			return new JsonPrimitive(tsAnyType.getContent());
 		}
 
+		/* (non-Javadoc)
+		 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type, com.google.gson.JsonDeserializationContext)
+		 */
 		@Override
 		public TsAnyType deserialize(JsonElement json, Type typeOfT,
 				JsonDeserializationContext context) throws JsonParseException {

@@ -102,12 +102,52 @@ class JsonConverterTest {
 	}
 	
 	@Test
+	void TestGetJsonNullSynopsisValue(){
+		def converter = new JsonConverter()
+		
+		def cs = new CodeSystemCatalogEntry()
+		cs.setResourceSynopsis(new EntryDescription())
+		cs.getResourceSynopsis().setValue(new TsAnyType())
+		cs.getResourceSynopsis().getValue().setContent(null)
+		
+		converter.toJson(cs)
+	}
+	
+	
+	@Test
+	void TestGetJsonBlankSynopsisValue(){
+		def converter = new JsonConverter()
+		
+		def cs = new CodeSystemCatalogEntry()
+		cs.setResourceSynopsis(new EntryDescription())
+		cs.getResourceSynopsis().setValue(new TsAnyType())
+		cs.getResourceSynopsis().getValue().setContent("    ")
+		
+		converter.toJson(cs)
+	}
+	
+	@Test
 	void TestGetJsonFromComplexObject(){
 		def converter = new JsonConverter()
 		
 		DelegatingMarshaller marshaller = new DelegatingMarshaller()
 		
 		Resource xml = new ClassPathResource("xml/breakingJson.xml")
+		
+		def stream = xml.getInputStream()
+		
+		def cs = marshaller.unmarshal(new StreamSource(stream))
+		
+		println converter.toJson(cs)
+	}
+	
+	@Test
+	void TestGetJsonFromXMLBreaking(){
+		def converter = new JsonConverter()
+		
+		DelegatingMarshaller marshaller = new DelegatingMarshaller()
+		
+		Resource xml = new ClassPathResource("xml/breaksJsonCodeSystems.xml")
 		
 		def stream = xml.getInputStream()
 		
