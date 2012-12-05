@@ -5,6 +5,7 @@ target/
 .settings
 .classpath
 .project
+.springBeans
 
 ### Intellij Idea ###
 *.ids
