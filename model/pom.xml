@@ -4,11 +4,12 @@
 	<parent>
 		<groupId>edu.mayo.cts2</groupId>
 		<artifactId>cts2-framework</artifactId>
-		<version>0.8.1-SNAPSHOT</version>
+		<version>0.8.0</version>
 	</parent>
 
 	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>model</artifactId>
+  <version>0.8.0</version>
 
 	<name>CTS2 Development Framework Model Objects</name>
 	<description>Castor Java Bean representation of the CTS2 XSD Model Representation</description>
