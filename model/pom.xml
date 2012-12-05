@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>edu.mayo.cts2</groupId>
 		<artifactId>cts2-framework</artifactId>
-		<version>0.8.2-SNAPSHOT</version>
+		<version>0.8.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>edu.mayo.cts2.framework</groupId>
@@ -30,9 +30,10 @@
 							<goal>clean</goal>
 						</goals>
 						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
 							<filesets>
 								<fileset>
-									<directory>${maven.build.dir}/generated-sources/castor</directory>
+									<directory>${project.build.directory}/generated-sources/castor</directory>
 									<includes>
 										<include>**/*</include>
 									</includes>
