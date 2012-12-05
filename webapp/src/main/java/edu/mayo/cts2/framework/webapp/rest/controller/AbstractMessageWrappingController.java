@@ -752,11 +752,12 @@ public abstract class AbstractMessageWrappingController extends
 		this.readContextResolver = readContextResolver;
 	}
 
-	public ServerContext getServerContext() {
+	protected ServerContext getServerContext() {
 		return serverContext;
 	}
 
-	public void setServerContext(ServerContext serverContext) {
+	protected void setServerContext(ServerContext serverContext) {
 		this.serverContext = serverContext;
 	}
+	
 }

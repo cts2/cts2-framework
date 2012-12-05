@@ -27,6 +27,8 @@ import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 
 /**
  * The Class UrlConstructor.
@@ -237,6 +239,15 @@ public class UrlConstructor {
 	public String createCodeSystemsUrl() {
 		return addServerContext(
 			URIHelperInterface.CODESYSTEMS);
+	}
+	
+	
+	public String createServiceUrl(StructuralProfile structural, FunctionalProfile functional) {
+		String serviceName = structural.name().replaceFirst("^SP", "").replaceAll("_", "").toLowerCase();
+		String serviceType = functional.name().replaceFirst("^FP", "").replaceAll("_", "").toLowerCase();
+		
+		return addServerContext(
+			URIHelperInterface.SERVICE + "/" + serviceName + serviceType);
 	}
 	
 	/**

@@ -7,6 +7,8 @@ import org.junit.Test
 
 import edu.mayo.cts2.framework.core.config.ServerContext
 import edu.mayo.cts2.framework.core.config.TestServerContext
+import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile
+import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile
 
 class UrlConstructorTest {
 	
@@ -49,4 +51,10 @@ class UrlConstructorTest {
 		assertEquals "http://serverRoot:8080/testapp/codesystem/CSN/version/CSVN/entities", url
 	}
 
+	@Test
+	void "Test create Service URL"(){
+		String url = urlConstructor.createServiceUrl(StructuralProfile.SP_CODE_SYSTEM, FunctionalProfile.FP_READ);
+
+		assertEquals "http://serverRoot:8080/testapp/service/codesystemread", url
+	}
 }

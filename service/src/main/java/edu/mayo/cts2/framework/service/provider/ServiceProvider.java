@@ -26,18 +26,31 @@ package edu.mayo.cts2.framework.service.provider;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
 /**
- * The Interface ServiceProvider.
+ * The ServiceProvider is the coupling point between the CTS2
+ * Development Framework and the individual Service Plugins. This interface
+ * allows the framework to request an implementation of a specific CTS2 Service
+ * from the plugin. 
+ * 
+ * The service will request plugins by passing in a CTS2 Service interface class.
+ * It is the responsibility of the plugin to either:
+ * 1) Return an implementation of that interface.
+ * or
+ * 2) Return a NULL, indicating no such service is available.
+ * 
+ * Each CTS2 Service Plugin is required to implement this interface once and only once.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface ServiceProvider {
 	
 	/**
-	 * Gets the service.
+	 * Gets the requested CTS2 Service. If this service has not been implemented,
+	 * or is otherwise unavailable, return a 'NULL' value.
 	 *
 	 * @param <T> the generic type
 	 * @param serviceClass the service class
-	 * @return the service
+	 *
+	 * @return the service, or a NULL if not implemented or unavailable
 	 */
 	public <T extends Cts2Profile> T getService(Class<T> serviceClass);
 	

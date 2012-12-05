@@ -548,20 +548,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 				ModelUtils.nameOrUriFromUri(uri),
 				redirect);
 	}
-	
-	@RequestMapping(value=PATH_CODESYSTEMVERSIONQUERYSERVICE, method=RequestMethod.GET)
-	public Void getCodeSystemVersionCatalogQueryService() {
-		return null;
-		//TODO
-	}
-	
-	@RequestMapping(value=PATH_CODESYSTEMVERSIONREADSERVICE, method=RequestMethod.GET)
-	public Void getCodeSystemVersionCatalogReadService() {
-		return null;
-		//TODO
-	}
-	
-	
+
 	@InitBinder
 	 public void initCodeSystemRestrictionBinder(
 			 WebDataBinder binder,

@@ -16,28 +16,26 @@ import edu.mayo.cts2.framework.service.profile.FunctionalConformance
 import edu.mayo.cts2.framework.service.profile.StructuralConformance
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 
-class ClassPathScanningConformanceFactoryTest {
-	
-	def factory = new ClassPathScanningConformanceFactory()
-	
-	@Test
-	void testDoScan(){
-		def classes = factory.doScan();
-		
-		assertTrue classes.size() > 0
-	}
-	
-	@Test
-	void testDoScanHaveFunctionalAnnotation(){
-		def classes = factory.doScan();
-		
-		
-		classes.each {
-			def annotation = AnnotationUtils.findAnnotation(it, FunctionalConformance.class)
-			assertNotNull it.name, annotation
-		}
-	}
 
+class ServiceUtilsTest {
+
+	@Test
+	void testFindAnnotations(){
+		def functionalConformance = ServiceUtils.findAnnotations(TestCsReadService.class, FunctionalConformance.class)
+		
+		def structuralConformance = ServiceUtils.findAnnotations(TestCsReadService.class, StructuralConformance.class)
+		
+		assertNotNull functionalConformance
+		assertNotNull structuralConformance
+	}
+	
+	@Test
+	void testAddTemporalAnnotation(){
+		def functionalConformance = ServiceUtils.findAnnotations(TestCsReadService.class, FunctionalConformance.class)
+		
+		assertNotNull functionalConformance
+	}
+	
 	@FunctionalConformance(FunctionalProfile.FP_TEMPORAL)
 	class TestCsReadService implements CodeSystemReadService {
 

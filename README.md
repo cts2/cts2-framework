@@ -1,14 +1,13 @@
 [![CTS2 Development Framework][Project Logo]][Website]
+
+[![Build Status](https://travis-ci.org/cts2/cts2-framework.png)](https://travis-ci.org/cts2/cts2-framework)
+
 What is the CTS2 Development Framework?
 ----------------
 The CTS2 Development Framework is a toolkit for rapidly creating CTS2 implementations.
 
 Visit our [website][Website] or get support on our [forums][Forums].  
 Track and submit issues and bugs on our [issue tracker][Issues].
-
-Follow us on Twitter!
----------------------
-[![Follow us on Twitter][Twitter Logo]][Twitter]
 
 Source
 ------
@@ -27,5 +26,3 @@ CTS2 Development Framework uses Maven to handle its dependencies.
 [Forums]: http://informatics.mayo.edu/cts2/framework/forum
 [GitHub]: https://github.com/cts2/cts2-framework
 [Issues]: https://github.com/cts2/cts2-framework/issues
-[Twitter]: https://twitter.com/cts2framework
-[Twitter Logo]: http://informatics.mayo.edu/cts2/framework/images/twitter_logo.jpg

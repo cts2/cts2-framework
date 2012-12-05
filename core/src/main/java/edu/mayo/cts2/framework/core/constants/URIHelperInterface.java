@@ -33,7 +33,6 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 		PathParameters, HeaderParameters {
 
 	/* CodeSystem */
-
 	public static final String PATH_CODESYSTEMS = "/" + CODESYSTEMS;
 	public static final String PATH_CODESYSTEM = "/" + CODESYSTEM;
 	public static final String PATH_CODESYSTEMBYID = "/" + CODESYSTEM + "/{"
@@ -70,7 +69,6 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" + VERSIONS;
 
 	/* Entities */
-
 	public static final String PATH_ENTITIES = "/" + ENTITIES;
 	public static final String PATH_ENTITY = "/" + ENTITY;
 	public static final String PATH_ENTITIES_OF_CODESYSTEM_VERSION = "/" + CODESYSTEM + "/{"
@@ -142,7 +140,6 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_STATEMENTBYURI = "/" + STATEMENT_BY_URI + "/" + ALL_WILDCARD;
 	
 	/* Maps */
-
 	public static final String PATH_MAP_BYID = "/" + MAP + "/{" + VAR_MAPID + "}";
 	public static final String PATH_MAP_CHANGEHISTORY = PATH_MAP_BYID + "/" + CHANGEHISTORY;
 	public static final String PATH_MAP_EARLIESTCHANGE = PATH_MAP_BYID + "/" + EARLIESTCHANGE;
@@ -179,16 +176,12 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 
 
 	/* Valueset */
-	
 	public static final String PATH_VALUESET = "/" + VALUESET;
-
 	public static final String PATH_VALUESETBYID = "/" + VALUESET + "/{"
-			+ VAR_VALUESETID + "}";
-	
+			+ VAR_VALUESETID + "}";	
 	public static final String PATH_VALUESET_CHANGEHISTORY = PATH_VALUESETBYID + "/" + CHANGEHISTORY;
 	public static final String PATH_VALUESET_EARLIESTCHANGE = PATH_VALUESETBYID + "/" + EARLIESTCHANGE;
 	public static final String PATH_VALUESET_LATESTCHANGE = PATH_VALUESETBYID + "/" + LATESTCHANGE;
-
 	public static final String PATH_VALUESET_BYURI = "/" + VALUESET_BY_URI + "/" + ALL_WILDCARD;
 
 	public static final String PATH_ENTITIESINVALUESET = "/" + VALUESET + "/{"
@@ -237,14 +230,7 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 			+ "/{" + VAR_VALUESETID + "}/" + ENTITIES + "/" + EXISTINGENTITYIDS;
 
 	/* Services */
-	public static final String PATH_CODESYSTEMQUERYSERVICE = 
-		SERVICE + "/" + CODESYSTEMQUERYSERVICE;
-	public static final String PATH_CODESYSTEMREADSERVICE = 
-		SERVICE + "/" + CODESYSTEMREADSERVICE;
-	public static final String PATH_CODESYSTEMVERSIONQUERYSERVICE =
-		SERVICE + "/" + CODESYSTEMVERSIONQUERYSERVICE;
-	public static final String PATH_CODESYSTEMVERSIONREADSERVICE =
-		SERVICE + "/" + CODESYSTEMVERSIONREADSERVICE;
+	public static final String PATH_SERVICE = SERVICE + "/{" + VAR_SERVICEID + "}";
 }
 
 interface PathKeywords {
@@ -342,6 +328,8 @@ interface PathKeywords {
 	public static final String LATESTCHANGE = "latestchange";
 	
 	public static final String ALL_WILDCARD = "**";
+	
+	public static final String CODE_SYSTEM_READ = "codesystemread";
 }
 
 interface PathVariables {
@@ -361,6 +349,7 @@ interface PathVariables {
 	public static final String VAR_CONCEPTDOMAINID = "conceptDomainID";
 	public static final String VAR_CONCEPTDOMAINBINDINGID = "conceptDomainBindingID";
 	public static final String VAR_RESOLUTIONTYPE = "resolutiontype";
+	public static final String VAR_SERVICEID = "serviceID";
 
 }
 

@@ -365,18 +365,6 @@ public class CodeSystemController extends AbstractMessageWrappingController {
 				redirect);
 	}
 
-	@RequestMapping(value=PATH_CODESYSTEMQUERYSERVICE, method=RequestMethod.GET)
-	public edu.mayo.cts2.framework.model.service.codesystem.CodeSystemQueryService getCodeSystemCatalogQueryService() {
-		return null;
-		//
-	}
-	
-	@RequestMapping(value=PATH_CODESYSTEMREADSERVICE, method=RequestMethod.GET)
-	public edu.mayo.cts2.framework.model.service.codesystem.CodeSystemReadService getCodeSystemCatalogReadService() {
-		return null;
-		//
-	}
-	
 	private ResourceQueryBuilder getNewResourceQueryBuilder(){
 		return new ResourceQueryBuilder(
 			this.codeSystemQueryService, 
