@@ -58,6 +58,7 @@ public class FelixPluginManager implements
 	InitializingBean, OsgiPluginManager, ServletContextAware, ApplicationContextAware {
     public static final String OSGI_FRAMEWORK_BUNDLES_ZIP = "osgi-framework-bundles.zip";
     public static final int REFRESH_TIMEOUT = 10;
+    public static final String MIN_SERVLET_VERSION = "2.5.0";
 
     public static final String CONFIG_DIR = "config";
     
@@ -121,23 +122,30 @@ public class FelixPluginManager implements
 		PackageScannerConfiguration scannerConfig = new DefaultPackageScannerConfiguration();
 		scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
 		scannerConfig.getPackageIncludes().add("org.jaxen*");
-		scannerConfig.getPackageIncludes().add("javax.servlet*");
 		scannerConfig.getPackageIncludes().add("com.sun*");
 		scannerConfig.getPackageIncludes().add("org.json*");
 		scannerConfig.getPackageIncludes().add("org.springframework.oxm*");
 		scannerConfig.getPackageExcludes().add("com.atlassian.plugins*");
 	
 		scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
-		scannerConfig.getPackageVersions().put("javax.servlet*", "2.4");
 		scannerConfig.getPackageVersions().put("org.apache.commons.collections*", "3.2.1");
 		
 
         // Create a case-insensitive configuration property map.
         final StringMap configMap = new StringMap(false);
-
+        
+        String exports = exportsBuilder.getExports(scannerConfig);
+        if(log.isDebugEnabled()){
+        	log.debug("Exports: " + exports);
+        }
+        
+        // Explicitly add the servlet exports;
+        exports += ",javax.servlet;version=" + MIN_SERVLET_VERSION;
+        exports += ",javax.servlet.http;version=" + MIN_SERVLET_VERSION;
+        
         // Add the bundle provided service interface package and the core OSGi
         // packages to be exported from the class path via the system bundle.
-        configMap.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, exportsBuilder.getExports(scannerConfig));
+        configMap.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, exports);
 
         // Explicitly specify the directory to use for caching bundles.
         File felixCache = ConfigUtils.createSubDirectory(
