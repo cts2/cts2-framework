@@ -12,13 +12,13 @@ import org.springframework.oxm.UnmarshallingFailureException
 import org.springframework.oxm.ValidationFailureException
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingMsg
-import edu.mayo.cts2.framework.model.core.ConceptDomainReference
-import edu.mayo.cts2.framework.model.core.RESTResource
+import edu.mayo.cts2.framework.model.core.SourceAndNotation
 import edu.mayo.cts2.framework.model.core.ValueSetReference
-import edu.mayo.cts2.framework.model.extension.LocalIdConceptDomainBinding
+import edu.mayo.cts2.framework.model.core.types.SetOperator
 import edu.mayo.cts2.framework.model.service.core.UpdateResourceVersionDescription
-import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
+import edu.mayo.cts2.framework.model.valuesetdefinition.CompleteValueSetReference
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
 
 class DelegatingMarshallerTest {
 	 
@@ -145,6 +145,32 @@ class DelegatingMarshallerTest {
 
 		
 		assertFalse sw.toString().contains("<versions>");
+
+	}
+	
+	@Test
+	void "Test Marshall ValueSetDefinition"(){
+		def stream = valid.getInputStream()
+		
+		def sw = new StringWriter();
+		
+		marshaller.marshal(
+			new ValueSetDefinition(
+				documentURI:"test",
+				about:"test",
+				definedValueSet:new ValueSetReference(),
+				entry: [
+					new ValueSetDefinitionEntry(
+						operator:SetOperator.UNION,
+						entryOrder:1,
+						completeValueSet:new CompleteValueSetReference(valueSet:new ValueSetReference()))	
+				],
+				sourceAndNotation:new SourceAndNotation()), new StreamResult(sw))
+
+		
+		println sw.toString()
+		
+		assertNotNull sw.toString()
 
 	}
 	
