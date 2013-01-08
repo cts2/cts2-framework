@@ -235,6 +235,10 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	protected int getStart() {
 		return start;
 	}
+
+    protected int getEnd() {
+        return this.getStart() + this.getMaxToReturn();
+    }
 	
 	protected Query getQuery(){
 		return this.query;

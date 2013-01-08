@@ -186,9 +186,9 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 		
 		List<T> prunedResults = this.pruneResults(transformedResults);
 
-		boolean atEnd = resultsMatchingFilters <= this.getMaxToReturn() + this.getStart();
-		
-		return new DirectoryResult<T>(prunedResults, atEnd);
+		boolean atEnd = resultsMatchingFilters <= this.getEnd();
+
+        return new DirectoryResult<T>(prunedResults, atEnd);
 	}
 
 	/**

@@ -157,6 +157,17 @@ class AbstractRemovingDirectoryBuilderTest {
 		
 		assertTrue results.isAtEnd()
 	}
+
+    @Test
+    void Test_createDirectoryResult_is_at_end_with_start(){
+        def builder = new TestAbstractRemovingDirectoryBuilder()
+        builder.addStart(2)
+        builder.addMaxToReturn(10)
+
+        def results = builder.createDirectoryResult(["one","two","three","four","five"])
+
+        assertTrue results.isAtEnd()
+    }
 }
 
 class TestAbstractRemovingDirectoryBuilder extends AbstractRemovingDirectoryBuilder<String,String> {
