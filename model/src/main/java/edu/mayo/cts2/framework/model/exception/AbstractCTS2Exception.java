@@ -40,6 +40,6 @@ public abstract class AbstractCTS2Exception extends RuntimeException {
     
     
     public String getMessage(){
-    	return this.getCts2Message().getValue().getContent();
+	    return this.getCts2Message() != null ? this.getCts2Message().getValue().getContent() : "";
     }
 }
