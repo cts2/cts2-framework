@@ -1,4 +1,6 @@
-package edu.mayo.cts2.framework.core.json;
+package edu.mayo.cts2.framework.core.json
+
+import edu.mayo.cts2.framework.core.json.JsonUnmarshallingException;
 
 import static org.junit.Assert.*
 
@@ -45,9 +47,19 @@ class JsonConverterTest {
 		assertEquals "ACTIVE", cs.entryState.toString()
 	}
 
-	
-	
-	@Test
+    @Test(expected = JsonUnmarshallingException)
+    void TestFromInvalidObject(){
+        def converter = new JsonConverter()
+
+        def json = """
+		{"somethingElse" : "aDifferentThing", "codeSystemName":"csname","about":"urn:oid:about","entryState":"ACTIVE"}
+		"""
+
+        converter.fromJson(json);
+    }
+
+
+    @Test
 	void TestJsonToObject(){
 		def converter = new JsonConverter()
 		
@@ -96,8 +108,7 @@ class JsonConverterTest {
 		def cs = new CodeSystemCatalogEntry()
 		cs.addKeyword("test1");
 		cs.addKeyword("test2");
-		
-		println converter.toJson(cs)
+
 		assertTrue converter.toJson(cs).contains("\"keywordList\":[\"test1\",\"test2\"]");
 	}
 	
@@ -153,7 +164,7 @@ class JsonConverterTest {
 		
 		def cs = marshaller.unmarshal(new StreamSource(stream))
 		
-		println converter.toJson(cs)
+		converter.toJson(cs)
 	}
 	
 	@Test

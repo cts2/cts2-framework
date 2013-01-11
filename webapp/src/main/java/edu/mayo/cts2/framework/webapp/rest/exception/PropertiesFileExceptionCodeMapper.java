@@ -28,6 +28,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -67,11 +68,28 @@ public class PropertiesFileExceptionCodeMapper implements Cts2RestExceptionCodeM
 		String code = this.properties.getProperty(exceptionName);
 		
 		if(code == null){
-			log.warn("No mapped error code for: " + exceptionName + ". Defaulting to: " + DEFAULT_ERROR_CODE);
-			
-			return DEFAULT_ERROR_CODE;
-		}
-		
-		return Integer.parseInt(code);
+	        return this.exeptionTypeToErrorCode(exception.getExceptionType());
+		} else {
+            return Integer.parseInt(code);
+        }
 	}
+
+    private int exeptionTypeToErrorCode(ExceptionType type){
+        Assert.notNull(type);
+
+        switch (type){
+            case INVALID_SERVICE_INPUT : {
+                 return 400;
+             }
+            case INVALID_SORT_CRITERION : {
+                return 400;
+            }
+            case INVALID_QUERY_CONTROL : {
+                return 400;
+            }
+            default : {
+                return DEFAULT_ERROR_CODE;
+            }
+        }
+    }
 }

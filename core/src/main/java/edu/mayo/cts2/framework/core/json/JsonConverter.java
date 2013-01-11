@@ -178,7 +178,9 @@ public class JsonConverter {
 		Set<Entry<String, JsonElement>> entrySet = element.getAsJsonObject()
 				.entrySet();
 
-		Assert.isTrue(entrySet.size() == 1);
+		if(entrySet.size() != 1){
+            throw new JsonUnmarshallingException("Could not determine the type of the JSON String: " + json);
+        }
 
 		return this.classNameCache.get(entrySet.iterator().next().getKey());
 	}
