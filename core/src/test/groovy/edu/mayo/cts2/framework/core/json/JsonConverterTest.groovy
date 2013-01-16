@@ -58,7 +58,6 @@ class JsonConverterTest {
         converter.fromJson(json);
     }
 
-
     @Test
 	void TestJsonToObject(){
 		def converter = new JsonConverter()
@@ -82,9 +81,7 @@ class JsonConverterTest {
 		
 		assertEquals cs, cs_return
 	}
-	
-	
-	
+
 	@Test
 	void TestSetChoiceValue(){
 		def converter = new JsonConverter()
@@ -98,7 +95,6 @@ class JsonConverterTest {
 		
 		assertNotNull des.namedEntity;
 		assertNotNull des.choiceValue;
-
 	}
 	
 	@Test
@@ -111,7 +107,17 @@ class JsonConverterTest {
 
 		assertTrue converter.toJson(cs).contains("\"keywordList\":[\"test1\",\"test2\"]");
 	}
-	
+
+    @Test
+    void TestGetJsonNoSynopsisValue(){
+        def converter = new JsonConverter()
+
+        def cs = new CodeSystemCatalogEntry()
+        cs.setResourceSynopsis(new EntryDescription())
+
+        converter.toJson(cs)
+    }
+
 	@Test
 	void TestGetJsonNullSynopsisValue(){
 		def converter = new JsonConverter()
@@ -173,8 +179,7 @@ class JsonConverterTest {
 		
 		def d = new Designation()
 		d.value = new TsAnyType(content: "test")
-		
-		println converter.toJson(d)
+
 		assertTrue ! converter.toJson(d).contains("anyObject")
 		assertTrue converter.toJson(d).contains("\"value\":\"test\"")
 	}

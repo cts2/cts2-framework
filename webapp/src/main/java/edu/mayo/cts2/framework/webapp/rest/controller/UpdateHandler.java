@@ -55,6 +55,7 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 			}
 			case METADATA: {
 				UpdateChangeableMetadataRequest request = this.buildUpdateMetadataRequest(group);
+                request.setChangeSetUri(changeSetUri);
 				
 				service.updateChangeableMetadata(identifier, request);		
 				break;

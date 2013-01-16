@@ -33,7 +33,12 @@ import edu.mayo.cts2.framework.model.core.StatusReference;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class UpdateChangeableMetadataRequest {
-	
+
+    /**
+     * the URI of the ChangeSet of this update
+     */
+    private String changeSetUri;
+
     /**
      * the state of this model element in an externally defined
      * workflow
@@ -104,5 +109,13 @@ public class UpdateChangeableMetadataRequest {
 	public void setChangeSource(SourceReference changeSource) {
 		this.changeSource = changeSource;
 	}
+
+    public String getChangeSetUri() {
+        return changeSetUri;
+    }
+
+    public void setChangeSetUri(String changeSetUri) {
+        this.changeSetUri = changeSetUri;
+    }
 
 }
