@@ -409,7 +409,7 @@
 				<executions>
 					<execution>
 						<id>upload-war-to-server</id>
-						<phase>deploy</phase>
+						<phase>release</phase>
 						<goals>
 							<goal>upload-single</goal>
 						</goals>
@@ -423,7 +423,7 @@
 
 					<execution>
 						<id>upload-standalone-jar-to-server</id>
-						<phase>deploy</phase>
+						<phase>release</phase>
 						<goals>
 							<goal>upload-single</goal>
 						</goals>
