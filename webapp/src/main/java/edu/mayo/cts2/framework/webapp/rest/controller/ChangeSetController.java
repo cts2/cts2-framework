@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import edu.mayo.cts2.framework.model.core.SourceReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -175,6 +176,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 		UpdatedState updatedState = request.getUpdatedState();
 
 		NameOrURI creator = null;
+		SourceReference sourceReference = new SourceReference();
 		OpaqueData changeInstructions = null;
 		Date officialEffectiveDate = null;
 		
@@ -184,6 +186,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 		
 		if(updatedCreator != null){
 			creator = updatedCreator.getCreator();
+			sourceReference.setContent(creator.getName());
 		}
 		
 		if(updatedEffectiveDate != null){
@@ -193,7 +196,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 		this.changeSetService.updateChangeSetMetadata(
 				changeSetUri, 
 				//TODO: How do we add a Source to the service?
-				null, 
+				sourceReference,
 				changeInstructions, 
 				officialEffectiveDate);
 		

@@ -114,7 +114,7 @@ public class MethodTimingAspect {
 		} catch (ExecutionException e) {
 			throw e.getCause();
 		} catch (TimeoutException e) {
-			throw ExceptionFactory.createTimeoutException();
+			throw ExceptionFactory.createTimeoutException(e.getMessage());
 		}
 	}
 }

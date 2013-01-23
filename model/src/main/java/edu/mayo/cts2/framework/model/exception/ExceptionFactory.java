@@ -221,12 +221,16 @@ public class ExceptionFactory {
 		
 		return ex;
 	}
-	
+
 	public static QueryTimeout createTimeoutException() {
+		return createTimeoutException("");
+	}
+
+	public static QueryTimeout createTimeoutException(String message) {
 		QueryTimeout timeout = new QueryTimeout();
 		timeout.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		timeout.setSeverity(LoggingLevel.ERROR);
-		
+		timeout.setCts2Message(ModelUtils.createOpaqueData(message));
 		return timeout;
 	}
 	
