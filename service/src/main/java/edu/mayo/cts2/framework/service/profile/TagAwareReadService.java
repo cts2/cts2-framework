@@ -30,7 +30,7 @@ import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
- * The Interface TagAwareReadService.
+ * A specialization of the @link ReadService to allow for tagged versions.
  *
  * @param <R> the generic type
  * @param <I> the generic type
