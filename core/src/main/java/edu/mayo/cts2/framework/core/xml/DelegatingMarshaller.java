@@ -47,7 +47,9 @@ import com.google.common.collect.Iterables;
 import edu.mayo.cts2.framework.core.plugin.ExportedService;
 
 /**
- * The Class DelegatingMarshaller.
+ * The default implementation of the Cts2Marshaller.
+ *
+ * @see Cts2Marshaller
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
