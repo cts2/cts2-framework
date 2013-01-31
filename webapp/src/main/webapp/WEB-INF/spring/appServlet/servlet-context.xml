@@ -587,127 +587,127 @@
 
   <!-- Association Services -->
   <!--<sws:static-wsdl id="AdvancedAssociationQueryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AdvancedAssociationQueryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AdvancedAssociationQueryService.wsdl" />-->
   <!--<sws:static-wsdl id="AssociationHistoryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationHistoryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="AssociationMaintenanceService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationMaintenanceService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="AssociationQueryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationQueryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationQueryService.wsdl" />-->
   <sws:static-wsdl id="AssociationReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/AssociationReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationReadService.wsdl" />
 
   <!-- Code System Catalog Services -->
   <!--<sws:static-wsdl id="CodeSystemCatalogHistoryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogHistoryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemCatalogMaintenanceService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogMaintenanceService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogMaintenanceService.wsdl" />-->
 	<sws:static-wsdl id="CodeSystemCatalogQueryService"
-		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogQueryService.wsdl" />
+		location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogQueryService.wsdl" />
 	<sws:static-wsdl id="CodeSystemCatalogReadService"
-		location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemCatalogReadService.wsdl" />
+		location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogReadService.wsdl" />
 
   <!-- Code System Version Catalog Services  -->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogHistoryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogMaintenanceService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogMaintenanceService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogQueryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogQueryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="CodeSystemVersionCatalogReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/CodeSystemVersionCatalogReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogReadService.wsdl" />
 
   <!-- Concept Domain Binding Services   -->
   <!--<sws:static-wsdl id="ConceptDomainBindingMaintenanceService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainBindingMaintenanceService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ConceptDomainBindingQueryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainBindingQueryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingQueryService.wsdl" />-->
   <sws:static-wsdl id="ConceptDomainBindingReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainBindingReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingReadService.wsdl" />
 
   <!-- Concept Domain Catalog Services  -->
   <!--<sws:static-wsdl id="ConceptDomainCatalogHistoryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogHistoryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="ConceptDomainCatalogMaintenanceService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogMaintenanceService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ConceptDomainCatalogQueryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogQueryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="ConceptDomainCatalogReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ConceptDomainCatalogReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogReadService.wsdl" />
 
   <!-- Entity Description Services  -->
   <!--<sws:static-wsdl id="EntityDescriptionHistoryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/EntityDescriptionHistoryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="EntityDescriptionMaintenanceService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/EntityDescriptionMaintenanceService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="EntityDescriptionQueryService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/EntityDescriptionQueryService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionQueryService.wsdl" />-->
   <sws:static-wsdl id="EntityDescriptionReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/EntityDescriptionReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionReadService.wsdl" />
   <!--<sws:static-wsdl id="EntityDescriptionTransformService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/EntityDescriptionTransformService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionTransformService.wsdl" />-->
 
   <!-- Map Services  -->
   <!--<sws:static-wsdl id="MapCatalogHistoryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapCatalogHistoryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="MapCatalogMaintenanceService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapCatalogMaintenanceService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="MapCatalogQueryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapCatalogQueryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="MapCatalogReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapCatalogReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogReadService.wsdl" />
   <!--<sws:static-wsdl id="MapResolutionService"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapResolutionService.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapResolutionService.wsdl" />-->
 
   <!-- Map Entry Services  -->
   <!--<sws:static-wsdl id="MapEntryHistoryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapEntryHistoryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="MapEntryMaintenanceService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapEntryMaintenanceService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="MapEntryQueryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapEntryQueryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryQueryService.wsdl" />-->
   <sws:static-wsdl id="MapEntryReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapEntryReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryReadService.wsdl" />
 
   <!-- Map Version Services  -->
   <!--<sws:static-wsdl id="MapVersionHistoryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapVersionHistoryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="MapVersionMaintenanceService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapVersionMaintenanceService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="MapVersionQueryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapVersionQueryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionQueryService.wsdl" />-->
   <sws:static-wsdl id="MapVersionReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/MapVersionReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionReadService.wsdl" />
 
   <!-- Statement Services  -->
   <!--<sws:static-wsdl id="StatementHistoryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/StatementHistoryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/StatementHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="StatementQueryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/StatementQueryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/StatementQueryService.wsdl" />-->
   <sws:static-wsdl id="StatementReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/StatementReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/StatementReadService.wsdl" />
 
   <!-- ValueSet Catalog Services  -->
   <!--<sws:static-wsdl id="ValueSetCatalogHistoryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetCatalogHistoryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetCatalogMaintenanceService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetCatalogMaintenanceService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetCatalogQueryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetCatalogQueryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="ValueSetCatalogReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetCatalogReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogReadService.wsdl" />
 
   <!-- ValueSet Definition Services  -->
   <!--<sws:static-wsdl id="ValueSetDefinitionHistoryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetDefinitionHistoryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetDefinitionMaintenanceService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetDefinitionMaintenanceService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetDefinitionQueryService"-->
-  <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetDefinitionQueryService.wsdl" />-->
+  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionQueryService.wsdl" />-->
   <sws:static-wsdl id="ValueSetDefinitionReadService"
-    location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetDefinitionReadService.wsdl" />
+    location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionReadService.wsdl" />
   <!--<sws:static-wsdl id="ValueSetDefinitionResolution"-->
-    <!--location="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/soap/wsdl/ValueSetDefinitionResolution.wsdl" />-->
+    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionResolution.wsdl" />-->
 
   <!-- ===================== -->
   <!--       Endpoints       -->
