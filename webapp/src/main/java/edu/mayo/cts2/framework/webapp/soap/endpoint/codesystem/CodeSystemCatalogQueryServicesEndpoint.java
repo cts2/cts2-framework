@@ -53,8 +53,6 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
 	@Cts2Service 
 	private CodeSystemQueryService codeSystemQueryService;
 	
-	private FilterResolver filterResolver = new FilterResolver();
-	
 	@PayloadRoot(localPart = "getAllCodeSystems", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
 	@ResponsePayload
 	public GetAllCodeSystemsResponse getAllCodeSystems(@RequestPayload final GetAllCodeSystems request) {
@@ -72,66 +70,16 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
 	@ResponsePayload
 	public ResolveResponse resolve(@RequestPayload final Resolve request) {
 
-		@SuppressWarnings("unchecked")
-		final SoapDirectoryUriRequest<Void> directoryUriRequest = 
-				(SoapDirectoryUriRequest<Void>) 
-					DirectoryUriUtils.deserialize(request.getDirectory());
-		
-		SoapDirectoryUri<Void> directoryUri = directoryUriRequest.getSoapDirectoryUri();
-		
-		if(directoryUri.getSetOperation() != null){
-			throw new UnsupportedOperationException("Set Operations not implemented.");
-		}
-		
-		Set<FilterComponent> filters = directoryUri.getFilterComponents();
-		
-		final Set<ResolvedFilter> resolvedFilters = new HashSet<ResolvedFilter>();
-		
-		if(CollectionUtils.isNotEmpty(filters)){
-			for(FilterComponent filter : filters){
-				Collection<ResolvedFilter> resolvedFilterCollection = 
-						filterResolver.resolveFilter(filter, this.codeSystemQueryService);
-				
-				resolvedFilters.addAll(resolvedFilterCollection);
-			}
-		}
+        return this.doResolve(this.codeSystemQueryService, request, CodeSystemCatalogEntryDirectory.class,
+                new ResponseBuilder<ResolveResponse, CodeSystemCatalogEntryDirectory>() {
+            @Override
+            public ResolveResponse buildResponse(CodeSystemCatalogEntryDirectory directory) {
+                ResolveResponse response = new ResolveResponse();
+                response.setCodeSystemCatalogEntryDirectory(directory);
 
-		//TODO: Need to abstract this for other Query Services, 
-		//and ad Sort, etc.
-		DirectoryResult<CodeSystemCatalogEntrySummary> result = this.codeSystemQueryService.getResourceSummaries(
-				new ResourceQuery(){
-
-					@Override
-					public Query getQuery() {
-						return null;
-					}
-
-					@Override
-					public Set<ResolvedFilter> getFilterComponent() {
-						return resolvedFilters;
-					}
-
-					@Override
-					public ResolvedReadContext getReadContext() {
-						return resolveReadContext(request.getContext());
-					}
-					
-				}, 
-				null,
-				this.getPage(
-						directoryUriRequest.getPage(),
-						request.getQueryControl()));
-		
-		CodeSystemCatalogEntryDirectory directory = 
-				this.populateDirectory(
-						result, 
-						directoryUriRequest, 
-						CodeSystemCatalogEntryDirectory.class);
-		
-		ResolveResponse response = new ResolveResponse();
-		response.setCodeSystemCatalogEntryDirectory(directory);
-		
-		return response;
+                return response;
+            }
+        });
 	}
 
   @PayloadRoot(localPart = "getSupportMatchAlgorithm", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices")
@@ -191,15 +139,6 @@ public class CodeSystemCatalogQueryServicesEndpoint extends AbstractQueryService
     return response;
   }
 	
-	protected Page getPage(int pageNumber, QueryControl queryControl){
-		Page page = new Page();
-		if(queryControl != null){
-			page.setMaxToReturn(queryControl.getMaxToReturn().intValue());
-		}
-		
-		page.setPage(pageNumber);
-		
-		return page;
-	}
+
 
 }

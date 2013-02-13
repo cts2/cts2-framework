@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import edu.mayo.cts2.framework.model.core.SourceReference;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,14 +91,14 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			ChangeSetQueryExtensionRestrictions restrictions,
-			RestFilter restFilter,
+			RestFilters restFilters,
 			Page page) {
 		
 		return this.getChangSets(
 				httpServletRequest,
 				queryControl, null,
 				restrictions, 
-				restFilter,
+				restFilters,
 				page);
 	}
 	
@@ -107,7 +108,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 			QueryControl queryControl,
 			@RequestBody Query query,
 			ChangeSetQueryExtensionRestrictions restrictions,
-			RestFilter restFilter,
+			RestFilters restFilters,
 			Page page) {
 		
 		
@@ -115,7 +116,7 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 			this.changeSetQueryExtension.getResourceSummaries(
 				this.getChangeSetQuery(
 						query, 
-						restFilter, 
+						restFilters,
 						restrictions),
 						null,//TODO add Sorting
 				page);
@@ -242,15 +243,23 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 	
 	private ChangeSetQuery getChangeSetQuery(
 			final Query query, 
-			final RestFilter restFilter,
+			final RestFilters restFilters,
 			final ChangeSetQueryExtensionRestrictions restrictions){
 		
 		final Set<ResolvedFilter> filters = new HashSet<ResolvedFilter>();
-		
-		filters.add(
-				this.getFilterResolver().resolveRestFilter(
-						restFilter,
-						this.changeSetQueryExtension));
+
+        if(restFilters != null){
+            for(RestFilter filter : restFilters.getRestFilters()){
+                ResolvedFilter resolvedFilter =
+                        this.getFilterResolver().resolveRestFilter(
+                        filter,
+                        this.changeSetQueryExtension);
+
+                if(resolvedFilter != null){
+                    filters.add(resolvedFilter);
+                }
+            }
+        }
 		
 		return new ChangeSetQuery() {
 			

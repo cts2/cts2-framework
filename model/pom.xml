@@ -209,6 +209,31 @@
 						</configuration>
 
 					</execution>
+
+                    <execution>
+                        <id>remove interface from resolutions</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+
+                        <configuration>
+                            <includes>
+                                <include>target/generated-sources/**/wsdl/basehistoryservice/Resolve.java</include>
+                                <include>target/generated-sources/**/wsdl/valuesetdefinitionresolution/Resolve.java</include>
+                                <include>target/generated-sources/**/wsdl/mapresolution/Resolve.java</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>implements java.io.Serializable, edu.mayo.cts2.framework.model.wsdl.SoapResolveRequest
+                                    </token>
+                                    <value>implements java.io.Serializable
+                                    </value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+
+                    </execution>
 				</executions>
 			</plugin>
 

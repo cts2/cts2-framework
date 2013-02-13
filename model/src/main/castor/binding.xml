@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <binding xmlns="http://www.castor.org/SourceGenerator/Binding" 
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.castor.org/SourceGenerator/Binding
                 http://castor.org/binding.xsd" defaultBindingType="type">
 		
@@ -23,5 +23,11 @@
    				<implements>edu.mayo.cts2.framework.model.core.IsChangeable</implements>
    			</java-class>  
 		</complexTypeBinding>
+
+        <complexTypeBinding name="/complexType:resolve">
+            <java-class>
+                <implements>edu.mayo.cts2.framework.model.wsdl.SoapResolveRequest</implements>
+            </java-class>
+        </complexTypeBinding>
 
 </binding>
