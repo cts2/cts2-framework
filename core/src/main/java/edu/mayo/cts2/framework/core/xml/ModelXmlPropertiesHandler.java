@@ -6,12 +6,17 @@ import java.util.Properties;
 import org.springframework.core.io.ClassPathResource;
 
 public class ModelXmlPropertiesHandler {
-	
-	public static final String CASTORBUILDER_PROPS = "castorbuilder.properties";
+
+    public static final String CASTOR_PROPS = "castor.properties";
+    public static final String CASTORBUILDER_PROPS = "castorbuilder.properties";
 	public static final String NAMESPACE_LOCATION_PROPS = "namespaceLocations.properties";
 	public static final String NAMESPACE_MAPPINGS_PROPS = "namespaceMappings.properties";
-	
-	public Properties getCastorBuilderProperties(){
+
+    public Properties getCastorProperties(){
+        return this.getProperties(CASTOR_PROPS);
+    }
+
+    public Properties getCastorBuilderProperties(){
 		return this.getProperties(CASTORBUILDER_PROPS);
 	}
 	
