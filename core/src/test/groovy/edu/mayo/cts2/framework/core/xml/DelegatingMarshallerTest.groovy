@@ -1,4 +1,8 @@
-package edu.mayo.cts2.framework.core.xml;
+package edu.mayo.cts2.framework.core.xml
+
+import edu.mayo.cts2.framework.model.castor.MarshallSuperClass
+import org.junit.Ignore
+import org.springframework.oxm.castor.CastorMarshaller;
 
 import static org.junit.Assert.*
 
@@ -21,6 +25,12 @@ import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
 
 class DelegatingMarshallerTest {
+
+    class TestCodeSystem
+        extends CodeSystemCatalogEntry
+        implements MarshallSuperClass {
+
+    }
 	 
 	DelegatingMarshaller marshaller = new DelegatingMarshaller()
 	
@@ -32,7 +42,21 @@ class DelegatingMarshallerTest {
 	Resource rxNorm = new ClassPathResource("xml/rxNorm.xml");
 	Resource emptyVersions = new ClassPathResource("xml/emptyVersions.xml");
 	Resource getAllCodeSystemsResponse = new ClassPathResource("xml/GetAllCodeSystemsResponse.xml");
-	
+
+    @Test
+    void "Test Get Marshaller"(){
+        assertTrue CastorMarshaller.class != marshaller.getMarshaller(TestCodeSystem).class
+    }
+
+    @Ignore("I think this is a Castor bug.")
+    @Test(expected=ValidationFailureException.class)
+    void "Test Marshall Invalid Proxy"(){
+        def result = new StringWriter()
+        marshaller.marshal(new TestCodeSystem(), new StreamResult(result))
+
+        print result
+    }
+
 	@Test
 	void "Test Unmarshall Valid"(){
 		def stream = valid.getInputStream()

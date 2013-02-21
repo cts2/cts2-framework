@@ -174,7 +174,9 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 		Map<String,String> returnMap = new HashMap<String,String>();
 		
 		for(Entry<Object, Object> entry : props.entrySet()){
-			returnMap.put((String)entry.getKey(), (String)entry.getValue());
+			returnMap.put(
+                    StringUtils.trim((String)entry.getKey()),
+                    StringUtils.trim((String)entry.getValue()));
 		}
 		
 		return returnMap;
@@ -220,7 +222,7 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 	 * @param clazz the clazz
 	 * @return the marshaller
 	 */
-	private Marshaller getMarshaller(Class<?> clazz) {
+	protected Marshaller getMarshaller(Class<?> clazz) {
 
         final Class[] interfaces = clazz.getInterfaces();
 
