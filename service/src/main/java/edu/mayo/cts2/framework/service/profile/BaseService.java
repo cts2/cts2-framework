@@ -30,7 +30,7 @@ import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 
 /**
- * The Interface BaseService.
+ * The basic service metadata of a CTS2 Service Profile.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

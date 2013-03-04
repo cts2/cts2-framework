@@ -31,7 +31,9 @@ import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 /**
- * The Interface QueryService.
+ * The basic metadata of a CTS2 Query Service.
+ *
+ * @see QueryService
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

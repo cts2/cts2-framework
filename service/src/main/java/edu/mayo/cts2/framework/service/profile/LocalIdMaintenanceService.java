@@ -29,7 +29,7 @@ import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 
 /**
- * An extension of the {@BaseMaintenanceService} that allows for a Local ID to be
+ * An extension of the {@link BaseMaintenanceService} that allows for a Local ID to be
  * assigned to CTS2 Resources that are normally only identified by a URI.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>

@@ -30,7 +30,7 @@ import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
- * The Interface ResourceQuery.
+ * The basic set of restrictions and filters that can be applied to a resource.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
