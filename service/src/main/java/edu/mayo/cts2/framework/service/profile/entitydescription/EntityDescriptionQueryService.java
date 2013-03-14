@@ -68,15 +68,11 @@ public interface EntityDescriptionQueryService extends
 	/**
 	 * Resolve as entity reference list.
 	 *
-	 * @param query the query
-	 * @param filterComponent the filter component
 	 * @param restrictions the restrictions
 	 * @param readContext the read context
 	 * @return the entity reference list
 	 */
 	public EntityReferenceList resolveAsEntityReferenceList(
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
 			EntityDescriptionQuery restrictions,
 			ResolvedReadContext readContext);
 	
@@ -84,16 +80,12 @@ public interface EntityDescriptionQueryService extends
 	 * Intersect entity list.
 	 *
 	 * @param entities the entities
-	 * @param query the query
-	 * @param filterComponent the filter component
 	 * @param restrictions the restrictions
 	 * @param readContext the read context
 	 * @return the entity name or uri list
 	 */
 	public EntityNameOrURIList intersectEntityList(
 			Set<EntityNameOrURI> entities,
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
 			EntityDescriptionQuery restrictions,
 			ResolvedReadContext readContext);
 
