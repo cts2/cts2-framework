@@ -52,16 +52,12 @@ public interface EntityDescriptionQueryService extends
 	 * Checks if is entity in set.
 	 *
 	 * @param entity the entity
-	 * @param query the query
-	 * @param filterComponent the filter component
 	 * @param restrictions the restrictions
 	 * @param readContext the read context
 	 * @return true, if is entity in set
 	 */
 	public boolean isEntityInSet(
 			EntityNameOrURI entity,
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
 			EntityDescriptionQuery restrictions,
 			ResolvedReadContext readContext);
 	
