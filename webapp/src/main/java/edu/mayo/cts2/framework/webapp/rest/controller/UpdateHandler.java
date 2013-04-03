@@ -60,6 +60,9 @@ public class UpdateHandler extends AbstractMainenanceHandler {
 				service.updateChangeableMetadata(identifier, request);		
 				break;
 			}
+			default: {
+				throw new UnspecifiedCts2Exception("Only UPDATE or METADATA changes allowed via this URL.");
+			}
 		}
 	}
 	

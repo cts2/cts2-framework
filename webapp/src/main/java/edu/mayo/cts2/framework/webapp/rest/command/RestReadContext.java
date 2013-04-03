@@ -1,5 +1,7 @@
 package edu.mayo.cts2.framework.webapp.rest.command;
 
+import java.util.List;
+
 import edu.mayo.cts2.framework.model.core.LanguageReference;
 import edu.mayo.cts2.framework.model.service.core.types.ActiveOrAll;
 
@@ -12,6 +14,8 @@ public class RestReadContext {
 	private String changesetcontext;
 
 	private java.util.Date referencetime;
+	
+    private List<String> contentfilter;
 
 	public ActiveOrAll getActive() {
 		return active;
@@ -45,5 +49,12 @@ public class RestReadContext {
 		this.referencetime = referencetime;
 	}
 	
+    public List<String> getContentfilter() {
+        return contentfilter;
+    }
+
+    public void setContentfilter(List<String> contentfilter) {
+        this.contentfilter = contentfilter;
+    }
 	
 }

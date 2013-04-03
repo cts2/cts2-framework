@@ -28,14 +28,12 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
+import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 
 /**
  * The Class PropertiesFileExceptionCodeMapper.
@@ -44,9 +42,7 @@ import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
  */
 @Component
 public class PropertiesFileExceptionCodeMapper implements Cts2RestExceptionCodeMapper, InitializingBean {
-	
-	private static Log log = LogFactory.getLog(PropertiesFileExceptionCodeMapper.class);
-	
+
 	private static final int DEFAULT_ERROR_CODE = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 	@Resource(name="errorCodes")

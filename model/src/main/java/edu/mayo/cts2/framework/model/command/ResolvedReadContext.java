@@ -15,6 +15,15 @@ public class ResolvedReadContext {
 	 * inquiry, where appropriate.
 	 */
 	private LanguageReference languageReference;
+	
+	/**
+	 * An option to limit the content of the returned result to a specific set
+	 * of fields. May be null, meaning that the entire resource is to be returned.
+	 * 
+	 * NOTE: This field will only apply in contexts where the entire resource is 
+	 * being requested, such as 'read' and 'resolveToList' operations. 
+	 */
+	private ReturnContentFilter returnContentFilter;
 
 	/**
 	 * The URI of an open change set whose contents should be included in the
@@ -59,5 +68,13 @@ public class ResolvedReadContext {
 
 	public void setReferenceTime(java.util.Date referenceTime) {
 		this.referenceTime = referenceTime;
+	}
+
+	public ReturnContentFilter getReturnContentFilter() {
+		return returnContentFilter;
+	}
+
+	public void setReturnContentFilter(ReturnContentFilter returnContentFilter) {
+		this.returnContentFilter = returnContentFilter;
 	}
 }
