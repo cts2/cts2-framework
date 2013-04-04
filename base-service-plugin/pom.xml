@@ -22,7 +22,6 @@
 		<webapp.port>5150</webapp.port>
 		<stop.port>${webapp.port}0</stop.port>
 		<test.plugin.properties.name>${project.artifactId}.properties</test.plugin.properties.name>
-        <start.server.marker.file>${basedir}/src/test/resources/start-server.marker</start.server.marker.file>
 		<test.config.dir>${project.build.directory}/testconfigdir</test.config.dir>
 		<test.plugins.dir>${project.build.directory}/test-plugins</test.plugins.dir>
 		<war.file.name>webapp.war</war.file.name>
@@ -46,10 +45,10 @@
         </profile>
 
 		<profile>
-			<id>child</id>
+			<id>server-start</id>
 			<activation>
                  <file>
-                    <exists>${start.server.marker.file}</exists>
+                    <exists>src/test/resources/start-server.marker</exists>
                  </file>
 			</activation>
 			<build>
