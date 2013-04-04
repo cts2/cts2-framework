@@ -39,18 +39,18 @@
 
         <profile>
             <id>skip-server-start</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            	<activation>
+                 <file>
+                    <exists>src/test/resources/skip-start-server.marker</exists>
+                 </file>
+			</activation>
         </profile>
 
 		<profile>
 			<id>server-start</id>
 			<activation>
-                 <file>
-                    <exists>src/test/resources/start-server.marker</exists>
-                 </file>
-			</activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
 			<build>
 				<plugins>
 
