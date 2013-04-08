@@ -1,7 +1,6 @@
 package edu.mayo.cts2.framework.webapp.soap.endpoint.entitydescription;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
 
@@ -17,12 +16,8 @@ import edu.mayo.cts2.framework.model.core.EntityReference;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
-import edu.mayo.cts2.framework.model.entity.EntityList;
-import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
-import edu.mayo.cts2.framework.model.service.core.QueryControl;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -163,15 +158,7 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
   @PayloadRoot(localPart = "readEntityDescriptions", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
   @ResponsePayload
   public ReadEntityDescriptionsResponse readEntityDescriptions(@RequestPayload ReadEntityDescriptions request) {
-    EntityList entities = this.doReadEntityDescriptions(
-        this.entityDescriptionReadService,
-        request.getEntityId(),
-        request.getQueryControl(),
-        request.getContext());
-
-    ReadEntityDescriptionsResponse response = new ReadEntityDescriptionsResponse();
-    response.setEntityList(entities);
-    return response;
+    throw new UnsupportedOperationException();
   }
 
   @PayloadRoot(localPart = "availableDescriptions", namespace = "http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices")
@@ -317,22 +304,6 @@ public class EntityDescriptionReadServicesEndpoint extends AbstractReadServiceEn
     return response;
   }
 
-
-  private EntityList doReadEntityDescriptions(
-      final EntityDescriptionReadService readService,
-      final EntityNameOrURI entityId,
-      final QueryControl queryControl,
-      final ReadContext context) {
-    final ResolvedReadContext resolvedReadContext = this.resolveReadContext(context);
-
-    return this.doTimedCall(new Callable<EntityList>() {
-
-      @Override
-      public EntityList call() throws Exception {
-        return readService.readEntityDescriptions(entityId, resolvedReadContext);
-      }
-    }, queryControl);
-  }
 
 	public CodeSystemVersionNameResolver getCodeSystemVersionNameResolver() {
 		return codeSystemVersionNameResolver;

@@ -34,7 +34,6 @@ import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
-import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -44,7 +43,7 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
- * The Interface EntityDescriptionReadService.
+ * The CTS2 EntityDescription Read Service interface.
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -85,7 +84,7 @@ public interface EntityDescriptionReadService extends
 	 * @param readContext the read context
 	 * @return the entity list
 	 */
-	public EntityList readEntityDescriptions(
+	public List<EntityListEntry> readEntityDescriptions(
 			EntityNameOrURI entityId,
 			ResolvedReadContext readContext);
 
