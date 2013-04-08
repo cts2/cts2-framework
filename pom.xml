@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>0.8.2-SNAPSHOT</version>
+	<version>0.8.2</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
@@ -41,7 +41,7 @@
 
 	<scm>
 		<developerConnection>scm:git:git@github.com:cts2/cts2-framework.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>cts2-framework-0.8.2</tag>
   </scm>
 
 	<modules>
