@@ -12,8 +12,9 @@ import edu.mayo.cts2.framework.model.util.ModelUtils;
  */
 public class JsonUnmarshallingException extends CTS2Exception {
 
+	private static final long serialVersionUID = -4301298625407627572L;
 
-    public JsonUnmarshallingException(String message) {
+	public JsonUnmarshallingException(String message) {
         super();
         this.setCts2Message(ModelUtils.createOpaqueData(message));
         this.setSeverity(LoggingLevel.ERROR);

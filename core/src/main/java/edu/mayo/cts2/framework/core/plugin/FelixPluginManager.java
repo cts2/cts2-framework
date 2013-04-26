@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -55,7 +57,11 @@ import edu.mayo.cts2.framework.core.config.ConfigUtils;
  */
 @Component
 public class FelixPluginManager implements 
-	InitializingBean, OsgiPluginManager, ServletContextAware, ApplicationContextAware {
+	InitializingBean, 
+	DisposableBean,
+	OsgiPluginManager, 
+	ServletContextAware, 
+	ApplicationContextAware {
     public static final String OSGI_FRAMEWORK_BUNDLES_ZIP = "osgi-framework-bundles.zip";
     public static final int REFRESH_TIMEOUT = 10;
     public static final String MIN_SERVLET_VERSION = "2.5.0";
@@ -428,25 +434,25 @@ public class FelixPluginManager implements
         }
     }
 
-    public void stop() throws OsgiContainerException
+    protected void stop() throws OsgiContainerException
     {
-        if (felixRunning)
-        {
-            for (final ServiceTracker tracker : this.trackers)
-            {
-                tracker.close();
-            }
-            try
-            {
+        if (felixRunning){
+            try {
+				for (final ServiceTracker tracker : 
+						new ArrayList<ServiceTracker>(this.trackers)){
+				    tracker.close();
+				}
+			} catch (Exception e) {
+				log.warn("Error closing ServiceTrackers", e);
+			}
+            try {
                 felix.stop();
                 felix.waitForStop(5000);
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e){
                 log.warn("Interrupting Felix shutdown", e);
             }
-            catch (BundleException ex)
-            {
+            catch (BundleException ex){
                 log.error("An error occurred while stopping the Felix OSGi Container. ", ex);
             }
         }
@@ -634,6 +640,10 @@ public class FelixPluginManager implements
 						extensionPoint.addServiceTrackerCustomizer()));
 	}
 
+	@Override
+	public void destroy() throws Exception {
+		this.stop();
+	}
 
 	@Override
 	public void setServletContext(ServletContext servletContext) {
@@ -645,4 +655,5 @@ public class FelixPluginManager implements
 			throws BeansException {
 		this.applicationContext = applicationContext;	
 	}
+
 }
