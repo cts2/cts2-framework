@@ -42,7 +42,6 @@ import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI;
-import edu.mayo.cts2.framework.model.service.exception.UnsupportedPredicate;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedVersionTag;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -88,7 +87,7 @@ public class ExceptionFactory {
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_READ_CONTEXT);
 		
-		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedNameOrUri, possibleValues));
+		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("Name or URI", requestedNameOrUri, possibleValues));
 		
 		return ex;
 	}
@@ -116,12 +115,19 @@ public class ExceptionFactory {
 	public static UnknownResourceReference createUnsupportedPropertyReference(
 			PropertyReference propertyReference,
 			Iterable<? extends PropertyReference> propertyReferences) {
+		return createUnsupportedPropertyReference(
+				propertyReference.getReferenceTarget().getName(), propertyReferences);
+	}
+	
+	public static UnknownResourceReference createUnsupportedPropertyReference(
+			String requestedNameOrUri,
+			Iterable<? extends PropertyReference> propertyReferences) {
 		UnknownResourceReference ex = new UnknownResourceReference();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
-		ex.setCts2Message(getPossibleValuesMessageFromPropertyReference("PropertyReference", propertyReference.getReferenceTarget().getUri(), propertyReferences));
+		ex.setCts2Message(getPossibleValuesMessageFromPropertyReference("PropertyReference", requestedNameOrUri, propertyReferences));
 		
 		return ex;
 	}
@@ -377,18 +383,4 @@ public class ExceptionFactory {
 		return ModelUtils.createOpaqueData(sb.toString());
 	}
 
-	/**
-	 * Creates a new Exception object.
-	 *
-	 * @param name the name
-	 * @return the cts2 rest exception
-	 */
-	public static UnsupportedPredicate createUnsupportedPredicateReference(
-			String name) {	
-		UnsupportedPredicate ex = new UnsupportedPredicate();
-		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-		ex.setSeverity(LoggingLevel.ERROR);
-
-		return ex;
-	}
 }

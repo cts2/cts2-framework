@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
@@ -133,7 +132,7 @@ public class ControllerUtils {
 				}
 		}
 		
-		throw ExceptionFactory.createUnsupportedPredicateReference(nameOrUri);
+		throw ExceptionFactory.createUnsupportedPropertyReference(nameOrUri, list);
 	}
 	
 	/**
@@ -155,24 +154,5 @@ public class ControllerUtils {
 		
 		throw ExceptionFactory.createUnsupportedNameOrUriException(nameOrUri, list);
 	}
-	
-	/**
-	 * Gets the predicate reference.
-	 *
-	 * @param nameOrUri the name or uri
-	 * @param list the list
-	 * @return the predicate reference
-	 */
-	public static PredicateReference getPredicateReference(String nameOrUri, Iterable<? extends PredicateReference> list) {
-		
-		//TODO: does not take into account namespaces
-		for(PredicateReference ref : list){
-			if(StringUtils.equals(ref.getName(), nameOrUri) ||
-					StringUtils.equals(ref.getUri(), nameOrUri)){
-				return ref;
-			}
-		}
-		
-		throw ExceptionFactory.createUnsupportedPredicateReference(nameOrUri);
-	}
+
 }
