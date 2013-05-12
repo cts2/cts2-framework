@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>cts2-framework</artifactId>
@@ -37,20 +38,50 @@
 			</activation>
 		</profile>
 
-        <profile>
-            <id>skip-server-start</id>
-            	<activation>
-                 <file>
-                    <exists>src/test/resources/skip-start-server.marker</exists>
-                 </file>
+		<profile>
+			<id>skip-server-start</id>
+			<activation>
+				<file>
+					<exists>src/test/resources/skip-start-server.marker</exists>
+				</file>
 			</activation>
-        </profile>
+
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.5</version>
+						<executions>						
+							<execution>
+								<id>copy-test-properties-file</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${test.config.dir}/${webapp.name}/config</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${basedir}/src/test/resources</directory>
+											<includes>
+												<include>${test.plugin.properties.name}</include>
+											</includes>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
 		<profile>
 			<id>server-start</id>
 			<activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<build>
 				<plugins>
 
@@ -152,9 +183,9 @@
 						<artifactId>maven-jetty-plugin</artifactId>
 						<version>6.1.22</version>
 						<configuration>
-				          <stopPort>${stop.port}</stopPort> 
-				          <stopKey>jetty-stop</stopKey>
-				        </configuration>
+							<stopPort>${stop.port}</stopPort>
+							<stopKey>jetty-stop</stopKey>
+						</configuration>
 						<executions>
 							<execution>
 								<id>start-jetty</id>
