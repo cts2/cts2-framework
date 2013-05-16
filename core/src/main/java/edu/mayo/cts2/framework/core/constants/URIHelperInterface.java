@@ -421,6 +421,8 @@ interface PathParameters {
 	
 	public static final String DEFAULT_VALUESETDEFINITION_RESOLUTION = "iterable";
 	public static final String DEFAULT_TAG = "CURRENT";
+	
+	public static final String PARAM_SEPARATOR = ":";
 
 }
 

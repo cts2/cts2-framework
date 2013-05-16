@@ -39,9 +39,9 @@ public class EntityDescriptionQueryServiceRestrictions {
 
 	private Set<EntityNameOrURI> entities = new HashSet<EntityNameOrURI>();
 	
-	private NameOrURI codeSystemVersion;
+	private Set<NameOrURI> codeSystemVersions = new HashSet<NameOrURI>();
 	
-	private TaggedCodeSystemRestriction taggedCodeSystem;
+	private Set<TaggedCodeSystemRestriction> taggedCodeSystems = new HashSet<TaggedCodeSystemRestriction>();
 	
 	private HierarchyRestriction hierarchyRestriction;
 	
@@ -53,21 +53,6 @@ public class EntityDescriptionQueryServiceRestrictions {
 		this.entities = entities;
 	}
 
-	public NameOrURI getCodeSystemVersion() {
-		return codeSystemVersion;
-	}
-
-	public void setCodeSystemVersion(NameOrURI codeSystemVersion) {
-		this.codeSystemVersion = codeSystemVersion;
-	}
-
-	public TaggedCodeSystemRestriction getTaggedCodeSystem() {
-		return taggedCodeSystem;
-	}
-
-	public void setTaggedCodeSystem(TaggedCodeSystemRestriction taggedCodeSystem) {
-		this.taggedCodeSystem = taggedCodeSystem;
-	}
 
 	public HierarchyRestriction getHierarchyRestriction() {
 		return hierarchyRestriction;
@@ -76,6 +61,25 @@ public class EntityDescriptionQueryServiceRestrictions {
 	public void setHierarchyRestriction(HierarchyRestriction hierarchyRestriction) {
 		this.hierarchyRestriction = hierarchyRestriction;
 	}
+
+	public Set<NameOrURI> getCodeSystemVersions() {
+		return codeSystemVersions;
+	}
+
+	public void setCodeSystemVersions(Set<NameOrURI> codeSystemVersions) {
+		this.codeSystemVersions = codeSystemVersions;
+	}
+
+	public Set<TaggedCodeSystemRestriction> getTaggedCodeSystems() {
+		return taggedCodeSystems;
+	}
+
+	public void setTaggedCodeSystems(
+			Set<TaggedCodeSystemRestriction> taggedCodeSystems) {
+		this.taggedCodeSystems = taggedCodeSystems;
+	}
+
+
 
 	public static class HierarchyRestriction {
 		
@@ -100,8 +104,6 @@ public class EntityDescriptionQueryServiceRestrictions {
 		public void setHierarchyType(HierarchyType hierarchyType) {
 			this.hierarchyType = hierarchyType;
 		}
-		
-		
-	
+
 	}
 }

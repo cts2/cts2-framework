@@ -167,6 +167,26 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 	}
 	
 	/**
+	 * Update state directly. Clients can use this for state changes that aren't
+	 * necessarily a result of filtering, such as restrictions.
+	 *
+	 * @param state the new state
+	 */
+	protected void updateState(S state){
+		this.initialState = state;
+	}
+	
+	/**
+	 * Gets the current state. In general, this should only be called if needing
+	 * a current state reference when using the {@link #updateState(Object)} method.
+	 *
+	 * @return the current state
+	 */
+	protected S getState(){
+		return this.initialState;
+	}
+	
+	/**
 	 * The Interface Callback.
 	 *
 	 * @param <S> the generic type

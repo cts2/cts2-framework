@@ -305,7 +305,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 							codeSystemVersionId,
 							readContext);
 		
-		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		restrictions.getCodeSystemVersions().add(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		return this.getEntityDescriptions(
 				httpServletRequest, 
@@ -350,7 +350,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 				codeSystemVersionId,
 				readContext);
 		
-		restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromName(codeSystemVersionName));
+		restrictions.getCodeSystemVersions().add(ModelUtils.nameOrUriFromName(codeSystemVersionName));
 		
 		this.getEntityDescriptionsCount(
 				httpServletResponse,
@@ -633,17 +633,19 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	@InitBinder
 	public void initEntityDescriptionRestrictionBinder(
 			 WebDataBinder binder,
-			 @RequestParam(value=PARAM_CODESYSTEM, required=false) String codesystem,
-			 @RequestParam(value=PARAM_TAG, required=false) String tag,
-			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codesystemversion,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) List<String> codesystem,
+			 @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codesystemversion,
 			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity) {
 		
 		if(binder.getTarget() instanceof EntityDescriptionQueryServiceRestrictions){
 			EntityDescriptionQueryServiceRestrictions restrictions = 
 					(EntityDescriptionQueryServiceRestrictions) binder.getTarget();
 
-			if(StringUtils.isNotBlank(codesystemversion)){
-				restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromEither(codesystemversion));
+			if(CollectionUtils.isNotEmpty(codesystemversion)){
+				for(String csv : codesystemversion){
+					restrictions.getCodeSystemVersions().add(
+						ModelUtils.nameOrUriFromEither(csv));
+				}
 			}		
 			
 			if(CollectionUtils.isNotEmpty(entity)){
@@ -651,14 +653,27 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 						ControllerUtils.idsToEntityNameOrUriSet(entity));
 			}		
 			
-			if(StringUtils.isNotBlank(codesystem)){
+			if(CollectionUtils.isNotEmpty(codesystem)){
+				for(String cs : codesystem){
+					String[] parts = StringUtils.split(cs, PARAM_SEPARATOR);
+					TaggedCodeSystemRestriction	restriction = 
+						new TaggedCodeSystemRestriction();
 
-				restrictions.setTaggedCodeSystem(new TaggedCodeSystemRestriction());
-				restrictions.getTaggedCodeSystem().setCodeSystem(ModelUtils.nameOrUriFromEither(codesystem));
+					restriction.setCodeSystem(ModelUtils.nameOrUriFromEither(parts[0]));
+					
+					String tagName;
+					if(parts.length == 2){
+						tagName = ControllerUtils.getReference(
+							parts[1], 
+							this.entityDescriptionQueryService.getSupportedTags()).getContent();
+					} else {
+						tagName = DEFAULT_TAG;
+					}
 				
-				String tagName = ControllerUtils.getReference(tag, this.entityDescriptionQueryService.getSupportedTags()).getContent();
-			
-				restrictions.getTaggedCodeSystem().setTag(tagName);
+					restriction.setTag(tagName);
+					
+					restrictions.getTaggedCodeSystems().add(restriction);
+				}
 			}
 		}
 	}

@@ -230,7 +230,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 		hierarchyRestriction.setHierarchyType(HierarchyType.CHILDREN);
 	
 		restrictions.setHierarchyRestriction(hierarchyRestriction);
-		restrictions.setCodeSystemVersion(codeSystemVersionNameOrUri);
+		restrictions.getCodeSystemVersions().add(codeSystemVersionNameOrUri);
 		
 		EntityQueryBuilder builder = 
 				this.getNewEntityQueryBuilder();
