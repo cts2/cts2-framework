@@ -1,7 +1,5 @@
 package edu.mayo.cts2.framework.core.json
 
-import edu.mayo.cts2.framework.core.json.JsonUnmarshallingException;
-
 import static org.junit.Assert.*
 
 import javax.xml.transform.stream.StreamSource
@@ -18,6 +16,7 @@ import edu.mayo.cts2.framework.model.core.TsAnyType
 import edu.mayo.cts2.framework.model.entity.Designation
 import edu.mayo.cts2.framework.model.entity.EntityDescription
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
+import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI
 
 class JsonConverterTest {
 	
@@ -80,6 +79,14 @@ class JsonConverterTest {
 		def cs_return = converter.fromJson(json)
 		
 		assertEquals cs, cs_return
+	}
+	
+	@Test
+	void TestExceptionToJson(){
+		def converter = new JsonConverter()
+		def ex = new UnsupportedNameOrURI()
+		
+		def json = converter.toJson(ex);
 	}
 
 	@Test

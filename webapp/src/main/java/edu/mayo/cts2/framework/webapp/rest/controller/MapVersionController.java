@@ -511,7 +511,7 @@ public class MapVersionController extends AbstractMessageWrappingController {
 			 WebDataBinder binder,
 			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity,
 			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> valueset,
-			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> codesystem,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) List<String> codesystem,
 			 @RequestParam(value=PARAM_ENTITIES_MAPROLE, required=false) MapRole entitiesmaprole,
 			 @RequestParam(value=PARAM_ENTITIES_MAPSTATUS, required=false) MapStatus mapstatus,
 			 @RequestParam(value=PARAM_ALL_OR_SOME, required=false) RestrictionType allorsome,

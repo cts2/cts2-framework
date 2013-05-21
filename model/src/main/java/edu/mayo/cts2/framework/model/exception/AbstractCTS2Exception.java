@@ -10,6 +10,7 @@ public abstract class AbstractCTS2Exception extends RuntimeException {
 	public AbstractCTS2Exception(){
 		this.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		this.setSeverity(LoggingLevel.ERROR);
+		this.initCause(null);
 	}
 	
 	  /**

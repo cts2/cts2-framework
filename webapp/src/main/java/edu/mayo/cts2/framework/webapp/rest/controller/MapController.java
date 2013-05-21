@@ -399,7 +399,7 @@ public class MapController extends AbstractMessageWrappingController {
 			 WebDataBinder binder,
 			 @RequestParam(value=PARAM_ENTITY, required=false) List<String> entity,
 			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> valueset,
-			 @RequestParam(value=PARAM_VALUESET, required=false) List<String> codesystem,
+			 @RequestParam(value=PARAM_CODESYSTEM, required=false) List<String> codesystem,
 			 @RequestParam(value=PARAM_ALL_OR_SOME, required=false) RestrictionType allorsome,
 			 @RequestParam(value=PARAM_CODESYSTEMS_MAPROLE, required=false) MapRole codesystemsmaprole,
 			 @RequestParam(value=PARAM_VALUESETS_MAPROLE, required=false) MapRole valuesetsmaprole) {
