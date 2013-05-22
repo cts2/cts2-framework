@@ -1,3 +1,26 @@
+/*
+ * Copyright: (c) 2004-2013 Mayo Foundation for Medical Education and 
+ * Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
+ * triple-shield Mayo logo are trademarks and service marks of MFMER.
+ *
+ * Except as contained in the copyright notice above, or as used to identify 
+ * MFMER as the author of this software, the trade names, trademarks, service
+ * marks, or product names of the copyright holder shall not be used in
+ * advertising, promotion or otherwise in connection with this software without
+ * prior written authorization of the copyright holder.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.mayo.cts2.framework.core.plugin;
 
 import static edu.mayo.cts2.framework.core.plugin.ExportBuilderUtils.copyUnlessExist;
@@ -30,6 +53,8 @@ import com.google.common.collect.Sets;
 
 /**
  * Builds the OSGi package exports string.  Uses a file to cache the scanned results, keyed by the application version.
+ *
+ * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 class ExportsBuilder
 {
@@ -56,10 +81,9 @@ class ExportsBuilder
      * Often, this information will not change without a system restart, so we determine this once and then cache the value.
      * The cache is only useful if the plugin system is thrown away and re-initialised. This is done thousands of times
      * during JIRA functional testing, and the cache was added to speed this up.
-     *
+     * 
      * If needed, call {@link #clearExportCache()} to clear the cache.
      *
-     * @param regs The list of host component registrations
      * @param packageScannerConfig The configuration for the package scanning
      * @return A list of exports, in a format compatible with OSGi headers
      */
@@ -85,7 +109,6 @@ class ExportsBuilder
     /**
      * Determines framework exports taking into account host components and package scanner configuration.
      *
-     * @param regs The list of host component registrations
      * @param packageScannerConfig The configuration for the package scanning
      * @return A list of exports, in a format compatible with OSGi headers
      */
@@ -144,6 +167,12 @@ class ExportsBuilder
         }
     }
 
+    /**
+     * Generate exports.
+     *
+     * @param packageScannerConfig the package scanner config
+     * @return the collection
+     */
     Collection<ExportPackage> generateExports(PackageScannerConfiguration packageScannerConfig)
     {
         String[] arrType = new String[0];

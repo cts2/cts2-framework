@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.model.command;
 
 /**
- * The Class Page.
+ * A request for a 'page' of CTS2 resources.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

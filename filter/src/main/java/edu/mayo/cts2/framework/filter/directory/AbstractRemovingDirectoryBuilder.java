@@ -38,7 +38,11 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 
 /**
- * The Class AbstractRemovingDirectoryBuilder.
+ * A {@link DirectoryBuilder} implementation based on knowing a priori all potential
+ * results, and incrementally removing ones that don't match the filters.
+ * 
+ * Use this {@link DirectoryBuilder} implementation when the result set is small enough
+ * to be held entirely in memory.
  *
  * @param <F> the generic type
  * @param <T> the generic type

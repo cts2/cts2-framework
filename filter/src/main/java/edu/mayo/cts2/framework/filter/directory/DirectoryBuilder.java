@@ -30,7 +30,8 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
- * The Interface DirectoryBuilder.
+ * A Builder-Pattern interface for assembling a {@link DirectoryResult}. This is
+ * intended to be used mostly in CTS2 Query Service implementations.
  *
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>

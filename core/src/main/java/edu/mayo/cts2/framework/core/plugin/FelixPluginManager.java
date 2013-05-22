@@ -1,3 +1,26 @@
+/*
+ * Copyright: (c) 2004-2013 Mayo Foundation for Medical Education and 
+ * Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
+ * triple-shield Mayo logo are trademarks and service marks of MFMER.
+ *
+ * Except as contained in the copyright notice above, or as used to identify 
+ * MFMER as the author of this software, the trade names, trademarks, service
+ * marks, or product names of the copyright holder shall not be used in
+ * advertising, promotion or otherwise in connection with this software without
+ * prior written authorization of the copyright holder.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
@@ -52,7 +75,9 @@ import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
 
 /**
- * Felix implementation of the OSGi container manager
+ * Felix implementation of the OSGi container manager.
+ *
+ * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
 public class FelixPluginManager implements 
@@ -90,11 +115,20 @@ public class FelixPluginManager implements
     	
     };
 
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.start();
 	}
 	
+	/**
+	 * Autodeploy bundles.
+	 *
+	 * @param pluginDirectory the plugin directory
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void autodeployBundles(File pluginDirectory) throws IOException{
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		
@@ -111,6 +145,11 @@ public class FelixPluginManager implements
 		
 	}
 
+    /**
+     * Start.
+     *
+     * @throws OsgiContainerException the osgi container exception
+     */
     public void start() throws OsgiContainerException
     {
         if (isRunning())
@@ -322,6 +361,11 @@ public class FelixPluginManager implements
         }
     }
     
+    /**
+     * The Class HostActivator.
+     *
+     * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
+     */
     public static class HostActivator implements BundleActivator {
         private BundleContext m_context = null;
         private ServiceRegistration m_registration = null;
@@ -329,12 +373,21 @@ public class FelixPluginManager implements
         private Object service;
         private Class<?>[] interfaces;
         
+        /**
+         * Instantiates a new host activator.
+         *
+         * @param service the service
+         * @param interfaces the interfaces
+         */
         public HostActivator(Object service, Class<?>[] interfaces){
      
         	this.service = service;
         	this.interfaces = (Class<?>[]) ArrayUtils.clone(interfaces);
         }
 
+        /* (non-Javadoc)
+         * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+         */
         @SuppressWarnings({ "rawtypes" })
 		public void start(BundleContext context)
         {
@@ -361,6 +414,9 @@ public class FelixPluginManager implements
                 prefs);
         }
 
+        /* (non-Javadoc)
+         * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+         */
         public void stop(BundleContext context)
         {
             // Unregister the property lookup service.
@@ -433,6 +489,11 @@ public class FelixPluginManager implements
         }
     }
 
+    /**
+     * Stop.
+     *
+     * @throws OsgiContainerException the osgi container exception
+     */
     protected void stop() throws OsgiContainerException
     {
         if (felixRunning){
@@ -466,6 +527,13 @@ public class FelixPluginManager implements
         return felix.getRegisteredServices();
     }
 
+	/**
+	 * Gets the service tracker.
+	 *
+	 * @param clazz the clazz
+	 * @param customizer the customizer
+	 * @return the service tracker
+	 */
 	public ServiceTracker getServiceTracker(final String clazz, ServiceTrackerCustomizer customizer) {
 		if (!isRunning()) {
 			throw new IllegalStateException(
@@ -501,6 +569,9 @@ public class FelixPluginManager implements
 		T doWithBundle(Bundle bundle) throws BundleException;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#removePlugin(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void removePlugin(String pluginName, String pluginVersion) {
 		this.doWithBundle(pluginName, pluginVersion, new DoWithBundle<Void>(){
@@ -514,6 +585,13 @@ public class FelixPluginManager implements
 		});
 	}
 	
+	/**
+	 * Find bundle.
+	 *
+	 * @param name the name
+	 * @param version the version
+	 * @return the bundle
+	 */
 	protected Bundle findBundle(String name, String version){
 		for(Bundle bundle : this.felix.getBundleContext().getBundles()){
 			if(bundle.getSymbolicName().equals(name) &&
@@ -538,6 +616,9 @@ public class FelixPluginManager implements
 	}
 
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#getPluginDescription(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public PluginDescription getPluginDescription(
 			String pluginName,
@@ -575,6 +656,9 @@ public class FelixPluginManager implements
 	}
 
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#activatePlugin(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void activatePlugin(String name, String version) {
 		this.doWithBundle(name, version, new DoWithBundle<Void>(){
@@ -589,6 +673,9 @@ public class FelixPluginManager implements
 	}
 
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#dectivatePlugin(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void dectivatePlugin(String name, String version) {
 		this.doWithBundle(name, version, new DoWithBundle<Void>(){
@@ -607,6 +694,9 @@ public class FelixPluginManager implements
 		return felix.getBundleContext();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#installPlugin(java.net.URL)
+	 */
 	@Override
 	public void installPlugin(URL source) throws IOException {
 		try {
@@ -616,6 +706,9 @@ public class FelixPluginManager implements
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#isPluginActive(edu.mayo.cts2.framework.core.plugin.PluginReference)
+	 */
 	@Override
 	public boolean isPluginActive(PluginReference ref) {
 		return this.doWithBundle(
@@ -631,6 +724,9 @@ public class FelixPluginManager implements
 	}
 
 
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.core.plugin.PluginManager#registerExtensionPoint(edu.mayo.cts2.framework.core.plugin.ExtensionPoint)
+	 */
 	@Override
 	public void registerExtensionPoint(ExtensionPoint extensionPoint) {
 		extensionPoint.setServiceTracker(
@@ -639,6 +735,9 @@ public class FelixPluginManager implements
 						extensionPoint.addServiceTrackerCustomizer()));
 	}
 
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.DisposableBean#destroy()
+	 */
 	@Override
 	public void destroy() throws Exception {
 		this.stop();

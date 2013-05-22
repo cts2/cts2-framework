@@ -36,7 +36,7 @@ import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
- * The Class AbstractDirectoryBuilder.
+ * A basic implementation of {@link DirectoryBuilder}.
  *
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>

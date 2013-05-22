@@ -31,7 +31,10 @@ import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 
 /**
- * The Class UrlConstructor.
+ * A helper class for producing CTS2 compliant URLs.
+ * 
+ * Service plugins should use this class instead of constructing resource
+ * 'hrefs' by hand, if possible.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

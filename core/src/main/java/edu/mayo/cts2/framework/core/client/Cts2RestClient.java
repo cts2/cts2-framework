@@ -46,7 +46,7 @@ import edu.mayo.cts2.framework.core.xml.Cts2Marshaller;
 import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 
 /**
- * The Class Cts2RestClient.
+ * A client for interacting with a CTS2 REST service.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -58,8 +58,14 @@ public class Cts2RestClient {
 	private RestTemplate nonSecureTemplate;
 	
 	private Cts2Marshaller marshaller;
+	
 	private HttpMessageConverter<Object> converter;
 	
+	/**
+	 * Instance.
+	 *
+	 * @return the cts2 rest client
+	 */
 	public static synchronized Cts2RestClient instance(){
 		if(instance == null){
 			try {
@@ -73,17 +79,26 @@ public class Cts2RestClient {
 
 	/**
 	 * Instantiates a new cts2 rest client.
-	 *
-	 * @throws Exception the exception
 	 */
 	private Cts2RestClient() {
 		this(new DelegatingMarshaller(), true);
 	}
 	
+	/**
+	 * Instantiates a new cts2 rest client.
+	 *
+	 * @param trustSelfSignedSsl the trust self signed ssl
+	 */
 	public Cts2RestClient(boolean trustSelfSignedSsl) {
 		this(new DelegatingMarshaller(), trustSelfSignedSsl);
 	}
 	
+	/**
+	 * Instantiates a new cts2 rest client.
+	 *
+	 * @param marshaller the marshaller
+	 * @param trustSelfSignedSsl the trust self signed ssl
+	 */
 	public Cts2RestClient(Cts2Marshaller marshaller, boolean trustSelfSignedSsl) {
 		this.marshaller = marshaller;
 		this.converter = new MarshallingHttpMessageConverter(marshaller);
@@ -95,6 +110,13 @@ public class Cts2RestClient {
 	}
 
 	
+	/**
+	 * Gets the rest template.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @return the rest template
+	 */
 	protected final RestTemplate doGetRestTemplate(String username, String password) {
 		if(username != null && password != null){
 			return this.createRestTemplate(username, password);
@@ -106,7 +128,8 @@ public class Cts2RestClient {
 	/**
 	 * Creates the rest template.
 	 *
-	 * @param requestFactory the request factory
+	 * @param username the username
+	 * @param password the password
 	 * @return the rest template
 	 */
 	protected RestTemplate createRestTemplate(String username, String password) {
@@ -126,42 +149,117 @@ public class Cts2RestClient {
 		return restTemplate;
 	}
 
+	/**
+	 * Perform an HTTP 'GET' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param clazz the clazz
+	 * @return the cts2 resource
+	 */
 	public <T> T getCts2Resource(String url, Class<T> clazz){
 		return this.getCts2Resource(url, null, null, clazz);
 	}
 	
+	/**
+	 * Perform an HTTP 'GET' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param clazz the clazz
+	 * @return the cts2 resource
+	 */
 	public <T> T getCts2Resource(String url, String username, String password, Class<T> clazz){
 		return this.getCts2Resource(url, username, password, clazz, new String[0]);
 	}
 	
+	/**
+	 * Perform an HTTP 'GET' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param clazz the clazz
+	 * @param queryParameters the query parameters
+	 * @return the cts2 resource
+	 */
 	public <T> T getCts2Resource(String url, String username, String password, Class<T> clazz, String... queryParameters){
 		return this.doGetRestTemplate(username, password).getForObject(url, clazz, (Object[])queryParameters);
 	}
 
+	/**
+	 * Perform an HTTP 'POST' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param cts2Resource the cts2 resource
+	 * @return the uri
+	 */
 	public URI postCts2Resource(String url, Object cts2Resource){
 		return this.postCts2Resource(url, null, null, cts2Resource);
 	}
 	
+	/**
+	 * Perform an HTTP 'POST' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param cts2Resource the cts2 resource
+	 * @return the uri
+	 */
 	public URI postCts2Resource(String url, String username, String password, Object cts2Resource){
 		return this.doGetRestTemplate(username, password).postForLocation(url, cts2Resource);
 	}
 	
+	/**
+	 * Perform an HTTP 'DELETE' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 */
 	public void deleteCts2Resource(String url){
 		this.deleteCts2Resource(null, null, url);
 	}
 	
+	/**
+	 * Perform an HTTP 'DELETE' of the CTS2 resource.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @param url the url
+	 */
 	public void deleteCts2Resource(String username, String password, String url){
 		this.doGetRestTemplate(username, password).delete(url);
 	}
 
+	/**
+	 * Perform an HTTP 'PUT' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param cts2Resource the cts2 resource
+	 */
 	public void putCts2Resource(String url, Object cts2Resource){
 		this.putCts2Resource(url, null, null, cts2Resource);
 	}
 	
+	/**
+	 * Perform an HTTP 'PUT' of the CTS2 resource.
+	 *
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param cts2Resource the cts2 resource
+	 */
 	public void putCts2Resource(String url, String username, String password, Object cts2Resource){
 		this.doGetRestTemplate(username,password).put(url, cts2Resource);
 	}
 	
+	/**
+	 * Creates the secure transport.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @return the client http request factory
+	 */
 	protected ClientHttpRequestFactory createSecureTransport(String username, String password){
 		HttpClient client = new HttpClient();
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username,password);
@@ -171,6 +269,9 @@ public class Cts2RestClient {
 		return commons;
 	}
 	
+	/**
+	 * Enable trust for a self signed ssl.
+	 */
 	protected void trustSelfSignedSSL() {
 		try {
 			SSLContext ctx = SSLContext.getInstance("TLS");

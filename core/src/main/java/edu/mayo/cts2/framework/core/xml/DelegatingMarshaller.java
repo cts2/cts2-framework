@@ -24,13 +24,19 @@
 package edu.mayo.cts2.framework.core.xml;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -224,7 +230,7 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 	 */
 	protected Marshaller getMarshaller(Class<?> clazz) {
 
-        final Class[] interfaces = clazz.getInterfaces();
+        final Class<?>[] interfaces = clazz.getInterfaces();
 
         if(interfaces != null){
             for(Class<?> interfaze : interfaces){

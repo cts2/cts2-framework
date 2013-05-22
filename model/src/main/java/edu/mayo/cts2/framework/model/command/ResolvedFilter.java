@@ -27,7 +27,7 @@ import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
- * The Class ResolvedFilter.
+ * A 'filter' used to request a subset of CTS2 resource based on some criteria.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

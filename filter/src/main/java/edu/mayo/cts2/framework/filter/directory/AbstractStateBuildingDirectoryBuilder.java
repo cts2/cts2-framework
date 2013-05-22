@@ -35,7 +35,12 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
 /**
- * The Class AbstractStateBuildingDirectoryBuilder.
+ * A {@link DirectoryBuilder} implementation based on incrementally building some "state"
+ * object and ultimately resolving it.
+ * 
+ * Use this as opposed to {@link AbstractRemovingDirectoryBuilder} when the result set
+ * is too large to keep in memory, or if you are interacting with some sort of other query
+ * interface, such as JDBC or Lucene.
  *
  * @param <S> the generic type
  * @param <T> the generic type
