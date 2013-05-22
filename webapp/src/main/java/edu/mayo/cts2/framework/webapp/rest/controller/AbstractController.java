@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -54,6 +55,7 @@ import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2Exception;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
 import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
@@ -240,6 +242,38 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 		return ! (StringUtils.removeStart(StringUtils.removeEnd(requestUri, "/"), "/").equals(
 				StringUtils.removeStart(
 						StringUtils.removeEnd(adjustedTemplate, "/"),"/")));
+	}
+	
+	@ExceptionHandler(ConversionNotSupportedException.class)
+	@ResponseBody
+	public UnspecifiedCts2Exception handleException(
+			HttpServletResponse response, 
+			HttpServletRequest request, 
+			ConversionNotSupportedException ex) {	
+		int status = HttpServletResponse.SC_BAD_REQUEST;
+		response.setStatus(status);
+		
+		Class<?> requiredType = ex.getRequiredType();
+		String typeName = requiredType.getSimpleName();
+		String value = ex.getValue().toString();
+		
+		String possibleValues = "";
+		
+		if(requiredType.isEnum()){
+			StringBuilder sb = new StringBuilder();
+			sb.append(" Possible values include: ");
+			
+			Object[] values = requiredType.getEnumConstants();
+			
+			sb.append(StringUtils.join(values, ", "));
+			
+			possibleValues = sb.toString();
+		}
+		
+		return ExceptionFactory.createUnknownException(
+			"Cannot convert value " + value + " to the type " + typeName + "." + possibleValues, 
+					getUrlString(request),
+					getParameterString(request));
 	}
 	
 	/**

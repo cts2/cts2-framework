@@ -8,6 +8,7 @@ public abstract class AbstractCTS2Exception extends RuntimeException {
 	private static final long serialVersionUID = 3600583925006355829L;
 	
 	public AbstractCTS2Exception(){
+		super();
 		this.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		this.setSeverity(LoggingLevel.ERROR);
 		this.initCause(null);

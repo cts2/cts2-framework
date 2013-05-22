@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
@@ -255,11 +256,14 @@ public class ExceptionFactory {
 		ex.setSeverity(LoggingLevel.ERROR);
 		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
-		message = message + 
-		" Request was: " + url + 
-			", Parameters were: " + paramString;
+		StringBuilder sb = new StringBuilder(message);
+		sb.append(" Request was: " + url);
 		
-		ex.setCts2Message(ModelUtils.createOpaqueData(message));
+		if(StringUtils.isNotBlank(paramString)){
+			sb.append(", Parameters were: " + paramString);
+		}
+		
+		ex.setCts2Message(ModelUtils.createOpaqueData(sb.toString()));
 		
 		return ex;
 	}
