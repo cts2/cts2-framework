@@ -7,8 +7,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.service.core.FilterComponent;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
@@ -37,10 +37,10 @@ public class FilterResolver {
 				//TODO: Check for a URI here
 				String name = nameOrURI.getName();
 
-				PropertyReference propertyReference = 
-						ControllerUtils.getPropertyReference(name, service.getSupportedSearchReferences());
+				ComponentReference componentReference = 
+						ControllerUtils.getComponentReference(name, service.getSupportedSearchReferences());
 				
-				resolvedFilter.setPropertyReference(propertyReference);
+				resolvedFilter.setComponentReference(componentReference);
 
 				resolvedFilter.setMatchValue(filter.getMatchValue());
 				

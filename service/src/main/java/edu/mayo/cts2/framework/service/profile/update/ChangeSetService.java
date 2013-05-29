@@ -90,6 +90,6 @@ public interface ChangeSetService extends Cts2Profile {
 	 * @param changeSetUri the change set uri
 	 * @return the string
 	 */
-	public String importChangeSet(URI changeSetUri);
+	public String importChangeSet(String changeSetUri);
 
 }

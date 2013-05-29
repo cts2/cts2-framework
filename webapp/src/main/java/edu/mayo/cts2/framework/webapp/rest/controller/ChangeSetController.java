@@ -130,16 +130,15 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 		return this.buildResponse(httpServletRequest, directory);
 	}
 
-	@RequestMapping(value="/changeset", method=RequestMethod.POST, params="changeseturi")
-	public ResponseEntity<Void> importChangeSet(
-			@RequestParam(required=true) URI changeseturi) {
+	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> importChangeSet(@PathVariable String changeSetUri) {
 		
-		String returnedChangeSetUri = this.changeSetService.importChangeSet(changeseturi);
+		String returnedChangeSetUri = this.changeSetService.importChangeSet(changeSetUri);
 		
 		return this.getResponseEntity(returnedChangeSetUri);
 	}
 	
-	@RequestMapping(value="/changeset", method=RequestMethod.POST, params="!changeseturi")
+	@RequestMapping(value="/changeset", method=RequestMethod.POST)
 	public ResponseEntity<Void> createChangeSet() {
 		
 		ChangeSet changeSet = this.changeSetService.createChangeSet();

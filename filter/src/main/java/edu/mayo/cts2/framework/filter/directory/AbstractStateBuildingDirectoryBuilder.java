@@ -145,7 +145,7 @@ public abstract class AbstractStateBuildingDirectoryBuilder<S,T> extends Abstrac
 			
 		
 					StateAdjustingPropertyReference<S> modelAttributeReference = 
-						this.getPropertyReference(
+						this.getComponentReference(
 								filter.getPropertyReference(),
 								this.stateAdjustingPropertyReference);
 					

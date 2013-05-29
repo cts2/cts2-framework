@@ -27,8 +27,8 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
@@ -58,7 +58,7 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * @param page the page
 	 * @return the resolved value set result
 	 */
-	public ResolvedValueSetResult<EntitySynopsis> resolveDefinition(
+	public ResolvedValueSetResult<URIAndEntityName> resolveDefinition(
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
 			NameOrURI tag,

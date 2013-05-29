@@ -29,8 +29,8 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
@@ -117,15 +117,15 @@ public class ControllerUtils {
 	}
 	
 	/**
-	 * Gets the property reference.
+	 * Gets the component reference.
 	 *
 	 * @param nameOrUri the name or uri
 	 * @param list the list
 	 * @return the property reference
 	 */
-	public static PropertyReference getPropertyReference(String nameOrUri, Iterable<? extends PropertyReference> list) {
+	public static ComponentReference getComponentReference(String nameOrUri, Iterable<? extends ComponentReference> list) {
 	
-		for(PropertyReference ref : list){
+		for(ComponentReference ref : list){
 			if(StringUtils.equals(ref.getReferenceTarget().getName(), nameOrUri) ||
 					StringUtils.equals(ref.getReferenceTarget().getUri(), nameOrUri)){
 					return ref;

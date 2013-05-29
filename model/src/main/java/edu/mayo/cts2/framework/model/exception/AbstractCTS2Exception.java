@@ -1,7 +1,6 @@
 package edu.mayo.cts2.framework.model.exception;
 
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
-import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 
 public abstract class AbstractCTS2Exception extends RuntimeException {
 
@@ -9,7 +8,6 @@ public abstract class AbstractCTS2Exception extends RuntimeException {
 	
 	public AbstractCTS2Exception(){
 		super();
-		this.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		this.setSeverity(LoggingLevel.ERROR);
 		this.initCause(null);
 	}
@@ -23,14 +21,6 @@ public abstract class AbstractCTS2Exception extends RuntimeException {
             final edu.mayo.cts2.framework.model.core.OpaqueData cts2Message);
     
     public abstract edu.mayo.cts2.framework.model.core.OpaqueData getCts2Message();
-
-    /**
-     * Sets the value of field 'exceptionType'.
-     * 
-     * @param exceptionType the value of field 'exceptionType'.
-     */
-    public abstract void setExceptionType(
-            final edu.mayo.cts2.framework.model.service.exception.types.ExceptionType exceptionType);
 
     /**
      * Sets the value of field 'severity'.

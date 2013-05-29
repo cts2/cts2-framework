@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.filter.match;
 
 import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 
 /**
  * The Class ResolvableModelAttributeReference.
@@ -32,7 +32,7 @@ import edu.mayo.cts2.framework.model.core.PropertyReference;
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class ResolvablePropertyReference<T> extends PropertyReference implements MarshallSuperClass {
+public class ResolvableComponentReference<T> extends ComponentReference implements MarshallSuperClass {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5500382462242484409L;
@@ -45,17 +45,24 @@ public class ResolvablePropertyReference<T> extends PropertyReference implements
 	 *
 	 * @param attributeResolver the attribute resolver
 	 */
-	public ResolvablePropertyReference(AttributeResolver<T> attributeResolver){
+	public ResolvableComponentReference(AttributeResolver<T> attributeResolver){
 		this.attributeResolver = attributeResolver;
 	}
 	
-	public static <S> ResolvablePropertyReference<S> toPropertyReference(
-			PropertyReference ref, AttributeResolver<S> attributeResolver){
-		ResolvablePropertyReference<S> returnRef = 
-			new ResolvablePropertyReference<S>(attributeResolver);
+	public static <S> ResolvableComponentReference<S> toComponentReference(
+			ComponentReference ref, AttributeResolver<S> attributeResolver){
+		ResolvableComponentReference<S> returnRef = 
+			new ResolvableComponentReference<S>(attributeResolver);
 		
-		returnRef.setReferenceTarget(ref.getReferenceTarget());
-		returnRef.setReferenceTarget(ref.getReferenceTarget());
+		if(ref.getAttributeReference() != null){
+			returnRef.setAttributeReference(ref.getAttributeReference());
+		} else if(ref.getPropertyReference() != null){
+			returnRef.setPropertyReference(ref.getPropertyReference());
+		} else if (ref.getSpecialReference() != null){
+			returnRef.setSpecialReference(ref.getSpecialReference());
+		} else {
+			throw new IllegalArgumentException("ComponentReference must not be empty.");
+		} 
 	
 		return returnRef;
 	}

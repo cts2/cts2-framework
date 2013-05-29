@@ -7,237 +7,237 @@
   <!--                Association Services              -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AdvancedAssociationQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/AdvancedAssociationQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/AdvancedAssociationQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/AdvancedAssociationQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/AssociationHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/AssociationHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/AssociationHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/AssociationMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/AssociationMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/AssociationMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/AssociationQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/AssociationQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/AssociationQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/AssociationReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/AssociationReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/AssociationReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/AssociationReadServiceTypes.xsd" />
 
 
   <!-- ================================================ -->
   <!--           Code System Catalog Services           -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemCatalogHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemCatalogMaintenanceServiceTypes.xsd" />
 
   <xs:import
-		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogQueryServices"
-		schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogQueryServiceTypes.xsd" />
+		namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemCatalogQueryServices"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemCatalogQueryServiceTypes.xsd" />
 
   <xs:import
-		namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemCatalogReadServices"
-		schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogReadServiceTypes.xsd" />
+		namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemCatalogReadServices"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemCatalogReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--       Code System Version Catalog Services       -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/CodeSystemVersionCatalogReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/CodeSystemVersionCatalogReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--          Concept Domain Binding Services         -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainBindingMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainBindingMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainBindingQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainBindingQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainBindingReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainBindingReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainBindingReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--          Concept Domain Catalog Services         -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainCatalogHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainCatalogMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainCatalogQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ConceptDomainCatalogReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ConceptDomainCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ConceptDomainCatalogReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--            Entity Description Services           -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/EntityDescriptionHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/EntityDescriptionHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/EntityDescriptionMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/EntityDescriptionMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/EntityDescriptionQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/EntityDescriptionQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/EntityDescriptionReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/EntityDescriptionReadServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/EntityDescriptionTransformServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionTransformServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/EntityDescriptionTransformServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/EntityDescriptionTransformServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--                    Map Services                  -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapCatalogHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapCatalogMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapCatalogQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapCatalogReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapCatalogReadServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapResolutionServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapResolutionServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapResolutionServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapResolutionServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--                Map Entry Services                -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapEntryHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapEntryHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapEntryMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapEntryMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapEntryQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapEntryQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapEntryReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapEntryReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapEntryReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--              Map Version Services             -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapVersionHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapVersionHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapVersionMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapVersionMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapVersionQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapVersionQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/MapVersionReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/MapVersionReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/MapVersionReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--                 Statement Services               -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/StatementHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/StatementHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/StatementHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/StatementHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/StatementQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/StatementQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/StatementQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/StatementQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/StatementReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/StatementReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/StatementReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/StatementReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--            Value Set Catalog Services            -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetCatalogHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetCatalogHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetCatalogMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetCatalogMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetCatalogQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetCatalogQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetCatalogReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetCatalogReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetCatalogReadServiceTypes.xsd" />
 
   <!-- ================================================ -->
   <!--           Value Set Definition Services          -->
   <!-- ================================================ -->
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionHistoryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionHistoryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetDefinitionHistoryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetDefinitionHistoryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionMaintenanceServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionMaintenanceServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetDefinitionMaintenanceServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetDefinitionMaintenanceServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionQueryServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionQueryServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetDefinitionQueryServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetDefinitionQueryServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionReadServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionReadServiceTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetDefinitionReadServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetDefinitionReadServiceTypes.xsd" />
 
   <xs:import
-      namespace="http://schema.omg.org/spec/CTS2/1.0/wsdl/ValueSetDefinitionResolutionServices"
-      schemaLocation="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionResolutionTypes.xsd" />
+      namespace="http://www.omg.org/spec/CTS2/1.1/wsdl/ValueSetDefinitionResolutionServices"
+      schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/wsdl/ValueSetDefinitionResolutionTypes.xsd" />
 
 </schema>

@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.beans.PropertyEditorSupport;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashSet;
@@ -53,13 +52,10 @@ import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2Exception;
 import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
-import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
-import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
@@ -109,10 +105,7 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	@ResponseBody
 	public CTS2Exception handleException(HttpServletResponse response, CTS2Exception ex) {
 		int status = this.cts2RestExceptionCodeMapper.getErrorCode(ex);
-		
-		if(ex.getExceptionType() == null){
-			ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
-		}
+
 		if(ex.getSeverity() == null){
 			ex.setSeverity(LoggingLevel.ERROR);
 		}
@@ -328,25 +321,6 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 		}
 	 }
 	
-	/**
-	 * Inits the binder.
-	 *
-	 * @param binder the binder
-	 */
-	@InitBinder
-	 public void initTargetReferenceTypeBinder(WebDataBinder binder) {
-
-	  binder.registerCustomEditor(TargetReferenceType.class,
-	    new TargetReferenceTypeEditor());
-	 }
-	
-	@InitBinder
-	 public void initQueryControlBinder(WebDataBinder binder) {
-		
-		binder.registerCustomEditor(QueryControl.class,
-			    new QueryControlTypeEditor());
-	 }
-	
 	@InitBinder
 	public void initEntityDescriptionRestrictionBinder(
 			 WebDataBinder binder,
@@ -371,27 +345,6 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 				filters.getRestFilters().add(filter);
 			}
 		}
-	}
-	
-	/**
-	 * The Class TargetReferenceTypeEditor.
-	 *
-	 * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
-	 */
-	private class TargetReferenceTypeEditor extends PropertyEditorSupport{
-
-	    @Override
-	    public void setAsText(final String text){
-	        this.setValue(TargetReferenceType.valueOf(text.toUpperCase()));
-	    }
-	}
-	
-	private class QueryControlTypeEditor extends PropertyEditorSupport{
-
-	    @Override
-	    public void setAsText(final String text){
-	        this.setValue(TargetReferenceType.valueOf(text.toUpperCase()));
-	    }
 	}
 	
 	/**

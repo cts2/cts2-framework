@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:core="http://www.omg.org/spec/CTS2/1.1/Core"
+	xmlns:coreservice="http://www.omg.org/spec/CTS2/1.1/CoreService"
+	xmlns="http://www.omg.org/spec/CTS2/1.1/extensions/ChangeSetQueryExtension"
+	targetNamespace="http://www.omg.org/spec/CTS2/1.1/extensions/ChangeSetQueryExtension"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/Core"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/Core.xsd" />
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CoreService"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/CoreService.xsd" />
+
+	<xs:element name="ChangeSetDirectory">
+		<xs:annotation>
+			<xs:documentation>A directory that summarizes a set of ChangeSets.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="core:Directory">
+					<xs:sequence>
+						<xs:element name="entry" type="ChangeSetDirectoryEntry"
+							minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="ChangeSetDirectoryEntry">
+		<xs:annotation>
+			<xs:documentation>A synopsis of a ChangeSet.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="core:DirectoryEntry">
+				<xs:group ref="core:ChangeSetElementGroup" />
+				<xs:attributeGroup ref="core:ChangeSetAttributeGroup" />
+				<xs:attribute name="state" type="core:FinalizableState"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

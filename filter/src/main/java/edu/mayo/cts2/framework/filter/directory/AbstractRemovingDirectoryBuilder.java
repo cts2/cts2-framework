@@ -29,11 +29,11 @@ import java.util.List;
 import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.match.Matcher;
+import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 
@@ -58,8 +58,8 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	private Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences = 
 		new HashSet<ResolvableMatchAlgorithmReference>();
 	
-	private Set<ResolvablePropertyReference<F>> resolvablePropertyReferences = 
-		new HashSet<ResolvablePropertyReference<F>>();
+	private Set<ResolvableComponentReference<F>> resolvablePropertyReferences = 
+		new HashSet<ResolvableComponentReference<F>>();
 	
 	private Set<F> allPossibleResults;
 	
@@ -85,7 +85,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	public AbstractRemovingDirectoryBuilder(
 			List<F> allPossibleResults,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvablePropertyReference<F>> resolvablePropertyReferences
+			Set<ResolvableComponentReference<F>> resolvablePropertyReferences
 			){
 		super();
 		this.allPossibleResults = new HashSet<F>(allPossibleResults);
@@ -107,7 +107,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @return the directory builder
 	 */
 	public DirectoryBuilder<T> addSupportedPropertyReference(
-			ResolvablePropertyReference<F> reference){
+			ResolvableComponentReference<F> reference){
 		this.resolvablePropertyReferences.add(reference);
 		return this;
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	}
 	
 	public DirectoryBuilder<T> addResolvablePropertyReference(
-			ResolvablePropertyReference<F> reference){
+			ResolvableComponentReference<F> reference){
 		this.resolvablePropertyReferences.add(reference);
 		return this;
 	}
@@ -280,10 +280,10 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 * @return the candidate text
 	 */
 	protected Iterable<String> getCandidateText(
-			PropertyReference propertyReference,
+			ComponentReference componentReference,
 			F candidate) {
-		ResolvablePropertyReference<F> ref = 
-				this.getResolvablePropertyReferences(propertyReference);
+		ResolvableComponentReference<F> ref = 
+				this.getResolvableComponentReferences(componentReference);
 		
 		return ref.getModelAttributeValue(candidate);
 	}
@@ -296,8 +296,8 @@ public abstract class AbstractRemovingDirectoryBuilder<F,T> extends AbstractNonL
 	 */
 
 	
-	private ResolvablePropertyReference<F> getResolvablePropertyReferences(PropertyReference nameOrUri){
-		for(ResolvablePropertyReference<F> predicate : this.resolvablePropertyReferences){
+	private ResolvableComponentReference<F> getResolvableComponentReferences(ComponentReference nameOrUri){
+		for(ResolvableComponentReference<F> predicate : this.resolvablePropertyReferences){
 			if(predicate.getReferenceTarget().getName().equals(nameOrUri.getReferenceTarget().getName())){
 				return predicate;
 			}

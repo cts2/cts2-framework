@@ -30,8 +30,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.Query;
 
@@ -163,7 +163,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	 * @param references the references
 	 * @return the model attribute reference
 	 */
-	protected <M extends PropertyReference> M getPropertyReference(
+	protected <M extends ComponentReference> M getComponentReference(
 			PropertyReference nameOrUri, 
 			Iterable<? extends M> references){
 		for(M modelAttribute : references){
@@ -180,7 +180,6 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 				references);
 	}
 	
-
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.rest.filter.directory.DirectoryBuilder#addMaxToReturn(int)
 	 */

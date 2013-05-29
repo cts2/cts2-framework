@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:core="http://www.omg.org/spec/CTS2/1.1/Core"
+	xmlns:coreservice="http://www.omg.org/spec/CTS2/1.1/CoreService"
+	xmlns="http://www.omg.org/spec/CTS2/1.1/extensions/NamespaceServiceExtension"
+	targetNamespace="http://www.omg.org/spec/CTS2/1.1/extensions/NamespaceServiceExtension"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/Core"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/Core.xsd" />
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CoreService"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/CoreService.xsd" />
+
+	<xs:element name="NamespaceDirectory">
+		<xs:annotation>
+			<xs:documentation>A directory of Namespaces.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="core:Directory">
+					<xs:sequence>
+						<xs:element name="entry" type="coreservice:DocumentedNamespaceReference"
+							minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="NamespaceList">
+		<xs:annotation>
+			<xs:documentation>A directory of Namespaces.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="core:Directory">
+					<xs:sequence>
+						<xs:element name="entry" type="MultiNameNamespaceReference"
+							minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="MultiNameNamespaceReference">
+		<xs:sequence>
+			<xs:element name="alternateName" type="core:LocalIdentifier"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="uri" type="core:ExternalURI" use="optional" />
+		<xs:attribute name="href" type="core:RenderingURI" use="optional" />
+		<xs:attribute name="preferredName" type="core:LocalIdentifier"
+			use="required" />
+	</xs:complexType>
+
+</xs:schema>

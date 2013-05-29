@@ -27,8 +27,8 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
@@ -61,7 +61,7 @@ public interface ResolvedValueSetResolutionService extends BaseQueryService,
 	 *            the page
 	 * @return the resolution
 	 */
-	public ResolvedValueSetResult<EntitySynopsis> getResolution(
+	public ResolvedValueSetResult<URIAndEntityName> getResolution(
 			ResolvedValueSetReadId identifier,
 			Set<ResolvedFilter> filterComponent, 
 			Page page);

@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import edu.mayo.cts2.framework.model.service.exception.CTS2Exception;
-import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 
 /**
  * The Class PropertiesFileExceptionCodeMapper.
@@ -64,28 +63,10 @@ public class PropertiesFileExceptionCodeMapper implements Cts2RestExceptionCodeM
 		String code = this.properties.getProperty(exceptionName);
 		
 		if(code == null){
-	        return this.exeptionTypeToErrorCode(exception.getExceptionType());
+			return DEFAULT_ERROR_CODE;
 		} else {
             return Integer.parseInt(code);
         }
 	}
-
-    private int exeptionTypeToErrorCode(ExceptionType type){
-        Assert.notNull(type);
-
-        switch (type){
-            case INVALID_SERVICE_INPUT : {
-                 return 400;
-             }
-            case INVALID_SORT_CRITERION : {
-                return 400;
-            }
-            case INVALID_QUERY_CONTROL : {
-                return 400;
-            }
-            default : {
-                return DEFAULT_ERROR_CODE;
-            }
-        }
-    }
+	
 }

@@ -30,7 +30,7 @@ public class FilterResolver {
 		String nameOrUri = restFilter.getFiltercomponent();
 
 		PropertyReference propertyReference = 
-				ControllerUtils.getPropertyReference(nameOrUri, service.getSupportedSearchReferences());
+				ControllerUtils.getComponentReference(nameOrUri, service.getSupportedSearchReferences());
 		
 		resolvedFilter.setPropertyReference(propertyReference);
 

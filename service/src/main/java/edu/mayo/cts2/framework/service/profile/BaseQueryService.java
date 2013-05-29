@@ -25,9 +25,9 @@ package edu.mayo.cts2.framework.service.profile;
 
 import java.util.Set;
 
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.service.core.types.FunctionalProfile;
 
 /**
@@ -52,14 +52,14 @@ public interface BaseQueryService extends BaseService {
 	 *
 	 * @return the supported search references
 	 */
-	public Set<? extends PropertyReference> getSupportedSearchReferences();
+	public Set<? extends ComponentReference> getSupportedSearchReferences();
 	
 	/**
 	 * Gets the supported sort references.
 	 *
 	 * @return the supported sort references
 	 */
-	public Set<? extends PropertyReference> getSupportedSortReferences();
+	public Set<? extends ComponentReference> getSupportedSortReferences();
 
 	/**
 	 * Gets the known properties.

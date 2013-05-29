@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://schema.omg.org/spec/CTS2/1.0/cts2-extension" xmlns:tns="http://schema.omg.org/spec/CTS2/1.0/cts2-extension"
+	targetNamespace="http://schema.omg.org/spec/CTS2/1.1/cts2-extension" xmlns:tns="http://schema.omg.org/spec/CTS2/1.1/cts2-extension"
 	elementFormDefault="qualified">
 
-	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/extensions/ChangeSetQueryExtension"
-		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/extensions/ChangeSetQueryExtension.xsd" />
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/extensions/ChangeSetQueryExtension"
+		schemaLocation="./ChangeSetQueryExtension.xsd" />
 		
-	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/extensions/ResolvedValueSetQueryExtension"
-		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/extensions/ResolvedValueSetQueryExtension.xsd" />
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/extensions/ResolvedValueSetQueryExtension"
+		schemaLocation="./ResolvedValueSetQueryExtension.xsd" />
 		
-	<xs:import namespace="http://schema.omg.org/spec/CTS2/1.0/extensions/NamespaceServiceExtension"
-		schemaLocation="http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/extensions/NamespaceServiceExtension.xsd" />
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/extensions/NamespaceServiceExtension"
+		schemaLocation="./NamespaceServiceExtension.xsd" />
 
 </schema>

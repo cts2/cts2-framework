@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.model.command;
 
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
  * A 'filter' used to request a subset of CTS2 resource based on some criteria.
@@ -34,7 +34,7 @@ import edu.mayo.cts2.framework.model.core.PropertyReference;
 public class ResolvedFilter {
 	
 	private MatchAlgorithmReference matchAlgorithmReference;
-	private PropertyReference propertyReference;
+	private ComponentReference componentReference;
 	private String matchValue;
 	
 	public MatchAlgorithmReference getMatchAlgorithmReference() {
@@ -46,10 +46,6 @@ public class ResolvedFilter {
 		this.matchAlgorithmReference = matchAlgorithmReference;
 	}
 
-	public PropertyReference getPropertyReference() {
-		return propertyReference;
-	}
-
 	public String getMatchValue() {
 		return matchValue;
 	}
@@ -58,8 +54,12 @@ public class ResolvedFilter {
 		this.matchValue = matchValue;
 	}
 
-	public void setPropertyReference(PropertyReference propertyReference) {
-		this.propertyReference = propertyReference;
+	public ComponentReference getComponentReference() {
+		return componentReference;
+	}
+
+	public void setComponentReference(ComponentReference componentReference) {
+		this.componentReference = componentReference;
 	}
 
 }

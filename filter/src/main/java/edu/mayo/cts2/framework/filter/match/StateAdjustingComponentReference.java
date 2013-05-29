@@ -24,8 +24,8 @@
 package edu.mayo.cts2.framework.filter.match;
 
 import edu.mayo.cts2.framework.model.castor.MarshallSuperClass;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 
 /**
  * The Class StateAdjustingModelAttributeReference.
@@ -33,7 +33,7 @@ import edu.mayo.cts2.framework.model.core.PropertyReference;
  * @param <S> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class StateAdjustingPropertyReference<S> extends PropertyReference implements MarshallSuperClass {
+public class StateAdjustingComponentReference<S> extends ComponentReference implements MarshallSuperClass {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5500382462242484409L;
@@ -45,7 +45,7 @@ public class StateAdjustingPropertyReference<S> extends PropertyReference implem
 	 *
 	 * @param stateUpdater the state updater
 	 */
-	public StateAdjustingPropertyReference(StateUpdater<S> stateUpdater) {
+	public StateAdjustingComponentReference(StateUpdater<S> stateUpdater) {
 		this.stateUpdater = stateUpdater;
 	}
 
@@ -61,13 +61,20 @@ public class StateAdjustingPropertyReference<S> extends PropertyReference implem
 		return this.stateUpdater.updateState(currentState, matchAlgorithm, queryString);
 	}
 
-	public static <S> StateAdjustingPropertyReference<S> toPropertyReference(
-			PropertyReference ref, StateUpdater<S> stateUpdater){
-		StateAdjustingPropertyReference<S> returnRef = 
-			new StateAdjustingPropertyReference<S>(stateUpdater);
+	public static <S> StateAdjustingComponentReference<S> toComponentReference(
+			ComponentReference ref, StateUpdater<S> stateUpdater){
+		StateAdjustingComponentReference<S> returnRef = 
+			new StateAdjustingComponentReference<S>(stateUpdater);
 		
-		returnRef.setReferenceTarget(ref.getReferenceTarget());
-		returnRef.setReferenceTarget(ref.getReferenceTarget());
+		if(ref.getAttributeReference() != null){
+			returnRef.setAttributeReference(ref.getAttributeReference());
+		} else if(ref.getPropertyReference() != null){
+			returnRef.setPropertyReference(ref.getPropertyReference());
+		} else if (ref.getSpecialReference() != null){
+			returnRef.setSpecialReference(ref.getSpecialReference());
+		} else {
+			throw new IllegalArgumentException("ComponentReference must not be empty.");
+		} 
 	
 		return returnRef;
 	}

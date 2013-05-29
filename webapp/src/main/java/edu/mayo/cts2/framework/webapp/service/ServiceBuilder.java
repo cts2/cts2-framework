@@ -39,13 +39,12 @@ import org.springframework.util.Assert;
 import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
@@ -184,7 +183,7 @@ public class ServiceBuilder implements InitializingBean {
 		return service;
 	}
 	
-	private List<ModelAttributeReference> toModelAttributeReferences(Set<? extends PropertyReference> props){
+	private List<ModelAttributeReference> toModelAttributeReferences(Set<? extends ComponentReference> props){
 		if(CollectionUtils.isEmpty(props)){
 			return null;
 		}

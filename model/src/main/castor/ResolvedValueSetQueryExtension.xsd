@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:core="http://www.omg.org/spec/CTS2/1.1/Core"
+	xmlns:coreservice="http://www.omg.org/spec/CTS2/1.1/CoreService"
+	xmlns="http://www.omg.org/spec/CTS2/1.1/extensions/ResolvedValueSetQueryExtension"
+	targetNamespace="http://www.omg.org/spec/CTS2/1.1/extensions/ResolvedValueSetQueryExtension"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/Core"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/Core.xsd" />
+	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CoreService"
+		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/CoreService.xsd" />
+
+	<xs:element name="ResolvedValueSetQueryService" type="ResolvedValueSetQueryService"/>
+	<xs:complexType name="ResolvedValueSetQueryService">
+		<xs:complexContent>
+			<xs:extension base="coreservice:BaseQueryService">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

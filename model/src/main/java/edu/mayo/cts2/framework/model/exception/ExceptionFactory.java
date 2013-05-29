@@ -30,10 +30,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
@@ -44,7 +44,6 @@ import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI;
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedVersionTag;
-import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 
 /**
@@ -66,7 +65,6 @@ public class ExceptionFactory {
 			Iterable<? extends NameAndMeaningReference> possibleValues) {
 		UnsupportedMatchAlgorithm ex = new UnsupportedMatchAlgorithm();
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("MatchAlgorithm", requestedAlgorithm, possibleValues));
 		
@@ -86,7 +84,6 @@ public class ExceptionFactory {
 			Iterable<T> possibleValues) {
 		UnsupportedNameOrURI ex = new UnsupportedNameOrURI();
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_READ_CONTEXT);
 		
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("Name or URI", requestedNameOrUri, possibleValues));
 		
@@ -106,29 +103,27 @@ public class ExceptionFactory {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name.getUri(), matchAlgorithmReferences));
 		
 		return ex;
 	}
 	
-	public static UnknownResourceReference createUnsupportedPropertyReference(
-			PropertyReference propertyReference,
-			Iterable<? extends PropertyReference> propertyReferences) {
-		return createUnsupportedPropertyReference(
-				propertyReference.getReferenceTarget().getName(), propertyReferences);
+	public static UnknownResourceReference createUnsupportedComponentReference(
+			ComponentReference componentReference,
+			Iterable<? extends ComponentReference> componentReferences) {
+		return createUnsupportedComponentReference(
+				componentReference, componentReferences);
 	}
 	
 	public static UnknownResourceReference createUnsupportedPropertyReference(
 			String requestedNameOrUri,
-			Iterable<? extends PropertyReference> propertyReferences) {
+			Iterable<? extends ComponentReference> propertyReferences) {
 		UnknownResourceReference ex = new UnknownResourceReference();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
-		ex.setCts2Message(getPossibleValuesMessageFromPropertyReference("PropertyReference", requestedNameOrUri, propertyReferences));
+		ex.setCts2Message(getPossibleValuesMessageFromComponentReference("PropertyReference", requestedNameOrUri, propertyReferences));
 		
 		return ex;
 	}
@@ -139,7 +134,6 @@ public class ExceptionFactory {
 		UnsupportedVersionTag ex = new UnsupportedVersionTag();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setCts2Message(
 				getPossibleValuesMessageFromNameAndMeaning("VersionTagReference", 
@@ -161,7 +155,6 @@ public class ExceptionFactory {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name, matchAlgorithmReferences));
 		
@@ -187,7 +180,6 @@ public class ExceptionFactory {
 		}
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		ex.setCts2Message(ModelUtils.createOpaqueData("Resource with Identifier: " + name + " not found."));
 		
 		return ex;
@@ -224,7 +216,6 @@ public class ExceptionFactory {
 		ex.setCts2Message(ModelUtils.createOpaqueData(message));
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
 		return ex;
 	}
@@ -235,7 +226,6 @@ public class ExceptionFactory {
 
 	public static QueryTimeout createTimeoutException(String message) {
 		QueryTimeout timeout = new QueryTimeout();
-		timeout.setExceptionType(ExceptionType.INVALID_QUERY_CONTROL);
 		timeout.setSeverity(LoggingLevel.ERROR);
 		timeout.setCts2Message(ModelUtils.createOpaqueData(message));
 		return timeout;
@@ -254,7 +244,6 @@ public class ExceptionFactory {
 		UnspecifiedCts2Exception ex = new UnspecifiedCts2Exception();
 		
 		ex.setSeverity(LoggingLevel.ERROR);
-		ex.setExceptionType(ExceptionType.INVALID_SERVICE_INPUT);
 		
 		StringBuilder sb = new StringBuilder(message);
 		sb.append(" Request was: " + url);
@@ -299,14 +288,14 @@ public class ExceptionFactory {
 		return getPossibleValuesMessage(type, requestedValue, returnList);
 	}
 	
-	private static OpaqueData getPossibleValuesMessageFromPropertyReference(
+	private static OpaqueData getPossibleValuesMessageFromComponentReference(
 			String type, 
 			String requestedValue, 
-			Iterable<? extends PropertyReference> possibleValues){
+			Iterable<? extends ComponentReference> possibleValues){
 		List<String> returnList = new ArrayList<String>();
 		
-		for(PropertyReference ref : possibleValues) {
-			returnList.add(propertyRefToString(ref));
+		for(ComponentReference ref : possibleValues) {
+			returnList.add(componentRefToString(ref));
 		}
 	
 		return getPossibleValuesMessage(type, requestedValue, returnList);
@@ -339,22 +328,46 @@ public class ExceptionFactory {
 		return sb.toString();
 	}
 	
-	private static String propertyRefToString(PropertyReference ref){
+	private static String componentRefToString(ComponentReference ref){
 		if(ref == null){
 			return null;
 		}
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("Name: " + ref.getReferenceTarget().getName());
 		
-		if(ref.getReferenceTarget().getUri() != null && !ref.getReferenceTarget().getUri().isEmpty()){
-			sb.append(", ");
-			sb.append("URI: " + ref.getReferenceTarget().getUri());
-		}
-		
-		if(ref.getReferenceTarget().getHref() != null && !ref.getReferenceTarget().getHref().isEmpty()){
-			sb.append(", ");
-			sb.append("Href: " + ref.getReferenceTarget().getHref());
+		if(ref.getAttributeReference() != null){
+			sb.append("Attribute Name: " + ref.getAttributeReference());
+			
+		} else if (ref.getPropertyReference() != null){
+			URIAndEntityName propertyReference = ref.getPropertyReference();
+			
+			List<String> segments = new ArrayList<String>();
+
+			if(propertyReference.getName() != null){
+				segments.add("Property Name: " + propertyReference.getName());
+			}
+			
+			if(propertyReference.getNamespace() != null){
+				segments.add("Property Namespace: " + propertyReference.getNamespace());
+			}
+
+			if(propertyReference.getUri() != null){
+				sb.append("Property URI: " + propertyReference.getUri());
+			}
+			
+			if(propertyReference.getDesignation() != null){
+				sb.append("Property Designation: " + propertyReference.getDesignation());
+			}
+			
+			if(propertyReference.getHref() != null){
+				sb.append("Property Href: " + propertyReference.getHref());
+			}
+			
+			sb.append(StringUtils.join(segments, ", "));			
+		} else if (ref.getSpecialReference() != null){
+			sb.append("Special Reference Name: " + ref.getSpecialReference());
+		} else {
+			throw new IllegalArgumentException("ComponentReference must not be empty.");
 		}
 		
 		return sb.toString();
