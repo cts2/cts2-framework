@@ -298,11 +298,13 @@
 			<version>1.2</version>
 		</dependency>
 
+		<!-- TODO: Use this for documentation (or something similar)
 		<dependency>
 			<groupId>com.mangofactory</groupId>
 			<artifactId>swagger-springmvc</artifactId>
 			<version>0.5.2</version>
 		</dependency>
+		-->
 
 		<dependency>
 			<groupId>xml-resolver</groupId>
