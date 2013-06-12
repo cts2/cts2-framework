@@ -31,9 +31,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -335,6 +337,8 @@ public class FelixPluginManager implements
 				}
             }
             
+            this.initializeNonOsgiPlugins();
+            
             felix.start();
             
             for(String bean : 
@@ -354,11 +358,22 @@ public class FelixPluginManager implements
             servletContext.setAttribute(
     				PluginManager.class.getName(),
     				this);
+
         }
         catch (final Exception ex)
         {
             throw new OsgiContainerException("Unable to start OSGi container", ex);
         }
+    }
+    
+    protected void initializeNonOsgiPlugins(){
+    	ServiceLoader<NonOsgiPluginInitializer> serviceLoader = ServiceLoader.load(NonOsgiPluginInitializer.class);
+    	
+    	Iterator<NonOsgiPluginInitializer> itr = serviceLoader.iterator();
+    	while(itr.hasNext()){
+    		NonOsgiPluginInitializer pluginInitializer = itr.next();
+    		pluginInitializer.initialize(this);
+    	}
     }
     
     /**
