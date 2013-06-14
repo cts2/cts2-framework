@@ -43,8 +43,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UrlPathHelper;
 
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
@@ -75,6 +73,8 @@ import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
 public abstract class AbstractController extends AbstractServiceAwareBean implements URIHelperInterface, ModelAndViewInterface {
 	
 	protected Log log = LogFactory.getLog(getClass());
+	
+	protected static final String DEFAULT_REDIRECT = "true";
 	
 	@Resource
 	private RestConfig restConfig;
@@ -212,24 +212,6 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	 */
 	protected void setCount(int count, HttpServletResponse httpServletResponse) {
 		httpServletResponse.setHeader(HEADER_COUNT, Integer.toString(count));
-	}
-	
-	/**
-	 * Redirect.
-	 *
-	 * @param redirectUrl the redirect url
-	 * @param httpServletRequest the http servlet request
-	 * @param pathParametersToRemove the path parameters to remove
-	 * @return the model and view
-	 */
-	protected ModelAndView redirect(String redirectUrl, HttpServletRequest httpServletRequest){
-		RedirectView rmv = new RedirectView(redirectUrl);
-
-		rmv.setExposeModelAttributes(false);
-		
-		ModelAndView mav = new ModelAndView(rmv);
-
-		return mav;
 	}
 	
 	protected boolean isPartialRedirect(HttpServletRequest request, String urlTemplatePath){

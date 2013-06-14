@@ -263,7 +263,7 @@ public class StatementController extends AbstractMessageWrappingController {
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		StatementReadId id = new StatementReadId(uri);
 		

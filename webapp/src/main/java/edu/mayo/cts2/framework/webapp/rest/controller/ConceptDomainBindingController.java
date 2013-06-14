@@ -394,7 +394,7 @@ public class ConceptDomainBindingController extends AbstractMessageWrappingContr
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		ConceptDomainBindingReadId id = new ConceptDomainBindingReadId(uri);
 		

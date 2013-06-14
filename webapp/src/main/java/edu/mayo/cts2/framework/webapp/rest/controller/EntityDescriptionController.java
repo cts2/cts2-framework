@@ -58,6 +58,7 @@ import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
+import edu.mayo.cts2.framework.model.entity.EntityReferenceMsg;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -155,6 +156,27 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 			return msg;
 		}
 	};
+	
+	private final static MessageFactory<EntityList> ENTITY_LIST_MESSAGE_FACTORY = 
+		new MessageFactory<EntityList>(){
+
+		@Override
+		public Message createMessage(EntityList resource) {
+			return resource;
+		}	
+	};
+	
+	private final static MessageFactory<EntityReference> ENTITYREFERENCE_MESSAGE_FACTORY = 
+			new MessageFactory<EntityReference>(){
+
+			@Override
+			public Message createMessage(EntityReference resource) {
+				EntityReferenceMsg msg = new EntityReferenceMsg();
+				msg.setEntityReference(resource);
+				
+				return msg;
+			}	
+		};
 	
 	/**
 	 * Creates the entity description.
@@ -472,7 +494,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
@@ -556,7 +578,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		EntityNameOrURI entityId = 
 				ModelUtils.entityNameOrUriFromName(this.getScopedEntityName(entityName));
 	
-		Object response;
+		Object response = null;
 		
 		if(list){
 			DirectoryResult<EntityListEntry> entityList = 
@@ -567,7 +589,13 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 							page);
 			response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
 		} else {
-			response = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+			EntityReference entityReference = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
+			
+			if(entityReference != null){
+				response = this.wrapMessage(
+					ENTITYREFERENCE_MESSAGE_FACTORY.createMessage(entityReference), 
+					httpServletRequest);
+			}
 		}
 		
 		if(response == null) {
@@ -592,15 +620,12 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 			@RequestParam(PARAM_URI) String uri,
 			Page page,
 			boolean list,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 
 		ResolvedReadContext readContext = this.resolveRestReadContext(restReadContext);
 		
 		EntityNameOrURI entityId = 
 				ModelUtils.entityNameOrUriFromUri(uri);
-
-		Object response;
-		ScopedEntityName name = null;
 		
 		if(list){
 			DirectoryResult<EntityListEntry> entityList = 
@@ -609,28 +634,72 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 							this.resolveSort(queryControl, this.entityDescriptionQueryService),
 							readContext, 
 							page);
-			response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+			
+			if(entityList == null || CollectionUtils.isEmpty(entityList.getEntries())){
+				throw ExceptionFactory.createUnknownResourceException(entityId.toString(), UnknownEntity.class);
+			}
+			
+			ScopedEntityName name = ModelUtils.getEntity(entityList.getEntries().get(0).getEntry()).getEntityID();
+			
+			EntityList descriptions = 
+				this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+			
+			final String id = EncodingUtils.encodeScopedEntityName(name);
+			
+			return this.doForward(
+				descriptions, 
+				id, 
+				httpServletRequest, 
+				ENTITY_LIST_MESSAGE_FACTORY,
+				PATH_ENTITYBYURI, 
+				PATH_ALL_DESCRIPTIONS_OF_ENTITYBYID, 
+				new UrlTemplateBinder<EntityList>(){
+					@Override
+					public Map<String, String> getPathValues(
+							EntityList resource) {
+						Map<String, String> map = new HashMap<String,String>();
+						map.put(VAR_ENTITYID, id);
+						
+						return map;
+					}
+				}, 
+				restReadContext, 
+				UnknownEntity.class, 
+				redirect);
+			
 		} else {
 			EntityReference descriptions = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
 			
-			if(descriptions != null){
-				name = descriptions.getName();
+			if(descriptions == null){
+				throw ExceptionFactory.createUnknownResourceException(entityId.toString(), UnknownEntity.class);
 			}
 			
-			response = descriptions;
-		}
-		
-		if(response == null) {
-			throw ExceptionFactory.createUnknownResourceException(entityId.toString(), UnknownEntity.class);
-		} else {
+			final String id = EncodingUtils.encodeScopedEntityName(descriptions.getName());
 			
-			if(redirect && name != null) {
-				String redirectUrl = PATH_ENTITY + "/" + EncodingUtils.encodeScopedEntityName(name);
-				return this.redirect(redirectUrl, httpServletRequest);
-			} else {
-				return this.buildUriForwardingModelAndView(response);
-			}
+			return this.doForward(
+				descriptions, 
+				id, 
+				httpServletRequest, 
+				ENTITYREFERENCE_MESSAGE_FACTORY,
+				PATH_ENTITYBYURI, 
+				PATH_ALL_DESCRIPTIONS_OF_ENTITYBYID, 
+				new UrlTemplateBinder<EntityReference>(){
+
+					@Override
+					public Map<String, String> getPathValues(
+							EntityReference resource) {
+						Map<String, String> map = new HashMap<String,String>();
+						map.put(VAR_ENTITYID, id);
+						
+						return map;
+					}
+					
+				}, 
+				restReadContext, 
+				UnknownEntity.class, 
+				redirect);
 		}
+
 	}
 	
 	@InitBinder

@@ -402,6 +402,8 @@ interface PathParameters {
 	
 	public static final String PARAM_LIST = "list";
 	
+	public static final String PARAM_REDIRECT = "redirect";
+	
 	public static final String RESOLUTION_TYPE = "resolutiontype";
 
 	public static final String RESOLUTION_TYPE_DIRECTORY = "directory";

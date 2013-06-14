@@ -343,7 +343,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		ValueSetDefinitionReadId id = new ValueSetDefinitionReadId(uri);
 	
@@ -395,7 +395,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 			QueryControl queryControl,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@RequestParam(value=PARAM_TAG, defaultValue=DEFAULT_TAG) String tag,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		//TODO: Accept tag URIs here
 		VersionTagReference tagReference = new VersionTagReference(tag);

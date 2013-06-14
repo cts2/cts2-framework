@@ -379,7 +379,7 @@ public class MapController extends AbstractMessageWrappingController {
 			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		return this.doReadByUri(
 				httpServletRequest, 
