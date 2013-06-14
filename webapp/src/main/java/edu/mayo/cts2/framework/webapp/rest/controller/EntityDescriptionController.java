@@ -612,7 +612,10 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 			response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
 		} else {
 			EntityReference descriptions = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
-			name = descriptions.getName();
+			
+			if(descriptions != null){
+				name = descriptions.getName();
+			}
 			
 			response = descriptions;
 		}
