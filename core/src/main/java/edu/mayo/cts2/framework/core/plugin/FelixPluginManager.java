@@ -91,8 +91,6 @@ public class FelixPluginManager implements
     public static final String OSGI_FRAMEWORK_BUNDLES_ZIP = "osgi-framework-bundles.zip";
     public static final int REFRESH_TIMEOUT = 10;
     public static final String MIN_SERVLET_VERSION = "2.5.0";
-
-    public static final String CONFIG_DIR = "config";
     
     private ServletContext servletContext;
     
@@ -337,9 +335,9 @@ public class FelixPluginManager implements
 				}
             }
             
-            this.initializeNonOsgiPlugins();
-            
             felix.start();
+               
+            this.initializeNonOsgiPlugins();
             
             for(String bean : 
             	this.applicationContext.getBeanNamesForType(ExtensionPoint.class)){
