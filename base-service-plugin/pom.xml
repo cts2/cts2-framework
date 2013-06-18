@@ -39,6 +39,8 @@
 		<test.config.dir>${project.build.directory}/testconfigdir</test.config.dir>
 		<test.plugins.dir>${project.build.directory}/test-plugins</test.plugins.dir>
 		<war.file.name>webapp.war</war.file.name>
+		<webapp.classifier></webapp.classifier>
+		<osgi.bundle.classifier></osgi.bundle.classifier>
 	</properties>
 
 	<profiles>
@@ -272,7 +274,7 @@
 								<!-- empty groupId/artifactId represents the current build -->
 							</overlay>
 						</overlays>
-						<classifier>webapp</classifier>
+						<classifier>${webapp.classifier}</classifier>
 					</configuration>
 				</plugin>
 				
@@ -281,23 +283,8 @@
 					<artifactId>maven-bundle-plugin</artifactId>
 					<version>2.3.6</version>
 					<configuration>
-						<classifier>osgi</classifier>
+						<classifier>${osgi.bundle.classifier}</classifier>
 					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.4</version>
-					<executions>
-						<execution>
-							<id>non-osgi-jar</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 			
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
