@@ -101,6 +101,8 @@ public class FelixPluginManager implements
 	
 	@Resource
 	private SupplementalPropetiesLoader supplementalPropetiesLoader;
+	
+	private Set<NonOsgiPluginInitializer> nonOsgiPlugins = new HashSet<NonOsgiPluginInitializer>();
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(FelixPluginManager.class);
     private static final String OSGI_BOOTDELEGATION = "org.osgi.framework.bootdelegation";
@@ -371,6 +373,7 @@ public class FelixPluginManager implements
     	while(itr.hasNext()){
     		NonOsgiPluginInitializer pluginInitializer = itr.next();
     		pluginInitializer.initialize(this);
+    		this.nonOsgiPlugins.add(pluginInitializer);
     	}
     }
     
@@ -507,8 +510,11 @@ public class FelixPluginManager implements
      *
      * @throws OsgiContainerException the osgi container exception
      */
-    protected void stop() throws OsgiContainerException
-    {
+    protected void stop() throws OsgiContainerException {
+    	for(NonOsgiPluginInitializer nonOsgiPlugins : this.nonOsgiPlugins){
+    		nonOsgiPlugins.destroy();
+    	}
+    	
         if (felixRunning){
             try {
 				for (final ServiceTracker tracker : 
@@ -533,7 +539,6 @@ public class FelixPluginManager implements
         felixRunning = false;
         felix = null;
     }
-
 
     public ServiceReference[] getRegisteredServices()
     {

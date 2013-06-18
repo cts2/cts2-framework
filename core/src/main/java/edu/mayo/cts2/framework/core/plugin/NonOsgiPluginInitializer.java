@@ -32,4 +32,6 @@ public interface NonOsgiPluginInitializer {
 
 	public void initialize(OsgiPluginManager osgiPluginManager);
 
+	public void destroy();
+
 }
