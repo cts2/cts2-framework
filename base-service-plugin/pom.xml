@@ -272,6 +272,7 @@
 								<!-- empty groupId/artifactId represents the current build -->
 							</overlay>
 						</overlays>
+						<classifier>webapp</classifier>
 					</configuration>
 				</plugin>
 				
