@@ -21,71 +21,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.core.plugin;
+package edu.mayo.cts2.framework.core.config;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
-import org.osgi.framework.Constants;
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.ConfigConstants;
-import edu.mayo.cts2.framework.core.config.ConfigInitializer;
-import edu.mayo.cts2.framework.core.config.ConfigUtils;
-
 /**
- * The Class SupplementalPropetiesLoader.
+ * A general configuration point for deployment related aspects. Specific properties are not
+ * specified, as upstream modules may have different deployment configuration needs. 
+ * 
+ * Some examples of how this can be used:
+ * 
+ * - To fully or partially start OSGi.
+ * - To expose (or not) various Web Resources (HTML pages, SOAP Services, etc).
+ * 
+ * This will be configured by a 'cts2-deployment.properties' file in the CTS2 config directory.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-public class SupplementalPropetiesLoader implements InitializingBean {
+public class Cts2DeploymentConfig implements InitializingBean {
 	
 	@Resource
 	private ConfigInitializer configInitializer;
-
-	private Map<String,Properties> overrides = new HashMap<String,Properties>();
+	
+	private Properties cts2ConfigProperties;
 
 	/* (non-Javadoc)
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		File overridesDir = 
-			new File(this.configInitializer.getContextConfigDirectory().getPath() + File.separator + ConfigConstants.CONFIG_DIRECTORY);
+		File cts2ConfigFile = 
+			new File(
+				this.configInitializer.getContextConfigDirectory().getPath() + 
+				File.separator + 
+				ConfigConstants.CONFIG_DIRECTORY +
+				File.separator + ConfigConstants.CTS2_DEPLOYMENT_CONFIG_FILE_NAME);
 		
-		if(overridesDir.exists()){
-			 FileFilter nonDeploymentConfigFiles = new FileFilter(){
-				@Override
-				public boolean accept(File file) {
-					return ! StringUtils.equals(
-							ConfigConstants.CTS2_DEPLOYMENT_CONFIG_FILE_NAME, 
-							file.getName());
-				}
-            };
-			
-			for(File file : overridesDir.listFiles(nonDeploymentConfigFiles)){
-				Properties props = ConfigUtils.loadProperties(file);
-				String pid = (String) props.get(Constants.SERVICE_PID);
-				
-				if(pid == null){
-					throw new IllegalStateException("Overriding Properties File must include a " + Constants.SERVICE_PID + " propery.");
-				}
-				
-				this.overrides.put(pid, props);
-			}
+		if(! cts2ConfigFile.exists()){
+			cts2ConfigFile.createNewFile();
 		}
+		
+		this.cts2ConfigProperties = ConfigUtils.loadProperties(cts2ConfigFile);
 	}
 	
-	
-	protected Map<String,Properties> getOverriddenProperties(){
-		return this.overrides;
+	/**
+	 * Gets the boolean property.
+	 *
+	 * @param propertyName the property name
+	 * @return the boolean property
+	 */
+	public boolean getBooleanProperty(String propertyName){
+		return BooleanUtils.toBoolean(this.cts2ConfigProperties.getProperty(propertyName));
 	}
+	
+	/**
+	 * Gets the string property.
+	 *
+	 * @param propertyName the property name
+	 * @return the string property
+	 */
+	public String getStringProperty(String propertyName){
+		return this.cts2ConfigProperties.getProperty(propertyName);
+	}
+
 }

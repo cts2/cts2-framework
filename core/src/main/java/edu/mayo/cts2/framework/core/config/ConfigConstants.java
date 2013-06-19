@@ -33,6 +33,10 @@ public class ConfigConstants {
 	/** The Constant PLUGINS_DIRECTORY. */
 	public static final String PLUGINS_DIRECTORY = "plugins";
 	
+	public static final String CONFIG_DIRECTORY = "config";
+	
+	public static final String CTS2_DEPLOYMENT_CONFIG_FILE_NAME = "cts2-deployment.properties";
+	
 	/** The Constant PLUGIN_PROPERTIES_FILE_NAME. */
 	public static final String PLUGIN_PROPERTIES_FILE_NAME = "plugin.properties";
 
