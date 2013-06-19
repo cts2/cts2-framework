@@ -9,6 +9,7 @@ import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 
 import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 import edu.mayo.cts2.framework.service.provider.ServiceProviderFactory;
+import edu.mayo.cts2.framework.webapp.rest.config.MetaTypeRestConfig;
 
 public class SoapEndpointTestBase {
 	
@@ -43,6 +44,7 @@ public class SoapEndpointTestBase {
 			System.setProperty("cts2.config.dir", "target/testconfigdir");
 			System.setProperty("test.plugins.dir", "target/test-plugins");
 			System.setProperty(ServiceProviderFactory.USE_CLASSPATH_PROVIDER_PROP, "true");
+			System.setProperty(MetaTypeRestConfig.ALLOW_SOAP, "true");
 			
 	        Server server = new Server(8081);
 	        WebAppContext ctx = new WebAppContext();

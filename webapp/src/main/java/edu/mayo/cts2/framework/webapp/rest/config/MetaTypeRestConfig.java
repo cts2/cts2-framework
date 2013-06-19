@@ -45,22 +45,17 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
 @Component
 public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig {
 	
-	private static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
-	private static final String SHOW_STACK_TRACE = "showStackTrace";
-	private static final String SHOW_HOME_PAGE = "showHomePage";
+	public static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
+	public static final String ALLOW_SOAP = "allowSoap";
+	public static final String SHOW_STACK_TRACE = "showStackTrace";
+	public static final String SHOW_HOME_PAGE = "showHomePage";
+	
 	private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
 	private boolean allowHtmlRendering;
+	private boolean allowSoap;
 	private boolean showStackTrace;
 	private boolean showHomePage;
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.webapp.rest.config.RestConfig#getAllowHtmlRendering()
-	 */
-	@Override
-	public boolean getAllowHtmlRendering() {
-		return this.allowHtmlRendering;
-	}
 
 	/* (non-Javadoc)
 	 * @see org.osgi.service.metatype.MetaTypeProvider#getLocales()
@@ -84,7 +79,19 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 			
 			boolean home = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_HOME_PAGE) );
 			this.showHomePage = home;
+			
+			boolean soap = BooleanUtils.toBoolean( (Boolean) properties.get(ALLOW_SOAP) );
+			this.allowSoap = soap;
 		}		
+	}
+	
+	protected boolean checkEnvironmentVariableOverride(String property, boolean value){
+		String enValue = System.getProperty(property);
+		if(enValue != null){
+			return BooleanUtils.toBoolean(enValue);
+		} else {
+			return value;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -99,13 +106,23 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	}
 
 	@Override
+	public boolean getAllowHtmlRendering() {
+		return this.checkEnvironmentVariableOverride(ALLOW_HTML_RENDERING, this.allowHtmlRendering);
+	}
+
+	@Override
 	public boolean getShowStackTraceOnError() {
-		return this.showStackTrace;
+		return this.checkEnvironmentVariableOverride(SHOW_STACK_TRACE, this.showStackTrace);
 	}
 
 	@Override
 	public boolean getShowHomePage() {
-		return this.showHomePage;
+		return this.checkEnvironmentVariableOverride(SHOW_HOME_PAGE, this.showHomePage);
+	}
+	
+	@Override
+	public boolean getAllowSoap() {
+		return this.checkEnvironmentVariableOverride(ALLOW_SOAP, this.allowSoap);
 	}
 
 	/* (non-Javadoc)
@@ -115,6 +132,5 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	protected String getMetatypeXmlPath() {
 		return "/rest/webapp-rest-metatype.xml";
 	}
-
 
 }
