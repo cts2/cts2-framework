@@ -92,6 +92,7 @@ public class FelixPluginManager implements
 	ApplicationContextAware {
 	
 	public static final String SUPPRESS_OSGI_CONFIG_PROP_NAME = "osgi.suppress";
+	private static final boolean DEFALUE_SUPPRESS_OSGI_CONFIG_VALUE = false;
 	
     public static final String OSGI_FRAMEWORK_BUNDLES_ZIP = "osgi-framework-bundles.zip";
     public static final int REFRESH_TIMEOUT = 10;
@@ -167,7 +168,10 @@ public class FelixPluginManager implements
             return;
         }
         
-        boolean suppressOsgi = this.cts2GeneralConfig.getBooleanProperty(SUPPRESS_OSGI_CONFIG_PROP_NAME);
+        boolean suppressOsgi = 
+        	this.cts2GeneralConfig.getBooleanProperty(
+        		SUPPRESS_OSGI_CONFIG_PROP_NAME,
+        		DEFALUE_SUPPRESS_OSGI_CONFIG_VALUE);
 
         // Create a case-insensitive configuration property map.
         final StringMap configMap = new StringMap(false);

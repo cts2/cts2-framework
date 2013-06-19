@@ -29,6 +29,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +67,7 @@ public class Cts2DeploymentConfig implements InitializingBean {
 				File.separator + ConfigConstants.CTS2_DEPLOYMENT_CONFIG_FILE_NAME);
 		
 		if(! cts2ConfigFile.exists()){
-			cts2ConfigFile.createNewFile();
+			ConfigUtils.createFile(cts2ConfigFile.getAbsolutePath());
 		}
 		
 		this.cts2ConfigProperties = ConfigUtils.loadProperties(cts2ConfigFile);
@@ -78,8 +79,13 @@ public class Cts2DeploymentConfig implements InitializingBean {
 	 * @param propertyName the property name
 	 * @return the boolean property
 	 */
-	public boolean getBooleanProperty(String propertyName){
-		return BooleanUtils.toBoolean(this.cts2ConfigProperties.getProperty(propertyName));
+	public boolean getBooleanProperty(String propertyName, boolean defaultValue){
+		String value = this.cts2ConfigProperties.getProperty(propertyName);
+		if(StringUtils.isBlank(value)){
+			return defaultValue;
+		} else {
+			return BooleanUtils.toBoolean(value);
+		}
 	}
 	
 	/**
