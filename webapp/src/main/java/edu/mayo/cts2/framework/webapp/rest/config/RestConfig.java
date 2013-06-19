@@ -38,5 +38,7 @@ public interface RestConfig {
 	public boolean getAllowHtmlRendering();
 	
 	public boolean getShowStackTraceOnError();
+	
+	public boolean getShowHomePage();
 
 }

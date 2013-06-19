@@ -43,14 +43,16 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
  */
 @ExportedService( { MetaTypeProvider.class, ManagedService.class  })
 @Component
-public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig{
+public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig {
 	
 	private static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
 	private static final String SHOW_STACK_TRACE = "showStackTrace";
+	private static final String SHOW_HOME_PAGE = "showHomePage";
 	private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
 	private boolean allowHtmlRendering;
 	private boolean showStackTrace;
+	private boolean showHomePage;
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.webapp.rest.config.RestConfig#getAllowHtmlRendering()
@@ -58,15 +60,6 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	@Override
 	public boolean getAllowHtmlRendering() {
 		return this.allowHtmlRendering;
-	}
-
-	/**
-	 * Sets the allow html rendering.
-	 *
-	 * @param allowHtmlRendering the new allow html rendering
-	 */
-	public void setAllowHtmlRendering(boolean allowHtmlRendering) {
-		this.allowHtmlRendering = allowHtmlRendering;
 	}
 
 	/* (non-Javadoc)
@@ -88,6 +81,9 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 			
 			boolean show = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_STACK_TRACE) );
 			this.showStackTrace = show;
+			
+			boolean home = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_HOME_PAGE) );
+			this.showHomePage = home;
 		}		
 	}
 
@@ -102,6 +98,16 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 		return table;
 	}
 
+	@Override
+	public boolean getShowStackTraceOnError() {
+		return this.showStackTrace;
+	}
+
+	@Override
+	public boolean getShowHomePage() {
+		return this.showHomePage;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService#getMetatypeXmlPath()
 	 */
@@ -110,8 +116,5 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 		return "/rest/webapp-rest-metatype.xml";
 	}
 
-	@Override
-	public boolean getShowStackTraceOnError() {
-		return this.showStackTrace;
-	}
+
 }
