@@ -52,10 +52,17 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	
 	private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
-	private boolean allowHtmlRendering;
-	private boolean allowSoap;
-	private boolean showStackTrace;
-	private boolean showHomePage;
+	private static final boolean ALLOW_HTML_RENDERING_DEFAULT = false;
+	private boolean allowHtmlRendering = ALLOW_HTML_RENDERING_DEFAULT;
+	
+	private static final boolean ALLOW_SOAP_DEFAULT = false;
+	private boolean allowSoap = ALLOW_SOAP_DEFAULT;
+	
+	private static final boolean SHOW_STACK_TRACE_DEFAULT = false;
+	private boolean showStackTrace = SHOW_STACK_TRACE_DEFAULT;
+	
+	private static final boolean SHOW_HOME_PAGE_DEFAULT = true;
+	private boolean showHomePage = SHOW_HOME_PAGE_DEFAULT;
 
 	/* (non-Javadoc)
 	 * @see org.osgi.service.metatype.MetaTypeProvider#getLocales()
@@ -71,16 +78,16 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	@Override
 	public void updated(@SuppressWarnings("rawtypes") Dictionary properties) throws ConfigurationException {
 		if(properties != null){
-			boolean allow = BooleanUtils.toBoolean( (Boolean) properties.get(ALLOW_HTML_RENDERING) );
+			boolean allow = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(ALLOW_HTML_RENDERING), ALLOW_HTML_RENDERING_DEFAULT);
 			this.allowHtmlRendering = allow;
 			
-			boolean show = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_STACK_TRACE) );
+			boolean show = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(SHOW_STACK_TRACE), SHOW_STACK_TRACE_DEFAULT);
 			this.showStackTrace = show;
 			
-			boolean home = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_HOME_PAGE) );
+			boolean home = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(SHOW_HOME_PAGE), SHOW_HOME_PAGE_DEFAULT);
 			this.showHomePage = home;
 			
-			boolean soap = BooleanUtils.toBoolean( (Boolean) properties.get(ALLOW_SOAP) );
+			boolean soap = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(ALLOW_SOAP), ALLOW_SOAP_DEFAULT);
 			this.allowSoap = soap;
 		}		
 	}
