@@ -23,28 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.beans.PropertyEditorSupport;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UrlPathHelper;
-
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
@@ -64,9 +42,29 @@ import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UrlPathHelper;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.beans.PropertyEditorSupport;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * The Class AbstractController.
+ * The base abstract Spring MVC Controller.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */

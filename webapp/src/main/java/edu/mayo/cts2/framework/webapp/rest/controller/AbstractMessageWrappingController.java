@@ -82,7 +82,8 @@ import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 
 /**
- * The Class AbstractMessageWrappingController.
+ * An Abstract Spring MVC Controller to handle various common CTS2 functionality such as
+ * reading individual resources and constructing directories.
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
