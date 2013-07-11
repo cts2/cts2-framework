@@ -19,7 +19,7 @@ CTS2 Development Framework uses Maven to handle its dependencies.
 
 * Install Maven 3 (http://maven.apache.org/download.html)  
 * Checkout this repo and run: `mvn clean install`
-* NOTE: It may be necessary to configure ```MAVEN_OPTS``` to allow Maven more memory for the compilation. For example: ```MAVEN_OPTS="-Xmx4000m -XX:MaxPermSize=800m"```
+* NOTE: It may be necessary to configure ```MAVEN_OPTS``` to allow Maven more memory for the compilation. For example: ```MAVEN_OPTS="-Xmx500m -XX:MaxPermSize=256m"```
 
 [Project Logo]: http://informatics.mayo.edu/cts2/framework/wp-content/uploads/2011/10/logo4-small4.png
 [License]: http://www.apache.org/licenses/LICENSE-2.0
