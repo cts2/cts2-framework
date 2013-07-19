@@ -23,9 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.config;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
+import edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService;
+import edu.mayo.cts2.framework.core.plugin.ExportedService;
 import org.apache.commons.lang.BooleanUtils;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
@@ -33,8 +32,8 @@ import org.osgi.service.cm.ManagedService;
 import org.osgi.service.metatype.MetaTypeProvider;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService;
-import edu.mayo.cts2.framework.core.plugin.ExportedService;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 /**
  * The Class MetaTypeRestConfig.
@@ -49,8 +48,9 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	public static final String ALLOW_SOAP = "allowSoap";
 	public static final String SHOW_STACK_TRACE = "showStackTrace";
 	public static final String SHOW_HOME_PAGE = "showHomePage";
-	
-	private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
+    public static final String SUPPORT_EMAIL = "supportEmail";
+
+    private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
 	private static final boolean ALLOW_HTML_RENDERING_DEFAULT = false;
 	private boolean allowHtmlRendering = ALLOW_HTML_RENDERING_DEFAULT;
@@ -91,6 +91,15 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 			this.allowSoap = soap;
 		}		
 	}
+
+    protected String checkEnvironmentVariableOverride(String property, String value){
+        String enValue = System.getProperty(property);
+        if(enValue != null){
+            return enValue;
+        } else {
+            return value;
+        }
+    }
 	
 	protected boolean checkEnvironmentVariableOverride(String property, boolean value){
 		String enValue = System.getProperty(property);
@@ -132,9 +141,14 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 		return this.checkEnvironmentVariableOverride(ALLOW_SOAP, this.allowSoap);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService#getMetatypeXmlPath()
-	 */
+    @Override
+    public String getSupportEmail() {
+        return this.checkEnvironmentVariableOverride(SUPPORT_EMAIL, null);
+    }
+
+    /* (non-Javadoc)
+         * @see edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService#getMetatypeXmlPath()
+         */
 	@Override
 	protected String getMetatypeXmlPath() {
 		return "/rest/webapp-rest-metatype.xml";

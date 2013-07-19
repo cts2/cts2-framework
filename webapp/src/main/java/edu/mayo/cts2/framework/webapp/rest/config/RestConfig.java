@@ -43,4 +43,5 @@ public interface RestConfig {
 
 	public boolean getAllowSoap();
 
+    public String getSupportEmail();
 }

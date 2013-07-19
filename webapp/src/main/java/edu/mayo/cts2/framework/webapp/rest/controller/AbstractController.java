@@ -43,7 +43,6 @@ import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -60,6 +59,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyEditorSupport;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -136,27 +136,50 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	 * @param ex the ex
 	 * @return the model and view
 	 */
-	@ExceptionHandler(RuntimeException.class)
+	@ExceptionHandler(Throwable.class)
 	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 
 			RuntimeException ex) {
-		log.error(ex);
-		log.error("Stack: " + ExceptionUtils.getStackTrace(ex));
-		
+        String errorId = Long.toString(new Date().getTime());
+
+		log.error("Unexpected Error: " + errorId, ex);
+
 		int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		
 		response.setStatus(status);
-		
-		return 
+
+        boolean showStackTrace = this.getRestConfig().getShowStackTraceOnError();
+
+        if(showStackTrace){
+		    return
 				ExceptionFactory.createUnknownException(
-						ex, 
+						ex,
 						getUrlString(request),
 						getParameterString(request),
-						this.getRestConfig().getShowStackTraceOnError());
+                        true);
+        } else {
+            return
+                ExceptionFactory.createUnknownException(
+                        this.getErrorSupportMessage(errorId),
+                        getUrlString(request),
+                        getParameterString(request));
+        }
 	}
-	
+
+    protected String getErrorSupportMessage(String errorId){
+        String preamble = "An Unexpected error has occurred.";
+
+        String supportEmail = this.getRestConfig().getSupportEmail();
+
+        if(StringUtils.isNotBlank(supportEmail)){
+            preamble =
+                preamble + "\nPlease contact " + supportEmail + " and reference Log ID: " + errorId;
+        }
+
+        return preamble;
+    }
 	
 	/**
 	 * Handle exception.
