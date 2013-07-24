@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
 
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBinding;
 import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
+import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingListEntry;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.QueryService;
@@ -37,6 +37,6 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
  */
 @StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING)
 public interface ConceptDomainBindingQueryService extends 
-	QueryService<ConceptDomainBinding, ConceptDomainBindingDirectoryEntry, ConceptDomainBindingQuery>, Cts2Profile {
+	QueryService<ConceptDomainBindingListEntry, ConceptDomainBindingDirectoryEntry, ConceptDomainBindingQuery>, Cts2Profile {
 
 }

@@ -37,13 +37,13 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
  * 
  * @see edu.mayo.cts2.framework.service.profile.ResourceQuery
  *
- * @param <Resource> the (full) CTS2 Resource type to return
+ * @param <ListEntry> the (full) CTS2 Resource type to return
  * @param <Summary> the (summary) CTS2 Resource type to return
  * @param <Q> the query object used to specify query parameters
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends BaseQueryService {
+public interface QueryService<ListEntry,Summary,Q extends ResourceQuery> extends BaseQueryService {
 
 	/**
 	 * Gets the resource summaries.
@@ -66,7 +66,7 @@ public interface QueryService<Resource,Summary,Q extends ResourceQuery> extends 
 	 * @param page the page
 	 * @return the resource list
 	 */
-	public DirectoryResult<Resource> getResourceList(
+	public DirectoryResult<ListEntry> getResourceList(
 			Q query, 
 			SortCriteria sortCriteria,
 			Page page);

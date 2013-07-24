@@ -23,7 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystemversion;
 
-import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -37,8 +37,8 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
  */
 @StructuralConformance(StructuralProfile.SP_CODE_SYSTEM_VERSION)
 public interface CodeSystemVersionQueryService extends 
-	QueryService<CodeSystemVersionCatalogEntry, 
-		CodeSystemVersionCatalogEntrySummary, 
+	QueryService<CodeSystemVersionCatalogEntryListEntry,
+		CodeSystemVersionCatalogEntrySummary,
 		CodeSystemVersionQuery>, Cts2Profile {
 
 }

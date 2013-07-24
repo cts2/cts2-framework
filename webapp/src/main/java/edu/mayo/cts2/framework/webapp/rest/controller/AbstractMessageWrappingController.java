@@ -23,23 +23,24 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import edu.mayo.cts2.framework.core.config.ServerContext;
+import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
+import edu.mayo.cts2.framework.model.core.types.SortDirection;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
+import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
+import edu.mayo.cts2.framework.service.profile.*;
+import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
+import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
+import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
+import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
+import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -51,35 +52,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.mayo.cts2.framework.core.config.ServerContext;
-import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
-import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.Directory;
-import edu.mayo.cts2.framework.model.core.IsChangeable;
-import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.core.Parameter;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.RESTResource;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.SortCriterion;
-import edu.mayo.cts2.framework.model.core.types.CompleteDirectory;
-import edu.mayo.cts2.framework.model.core.types.SortDirection;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
-import edu.mayo.cts2.framework.model.service.exception.types.ExceptionType;
-import edu.mayo.cts2.framework.service.profile.BaseMaintenanceService;
-import edu.mayo.cts2.framework.service.profile.BaseQueryService;
-import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.ReadService;
-import edu.mayo.cts2.framework.service.profile.ResourceQuery;
-import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
-import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
-import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
-import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
-import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
-import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * An Abstract Spring MVC Controller to handle various common CTS2 functionality such as
@@ -210,7 +190,7 @@ public abstract class AbstractMessageWrappingController extends
 			throw new RuntimeException(e);
 		}	
 
-		if(result == null){
+		if(result == null || result.getEntries() == null){
 			result = new DirectoryResult<Void>(new ArrayList<Void>(), true);
 		}
 		
@@ -527,7 +507,7 @@ public abstract class AbstractMessageWrappingController extends
 	/**
 	 * Handle exists.
 	 *
-	 * @param resourceName the resource name
+	 * @param resourceIdAsString the resource name
 	 * @param exceptionClass the exception class
 	 * @param httpServletResponse the http servlet response
 	 * @param exists the exists

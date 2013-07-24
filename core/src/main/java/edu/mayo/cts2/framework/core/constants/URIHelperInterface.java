@@ -201,6 +201,9 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_RESOLUTION_OF_VALUESETDEFINITION =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT;
+
+    public static final String PATH_RESOLUTION_OF_VALUESETDEFINITION_ENTITIES =
+            PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + ENTITIES;
 	
 	public static final String PATH_RESOLVED_VALUESET = "/" + RESOLVED_VALUE_SET_LONG;
 	
@@ -211,15 +214,9 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	
 	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}";
-	
-	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_COMPLETE =
-			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}/" + COMPLETE;
-	
+
 	public static final String PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_ENTITIES =
 			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT + "/{" + VAR_RESOLVEDVALUESETID + "}/" + ENTITIES;
-	
-	public static final String PATH_RESOLUTIONS_OF_VALUESETDEFINITION =
-			PATH_VALUESETDEFINITION_OF_VALUESET_BYID + "/" + VALUE_SET_RESOLUTION_SHORT;
 	
 	public static final String PATH_VALUESETDEFINITION_BYURI = "/" + VALUESETDEFINITION_BY_URI + "/" + ALL_WILDCARD;
 	
@@ -401,26 +398,21 @@ interface PathParameters {
 	public static final String PARAM_TAG = "tag";
 	
 	public static final String PARAM_LIST = "list";
-	
-	public static final String PARAM_REDIRECT = "redirect";
-	
-	public static final String RESOLUTION_TYPE = "resolutiontype";
+    public static final String PARAM_COMPLETE = "complete";
 
-	public static final String RESOLUTION_TYPE_DIRECTORY = "directory";
-	public static final String RESOLUTION_TYPE_ENTITYDIRECTORY = "entitydirectory";
-	public static final String RESOLUTION_TYPE_COMPLETESET = "complete";
-	
-	public static enum ValueSetDefinitionResolutionTypes { 
+    public static final String PARAM_REDIRECT = "redirect";
+
+	public static enum ValueSetDefinitionResolutionTypes {
 		iterable,
 		entitydirectory,
-		complete 
+		complete
 	}
-	
-	public static enum ResolvedValueSetResolutionTypes { 
+
+	public static enum ResolvedValueSetResolutionTypes {
 		iterable,
-		complete 
+		complete
 	}
-	
+
 	public static final String DEFAULT_VALUESETDEFINITION_RESOLUTION = "iterable";
 	public static final String DEFAULT_TAG = "CURRENT";
 	

@@ -1,32 +1,21 @@
-package edu.mayo.cts2.framework.webapp.rest.controller;
-
-import static org.junit.Assert.*
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*
-import static org.springframework.test.web.server.result.MockMvcResultActions.*
-import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup
-
-import javax.annotation.Resource
-
-import org.junit.Test
-import org.springframework.test.web.server.setup.MockMvcBuilders
-
-import edu.mayo.cts2.framework.model.core.CodeSystemReference
-import edu.mayo.cts2.framework.model.core.NameAndMeaningReference
-import edu.mayo.cts2.framework.model.core.SourceAndNotation
-import edu.mayo.cts2.framework.model.core.ValueSetDefinitionReference
-import edu.mayo.cts2.framework.model.core.ValueSetReference
+package edu.mayo.cts2.framework.webapp.rest.controller
+import edu.mayo.cts2.framework.model.core.*
 import edu.mayo.cts2.framework.model.core.types.SetOperator
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition
-import edu.mayo.cts2.framework.model.valuesetdefinition.CompleteCodeSystemReference
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry
+import edu.mayo.cts2.framework.model.valuesetdefinition.*
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService
+import org.junit.Test
+import org.springframework.test.web.server.setup.MockMvcBuilders
 
- class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRestBindingTestBase {
+import javax.annotation.Resource
+
+import static org.junit.Assert.assertTrue
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.server.result.MockMvcResultActions.response
+
+class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRestBindingTestBase {
 	
 	@Resource
 	ValueSetDefinitionResolutionController controller
@@ -132,7 +121,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		
 		MockMvcBuilders
 			.webApplicationContextSetup(context).build()
-			.perform(get("/valueset/vs/definition/1/resolution").param("resolutiontype","iterable"))
+			.perform(get("/valueset/vs/definition/1/resolution").param("complete","false"))
 			.andExpect(response().status().isOk())
 			
 		assertTrue isCalled
@@ -156,7 +145,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		
 		MockMvcBuilders
 			.webApplicationContextSetup(context).build()
-			.perform(get("/valueset/vs/definition/1/resolution").param("resolutiontype","complete"))
+			.perform(get("/valueset/vs/definition/1/resolution").param("complete","true"))
 			.andExpect(response().status().isOk())
 			
 		assertTrue isCalled
@@ -177,7 +166,7 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 		
 		MockMvcBuilders
 			.webApplicationContextSetup(context).build()
-			.perform(get("/valueset/vs/definition/1/resolution").param("resolutiontype","entitydirectory"))
+			.perform(get("/valueset/vs/definition/1/entities"))
 			.andExpect(response().status().isOk())
 			
 		assertTrue isCalled

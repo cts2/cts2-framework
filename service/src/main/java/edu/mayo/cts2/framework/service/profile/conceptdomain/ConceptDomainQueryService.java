@@ -23,7 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.profile.conceptdomain;
 
-import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntry;
+import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.conceptdomain.ConceptDomainCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -38,6 +38,6 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
  */
 @StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN)
 public interface ConceptDomainQueryService extends 
-	QueryService<ConceptDomainCatalogEntry, ConceptDomainCatalogEntrySummary, ResourceQuery>, Cts2Profile {
+	QueryService<ConceptDomainCatalogEntryListEntry, ConceptDomainCatalogEntrySummary, ResourceQuery>, Cts2Profile {
 
 }

@@ -54,4 +54,8 @@ public class RestFilter {
 	public void setMatchvalue(String matchvalue) {
 		this.matchvalue = matchvalue;
 	}
+
+    public void setQ(String q) {
+        this.matchvalue = q;
+    }
 }

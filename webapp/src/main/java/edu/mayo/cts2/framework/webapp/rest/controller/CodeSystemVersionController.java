@@ -450,7 +450,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		
 		String contextPath = this.getUrlPathHelper().getContextPath(httpServletRequest);
 		
-		String requestUri = StringUtils.removeStart(httpServletRequest.getRequestURI(),contextPath);
+		String requestUri = StringUtils.removeStart(this.getUrlPathHelper().getRequestUri(httpServletRequest),contextPath);
 		
 		requestUri = StringUtils.removeStart(requestUri, "/");
 		

@@ -29,8 +29,8 @@ import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
-import edu.mayo.cts2.framework.model.mapversion.MapVersion;
 import edu.mayo.cts2.framework.model.mapversion.MapVersionDirectoryEntry;
+import edu.mayo.cts2.framework.model.mapversion.MapVersionListEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.service.mapversion.types.MapRole;
@@ -47,7 +47,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescripti
  */
 @StructuralConformance(StructuralProfile.SP_MAP_VERSION)
 public interface MapVersionQueryService extends 
-	QueryService<MapVersion, 
+	QueryService<MapVersionListEntry,
 		MapVersionDirectoryEntry, 
 		MapVersionQuery>, Cts2Profile {
 	
