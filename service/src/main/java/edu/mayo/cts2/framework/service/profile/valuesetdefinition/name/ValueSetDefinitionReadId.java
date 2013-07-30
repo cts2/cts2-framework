@@ -26,11 +26,7 @@ package edu.mayo.cts2.framework.service.profile.valuesetdefinition.name;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
 /**
- * A representation of the identifying characteristics of a
- * {@link edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition#ValueSetDefinition}.
- *
- * A valid ValueSetDefinitionReadId contains either the URI of the {@link edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition#ValueSetDefinition},
- * OR it's "name" plus identifying characteristics of the {@link edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry} to which it belongs.
+ * The Class ConceptDomainBindingReadId.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -43,24 +39,23 @@ public class ValueSetDefinitionReadId extends NameOrURI {
 	/**
 	 * Instantiates a new value set definition read id.
 	 *
-	 * @param localName the local "name" of the ValueSetDefinition
-	 * @param valueSet the {@link NameOrURI} of the
-     * {@link edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry} to which this ValueSetDefinition belongs
+	 * @param valueSetDefinitionName the local name
+	 * @param valueSet the value set
 	 */
-	public ValueSetDefinitionReadId(String localName, NameOrURI valueSet) {
+	public ValueSetDefinitionReadId(String valueSetDefinitionName, NameOrURI valueSet) {
 		super();
-		this.setName(localName);
+		this.setName(valueSetDefinitionName);
 		this.valueSet = valueSet;
 	}
 	
 	/**
 	 * Instantiates a new value set definition read id.
 	 *
-	 * @param uri the URI of the ValueSetDefinition
+	 * @param valueSetDefinitionUri the uri
 	 */
-	public ValueSetDefinitionReadId(String uri) {
+	public ValueSetDefinitionReadId(String valueSetDefinitionUri) {
 		super();
-		this.setUri(uri);
+		this.setUri(valueSetDefinitionUri);
 	}
 
 	/**
