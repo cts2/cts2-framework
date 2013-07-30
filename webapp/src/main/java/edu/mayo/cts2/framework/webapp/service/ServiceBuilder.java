@@ -192,7 +192,8 @@ public class ServiceBuilder implements InitializingBean {
 		List<ModelAttributeReference> returnList = new ArrayList<ModelAttributeReference>();
 		
 		for(PropertyReference property : props){
-			if(property.getReferenceType().equals(TargetReferenceType.ATTRIBUTE)){
+			if(property.getReferenceType() != null &&
+                    property.getReferenceType().equals(TargetReferenceType.ATTRIBUTE)){
 				ModelAttributeReference ref = new ModelAttributeReference();
 				ref.setContent(EncodingUtils.encodeScopedEntityName(property.getReferenceTarget()));
 				ref.setUri(property.getReferenceTarget().getUri());
