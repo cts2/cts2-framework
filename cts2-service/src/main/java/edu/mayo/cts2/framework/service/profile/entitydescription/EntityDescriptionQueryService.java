@@ -23,19 +23,19 @@
  */
 package edu.mayo.cts2.framework.service.profile.entitydescription;
 
-import java.util.Set;
-
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURIList;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.QueryService;
 import edu.mayo.cts2.framework.service.profile.StructuralConformance;
+
+import java.util.Set;
 
 /**
  * The Interface EntityDescriptionQueryService.
@@ -44,7 +44,7 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
  */
 @StructuralConformance(StructuralProfile.SP_ENTITY_DESCRIPTION)
 public interface EntityDescriptionQueryService extends 
-	QueryService<EntityDescription, EntityDirectoryEntry, EntityDescriptionQuery>, Cts2Profile {
+	QueryService<EntityListEntry, EntityDirectoryEntry, EntityDescriptionQuery>, Cts2Profile {
 
 	/**
 	 * Checks if is entity in set.

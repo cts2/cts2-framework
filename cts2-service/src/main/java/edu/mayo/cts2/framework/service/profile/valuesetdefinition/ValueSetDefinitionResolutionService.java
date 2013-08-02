@@ -23,8 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
-import java.util.Set;
-
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
@@ -33,13 +31,17 @@ import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.service.profile.BaseQueryService;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
+import java.util.Set;
+
 /**
- * The Interface ValueSetDefinitionResolutionService.
+ * A CTS2 Service to execute and process the rules expressed by a
+ * {@link ValueSetDefinition}.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -47,13 +49,12 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
 public interface ValueSetDefinitionResolutionService extends BaseQueryService, Cts2Profile {
 
 	/**
-	 * Resolve definition.
+	 * Resolve a {@link ValueSetDefinition} into a set of {@link EntitySynopsis} entries.
 	 *
 	 * @param definitionId the definition id
-	 * @param codeSystemVersions the code system versions
-	 * @param tag the tag
-	 * @param query the query
-	 * @param filterComponent the filter component
+	 * @param codeSystemVersions the code system versions to execute against
+	 * @param tag the tag (if any) of the code system versions to use
+	 * @param query the query to filter the returned results
 	 * @param readContext the read context
 	 * @param page the page
 	 * @return the resolved value set result
@@ -68,14 +69,12 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 			Page page);
 	
 	/**
-	 * Resolve definition as entity directory.
+     * Resolve a {@link ValueSetDefinition} into a set of {@link EntityDirectoryEntry} entries.
 	 *
 	 * @param definitionId the definition id
-	 * @param codeSystemVersions the code system versions
-	 * @param tag the tag
-	 * @param query the query
-	 * @param filterComponent the filter component
-	 * @param restrictions the restrictions
+     * @param codeSystemVersions the code system versions to execute against
+     * @param tag the tag (if any) of the code system versions to use
+     * @param query the query to filter the returned results
 	 * @param readContext the read context
 	 * @param page the page
 	 * @return the directory result
@@ -93,8 +92,8 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * Resolve definition as complete set.
 	 *
 	 * @param definitionId the definition id
-	 * @param codeSystemVersions the code system versions
-	 * @param tag the tag
+     * @param codeSystemVersions the code system versions to execute against
+     * @param tag the tag (if any) of the code system versions to use
 	 * @param readContext the read context
 	 * @return the resolved value set
 	 */

@@ -23,7 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.profile.codesystem;
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -39,6 +39,6 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
 @StructuralConformance(StructuralProfile.SP_CODE_SYSTEM)
 public interface CodeSystemQueryService
 		extends
-		QueryService<CodeSystemCatalogEntry, CodeSystemCatalogEntrySummary, ResourceQuery>, Cts2Profile {
+		QueryService<CodeSystemCatalogEntryListEntry, CodeSystemCatalogEntrySummary, ResourceQuery>, Cts2Profile {
 	//
 }

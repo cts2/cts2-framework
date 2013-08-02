@@ -24,7 +24,7 @@
 package edu.mayo.cts2.framework.service.profile.valueset;
 
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
-import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.QueryService;
@@ -37,6 +37,6 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
  */
 @StructuralConformance(StructuralProfile.SP_VALUE_SET)
 public interface ValueSetQueryService extends 
-	QueryService<ValueSetCatalogEntry, ValueSetCatalogEntrySummary, ValueSetQuery>, Cts2Profile{
+	QueryService<ValueSetCatalogEntryListEntry, ValueSetCatalogEntrySummary, ValueSetQuery>, Cts2Profile{
 
 }

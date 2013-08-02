@@ -120,7 +120,7 @@ public class ConfigInitializer {
 		} catch (NameNotFoundException e) {
 			// this is ok, it means there is no JNDI name registered
 		} catch (NamingException e) {
-			throw new IllegalStateException(e);
+			// this is also ok, it means there is no JNDI name registered
 		}
 
 		if (StringUtils.isNotBlank(jndiValue)) {

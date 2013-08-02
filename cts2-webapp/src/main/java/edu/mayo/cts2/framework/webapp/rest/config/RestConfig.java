@@ -38,5 +38,10 @@ public interface RestConfig {
 	public boolean getAllowHtmlRendering();
 	
 	public boolean getShowStackTraceOnError();
+	
+	public boolean getShowHomePage();
 
+	public boolean getAllowSoap();
+
+    public String getSupportEmail();
 }

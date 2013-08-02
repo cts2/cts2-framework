@@ -53,8 +53,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Builds the OSGi package exports string.  Uses a file to cache the scanned results, keyed by the application version.
- *
- * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 class ExportsBuilder
 {

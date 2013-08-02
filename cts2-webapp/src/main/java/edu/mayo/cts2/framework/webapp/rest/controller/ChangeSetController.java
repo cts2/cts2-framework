@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +30,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import edu.mayo.cts2.framework.model.core.SourceReference;
-import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +45,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ChangeDescription;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceReference;
+import edu.mayo.cts2.framework.model.core.types.ChangeType;
 import edu.mayo.cts2.framework.model.core.types.FinalizableState;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
@@ -62,12 +63,14 @@ import edu.mayo.cts2.framework.model.service.exception.ChangeSetIsNotOpen;
 import edu.mayo.cts2.framework.model.updates.ChangeSet;
 import edu.mayo.cts2.framework.model.updates.ChangeSetDirectory;
 import edu.mayo.cts2.framework.model.updates.ChangeSetDirectoryEntry;
+import edu.mayo.cts2.framework.model.updates.ChangeableResource;
 import edu.mayo.cts2.framework.service.command.restriction.ChangeSetQueryExtensionRestrictions;
 import edu.mayo.cts2.framework.service.profile.update.ChangeSetQuery;
 import edu.mayo.cts2.framework.service.profile.update.ChangeSetQueryExtension;
 import edu.mayo.cts2.framework.service.profile.update.ChangeSetService;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
+import edu.mayo.cts2.framework.webapp.rest.command.RestFilters;
 
 /**
  * The Class CodeSystemController.
@@ -131,11 +134,41 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 	}
 
 	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> importChangeSet(@PathVariable String changeSetUri) {
+	public ResponseEntity<Void> importChangeSet(
+			@PathVariable String changeSetUri,
+			@RequestBody ChangeSet changeSet) {
 		
-		String returnedChangeSetUri = this.changeSetService.importChangeSet(changeSetUri);
+		String returnedChangeSetUri = 
+			this.changeSetService.importChangeSet(this.prepareImportedChangeset(changeSet));
 		
+		this.changeSetService.commitChangeSet(returnedChangeSetUri);
+
 		return this.getResponseEntity(returnedChangeSetUri);
+	}
+	
+	protected ChangeSet prepareImportedChangeset(ChangeSet changeSet){
+		for(ChangeableResource member : changeSet.getMember()){
+			if(member.getChangeableElementGroup() == null){
+				member.setChangeableElementGroup(new ChangeableElementGroup());
+			}
+			if(member.getChangeableElementGroup().getChangeDescription() == null){
+				member.getChangeableElementGroup().setChangeDescription(new ChangeDescription());
+			}
+						
+			ChangeDescription changeDescription = member.getChangeableElementGroup().getChangeDescription();
+
+			if(changeDescription.getContainingChangeSet() == null){
+				changeDescription.setContainingChangeSet(changeSet.getChangeSetURI());
+			}
+			if(changeDescription.getChangeType() == null){
+				changeDescription.setChangeType(ChangeType.IMPORT);
+			}
+			if(changeDescription.getChangeDate() == null){
+				changeDescription.setChangeDate(new Date());
+			}	
+		}
+		
+		return changeSet;
 	}
 	
 	@RequestMapping(value="/changeset", method=RequestMethod.POST)

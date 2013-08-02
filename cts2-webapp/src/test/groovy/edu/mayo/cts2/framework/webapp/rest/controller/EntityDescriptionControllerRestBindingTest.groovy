@@ -96,6 +96,16 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 	}
 	
 	@Test
+	void testGetByCodeSystemVersionUriWithRedirectDefault(){
+
+		MockMvcBuilders
+			.webApplicationContextSetup(context).build()
+			.perform(get("/codesystemversionbyuri/entity/ns:code").param("uri","http://some/uri.org"))
+			.andExpect(response().status().isOk())
+			.andExpect(response().redirectedUrl("/codesystem/TESTCS/version/v1/entity/ns:code"))
+	}
+	
+	@Test
 	void testGetByTag(){
 
 		MockMvcBuilders

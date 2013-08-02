@@ -31,9 +31,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -41,6 +43,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.felix.cm.impl.ConfigurationManager;
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.Logger;
 import org.apache.felix.framework.util.FelixConstants;
@@ -73,6 +76,7 @@ import com.atlassian.plugin.osgi.container.impl.DefaultPackageScannerConfigurati
 
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
+import edu.mayo.cts2.framework.core.config.Cts2DeploymentConfig;
 
 /**
  * Felix implementation of the OSGi container manager.
@@ -86,11 +90,13 @@ public class FelixPluginManager implements
 	OsgiPluginManager, 
 	ServletContextAware, 
 	ApplicationContextAware {
+	
+	public static final String SUPPRESS_OSGI_CONFIG_PROP_NAME = "osgi.suppress";
+	private static final boolean DEFALUE_SUPPRESS_OSGI_CONFIG_VALUE = false;
+	
     public static final String OSGI_FRAMEWORK_BUNDLES_ZIP = "osgi-framework-bundles.zip";
     public static final int REFRESH_TIMEOUT = 10;
     public static final String MIN_SERVLET_VERSION = "2.5.0";
-
-    public static final String CONFIG_DIR = "config";
     
     private ServletContext servletContext;
     
@@ -101,6 +107,11 @@ public class FelixPluginManager implements
 	
 	@Resource
 	private SupplementalPropetiesLoader supplementalPropetiesLoader;
+	
+	@Resource
+	private Cts2DeploymentConfig cts2GeneralConfig;
+	
+	private Set<NonOsgiPluginInitializer> nonOsgiPlugins = new HashSet<NonOsgiPluginInitializer>();
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(FelixPluginManager.class);
     private static final String OSGI_BOOTDELEGATION = "org.osgi.framework.bootdelegation";
@@ -157,39 +168,45 @@ public class FelixPluginManager implements
             return;
         }
         
-        try {
-			this.autodeployBundles(this.configInitializer.getPluginsDirectory());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-        
-		PackageScannerConfiguration scannerConfig = new DefaultPackageScannerConfiguration();
-		scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
-		scannerConfig.getPackageIncludes().add("org.jaxen*");
-		scannerConfig.getPackageIncludes().add("com.sun*");
-		scannerConfig.getPackageIncludes().add("org.json*");
-		scannerConfig.getPackageIncludes().add("org.springframework.oxm*");
-		scannerConfig.getPackageExcludes().add("com.atlassian.plugins*");
-	
-		scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
-		scannerConfig.getPackageVersions().put("org.apache.commons.collections*", "3.2.1");
-		
+        boolean suppressOsgi = 
+        	this.cts2GeneralConfig.getBooleanProperty(
+        		SUPPRESS_OSGI_CONFIG_PROP_NAME,
+        		DEFALUE_SUPPRESS_OSGI_CONFIG_VALUE);
 
         // Create a case-insensitive configuration property map.
         final StringMap configMap = new StringMap(false);
         
-        String exports = exportsBuilder.getExports(scannerConfig);
-        if(log.isDebugEnabled()){
-        	log.debug("Exports: " + exports);
+        if(! suppressOsgi){
+	        try {
+				this.autodeployBundles(this.configInitializer.getPluginsDirectory());
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+	
+			PackageScannerConfiguration scannerConfig = new DefaultPackageScannerConfiguration();
+			scannerConfig.getPackageIncludes().add("edu.mayo.cts2.*");
+			scannerConfig.getPackageIncludes().add("org.jaxen*");
+			scannerConfig.getPackageIncludes().add("com.sun*");
+			scannerConfig.getPackageIncludes().add("org.json*");
+			scannerConfig.getPackageIncludes().add("org.springframework.oxm*");
+			scannerConfig.getPackageExcludes().add("com.atlassian.plugins*");
+		
+			scannerConfig.getPackageExcludes().remove("org.apache.commons.logging*");
+			scannerConfig.getPackageVersions().put("org.apache.commons.collections*", "3.2.1");
+			
+	        String exports = exportsBuilder.getExports(scannerConfig);
+	        if(log.isDebugEnabled()){
+	        	log.debug("Exports: " + exports);
+	        }
+	        
+	        // Explicitly add the servlet exports;
+	        exports += ",javax.servlet;version=" + MIN_SERVLET_VERSION;
+	        exports += ",javax.servlet.http;version=" + MIN_SERVLET_VERSION;
+	        
+	        // Add the bundle provided service interface package and the core OSGi
+	        // packages to be exported from the class path via the system bundle.
+	        configMap.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, exports);
         }
-        
-        // Explicitly add the servlet exports;
-        exports += ",javax.servlet;version=" + MIN_SERVLET_VERSION;
-        exports += ",javax.servlet.http;version=" + MIN_SERVLET_VERSION;
-        
-        // Add the bundle provided service interface package and the core OSGi
-        // packages to be exported from the class path via the system bundle.
-        configMap.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, exports);
 
         // Explicitly specify the directory to use for caching bundles.
         File felixCache = ConfigUtils.createSubDirectory(
@@ -203,8 +220,7 @@ public class FelixPluginManager implements
         configMap.put(FelixConstants.FRAGMENT_ATTACHMENT_RESOLVETIME, felixLogger);
 
         String bootDelegation = getAtlassianSpecificOsgiSystemProperty(OSGI_BOOTDELEGATION);
-        if ((bootDelegation == null) || (bootDelegation.trim().length() == 0))
-        {
+        if ((bootDelegation == null) || (bootDelegation.trim().length() == 0)){
             // These exist to work around JAXP problems.  Specifically, bundles that use static factories to create JAXP
             // instances will execute FactoryFinder with the CCL set to the bundle.  These delegations ensure the appropriate
             // implementation is found and loaded.
@@ -233,16 +249,15 @@ public class FelixPluginManager implements
         configMap.put(FelixConstants.IMPLICIT_BOOT_DELEGATION_PROP, "false");
 
         configMap.put(FelixConstants.FRAMEWORK_BUNDLE_PARENT, FelixConstants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK);
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("Felix configuration: " + configMap);
         }
 
-        validateConfiguration(configMap);
+        if(! suppressOsgi){
+        	validateConfiguration(configMap);
+        }
 
-        try
-        {
-      
+        try {
         	final List<BundleActivator> hostServices = new ArrayList<BundleActivator>();
             
             for(Entry<String, Object> bean : 
@@ -266,16 +281,9 @@ public class FelixPluginManager implements
             felixRunning = true;
             
             felix.init();
+ 
+            BundleContext context = felix.getBundleContext();
             
-            FileFilter fileOnlyFilter = new FileFilter(){
-
-				@Override
-				public boolean accept(File file) {
-					return !file.isDirectory();
-				}
-            	
-            };
-        
             ServiceTracker tracker = new ServiceTracker(
             		felix.getBundleContext(),
             		ConfigurationAdmin.class.getName(), new ServiceTrackerCustomizer(){
@@ -321,21 +329,36 @@ public class FelixPluginManager implements
             
             this.trackers.add(tracker);
             
-            for(File bundle : this.configInitializer.getPluginsDirectory().listFiles(fileOnlyFilter)){
-            	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());
-            	try {
-            		if(installedBundle.getHeaders().get(Constants.FRAGMENT_HOST) != null){
-            			log.info("Not Auto-starting Fragment bundle: " + installedBundle.getSymbolicName());
-            		} else {
-						installedBundle.start();
-						log.info("Auto-starting system bundle: " + installedBundle.getSymbolicName());
-            		}
-				} catch (BundleException e) {
-					log.warn("Bundle: " + installedBundle.getSymbolicName() + " failed to start.", e);
-				}
+            if(suppressOsgi){
+            	new ConfigurationManager().start(context);
+            } else {
+	            FileFilter fileOnlyFilter = new FileFilter(){
+	
+					@Override
+					public boolean accept(File file) {
+						return !file.isDirectory();
+					}
+	            	
+	            };
+	        
+	            for(File bundle : this.configInitializer.getPluginsDirectory().listFiles(fileOnlyFilter)){
+	            	Bundle installedBundle = felix.getBundleContext().installBundle(bundle.toURI().toString());
+	            	try {
+	            		if(installedBundle.getHeaders().get(Constants.FRAGMENT_HOST) != null){
+	            			log.info("Not Auto-starting Fragment bundle: " + installedBundle.getSymbolicName());
+	            		} else {
+							installedBundle.start();
+							log.info("Auto-starting system bundle: " + installedBundle.getSymbolicName());
+	            		}
+					} catch (BundleException e) {
+						log.warn("Bundle: " + installedBundle.getSymbolicName() + " failed to start.", e);
+					}
+	            }
             }
             
             felix.start();
+
+            this.initializeNonOsgiPlugins();
             
             for(String bean : 
             	this.applicationContext.getBeanNamesForType(ExtensionPoint.class)){
@@ -345,8 +368,6 @@ public class FelixPluginManager implements
             	this.registerExtensionPoint(extensionPoint);
             }
             
-            BundleContext context = felix.getBundleContext();
-            
             servletContext.setAttribute(
     				BundleContext.class.getName(),
     				context);
@@ -354,11 +375,22 @@ public class FelixPluginManager implements
             servletContext.setAttribute(
     				PluginManager.class.getName(),
     				this);
+
         }
-        catch (final Exception ex)
-        {
+        catch (final Exception ex) {
             throw new OsgiContainerException("Unable to start OSGi container", ex);
         }
+    }
+    
+    protected void initializeNonOsgiPlugins(){
+    	ServiceLoader<NonOsgiPluginInitializer> serviceLoader = ServiceLoader.load(NonOsgiPluginInitializer.class);
+    	
+    	Iterator<NonOsgiPluginInitializer> itr = serviceLoader.iterator();
+    	while(itr.hasNext()){
+    		NonOsgiPluginInitializer pluginInitializer = itr.next();
+    		pluginInitializer.initialize(this);
+    		this.nonOsgiPlugins.add(pluginInitializer);
+    	}
     }
     
     /**
@@ -494,8 +526,11 @@ public class FelixPluginManager implements
      *
      * @throws OsgiContainerException the osgi container exception
      */
-    protected void stop() throws OsgiContainerException
-    {
+    protected void stop() throws OsgiContainerException {
+    	for(NonOsgiPluginInitializer nonOsgiPlugins : this.nonOsgiPlugins){
+    		nonOsgiPlugins.destroy();
+    	}
+    	
         if (felixRunning){
             try {
 				for (final ServiceTracker tracker : 
@@ -520,7 +555,6 @@ public class FelixPluginManager implements
         felixRunning = false;
         felix = null;
     }
-
 
     public ServiceReference[] getRegisteredServices()
     {

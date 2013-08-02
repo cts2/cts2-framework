@@ -23,23 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
@@ -56,13 +39,23 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefini
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
-import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 import edu.mayo.cts2.framework.webapp.naming.TagResolver;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.ValueSetDefinitionQueryBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class ValueSetDefinitionController.
@@ -80,9 +73,6 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 	
 	@Cts2Service
 	private ValueSetDefinitionMaintenanceService valueSetDefinitionMaintenanceService;
-	
-	@Cts2Service
-	private ValueSetDefinitionResolutionService valueSetDefinitionResolutionService;
 	
 	@Resource
 	private TagResolver tagResolver;
@@ -343,7 +333,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		ValueSetDefinitionReadId id = new ValueSetDefinitionReadId(uri);
 	
@@ -395,7 +385,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 			QueryControl queryControl,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@RequestParam(value=PARAM_TAG, defaultValue=DEFAULT_TAG) String tag,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		//TODO: Accept tag URIs here
 		VersionTagReference tagReference = new VersionTagReference(tag);
@@ -410,7 +400,7 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 		
 		String contextPath = this.getUrlPathHelper().getContextPath(httpServletRequest);
 		
-		String requestUri = StringUtils.removeStart(httpServletRequest.getRequestURI(),contextPath);
+		String requestUri = StringUtils.removeStart(this.getUrlPathHelper().getRequestUri(httpServletRequest),contextPath);
 		
 		requestUri = StringUtils.removeStart(requestUri, "/");
 		
@@ -419,9 +409,20 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 				VALUESET + "/" + valueSetName + "/", 
 				VALUESET + "/" + valueSetName + "/" + 
 						VALUESETDEFINITION_SHORT + "/" + valueSetDefinitionLocalId + "/");
-		
-		return new ModelAndView(
+
+        if(redirect){
+            @SuppressWarnings("unchecked")
+            Map<String,Object> parameters =
+                    new HashMap<String,Object>(httpServletRequest.getParameterMap());
+
+            parameters.remove(PARAM_REDIRECT);
+
+            return new ModelAndView(
+                "redirect:"+ "/" + requestUri + this.mapToQueryString(parameters));
+        } else {
+            return new ModelAndView(
 				"forward:"+ "/" + requestUri);
+        }
 	}
 	
 	/**
@@ -523,12 +524,4 @@ public class ValueSetDefinitionController extends AbstractMessageWrappingControl
 		this.valueSetDefinitionMaintenanceService = valueSetDefinitionMaintenanceService;
 	}
 
-	public ValueSetDefinitionResolutionService getValueSetDefinitionResolutionService() {
-		return valueSetDefinitionResolutionService;
-	}
-
-	public void setValueSetDefinitionResolutionService(
-			ValueSetDefinitionResolutionService valueSetDefinitionResolutionService) {
-		this.valueSetDefinitionResolutionService = valueSetDefinitionResolutionService;
-	}
 }

@@ -237,7 +237,7 @@
 
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>model</artifactId>
+			<artifactId>cts2-model</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
@@ -301,13 +301,13 @@
 
 	<repositories>
 		<repository>
-			<id>atlassian gropus</id>
+			<id>atlassian groups</id>
 			<url>https://maven.atlassian.com/content/groups/public</url>
 		</repository>
 
 		<repository>
 			<id>atlassian</id>
-			<url>http://maven.atlassian.com/public</url>
+            <url>https://maven.atlassian.com/content/repositories/atlassian-public</url>
 		</repository>
 	</repositories>
 </project>

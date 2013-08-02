@@ -24,16 +24,19 @@
 package edu.mayo.cts2.framework.core.plugin;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.osgi.framework.Constants;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.core.config.ConfigConstants;
 import edu.mayo.cts2.framework.core.config.ConfigInitializer;
 import edu.mayo.cts2.framework.core.config.ConfigUtils;
 
@@ -44,8 +47,6 @@ import edu.mayo.cts2.framework.core.config.ConfigUtils;
  */
 @Component
 public class SupplementalPropetiesLoader implements InitializingBean {
-	
-	private static final String CONFIG_DIR = "config";
 	
 	@Resource
 	private ConfigInitializer configInitializer;
@@ -58,10 +59,19 @@ public class SupplementalPropetiesLoader implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		File overridesDir = 
-			new File(this.configInitializer.getContextConfigDirectory().getPath() + File.separator + CONFIG_DIR);
+			new File(this.configInitializer.getContextConfigDirectory().getPath() + File.separator + ConfigConstants.CONFIG_DIRECTORY);
 		
 		if(overridesDir.exists()){
-			for(File file : overridesDir.listFiles()){
+			 FileFilter nonDeploymentConfigFiles = new FileFilter(){
+				@Override
+				public boolean accept(File file) {
+					return ! StringUtils.equals(
+							ConfigConstants.CTS2_DEPLOYMENT_CONFIG_FILE_NAME, 
+							file.getName());
+				}
+            };
+			
+			for(File file : overridesDir.listFiles(nonDeploymentConfigFiles)){
 				Properties props = ConfigUtils.loadProperties(file);
 				String pid = (String) props.get(Constants.SERVICE_PID);
 				

@@ -59,7 +59,7 @@
 
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>filter</artifactId>
+			<artifactId>cts2-filter</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 

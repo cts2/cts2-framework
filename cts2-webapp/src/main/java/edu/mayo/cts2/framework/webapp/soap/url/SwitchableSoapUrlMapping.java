@@ -1,5 +1,5 @@
 /*
- * Copyright: (c) 2004-2011 Mayo Foundation for Medical Education and 
+ * Copyright: (c) 2004-2013 Mayo Foundation for Medical Education and 
  * Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
  * triple-shield Mayo logo are trademarks and service marks of MFMER.
  *
@@ -21,41 +21,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.webapp.rest.command;
+package edu.mayo.cts2.framework.webapp.soap.url;
 
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
+import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * The Class ResolvedFilter.
+ * Switches ON/OFF SOAP functionality but selectively accepting SOAP URLs.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class RestFilter {
+@Component
+public class SwitchableSoapUrlMapping extends SimpleUrlHandlerMapping {
+
+	@Resource
+	private RestConfig restConfig;
 	
-	private String matchalgorithm = ExternalCts2Constants.MATCH_CONTAINS_NAME;
-	private String filtercomponent = ExternalCts2Constants.MA_RESOURCE_SYNOPSIS_NAME;
-	private String matchvalue;
-	
-	public String getMatchalgorithm() {
-		return matchalgorithm;
-	}
-	public void setMatchalgorithm(String matchalgorithm) {
-		this.matchalgorithm = matchalgorithm;
-	}
-	public String getFiltercomponent() {
-		return filtercomponent;
-	}
-	public void setFiltercomponent(String filtercomponent) {
-		this.filtercomponent = filtercomponent;
-	}
-	public String getMatchvalue() {
-		return matchvalue;
-	}
-	public void setMatchvalue(String matchvalue) {
-		this.matchvalue = matchvalue;
+	/* (non-Javadoc)
+	 * @see org.springframework.web.servlet.handler.AbstractUrlHandlerMapping#getHandlerInternal(javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	protected Object getHandlerInternal(HttpServletRequest request) throws Exception {
+		if(this.restConfig.getAllowSoap()){
+			return super.getHandlerInternal(request);
+		} else {
+			return null;
+		}
 	}
 
-    public void setQ(String q) {
-        this.matchvalue = q;
-    }
 }

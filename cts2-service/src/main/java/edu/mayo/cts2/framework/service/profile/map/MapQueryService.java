@@ -23,7 +23,7 @@
  */
 package edu.mayo.cts2.framework.service.profile.map;
 
-import edu.mayo.cts2.framework.model.map.MapCatalogEntry;
+import edu.mayo.cts2.framework.model.map.MapCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.map.MapCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
@@ -37,6 +37,6 @@ import edu.mayo.cts2.framework.service.profile.StructuralConformance;
  */
 @StructuralConformance(StructuralProfile.SP_MAP)
 public interface MapQueryService extends 
-	QueryService<MapCatalogEntry, MapCatalogEntrySummary, MapQuery>, Cts2Profile {
+	QueryService<MapCatalogEntryListEntry, MapCatalogEntrySummary, MapQuery>, Cts2Profile {
 
 }

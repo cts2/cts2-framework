@@ -12,9 +12,22 @@
 
 	<name>CTS2 Development Framework Base Service Plugin</name>
 	<description>A Parent POM for CTS2 Development Framework Service Plugins (or other types
-	of Plugins). NOTE: OSGi Bundling is not handled here. Please consult 
+	of Plugins). 
+	
+	There are two different packaging strategies available:
+	1) OSGi Bundle (&lt;packaging&gt;bundle&lt;/packaging&gt;). This will create an OSGi compatible bundle for use in the
+	CTS2 Development Framework.
+	
+	NOTE: OSGi Bundling is not handled here. Please consult 
 	http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html for more information 
-	on how to construct an OSGi Bundle via Maven.</description>
+	on how to construct an OSGi Bundle via Maven.
+	
+	1) Non-OSGi WAR (&lt;packaging&gt;war&lt;/packaging&gt;). This will create a deployable WAR file with
+	the CTS2 Development Framework included. This means your plugin does NOT have to be OSGi
+	compliant, as it will be directly added to the classpath. Use this option if you have
+	problems with OSGi dependencies, or do not intend on starting/stopping/switching plugins
+	via the OSGi framework.
+	</description>
 
 	<properties>
 		<develpment.framework.version>${project.parent.version}</develpment.framework.version>
@@ -25,6 +38,8 @@
 		<test.config.dir>${project.build.directory}/testconfigdir</test.config.dir>
 		<test.plugins.dir>${project.build.directory}/test-plugins</test.plugins.dir>
 		<war.file.name>webapp.war</war.file.name>
+		<webapp.classifier></webapp.classifier>
+		<osgi.bundle.classifier></osgi.bundle.classifier>
 	</properties>
 
 	<profiles>
@@ -50,7 +65,7 @@
 					<plugin>
 						<artifactId>maven-resources-plugin</artifactId>
 						<version>2.5</version>
-						<executions>						
+						<executions>
 							<execution>
 								<id>copy-test-properties-file</id>
 								<phase>pre-integration-test</phase>
@@ -99,7 +114,7 @@
 									<artifactItems>
 										<artifactItem>
 											<groupId>edu.mayo.cts2.framework</groupId>
-											<artifactId>plugin-util</artifactId>
+											<artifactId>cts2-plugin-util</artifactId>
 											<version>${project.parent.version}</version>
 											<type>jar</type>
 											<overWrite>true</overWrite>
@@ -107,7 +122,7 @@
 										</artifactItem>
 										<artifactItem>
 											<groupId>edu.mayo.cts2.framework</groupId>
-											<artifactId>webapp</artifactId>
+											<artifactId>cts2-webapp</artifactId>
 											<version>${project.parent.version}</version>
 											<type>war</type>
 											<overWrite>true</overWrite>
@@ -234,7 +249,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>webapp</artifactId>
+			<artifactId>cts2-webapp</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 			<type>war</type>
@@ -244,6 +259,33 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<overlays>
+							<overlay>
+								<groupId>edu.mayo.cts2.framework</groupId>
+								<artifactId>cts2-webapp</artifactId>
+							</overlay>
+							<overlay>
+								<!-- empty groupId/artifactId represents the current build -->
+							</overlay>
+						</overlays>
+						<classifier>${webapp.classifier}</classifier>
+					</configuration>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.6</version>
+					<configuration>
+						<classifier>${osgi.bundle.classifier}</classifier>
+					</configuration>
+				</plugin>
+			
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>

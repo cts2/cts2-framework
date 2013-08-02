@@ -23,9 +23,8 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.config;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
+import edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService;
+import edu.mayo.cts2.framework.core.plugin.ExportedService;
 import org.apache.commons.lang.BooleanUtils;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
@@ -33,8 +32,8 @@ import org.osgi.service.cm.ManagedService;
 import org.osgi.service.metatype.MetaTypeProvider;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService;
-import edu.mayo.cts2.framework.core.plugin.ExportedService;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 /**
  * The Class MetaTypeRestConfig.
@@ -43,31 +42,27 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
  */
 @ExportedService( { MetaTypeProvider.class, ManagedService.class  })
 @Component
-public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig{
+public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig {
 	
-	private static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
-	private static final String SHOW_STACK_TRACE = "showStackTrace";
-	private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
+	public static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
+	public static final String ALLOW_SOAP = "allowSoap";
+	public static final String SHOW_STACK_TRACE = "showStackTrace";
+	public static final String SHOW_HOME_PAGE = "showHomePage";
+    public static final String SUPPORT_EMAIL = "supportEmail";
+
+    private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
-	private boolean allowHtmlRendering;
-	private boolean showStackTrace;
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.webapp.rest.config.RestConfig#getAllowHtmlRendering()
-	 */
-	@Override
-	public boolean getAllowHtmlRendering() {
-		return this.allowHtmlRendering;
-	}
-
-	/**
-	 * Sets the allow html rendering.
-	 *
-	 * @param allowHtmlRendering the new allow html rendering
-	 */
-	public void setAllowHtmlRendering(boolean allowHtmlRendering) {
-		this.allowHtmlRendering = allowHtmlRendering;
-	}
+	private static final boolean ALLOW_HTML_RENDERING_DEFAULT = false;
+	private boolean allowHtmlRendering = ALLOW_HTML_RENDERING_DEFAULT;
+	
+	private static final boolean ALLOW_SOAP_DEFAULT = false;
+	private boolean allowSoap = ALLOW_SOAP_DEFAULT;
+	
+	private static final boolean SHOW_STACK_TRACE_DEFAULT = false;
+	private boolean showStackTrace = SHOW_STACK_TRACE_DEFAULT;
+	
+	private static final boolean SHOW_HOME_PAGE_DEFAULT = true;
+	private boolean showHomePage = SHOW_HOME_PAGE_DEFAULT;
 
 	/* (non-Javadoc)
 	 * @see org.osgi.service.metatype.MetaTypeProvider#getLocales()
@@ -83,12 +78,36 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	@Override
 	public void updated(@SuppressWarnings("rawtypes") Dictionary properties) throws ConfigurationException {
 		if(properties != null){
-			boolean allow = BooleanUtils.toBoolean( (Boolean) properties.get(ALLOW_HTML_RENDERING) );
+			boolean allow = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(ALLOW_HTML_RENDERING), ALLOW_HTML_RENDERING_DEFAULT);
 			this.allowHtmlRendering = allow;
 			
-			boolean show = BooleanUtils.toBoolean( (Boolean) properties.get(SHOW_STACK_TRACE) );
+			boolean show = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(SHOW_STACK_TRACE), SHOW_STACK_TRACE_DEFAULT);
 			this.showStackTrace = show;
+			
+			boolean home = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(SHOW_HOME_PAGE), SHOW_HOME_PAGE_DEFAULT);
+			this.showHomePage = home;
+			
+			boolean soap = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(ALLOW_SOAP), ALLOW_SOAP_DEFAULT);
+			this.allowSoap = soap;
 		}		
+	}
+
+    protected String checkEnvironmentVariableOverride(String property, String value){
+        String enValue = System.getProperty(property);
+        if(enValue != null){
+            return enValue;
+        } else {
+            return value;
+        }
+    }
+	
+	protected boolean checkEnvironmentVariableOverride(String property, boolean value){
+		String enValue = System.getProperty(property);
+		if(enValue != null){
+			return BooleanUtils.toBoolean(enValue);
+		} else {
+			return value;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -102,16 +121,37 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 		return table;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService#getMetatypeXmlPath()
-	 */
+	@Override
+	public boolean getAllowHtmlRendering() {
+		return this.checkEnvironmentVariableOverride(ALLOW_HTML_RENDERING, this.allowHtmlRendering);
+	}
+
+	@Override
+	public boolean getShowStackTraceOnError() {
+		return this.checkEnvironmentVariableOverride(SHOW_STACK_TRACE, this.showStackTrace);
+	}
+
+	@Override
+	public boolean getShowHomePage() {
+		return this.checkEnvironmentVariableOverride(SHOW_HOME_PAGE, this.showHomePage);
+	}
+	
+	@Override
+	public boolean getAllowSoap() {
+		return this.checkEnvironmentVariableOverride(ALLOW_SOAP, this.allowSoap);
+	}
+
+    @Override
+    public String getSupportEmail() {
+        return this.checkEnvironmentVariableOverride(SUPPORT_EMAIL, null);
+    }
+
+    /* (non-Javadoc)
+         * @see edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService#getMetatypeXmlPath()
+         */
 	@Override
 	protected String getMetatypeXmlPath() {
 		return "/rest/webapp-rest-metatype.xml";
 	}
 
-	@Override
-	public boolean getShowStackTraceOnError() {
-		return this.showStackTrace;
-	}
 }

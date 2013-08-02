@@ -39,23 +39,23 @@ public class ValueSetDefinitionReadId extends NameOrURI {
 	/**
 	 * Instantiates a new value set definition read id.
 	 *
-	 * @param localName the local name
+	 * @param valueSetDefinitionName the local name
 	 * @param valueSet the value set
 	 */
-	public ValueSetDefinitionReadId(String localName, NameOrURI valueSet) {
+	public ValueSetDefinitionReadId(String valueSetDefinitionName, NameOrURI valueSet) {
 		super();
-		this.setName(localName);
+		this.setName(valueSetDefinitionName);
 		this.valueSet = valueSet;
 	}
 	
 	/**
 	 * Instantiates a new value set definition read id.
 	 *
-	 * @param uri the uri
+	 * @param valueSetDefinitionUri the uri
 	 */
-	public ValueSetDefinitionReadId(String uri) {
+	public ValueSetDefinitionReadId(String valueSetDefinitionUri) {
 		super();
-		this.setUri(uri);
+		this.setUri(valueSetDefinitionUri);
 	}
 
 	/**

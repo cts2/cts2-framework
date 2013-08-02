@@ -27,9 +27,8 @@
 
 	<dependencies>
 		<dependency>
-
 			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>service</artifactId>
+			<artifactId>cts2-service</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

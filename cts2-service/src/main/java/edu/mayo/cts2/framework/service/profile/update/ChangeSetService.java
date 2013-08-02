@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.service.profile.update;
 
-import java.net.URI;
 import java.util.Date;
 
 import edu.mayo.cts2.framework.model.core.OpaqueData;
@@ -90,6 +89,6 @@ public interface ChangeSetService extends Cts2Profile {
 	 * @param changeSetUri the change set uri
 	 * @return the string
 	 */
-	public String importChangeSet(String changeSetUri);
+	public String importChangeSet(ChangeSet changeSet);
 
 }

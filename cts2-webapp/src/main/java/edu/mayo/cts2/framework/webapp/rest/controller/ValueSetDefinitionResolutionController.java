@@ -26,10 +26,7 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.Directory;
-import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
@@ -66,7 +63,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
- * The Class ValueSetDefinitionController.
+ * An MVC Controller responsible for the resolution, retrieval, and maintenance of
+ * {@link ValueSetDefinition}s and {@link ResolvedValueSet}s.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -119,27 +117,26 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 
 	};
 
-	@RequestMapping(value={	
-			PATH_RESOLUTION_OF_VALUESETDEFINITION
-			},
-		method=RequestMethod.GET)
-	@ResponseBody
-	public Object getValueSetDefinitionResolution(
-			HttpServletRequest httpServletRequest,
-			QueryControl queryControl,
-			RestReadContext restReadContext,
-			ResolvedValueSetResolutionEntityRestrictions restrictions,
-			RestFilter restFilter,
-			@PathVariable(VAR_VALUESETID) String valueSetName,
-			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
-			@RequestParam(
-					value=RESOLUTION_TYPE, defaultValue=DEFAULT_VALUESETDEFINITION_RESOLUTION) 
-			ValueSetDefinitionResolutionTypes resolution,
-			@RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
-			@RequestParam(value=PARAM_TAG, required=false) String tagName,
-			Page page) {
-		
-		return this.getValueSetDefinitionResolution(
+    /**
+     * Gets the Entities resulting from the Resolution of a {$lnk ValueSetDefinition}.
+     *
+     * Example URL: {@code http://server.root/valueset/{id}/definition/entities}
+     */
+    @RequestMapping(value=PATH_RESOLUTION_OF_VALUESETDEFINITION_ENTITIES, method=RequestMethod.GET)
+    @ResponseBody
+    public Object getValueSetDefinitionResolutionEntities(
+            HttpServletRequest httpServletRequest,
+            QueryControl queryControl,
+            RestReadContext restReadContext,
+            ResolvedValueSetResolutionEntityRestrictions restrictions,
+            RestFilter restFilter,
+            @PathVariable(VAR_VALUESETID) String valueSetName,
+            @PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
+            @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
+            @RequestParam(value=PARAM_TAG, required=false) String tagName,
+            Page page) {
+
+        return this.doGetValueSetDefinitionResolution(
                 httpServletRequest,
                 queryControl,
                 restReadContext,
@@ -148,31 +145,77 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
                 restFilter,
                 valueSetName,
                 definitionLocalId,
-                resolution,
+                ValueSetDefinitionResolutionTypes.entitydirectory,
                 codeSystemVersionIds,
                 tagName,
                 page);
-	}
-	
-	@RequestMapping(value={	
-			PATH_RESOLUTION_OF_VALUESETDEFINITION
-			},
-		method=RequestMethod.POST)
+    }
+
+    /**
+     * Dynamically resolves a {@link ValueSetDefinition}.
+     *
+     * NOTE: The 'complete' parameter dictates whether or not the ValueSetDefinition is resolved
+     * to a {@link IteratableResolvedValueSet} (when false or omitted)
+     * or a {@link ResolvedValueSet} (when true)
+     *
+     * Example URL (iterable): {@code http://server.root/valueset/{id}/definition/{defId}/resolution}
+     * Example URL (complete): {@code http://server.root/valueset/{id}/definition/{defId}/resolution?complete=true}
+     *
+     * @see #getValueSetDefinitionResolutionEntities for resolving a ValueSetDefinition to Entities
+     */
+	@RequestMapping(value=PATH_RESOLUTION_OF_VALUESETDEFINITION, method=RequestMethod.GET)
 	@ResponseBody
 	public Object getValueSetDefinitionResolution(
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			RestReadContext restReadContext,
-			@RequestBody Query query,
 			ResolvedValueSetResolutionEntityRestrictions restrictions,
 			RestFilter restFilter,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
-			@RequestParam(
-					value=RESOLUTION_TYPE) 
-			ValueSetDefinitionResolutionTypes resolution,
 			@RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
 			@RequestParam(value=PARAM_TAG, required=false) String tagName,
+            @RequestParam(value=PARAM_COMPLETE, required=false) boolean complete,
+            Page page) {
+
+        ValueSetDefinitionResolutionTypes resolution;
+        if(complete){
+            resolution = ValueSetDefinitionResolutionTypes.complete;
+        } else {
+            resolution = ValueSetDefinitionResolutionTypes.iterable;
+        }
+
+		return this.doGetValueSetDefinitionResolution(
+				httpServletRequest,
+				queryControl,
+				restReadContext,
+				null,
+				restrictions, 
+				restFilter,
+				valueSetName, 
+				definitionLocalId,
+				resolution,
+				codeSystemVersionIds, 
+				tagName,
+                page);
+	}
+
+    /**
+     * Base method for resolving a {$link ValueSetDefinition} to either a {@link IteratableResolvedValueSet},
+     * a {@link ResolvedValueSet}, or an {@link EntityDirectory}l
+     */
+	protected Object doGetValueSetDefinitionResolution(
+			HttpServletRequest httpServletRequest,
+			QueryControl queryControl,
+			RestReadContext restReadContext,
+			Query query,
+			ResolvedValueSetResolutionEntityRestrictions restrictions,
+			RestFilter restFilter,
+		    String valueSetName,
+			String definitionLocalId,
+			ValueSetDefinitionResolutionTypes resolution,
+			List<String> codeSystemVersionIds,
+			String tagName,
 			Page page) {
 		
 		ValueSetDefinitionReadId definitionId = 
@@ -201,17 +244,17 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 								this.resolveSort(queryControl, this.valueSetDefinitionResolutionService), 
 								readContext,
 								page);
-				
-				IteratableResolvedValueSet iterable = this.populateDirectory(
-						directory, 
-						page, 
-						httpServletRequest, 
-						IteratableResolvedValueSet.class);
-				
-				if(iterable == null){
+
+				if(directory == null){
 					throw ExceptionFactory.createUnknownResourceException(
-							definitionLocalId.toString(), UnknownValueSetDefinition.class);
+							definitionLocalId, UnknownValueSetDefinition.class);
 				} else {
+                    IteratableResolvedValueSet iterable = this.populateDirectory(
+                            directory,
+                            page,
+                            httpServletRequest,
+                            IteratableResolvedValueSet.class);
+
 					iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
 					
 					return iterable;
@@ -238,7 +281,6 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 						EntityDirectory.class);
 			}
 			case complete : {
-				
 				ResolvedValueSet completeSet = this.valueSetDefinitionResolutionService.
 					resolveDefinitionAsCompleteSet(
 							definitionId, 
@@ -256,45 +298,13 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			}
 		}	
 	}
-	
-	@RequestMapping(value={	
-			PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_COMPLETE
-			},
-		method=RequestMethod.GET)
-	public Object getResolvedValueSetResolutionByLocalIdIterable(
-			HttpServletRequest httpServletRequest,
-			RestReadContext restReadContext,
-			@PathVariable(VAR_VALUESETID) String valueSetName,
-			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
-			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId) {
-		
-		ResolvedValueSetReadId id = 
-				new ResolvedValueSetReadId(
-						resolvedValueSetLocalId,
-						ModelUtils.nameOrUriFromName(valueSetName),
-						ModelUtils.nameOrUriFromName(definitionLocalId));
-		
-		ResolvedValueSet resolvedValueSet = 
-				this.resolvedValueSetResolutionService.getResolution(id);
-		
-		if(resolvedValueSet == null){
-			throw ExceptionFactory.createUnknownResourceException(
-					resolvedValueSetLocalId, 
-					UnknownResourceReference.class);
-		}
-		
-		ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
-		msg.setResolvedValueSet(resolvedValueSet);
-		
-		return this.buildResponse(
-				httpServletRequest, 
-				this.wrapMessage(msg, httpServletRequest));
-	}
-	
-	@RequestMapping(value={	
-			PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_ENTITIES
-			},
-		method=RequestMethod.GET)
+
+    /**
+     * Gets the Entities of a pre-resolved {@link ResolvedValueSet}.
+     *
+     * Example URL: {@code http://server.root/valueset/{id}/definition/{defId}/resolution/{resId}/entities}
+     */
+	@RequestMapping(value=PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID_ENTITIES, method=RequestMethod.GET)
 	public Object getResolvedValueSetResolutionByLocalIdEntities(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
@@ -350,14 +360,20 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			
 		return this.buildResponse(httpServletRequest, dir);
 	}
-	
-	@RequestMapping(value = { PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID }, method = RequestMethod.GET)
+
+    /**
+     * Gets a {@link ResolvedValueSet} by its local identifier.
+     *
+     * Example URL: {@code http://server.root/valueset/{id}/definition/{defId}/resolution/{resId}}
+     */
+	@RequestMapping(value=PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID, method=RequestMethod.GET)
 	public Object getResolvedValueSetResolutionByLocalId(
 			HttpServletRequest httpServletRequest,
 			RestReadContext restReadContext,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
 			@PathVariable(VAR_RESOLVEDVALUESETID) String resolvedValueSetLocalId,
+            @RequestParam(value=PARAM_COMPLETE, required=false) boolean complete,
 			RestFilter restFilter, 
 			Page page) {
 
@@ -366,34 +382,51 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 				ModelUtils.nameOrUriFromName(valueSetName),
 				ModelUtils.nameOrUriFromName(definitionLocalId));
 
-		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
-				restFilter, this.resolvedValueSetResolutionService);
+        if(complete){
+            ResolvedValueSet resolvedValueSet =
+                this.resolvedValueSetResolutionService.getResolution(id);
 
-		Set<ResolvedFilter> filterSet = new HashSet<ResolvedFilter>();
-		if (filter != null) {
-			filterSet.add(filter);
-		}
+            if (resolvedValueSet == null) {
+                throw ExceptionFactory.createUnknownResourceException(
+                        id.toString(), UnknownResourceReference.class);
+            } else {
+                return resolvedValueSet;
+            }
+        } else {
+            ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
+                    restFilter, this.resolvedValueSetResolutionService);
 
-		ResolvedValueSetResult<URIAndEntityName> directory =
-				this.resolvedValueSetResolutionService
-				.getResolution(
-						id, 
-						filterSet,
-						page);
+            Set<ResolvedFilter> filterSet = new HashSet<ResolvedFilter>();
+            if (filter != null) {
+                filterSet.add(filter);
+            }
 
-		if (directory == null) {
-			throw ExceptionFactory.createUnknownResourceException(
-					id.toString(), UnknownResourceReference.class);
-		}
+            ResolvedValueSetResult<URIAndEntityName> directory =
+                    this.resolvedValueSetResolutionService.
+                        getResolution(
+                            id,
+                            filterSet,
+                            page);
 
-		IteratableResolvedValueSet iterable = this.populateDirectory(directory,
-				page, httpServletRequest, IteratableResolvedValueSet.class);
+            if (directory == null) {
+                throw ExceptionFactory.createUnknownResourceException(
+                        id.toString(), UnknownResourceReference.class);
+            }
 
-		iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
+            IteratableResolvedValueSet iterable = this.populateDirectory(directory,
+                    page, httpServletRequest, IteratableResolvedValueSet.class);
 
-		return this.buildResponse(httpServletRequest, iterable);
+            iterable.setResolutionInfo(directory.getResolvedValueSetHeader());
+
+            return this.buildResponse(httpServletRequest, iterable);
+        }
 	}
-	
+
+    /**
+     * Lists all pre-resolved {@link ResolvedValueSet}s for a given {@link ValueSetDefinition}.
+     *
+     * Example URL: {@code http://server.root/valueset/{id}/definition/{defId}/resolutions}
+     */
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS_OF_VALUESETDEFINITION, method=RequestMethod.GET)
 	public Object getResolvedValueSetsOfValueSetDefinition(
 			HttpServletRequest httpServletRequest,
@@ -413,7 +446,12 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 				restFilter, 
 				page);
 	}
-	
+
+    /**
+     * Lists all pre-resolved {@link ResolvedValueSet}s.
+     *
+     * Example URL: {@code http://server.root/resolvedvaluesets}
+     */
 	@RequestMapping(value=PATH_RESOLVED_VALUESETS, method=RequestMethod.GET)
 	public Object getResolvedValueSets(
 			HttpServletRequest httpServletRequest,
@@ -436,8 +474,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			@RequestBody Query query,
 			RestFilter restFilter,
 			Page page) {
-		
-	
+
 		DirectoryResult<ResolvedValueSetDirectoryEntry> result = 
 				this.resolvedValueSetQueryService.getResourceSummaries(
 						this.getResolvedValueSetQuery(
@@ -455,11 +492,11 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		return this.buildResponse(httpServletRequest, directory);
 	}
-	
-	@RequestMapping(value={	
-			PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID
-			},
-		method=RequestMethod.DELETE)
+
+    /**
+     * Removes a {@link ResolvedValueSet}.
+     */
+	@RequestMapping(value=PATH_RESOLVED_VALUESET_OF_VALUESETDEFINITION_BYID, method=RequestMethod.DELETE)
 	@ResponseBody
 	public void deleteValueSetResolutionByLocalId(
 			HttpServletRequest httpServletRequest,
@@ -476,7 +513,10 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		this.resolvedValueSetLoaderService.delete(id);
 	}
-	
+
+    /**
+     * Loads a {@link ResolvedValueSet}.
+     */
 	@RequestMapping(value=PATH_RESOLVED_VALUESET, method=RequestMethod.POST)
 	public Object loadResolvedValueSet(
 			HttpServletRequest httpServletRequest,

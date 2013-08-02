@@ -21,22 +21,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.service.profile.conceptdomainbinding;
-
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingDirectoryEntry;
-import edu.mayo.cts2.framework.model.conceptdomainbinding.ConceptDomainBindingListEntry;
-import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
-import edu.mayo.cts2.framework.service.profile.Cts2Profile;
-import edu.mayo.cts2.framework.service.profile.QueryService;
-import edu.mayo.cts2.framework.service.profile.StructuralConformance;
+package edu.mayo.cts2.framework.core.plugin;
 
 /**
- * The Interface ConceptDomainBindingQueryService.
- *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-@StructuralConformance(StructuralProfile.SP_CONCEPT_DOMAIN_BINDING)
-public interface ConceptDomainBindingQueryService extends 
-	QueryService<ConceptDomainBindingListEntry, ConceptDomainBindingDirectoryEntry, ConceptDomainBindingQuery>, Cts2Profile {
+public interface NonOsgiPluginInitializer {
+
+	public void initialize(OsgiPluginManager osgiPluginManager);
+
+	public void destroy();
 
 }

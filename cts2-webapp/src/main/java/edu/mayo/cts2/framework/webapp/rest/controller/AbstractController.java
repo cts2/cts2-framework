@@ -23,29 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.UrlPathHelper;
-
 import edu.mayo.cts2.framework.core.constants.ModelAndViewInterface;
 import edu.mayo.cts2.framework.core.constants.URIHelperInterface;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
@@ -62,15 +39,36 @@ import edu.mayo.cts2.framework.webapp.rest.config.RestConfig;
 import edu.mayo.cts2.framework.webapp.rest.exception.Cts2RestExceptionCodeMapper;
 import edu.mayo.cts2.framework.webapp.rest.exception.StatusSettingCts2RestException;
 import edu.mayo.cts2.framework.webapp.service.AbstractServiceAwareBean;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UrlPathHelper;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * The Class AbstractController.
+ * The base abstract Spring MVC Controller.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public abstract class AbstractController extends AbstractServiceAwareBean implements URIHelperInterface, ModelAndViewInterface {
 	
 	protected Log log = LogFactory.getLog(getClass());
+	
+	protected static final String DEFAULT_REDIRECT = "true";
 	
 	@Resource
 	private RestConfig restConfig;
@@ -131,27 +129,50 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	 * @param ex the ex
 	 * @return the model and view
 	 */
-	@ExceptionHandler(RuntimeException.class)
+	@ExceptionHandler(Throwable.class)
 	@ResponseBody
 	public CTS2Exception handleException(
 			HttpServletResponse response, 
 			HttpServletRequest request, 
 			RuntimeException ex) {
-		log.error(ex);
-		log.error("Stack: " + ExceptionUtils.getStackTrace(ex));
-		
+        String errorId = Long.toString(new Date().getTime());
+
+		log.error("Unexpected Error: " + errorId, ex);
+
 		int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		
 		response.setStatus(status);
-		
-		return 
+
+        boolean showStackTrace = this.getRestConfig().getShowStackTraceOnError();
+
+        if(showStackTrace){
+		    return
 				ExceptionFactory.createUnknownException(
-						ex, 
+						ex,
 						getUrlString(request),
 						getParameterString(request),
-						this.getRestConfig().getShowStackTraceOnError());
+                        true);
+        } else {
+            return
+                ExceptionFactory.createUnknownException(
+                        this.getErrorSupportMessage(errorId),
+                        getUrlString(request),
+                        getParameterString(request));
+        }
 	}
-	
+
+    protected String getErrorSupportMessage(String errorId){
+        String preamble = "An Unexpected error has occurred.";
+
+        String supportEmail = this.getRestConfig().getSupportEmail();
+
+        if(StringUtils.isNotBlank(supportEmail)){
+            preamble =
+                preamble + "\nPlease contact " + supportEmail + " and reference Log ID: " + errorId;
+        }
+
+        return preamble;
+    }
 	
 	/**
 	 * Handle exception.
@@ -205,24 +226,6 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	 */
 	protected void setCount(int count, HttpServletResponse httpServletResponse) {
 		httpServletResponse.setHeader(HEADER_COUNT, Integer.toString(count));
-	}
-	
-	/**
-	 * Redirect.
-	 *
-	 * @param redirectUrl the redirect url
-	 * @param httpServletRequest the http servlet request
-	 * @param pathParametersToRemove the path parameters to remove
-	 * @return the model and view
-	 */
-	protected ModelAndView redirect(String redirectUrl, HttpServletRequest httpServletRequest){
-		RedirectView rmv = new RedirectView(redirectUrl);
-
-		rmv.setExposeModelAttributes(false);
-		
-		ModelAndView mav = new ModelAndView(rmv);
-
-		return mav;
 	}
 	
 	protected boolean isPartialRedirect(HttpServletRequest request, String urlTemplatePath){
@@ -344,7 +347,7 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 				
 				filters.getRestFilters().add(filter);
 			}
-		}
+	    }
 	}
 	
 	/**

@@ -41,6 +41,7 @@ import edu.mayo.cts2.framework.webapp.rest.resolver.FilterResolver;
 import edu.mayo.cts2.framework.webapp.rest.resolver.ReadContextResolver;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -60,7 +61,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * The Class AbstractMessageWrappingController.
+ * An Abstract Spring MVC Controller to handle various common CTS2 functionality such as
+ * reading individual resources and constructing directories.
  * 
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
@@ -187,7 +189,7 @@ public abstract class AbstractMessageWrappingController extends
 			throw new RuntimeException(e);
 		}	
 
-		if(result == null){
+		if(result == null || result.getEntries() == null){
 			result = new DirectoryResult<Void>(new ArrayList<Void>(), true);
 		}
 		
@@ -250,6 +252,7 @@ public abstract class AbstractMessageWrappingController extends
 	}
 
 	protected <R> ModelAndView forward(
+			HttpServletRequest httpServletRequest,
 			Message message,
 			R resource, 	
 			UrlTemplateBinder<R> urlBinder,
@@ -260,10 +263,19 @@ public abstract class AbstractMessageWrappingController extends
 		if(!redirect){
 			mav = this.buildUriForwardingModelAndView(message);
 		} else {
+			@SuppressWarnings("unchecked")
+			Map<String,Object> parameters = 
+				new HashMap<String,Object>(httpServletRequest.getParameterMap());
+			
+			parameters.remove(PARAM_REDIRECT);
+			parameters.remove(PARAM_URI);
+			
+			String queryString = this.mapToQueryString(parameters);
+			
 			mav = new ModelAndView(
-				"redirect:"+ this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate));
+				"redirect:" + this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate) + queryString);
 		}
-		
+
 		return mav;
 	}
 	
@@ -440,7 +452,7 @@ public abstract class AbstractMessageWrappingController extends
 			return null;
 		}
 		Set<? extends ComponentReference> predicates = queryService.getSupportedSortReferences();
-		ComponentReference ref = 
+	    ComponentReference ref =
 				ControllerUtils.getComponentReference(sort.getSort(), predicates);
 
 		SortCriterion sortCriterion = new SortCriterion();
@@ -542,7 +554,7 @@ public abstract class AbstractMessageWrappingController extends
 				redirect);
 	}
 	
-	protected <R extends IsChangeable> ModelAndView doForward(
+	protected <R> ModelAndView doForward(
 			R resource,
 			String identifier,
 			HttpServletRequest httpServletRequest,
@@ -566,18 +578,15 @@ public abstract class AbstractMessageWrappingController extends
 
 			msg = this.wrapMessage(msg, byNameTemaplate, urlBinder, resource, httpServletRequest);
 			
-			return this.forward(msg, resource, urlBinder, byNameTemaplate, redirect);
+			return this.forward(httpServletRequest, msg, resource, urlBinder, byNameTemaplate, redirect);
 		} else {
 
 			return this.forward(httpServletRequest, urlBinder, byNameTemaplate, resource, byUriTemplate, redirect);
 		}
 		
 	}
-	
-	private String getForwardOrRedirectString(boolean redirect){
-		return redirect ? "redirect" : "forward";
-	}
-	
+
+	@SuppressWarnings("unchecked")
 	protected <R> ModelAndView forward(
 			HttpServletRequest httpServletRequest,
 			UrlTemplateBinder<R> urlBinder,
@@ -585,8 +594,6 @@ public abstract class AbstractMessageWrappingController extends
 			R resource,
 			String byUriTemplate,
 			boolean redirect) {
-		String forwardOrRedirect = getForwardOrRedirectString(redirect);
-		
 		String url = this.urlTemplateBindingCreator.bindResourceToUrlTemplate(urlBinder, resource, urlTemplate);
 		
 		String extraUrlPath = StringUtils.substringAfter(httpServletRequest.getRequestURI(), StringUtils.removeEnd(byUriTemplate, ALL_WILDCARD));
@@ -594,10 +601,19 @@ public abstract class AbstractMessageWrappingController extends
 		if(StringUtils.isNotBlank(extraUrlPath)){
 			url = url + "/" + extraUrlPath;
 		}
-		
-		ModelAndView mav = new ModelAndView(
-				forwardOrRedirect + ":" + url);
-		
+
+		ModelAndView mav;
+		if(redirect){
+			Map<String,Object> parameters = 
+				new HashMap<String,Object>(httpServletRequest.getParameterMap());
+			
+			parameters.remove(PARAM_REDIRECT);
+			parameters.remove(PARAM_URI);
+			mav = new ModelAndView("redirect:" + url + this.mapToQueryString(parameters));
+		} else {
+			mav = new ModelAndView("forward:" + url);
+		}
+
 		return mav;
 	}
 	
@@ -645,31 +661,39 @@ public abstract class AbstractMessageWrappingController extends
 	 */
 	protected String getParametersString(Map<String, Object> parameters,
 			int page, int pageSize) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("?");
-
 		parameters = new HashMap<String, Object>(parameters);
 
 		parameters.put(URIHelperInterface.PARAM_PAGE, Integer.toString(page));
 
 		parameters.put(URIHelperInterface.PARAM_MAXTORETURN,
-				Integer.toString(pageSize));
+                Integer.toString(pageSize));
 
-		for (Entry<String, Object> entry : parameters.entrySet()) {
-			if (entry.getValue().getClass().isArray()) {
-
-				for (Object val : (Object[]) entry.getValue()) {
-					sb.append(entry.getKey() + "=" + val);
+		return this.mapToQueryString(parameters);
+	}
+	
+	protected String mapToQueryString(Map<String, Object> parameters){
+		if(MapUtils.isNotEmpty(parameters)){
+			StringBuffer sb = new StringBuffer();
+			sb.append("?");
+			
+			for (Entry<String, Object> entry : parameters.entrySet()) {
+				if (entry.getValue().getClass().isArray()) {
+	
+					for (Object val : (Object[]) entry.getValue()) {
+						sb.append(entry.getKey() + "=" + val);
+						sb.append("&");
+					}
+	
+				} else {
+					sb.append(entry.getKey() + "=" + entry.getValue());
 					sb.append("&");
 				}
-
-			} else {
-				sb.append(entry.getKey() + "=" + entry.getValue());
-				sb.append("&");
 			}
+			
+			return StringUtils.removeEnd(sb.toString(), "&");
+		} else {
+			return "";
 		}
-
-		return StringUtils.removeEnd(sb.toString(), "&");
 	}
 
 	/**

@@ -435,7 +435,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 			QueryControl queryControl,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@RequestParam(value=PARAM_TAG, defaultValue=DEFAULT_TAG) String tag,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 		
 		//TODO: Accept tag URIs here
 		VersionTagReference tagReference = new VersionTagReference(tag);
@@ -450,7 +450,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		
 		String contextPath = this.getUrlPathHelper().getContextPath(httpServletRequest);
 		
-		String requestUri = StringUtils.removeStart(httpServletRequest.getRequestURI(),contextPath);
+		String requestUri = StringUtils.removeStart(this.getUrlPathHelper().getRequestUri(httpServletRequest),contextPath);
 		
 		requestUri = StringUtils.removeStart(requestUri, "/");
 		
@@ -460,8 +460,19 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 				CODESYSTEM + "/" + codeSystemName + "/" + 
 						VERSION + "/" + codeSystemVersionName + "/");
 		
-		return new ModelAndView(
-				"forward:"+ "/" + requestUri);
+		if(redirect){
+			@SuppressWarnings("unchecked")
+			Map<String,Object> parameters = 
+					new HashMap<String,Object>(httpServletRequest.getParameterMap());
+				
+			parameters.remove(PARAM_REDIRECT);
+				
+			return new ModelAndView(
+				"redirect:"+ "/" + requestUri + this.mapToQueryString(parameters));
+		} else {
+			return new ModelAndView(
+				"forward:"+ "/" + requestUri );
+		}
 	}
 	
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYTAG,
@@ -534,7 +545,7 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 			RestReadContext restReadContext,
 			QueryControl queryControl,
 			@RequestParam(PARAM_URI) String uri,
-			@RequestParam(value="redirect", defaultValue="false") boolean redirect) {
+			@RequestParam(value="redirect", defaultValue=DEFAULT_REDIRECT) boolean redirect) {
 
 		return this.doReadByUri(
 				httpServletRequest, 
