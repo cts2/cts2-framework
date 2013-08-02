@@ -23,28 +23,17 @@
  */
 package edu.mayo.cts2.framework.model.exception;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
+import edu.mayo.cts2.framework.model.service.exception.*;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import edu.mayo.cts2.framework.model.core.ComponentReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
-import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.core.OpaqueData;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.types.LoggingLevel;
-import edu.mayo.cts2.framework.model.service.exception.QueryTimeout;
-import edu.mayo.cts2.framework.model.service.exception.UnknownResourceReference;
-import edu.mayo.cts2.framework.model.service.exception.UnsupportedMatchAlgorithm;
-import edu.mayo.cts2.framework.model.service.exception.UnsupportedModelAttribute;
-import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI;
-import edu.mayo.cts2.framework.model.service.exception.UnsupportedVersionTag;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A factory for creating Exception objects.
@@ -101,20 +90,25 @@ public class ExceptionFactory {
 			URIAndEntityName name,
 			Iterable<? extends ModelAttributeReference> matchAlgorithmReferences) {
 		UnsupportedModelAttribute ex = new UnsupportedModelAttribute();
-		
+
 		ex.setSeverity(LoggingLevel.ERROR);
-		
+
 		ex.setCts2Message(getPossibleValuesMessageFromNameAndMeaning("ModelAttribute", name.getUri(), matchAlgorithmReferences));
-		
+
 		return ex;
 	}
-	
+
 	public static UnknownResourceReference createUnsupportedComponentReference(
 			ComponentReference componentReference,
 			Iterable<? extends ComponentReference> componentReferences) {
-		return createUnsupportedComponentReference(
-				componentReference, componentReferences);
-	}
+        UnknownResourceReference ex = new UnknownResourceReference();
+
+        ex.setSeverity(LoggingLevel.ERROR);
+
+        ex.setCts2Message(getPossibleValuesMessageFromComponentReference("ComponentReference", componentReference, componentReferences));
+
+        return ex;
+    }
 	
 	public static UnknownResourceReference createUnsupportedPropertyReference(
 			String requestedNameOrUri,
@@ -287,6 +281,24 @@ public class ExceptionFactory {
 	
 		return getPossibleValuesMessage(type, requestedValue, returnList);
 	}
+
+    private static OpaqueData getPossibleValuesMessageFromComponentReference(
+            String type,
+            ComponentReference requestedValue,
+            Iterable<? extends ComponentReference> possibleValues){
+        String nameOrUri = "Unspecified";
+        if(requestedValue.getAttributeReference() != null){
+            nameOrUri = requestedValue.getAttributeReference();
+        }
+        if(requestedValue.getPropertyReference() != null){
+            nameOrUri = requestedValue.getPropertyReference().getName();
+        }
+        if(requestedValue.getSpecialReference() != null){
+            nameOrUri = requestedValue.getSpecialReference();
+        }
+
+        return getPossibleValuesMessageFromComponentReference(type, nameOrUri, possibleValues);
+    }
 	
 	private static OpaqueData getPossibleValuesMessageFromComponentReference(
 			String type, 
