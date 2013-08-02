@@ -1,6 +1,10 @@
 package edu.mayo.cts2.framework.core.xml
 
 import edu.mayo.cts2.framework.model.castor.MarshallSuperClass
+import edu.mayo.cts2.framework.model.core.ChangeDescription
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup
+import edu.mayo.cts2.framework.model.core.types.ChangeType
+import org.apache.commons.io.IOUtils
 import org.junit.Ignore
 import org.springframework.oxm.castor.CastorMarshaller;
 
@@ -210,6 +214,29 @@ class DelegatingMarshallerTest {
 		println sw.toString()
 		
 		assertTrue sw.toString().contains("<versions></versions>");
-
 	}
+
+    @Test
+    void "Test Marshall with ChangeDescription"(){
+        def stream = emptyVersions.getInputStream()
+
+        def sw = new StringWriter();
+
+        def entry = new CodeSystemCatalogEntry(
+            codeSystemName:"n",
+            about:"about",versions:"",
+            changeableElementGroup:
+                new ChangeableElementGroup( changeDescription:
+                        new ChangeDescription(
+                                changeDate: new Date(),
+                                changeType: ChangeType.CREATE,
+                                containingChangeSet: "asdf") )
+        )
+
+        marshaller.marshal(entry, new StreamResult(sw))
+
+        println sw.toString()
+
+        marshaller.unmarshal(new StreamSource(IOUtils.toInputStream(sw.toString())))
+    }
 }

@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import edu.mayo.cts2.framework.core.xml.PatchedCastorMarshaller;
-
 /**
  * The Class NamespaceAdjustingCastorMarshaller.
  *
@@ -37,7 +35,7 @@ import edu.mayo.cts2.framework.core.xml.PatchedCastorMarshaller;
 public class NamespaceAdjustingCastorMarshaller 
 	extends PatchedCastorMarshaller {
 
-	private static final String CORE_NS = "http://schema.omg.org/spec/CTS2/1.0/Core";
+	private static final String CORE_NS = "http://www.omg.org/spec/CTS2/1.1/Core";
 
 	/**
 	 * Instantiates a new namespace adjusting castor marshaller.
