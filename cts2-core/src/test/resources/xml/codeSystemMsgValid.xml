@@ -1,0 +1,17 @@
+<CodeSystemCatalogEntryDirectory
+	xmlns="http://www.omg.org/spec/CTS2/1.1/CodeSystem"
+	xmlns:core="http://www.omg.org/spec/CTS2/1.1/Core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	complete="COMPLETE" numEntries="1">
+	<core:heading>
+		<core:resourceRoot>codesystems</core:resourceRoot>
+		<core:resourceURI>http://informatics.mayo.edu/cts2/rest/codesystems</core:resourceURI>
+		<core:accessDate>2011-08-12T15:02:59.621-05:00</core:accessDate>
+	</core:heading>
+	
+	<entry xmlns="http://www.omg.org/spec/CTS2/1.1/CodeSystem" href="http://informatics.mayo.edu/cts2/rest/codesystem/SNOMEDCT"
+		about="urn:oid:1.1.1" codeSystemName="SNOMEDCT">
+		<versions>
+			http://informatics.mayo.edu/cts2/rest/codesystem/SNOMEDCT/versions</versions>
+	</entry>
+</CodeSystemCatalogEntryDirectory>

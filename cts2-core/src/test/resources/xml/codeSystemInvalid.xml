@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeSystemCatalogEntry
+	xmlns="http://www.omg.org/spec/CTS2/1.1/CodeSystem" xmlns:core="http://www.omg.org/spec/CTS2/1.1/Core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	codeSystemName="test" >
+</CodeSystemCatalogEntry>

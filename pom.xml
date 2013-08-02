@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>0.8.3-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
@@ -45,14 +45,14 @@
   </scm>
 
 	<modules>
-		<module>model</module>
-		<module>core</module>
-		<module>filter</module>
-		<module>service</module>
-		<module>webapp-rest-extensions</module>
-		<module>webapp</module>
-		<module>base-service-plugin</module>
-		<module>plugin-util</module>
+		<module>cts2-model</module>
+		<module>cts2-core</module>
+		<module>cts2-filter</module>
+		<module>cts2-service</module>
+		<module>cts2-webapp-rest-extensions</module>
+		<module>cts2-webapp</module>
+		<module>cts2-base-service-plugin</module>
+		<module>cts2-plugin-util</module>
 	</modules>
 
 	<properties>

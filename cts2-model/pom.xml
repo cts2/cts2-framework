@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>edu.mayo.cts2</groupId>
+		<artifactId>cts2-framework</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>edu.mayo.cts2.framework</groupId>
+	<artifactId>cts2-model</artifactId>
+
+	<name>CTS2 Development Framework Model Objects</name>
+	<description>Castor Java Bean representation of the CTS2 XSD Model Representation</description>
+
+	<properties>
+		<castorVersion>1.3.2</castorVersion>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+				<executions>
+					<execution>
+						<id>auto-clean-generated-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<filesets>
+								<fileset>
+									<directory>${project.build.directory}/generated-sources/castor</directory>
+									<includes>
+										<include>**/*</include>
+									</includes>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>maven-replacer-plugin</artifactId>
+				<version>1.3.9</version>
+				<executions>
+					<execution>
+						<id>remove content</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/*</include>
+							</includes>
+							<excludes>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/NameAndMeaningReference.java</exclude>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/SourceAndRoleReference.java</exclude>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/TsAnyType.java</exclude>
+								<exclude>target/generated-sources/castor/edu/mayo/cts2/framework/model/service/core/FunctionalProfileEntry.java</exclude>
+							</excludes>
+							<replacements>
+								<replacement>
+									<token>private java.lang.String _content = "";</token>
+									<value />
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>set content null</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/*</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>private java.lang.String _content = "";</token>
+									<value>protected java.lang.String _content = null;</value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>add extends for NameOrURI</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/NameOrURI.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class NameOrURI extends edu.mayo.cts2.framework.model.BaseCts2ModelObject
+									</token>
+									<value>class NameOrURI extends edu.mayo.cts2.framework.model.service.core.AbstractNameToString
+									</value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>add extends for EntityNameOrURI</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/EntityNameOrURI.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class EntityNameOrURI extends edu.mayo.cts2.framework.model.BaseCts2ModelObject
+									</token>
+									<value>class EntityNameOrURI extends edu.mayo.cts2.framework.model.service.core.AbstractEntityNameToString
+									</value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>add extends for EntityDescription</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/EntityDescription.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class EntityDescription extends edu.mayo.cts2.framework.model.BaseCts2ModelObject
+									</token>
+									<value>class EntityDescription extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice
+									</value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>add extends for CTS2Exception</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/CTS2Exception.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class CTS2Exception extends edu.mayo.cts2.framework.model.BaseCts2ModelObject
+									</token>
+									<value>class CTS2Exception extends edu.mayo.cts2.framework.model.exception.AbstractCTS2Exception
+									</value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>add extends for ChangeableResource</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+
+						<configuration>
+							<includes>
+								<include>target/generated-sources/**/ChangeableResource.java</include>
+							</includes>
+							<replacements>
+								<replacement>
+									<token>class ChangeableResource extends edu.mayo.cts2.framework.model.BaseCts2ModelObject
+									</token>
+									<value>class ChangeableResource extends edu.mayo.cts2.framework.model.core.AbstractIsChangeableChoice
+									</value>
+								</replacement>
+							</replacements>
+						</configuration>
+
+					</execution>
+
+                    <execution>
+                        <id>remove interface from resolutions</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+
+                        <configuration>
+                            <includes>
+                                <include>target/generated-sources/**/wsdl/basehistoryservice/Resolve.java</include>
+                                <include>target/generated-sources/**/wsdl/valuesetdefinitionresolution/Resolve.java</include>
+                                <include>target/generated-sources/**/wsdl/mapresolution/Resolve.java</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>implements java.io.Serializable, edu.mayo.cts2.framework.model.wsdl.SoapResolveRequest
+                                    </token>
+                                    <value>implements java.io.Serializable
+                                    </value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+
+                    </execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>castor-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<generateImportedSchemas>true</generateImportedSchemas>
+					<bindingfile>${basedir}/src/main/castor/binding.xml</bindingfile>
+					<verbose>true</verbose>
+					<properties>${basedir}/src/main/resources/castorbuilder.properties</properties>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.castor</groupId>
+						<artifactId>castor-codegen</artifactId>
+						<version>1.3.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.castor</groupId>
+						<artifactId>castor-xml-schema</artifactId>
+						<version>1.3.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.castor</groupId>
+						<artifactId>castor-xml</artifactId>
+						<version>1.3.2</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.castor</groupId>
+			<artifactId>castor-core</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.castor</groupId>
+			<artifactId>castor-xml</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.castor</groupId>
+			<artifactId>castor-xml-schema</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+	</dependencies>
+
+</project>

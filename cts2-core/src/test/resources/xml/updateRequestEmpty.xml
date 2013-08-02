@@ -1,0 +1,9 @@
+<p:UpdateResourceVersionDescription 
+	xmlns:p="http://www.omg.org/spec/CTS2/1.1/CoreService"
+	xmlns:p1="http://www.omg.org/spec/CTS2/1.1/Core"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <p:updatedAdditionalDocumentation/>
+
+
+</p:UpdateResourceVersionDescription>

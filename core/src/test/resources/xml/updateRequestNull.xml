@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<p:UpdateResourceVersionDescription 
-	xmlns:p="http://schema.omg.org/spec/CTS2/1.0/CoreService" 
-	xmlns:p1="http://schema.omg.org/spec/CTS2/1.0/Core"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	 xsi:schemaLocation="http://schema.omg.org/spec/CTS2/1.0/CoreService http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/serviceSchema/CoreService.xsd">
-
-
-</p:UpdateResourceVersionDescription>

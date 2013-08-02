@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeSystemCatalogEntryDirectory
+    xmlns="http://www.omg.org/spec/CTS2/1.1/CodeSystem"
+    xmlns:core="http://www.omg.org/spec/CTS2/1.1/Core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    complete="PARTIAL" numEntries="50" next="http://informatics.mayo.edu/cts2/rest/codesystems?page=1&amp;maxtoreturn=50">
+    <core:heading>
+        <core:resourceRoot>codesystems</core:resourceRoot>
+        <core:resourceURI>http://informatics.mayo.edu/cts2/rest/codesystems</core:resourceURI>
+        <core:accessDate>2012-11-27T12:25:18.268-05:00</core:accessDate>
+    </core:heading>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/VANDF"
+        resourceName="VANDF"
+        about="http://purl.bioontology.org/ontology/VANDF"
+        formalName="VANDF" codeSystemName="VANDF">
+        <core:resourceSynopsis>
+            <core:value>Veterans Health Administration National Drug File</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/VANDF/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/VANDF/version/2010_01_25">VANDF_2010_01_25_RRF</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/VANDF" href="http://informatics.mayo.edu/cts2/rest/codesystem/VANDF">VANDF</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/NTDO"
+        resourceName="NTDO"
+        about="http://purl.bioontology.org/ontology/NTDO"
+        formalName="Neglected Tropical Disease Ontology (NTDO)" codeSystemName="NTDO">
+        <core:resourceSynopsis>
+            <core:value>The Neglected Tropical Disease Ontology (NTDO) aims at representing classes and relations to a specific set of diseases which persist in exactly the physical, psychosocial and economic situation of the poorest, most marginalized populations of the developing world, the Neglected Tropical Diseases (NTD). The current focus of NTDO is related to the transmission of vector-borne diseases and how they are related to the death.&#xd;NTDO is based on BioTop (main classes and relations) and GFO (Time Representation) and represented in Description Logics (DL).&#xd;NTDO includes information about the proper disease, its causative agent (when available), dispositions, and the geographic location the disease happens. In addition, NTDO includes a generic attempt to identify the process which leads a person to death, due to NTDs or other diseases.&#xd;NTDO was built with a rich set of axioms and the intended usage is related to Health Surveillance of NTD-related morbidity and mortality cases.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/NTDO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/NTDO/version/Rev. 368">NTDO_Rev- 368_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/NTDO" href="http://informatics.mayo.edu/cts2/rest/codesystem/NTDO">NTDO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/CAMRQ"
+        resourceName="CAMRQ"
+        about="http://purl.bioontology.org/ontology/CAMRQ"
+        formalName="Quadrupedal Gait" codeSystemName="CAMRQ">
+        <core:resourceSynopsis>
+            <core:value>CEREBELLAR ATAXIA AND MENTAL RETARDATION WITH OR WITHOUT QUADRUPEDAL LOCOMOTION.&#xd;&#xd;OMIM: 224050, 610185, 613227</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/CAMRQ/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/CAMRQ/version/CAMRQ_OWL">CAMRQ_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/CAMRQ" href="http://informatics.mayo.edu/cts2/rest/codesystem/CAMRQ">CAMRQ</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/MEO"
+        resourceName="MEO"
+        about="http://purl.bioontology.org/ontology/MEO"
+        formalName="Metagenome/Microbes Environmental Ontology" codeSystemName="MEO">
+        <core:resourceSynopsis>
+            <core:value>Ontology of organismal habitats (especially focused on microbes)</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MEO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MEO/version/47317">MEO_47317_OWL-FULL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MEO" href="http://informatics.mayo.edu/cts2/rest/codesystem/MEO">MEO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/TEDDY"
+        resourceName="TEDDY"
+        about="http://purl.bioontology.org/ontology/TEDDY"
+        formalName="Terminology for the Description of Dynamics" codeSystemName="TEDDY">
+        <core:resourceSynopsis>
+            <core:value>The TErminology for the Description of DYnamics (TEDDY) project aims to provide an ontology for dynamical behaviours, observable dynamical phenomena, and control elements of bio-models and biological systems in Systems Biology and Synthetic Biology.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/TEDDY/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/TEDDY/version/rel-2011-08-30 (inferred)">TEDDY_rel-2011-08-30 (inferred)_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/TEDDY" href="http://informatics.mayo.edu/cts2/rest/codesystem/TEDDY">TEDDY</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/TRANS"
+        resourceName="TRANS"
+        about="http://purl.bioontology.org/ontology/TRANS"
+        formalName="Pathogen transmission" codeSystemName="TRANS">
+        <core:resourceSynopsis>
+            <core:value>This vocabulary describes a process that is the means of how a pathogen is transmitted from one host, reservoir, or source to another host. This transmission may occur either directly or indirectly and may involve animate vectors or inanimate vehicles.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/TRANS/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/TRANS/version/44947">TRANS_44947_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/TRANS" href="http://informatics.mayo.edu/cts2/rest/codesystem/TRANS">TRANS</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/MDDB"
+        resourceName="MDDB"
+        about="http://purl.bioontology.org/ontology/MDDB"
+        formalName="Master Drug Data Base" codeSystemName="MDDB">
+        <core:resourceSynopsis>
+            <core:value>Master Drug Data Base, 2009_08_05</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MDDB/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MDDB/version/2009_08_05">MDDB_2009_08_05_RRF</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MDDB" href="http://informatics.mayo.edu/cts2/rest/codesystem/MDDB">MDDB</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/TAHH"
+        resourceName="TAHH"
+        about="http://purl.bioontology.org/ontology/TAHH"
+        formalName="Terminology of Anatomy of Human Histology" codeSystemName="TAHH">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/TAHH/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/TAHH/version/unknown">TAHH_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/TAHH" href="http://informatics.mayo.edu/cts2/rest/codesystem/TAHH">TAHH</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM"
+        resourceName="HOM"
+        about="http://purl.bioontology.org/ontology/HOM"
+        formalName="Ontology of homology and related concepts in biology" codeSystemName="HOM">
+        <core:resourceSynopsis>
+            <core:value>This ontology represents concepts related to homology, as well as other concepts used to describe similarity and non-homology.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HOM/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM/version/1.4">HOM_1-4_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HOM" href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM">HOM</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CHI"
+        resourceName="HOM-CHI"
+        about="http://purl.bioontology.org/ontology/HOM-CHI"
+        formalName="HOM-CHI" codeSystemName="HOM-CHI">
+        <core:resourceSynopsis>
+            <core:value>HOM Catholic Health Initiative Data Ontology</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CHI/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CHI/version/0.3">HOM-CHI_0-3_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HOM-CHI" href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CHI">HOM-CHI</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/HL7"
+        resourceName="HL7"
+        about="http://purl.bioontology.org/ontology/HL7"
+        formalName="Health Level Seven" codeSystemName="HL7">
+        <core:resourceSynopsis>
+            <core:value>This version is the first update to Normative RIM, Release 3. It is based on changes approved in Harmonization in November 2010. This release of the RIM is bound to HL7 Abstract Data Types Release 2.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HL7/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HL7/version/0234">HL7_0234_LEXGRID-XML</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HL7" href="http://informatics.mayo.edu/cts2/rest/codesystem/HL7">HL7</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/MetaCT"
+        resourceName="MetaCT"
+        about="http://purl.bioontology.org/ontology/MetaCT"
+        formalName="MetaCT Ontology" codeSystemName="MetaCT">
+        <core:resourceSynopsis>
+            <core:value>An ontology to semi-automate systematic reviews and meta-analyses of clinical trials</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MetaCT/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MetaCT/version/1.0">MetaCT_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MetaCT" href="http://informatics.mayo.edu/cts2/rest/codesystem/MetaCT">MetaCT</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-MDCDRG"
+        resourceName="HOM-MDCDRG"
+        about="http://purl.bioontology.org/ontology/HOM-MDCDRG"
+        formalName="HOM-MDCDRG" codeSystemName="HOM-MDCDRG">
+        <core:resourceSynopsis>
+            <core:value>HOM MDC-DRG ontology</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HOM-MDCDRG/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-MDCDRG/version/1.1">HOM-MDCDRG_1-1_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HOM-MDCDRG" href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-MDCDRG">HOM-MDCDRG</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/PhenX"
+        resourceName="PhenX"
+        about="http://purl.bioontology.org/ontology/PhenX"
+        formalName="PhenX Terms" codeSystemName="PhenX">
+        <core:resourceSynopsis>
+            <core:value>Standard measures related to complex diseases, phenotypic traits and environmental exposures</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/PhenX/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/PhenX/version/0.1">PhenX_0-1_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/PhenX" href="http://informatics.mayo.edu/cts2/rest/codesystem/PhenX">PhenX</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/nif"
+        resourceName="nif"
+        about="http://purl.bioontology.org/ontology/nif"
+        formalName="NIFSTD" codeSystemName="nif">
+        <core:resourceSynopsis>
+            <core:value>NIF Standard ontology (NIFSTD) is a core component of Neuroscience Information Framework (NIF) project (http://neuinfo.org), a semantically enhanced portal for accessing and integrating neuroscience data, tools and information. NIFSTD includes a set of modular ontologies that provide a comprehensive collection of terminologies to describe neuroscience data and resources.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/nif/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/nif/version/2.5 - October 17, 2011">nif_2-5 - October 17, 2011_OWL-DL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/nif" href="http://informatics.mayo.edu/cts2/rest/codesystem/nif">nif</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-DXVCODES2"
+        resourceName="HOM-DXVCODES2"
+        about="http://purl.bioontology.org/ontology/HOM-DXVCODES2"
+        formalName="HOM-DXVCODES2_OSHPD" codeSystemName="HOM-DXVCODES2">
+        <core:resourceSynopsis>
+            <core:value>Secondary ICD9 Disease Diagnoses</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HOM-DXVCODES2/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-DXVCODES2/version/46083">HOM-DXVCODES2_46083_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HOM-DXVCODES2" href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-DXVCODES2">HOM-DXVCODES2</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/NCBITaxon"
+        resourceName="NCBITaxon"
+        about="http://purl.bioontology.org/ontology/NCBITaxon"
+        formalName="NCBI organismal classification" codeSystemName="NCBITaxon">
+        <core:resourceSynopsis>
+            <core:value>A taxonomic classification of living organisms and associated artifacts for their controlled description within the context of databases.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/NCBITaxon/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/NCBITaxon/version/38802">NCBITaxon_38802_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/NCBITaxon" href="http://informatics.mayo.edu/cts2/rest/codesystem/NCBITaxon">NCBITaxon</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/I9I10CMMOST"
+        resourceName="I9I10CMMOST"
+        about="http://purl.bioontology.org/ontology/I9I10CMMOST"
+        formalName="HOM-I9I10CMMOST" codeSystemName="I9I10CMMOST">
+        <core:resourceSynopsis>
+            <core:value>1225 most prevalent hospital recorded ICD9 codes generated from NHDS '08-10 file</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/I9I10CMMOST/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/I9I10CMMOST/version/0.4">I9I10CMMOST_0-4_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/I9I10CMMOST" href="http://informatics.mayo.edu/cts2/rest/codesystem/I9I10CMMOST">I9I10CMMOST</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.27982"
+        resourceName="profectus.deid.installation.27982"
+        about="http://purl.bioontology.org/ontology/profectus.deid.installation.27982"
+        formalName="profectus.deid.installation" codeSystemName="profectus.deid.installation.27982">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.27982/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.27982/version/1.0">profectus-deid-installation-27982_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/profectus.deid.installation.27982" href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.27982">profectus.deid.installation.27982</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/pharmgkb-owl"
+        resourceName="pharmgkb-owl"
+        about="http://purl.bioontology.org/ontology/pharmgkb-owl"
+        formalName="PharmGKB-in-OWL" codeSystemName="pharmgkb-owl">
+        <core:resourceSynopsis>
+            <core:value>PharmGKB represented in OWL and linked to related ontologies.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/pharmgkb-owl/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/pharmgkb-owl/version/1.0">pharmgkb-owl_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/pharmgkb-owl" href="http://informatics.mayo.edu/cts2/rest/codesystem/pharmgkb-owl">pharmgkb-owl</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/OntoOrpha"
+        resourceName="OntoOrpha"
+        about="http://purl.bioontology.org/ontology/OntoOrpha"
+        formalName="Orphanet Ontology of Rare Diseases" codeSystemName="OntoOrpha">
+        <core:resourceSynopsis>
+            <core:value>OntoOrpha is an ontology of Rare Diseases that includes clinical signs (phenotypes) and genes. The full Orphanet nomenclature (labels, synonyms) is provided in six languages with external references annotations (ICD, OMIM, HGNC, Genatlas, Swissprot). This version now includes epidemiology data related to rare diseases in Europe (class of prevalence, average age of onset, average age at death) extracted from the literature.&#xd;&lt;br /&gt;&#xd;Part of an ongoing research project, this ontology is developed to support editorial procedures of &lt;a href="http://www.orpha.net"&gt;Orphanet knowledge bases and services&lt;/a&gt;. Current alpha version is under active development. The version provided on bioportal contains only the main english labels. A version on the ontology with the full nomenclature of rare diseases (labels and synonyms in 6 languages based on skos annotations) is available on demand.&#xd;&lt;br /&gt;&lt;br /&gt;&#xd;&lt;img src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" alt="Creative Commons : Attribution - Non Commercial - No Derivs " /&gt;&#xd;&lt;br /&gt;&#xd;&lt;a href="http://creativecommons.org/licenses/by-nc-nd/3.0/"&gt;OntoOrpha is available under Creative Commons license ''Attribution-Non-Commercial-No Derivative Works 3.0''&lt;/a&gt;</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/OntoOrpha/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/OntoOrpha/version/45845">OntoOrpha_45845_OWL-DL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/OntoOrpha" href="http://informatics.mayo.edu/cts2/rest/codesystem/OntoOrpha">OntoOrpha</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/MDR"
+        resourceName="MDR"
+        about="http://purl.bioontology.org/ontology/MDR"
+        formalName="MedDRA" codeSystemName="MDR">
+        <core:resourceSynopsis>
+            <core:value>Medical Dictionary for Regulatory Activities Terminology (MedDRA)</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MDR/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MDR/version/12.0">MDR_12-0_RRF</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MDR" href="http://informatics.mayo.edu/cts2/rest/codesystem/MDR">MDR</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/TAO"
+        resourceName="TAO"
+        about="http://purl.bioontology.org/ontology/TAO"
+        formalName="Teleost Anatomy Ontology" codeSystemName="TAO">
+        <core:resourceSynopsis>
+            <core:value>Multispecies fish anatomy ontology. Originally seeded from ZFA, but intended to cover terms relevant to other taxa</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/TAO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/TAO/version/46338">TAO_46338_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/TAO" href="http://informatics.mayo.edu/cts2/rest/codesystem/TAO">TAO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7622"
+        resourceName="nhds.7622"
+        about="http://purl.bioontology.org/ontology/nhds.7622"
+        formalName="nhds" codeSystemName="nhds.7622">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7622/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7622/version/1.0">nhds-7622_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/nhds.7622" href="http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7622">nhds.7622</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.19037"
+        resourceName="profectus.deid.installation.19037"
+        about="http://purl.bioontology.org/ontology/profectus.deid.installation.19037"
+        formalName="profectus.deid.installation" codeSystemName="profectus.deid.installation.19037">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.19037/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.19037/version/1.0">profectus-deid-installation-19037_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/profectus.deid.installation.19037" href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.deid.installation.19037">profectus.deid.installation.19037</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/SSO"
+        resourceName="SSO"
+        about="http://purl.bioontology.org/ontology/SSO"
+        formalName="Syndromic Surveillance Ontology" codeSystemName="SSO">
+        <core:resourceSynopsis>
+            <core:value>The SSO encodes agreement among experts about how Emergency Department (ED) chief complaints are grouped into syndromes of public health importance (consensus definitions).</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/SSO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/SSO/version/1.0">SSO_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/SSO" href="http://informatics.mayo.edu/cts2/rest/codesystem/SSO">SSO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/WBls"
+        resourceName="WBls"
+        about="http://purl.bioontology.org/ontology/WBls"
+        formalName="C. elegans development" codeSystemName="WBls">
+        <core:resourceSynopsis>
+            <core:value>A structured controlled vocabulary of the development of &lt;i&gt;Caenorhabditis elegans&lt;/i&gt;.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/WBls/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/WBls/version/45245">WBls_45245_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/WBls" href="http://informatics.mayo.edu/cts2/rest/codesystem/WBls">WBls</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/cms.29622"
+        resourceName="cms.29622"
+        about="http://purl.bioontology.org/ontology/cms.29622"
+        formalName="cms" codeSystemName="cms.29622">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/cms.29622/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/cms.29622/version/1.0">cms-29622_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/cms.29622" href="http://informatics.mayo.edu/cts2/rest/codesystem/cms.29622">cms.29622</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7763"
+        resourceName="nhds.7763"
+        about="http://purl.bioontology.org/ontology/nhds.7763"
+        formalName="nhds" codeSystemName="nhds.7763">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7763/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7763/version/1.0">nhds-7763_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/nhds.7763" href="http://informatics.mayo.edu/cts2/rest/codesystem/nhds.7763">nhds.7763</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CMS"
+        resourceName="HOM-CMS"
+        about="http://purl.bioontology.org/ontology/HOM-CMS"
+        formalName="HOM-CMS" codeSystemName="HOM-CMS">
+        <core:resourceSynopsis>
+            <core:value>CMS data ontology</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CMS/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CMS/version/0.7">HOM-CMS_0-7_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HOM-CMS" href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM-CMS">HOM-CMS</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM_MDCs_DRGs"
+        resourceName="HOM_MDCs_DRGs"
+        about="http://purl.bioontology.org/ontology/HOM_MDCs_DRGs"
+        formalName="HOM_MDCs-DRGS" codeSystemName="HOM_MDCs_DRGs">
+        <core:resourceSynopsis>
+            <core:value>Major Diagnostic Categories (MDC) and Diagnosis Related Groups (DRG) as recommended by CA OSHPD, Version 26 &amp; 27, 2009</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HOM_MDCs_DRGs/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM_MDCs_DRGs/version/1.2">HOM_MDCs_DRGs_1-2_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HOM_MDCs_DRGs" href="http://informatics.mayo.edu/cts2/rest/codesystem/HOM_MDCs_DRGs">HOM_MDCs_DRGs</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/pro-ont"
+        resourceName="pro-ont"
+        about="http://purl.bioontology.org/ontology/pro-ont"
+        formalName="Protein Ontology" codeSystemName="pro-ont">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/pro-ont/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/pro-ont/version/2.0">pro-ont_2-0_OWL-FULL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/pro-ont" href="http://informatics.mayo.edu/cts2/rest/codesystem/pro-ont">pro-ont</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/MAT"
+        resourceName="MAT"
+        about="http://purl.bioontology.org/ontology/MAT"
+        formalName="Minimal anatomical terminology" codeSystemName="MAT">
+        <core:resourceSynopsis>
+            <core:value>Minimal set of terms for anatomy</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MAT/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MAT/version/1.1">MAT_1-1_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MAT" href="http://informatics.mayo.edu/cts2/rest/codesystem/MAT">MAT</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/ICD10"
+        resourceName="ICD10"
+        about="http://purl.bioontology.org/ontology/ICD10"
+        formalName="ICD10" codeSystemName="ICD10">
+        <core:resourceSynopsis>
+            <core:value>International Statistical Classification of Diseases and Related Health Problems (ICD-10). 10th rev. Geneva</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/ICD10/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/ICD10/version/1998">ICD10_1998_RRF</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/ICD10" href="http://informatics.mayo.edu/cts2/rest/codesystem/ICD10">ICD10</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/MPATH"
+        resourceName="MPATH"
+        about="http://purl.bioontology.org/ontology/MPATH"
+        formalName="Mouse pathology" codeSystemName="MPATH">
+        <core:resourceSynopsis>
+            <core:value>A structured controlled vocabulary of mutant and transgenic mouse pathology phenotypes</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MPATH/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MPATH/version/46448">MPATH_46448_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MPATH" href="http://informatics.mayo.edu/cts2/rest/codesystem/MPATH">MPATH</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/RS"
+        resourceName="RS"
+        about="http://purl.bioontology.org/ontology/RS"
+        formalName="Rat Strain Ontology" codeSystemName="RS">
+        <core:resourceSynopsis>
+            <core:value>This ontology defines the hierarchical display of the different rat strains as derived from the parental strains</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/RS/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/RS/version/4.0">RS_4-0_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/RS" href="http://informatics.mayo.edu/cts2/rest/codesystem/RS">RS</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/ZEA"
+        resourceName="ZEA"
+        about="http://purl.bioontology.org/ontology/ZEA"
+        formalName="Maize gross anatomy" codeSystemName="ZEA">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/ZEA/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/ZEA/version/1.1">ZEA_3294_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/ZEA" href="http://informatics.mayo.edu/cts2/rest/codesystem/ZEA">ZEA</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/PW"
+        resourceName="PW"
+        about="http://purl.bioontology.org/ontology/PW"
+        formalName="Pathway ontology" codeSystemName="PW">
+        <core:resourceSynopsis>
+            <core:value>The goal of the Pathway Ontology is to capture the various kinds of biological networks, the relationships between them and the alterations or malfunctioning of such networks within a hierarchical structure. The five nodes are: classic metabolic pathways, regulatory pathways, signaling pathways, drug pathways and disease pathways for complex human conditions. KEGG and Reactome databases, as well as extensive literature searches have been used to choose terms and their position within the tree. A complex human disease pathway is viewed in the context of genetic and environmental attributes that can affect or impair the functioning of various molecular and cellular pathways; their combined, accumulated effect is manifested in the diseased phenotype. In many cases the identity of the malfunctioning dynamic entity is speculated rather than known. Metabolic, regulatory or signaling pathway terms have associated terms for the altered version of the pathway and the level at which the alteration(s) may occur. Proteins with mutations known to affect a particular pathway can be annotated to the normal and altered version(s) of the pathway and to a disease pathway, if known. The ontology provides a unified way to annotate gene products to any type of pathway as well as to deviant pathways. Its hierarchical structure offers the researcher a 'view' of the connections, if not the dependencies between individual pathways, of the possible link between alterations within these complex biological circuitries and diseases.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/PW/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/PW/version/3.1">PW_3-1_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/PW" href="http://informatics.mayo.edu/cts2/rest/codesystem/PW">PW</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/HCPCS"
+        resourceName="HCPCS"
+        about="http://purl.bioontology.org/ontology/HCPCS"
+        formalName="Healthcare Common Procedure Coding System" codeSystemName="HCPCS">
+        <core:resourceSynopsis>
+            <core:value>Healthcare Common Procedure Coding System</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/HCPCS/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/HCPCS/version/2010">HCPCS_2010_RRF</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/HCPCS" href="http://informatics.mayo.edu/cts2/rest/codesystem/HCPCS">HCPCS</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/BHO"
+        resourceName="BHO"
+        about="http://purl.bioontology.org/ontology/BHO"
+        formalName="Bleeding History Phenotype" codeSystemName="BHO">
+        <core:resourceSynopsis>
+            <core:value>An application ontology devoted to the standardized recording of phenotypic data related to hemorrhagic disorders.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/BHO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/BHO/version/0.4">BHO_0-4_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/BHO" href="http://informatics.mayo.edu/cts2/rest/codesystem/BHO">BHO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/TestHDB"
+        resourceName="TestHDB"
+        about="http://purl.bioontology.org/ontology/TestHDB"
+        formalName="Human disease in Bioactivity" codeSystemName="TestHDB">
+        <core:resourceSynopsis>
+            <core:value>test</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/TestHDB/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/TestHDB/version/unknown">TestHDB_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/TestHDB" href="http://informatics.mayo.edu/cts2/rest/codesystem/TestHDB">TestHDB</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/MS"
+        resourceName="MS"
+        about="http://purl.bioontology.org/ontology/MS"
+        formalName="Mass spectrometry" codeSystemName="MS">
+        <core:resourceSynopsis>
+            <core:value>A structured controlled vocabulary for the annotation of mass spectrometry experiments. Developed by the HUPO Proteomics Standards Initiative.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/MS/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/MS/version/46531">MS_46531_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/MS" href="http://informatics.mayo.edu/cts2/rest/codesystem/MS">MS</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/SRC-OSHPDSC"
+        resourceName="SRC-OSHPDSC"
+        about="http://purl.bioontology.org/ontology/SRC-OSHPDSC"
+        formalName="HOM-DATASOURCE_OSHPDSC" codeSystemName="SRC-OSHPDSC">
+        <core:resourceSynopsis>
+            <core:value>OSHPD Datasource ontology for SoCal</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/SRC-OSHPDSC/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/SRC-OSHPDSC/version/1.1">SRC-OSHPDSC_1-1_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/SRC-OSHPDSC" href="http://informatics.mayo.edu/cts2/rest/codesystem/SRC-OSHPDSC">SRC-OSHPDSC</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/PKO"
+        resourceName="PKO"
+        about="http://purl.bioontology.org/ontology/PKO"
+        formalName="PKO_Re" codeSystemName="PKO">
+        <core:resourceSynopsis>
+            <core:value>Testing</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/PKO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/PKO/version/40917">PKO_40917_OWL-DL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/PKO" href="http://informatics.mayo.edu/cts2/rest/codesystem/PKO">PKO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/EO"
+        resourceName="EO"
+        about="http://purl.bioontology.org/ontology/EO"
+        formalName="Plant environmental conditions" codeSystemName="EO">
+        <core:resourceSynopsis>
+            <core:value>A structured controlled vocabulary for the representation of plant environmental conditions.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/EO/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/EO/version/45260">EO_45260_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/EO" href="http://informatics.mayo.edu/cts2/rest/codesystem/EO">EO</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/IDODEN"
+        resourceName="IDODEN"
+        about="http://purl.bioontology.org/ontology/IDODEN"
+        formalName="Dengue Fever Ontology" codeSystemName="IDODEN">
+        <core:resourceSynopsis>
+            <core:value>An ontology for dengue fever.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/IDODEN/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/IDODEN/version/0.001">IDODEN_0-001_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/IDODEN" href="http://informatics.mayo.edu/cts2/rest/codesystem/IDODEN">IDODEN</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.oshpd.installation.5931"
+        resourceName="profectus.oshpd.installation.5931"
+        about="http://purl.bioontology.org/ontology/profectus.oshpd.installation.5931"
+        formalName="profectus.oshpd.installation" codeSystemName="profectus.oshpd.installation.5931">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/profectus.oshpd.installation.5931/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.oshpd.installation.5931/version/1.0">profectus-oshpd-installation-5931_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/profectus.oshpd.installation.5931" href="http://informatics.mayo.edu/cts2/rest/codesystem/profectus.oshpd.installation.5931">profectus.oshpd.installation.5931</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry
+        href="http://informatics.mayo.edu/cts2/rest/codesystem/chi.41353"
+        resourceName="chi.41353"
+        about="http://purl.bioontology.org/ontology/chi.41353"
+        formalName="chi" codeSystemName="chi.41353">
+        <core:resourceSynopsis>
+            <core:value/>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/chi.41353/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/chi.41353/version/1.0">chi-41353_1-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/chi.41353" href="http://informatics.mayo.edu/cts2/rest/codesystem/chi.41353">chi.41353</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/TMA"
+        resourceName="TMA"
+        about="http://purl.bioontology.org/ontology/TMA"
+        formalName="Tissue Microarray Ontology" codeSystemName="TMA">
+        <core:resourceSynopsis>
+            <core:value>Tissue microarrays (TMA) are enormously useful tools for translational research, but incompatibilities in database systems between various researchers and institutions prevent the efficient sharing of data that could help realize their full potential.  The Resource Description Framework (RDF) provides a flexible method to represent knowledge in triples, which take the form Subject-Predicate-Object.  All data resources are described using Uniform Resource Identifiers (URI), which are global in scope.  We present an OWL (Web Ontology Language) schema that expands upon the TMA data exchange specification to address this issue and assist in data sharing and integration.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/TMA/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/TMA/version/1.0.0">TMA_1-0-0_OWL</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/TMA" href="http://informatics.mayo.edu/cts2/rest/codesystem/TMA">TMA</core:codeSystem>
+        </currentVersion>
+    </entry>
+    <entry href="http://informatics.mayo.edu/cts2/rest/codesystem/IMR"
+        resourceName="IMR"
+        about="http://purl.bioontology.org/ontology/IMR"
+        formalName="Molecule role (INOH Protein name/family name ontology)" codeSystemName="IMR">
+        <core:resourceSynopsis>
+            <core:value>A structured controlled vocabulary of concrete protein names and generic (abstract) protein names. This ontology is a INOH pathway annotation ontology, one of a set of ontologies intended to be used in pathway data annotation to ease data integration. This ontology is used to annotate protein names, protein family names, generic/concrete protein names in the INOH pathway data.&lt;br&gt;INOH is part of the BioPAX working group.</core:value>
+        </core:resourceSynopsis>
+        <versions>http://informatics.mayo.edu/cts2/rest/codesystem/IMR/versions</versions>
+        <currentVersion>
+            <core:version href="http://informatics.mayo.edu/cts2/rest/codesystem/IMR/version/45784">IMR_45784_OBO</core:version>
+            <core:codeSystem
+                uri="http://purl.bioontology.org/ontology/IMR" href="http://informatics.mayo.edu/cts2/rest/codesystem/IMR">IMR</core:codeSystem>
+        </currentVersion>
+    </entry>
+</CodeSystemCatalogEntryDirectory>
