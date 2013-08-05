@@ -9,9 +9,14 @@ public abstract class AbstractNameToString extends BaseCts2ModelObject {
 	public String toString() {
 		String returnString;
 		if (StringUtils.isNotBlank(this.getName())) {
-			returnString = "Name: " + this.getName();
+			if (StringUtils.isNotBlank(this.getUri())){
+				returnString = "Name: '" + this.getName() + "' URI: '" + this.getUri() + "'";
+			}
+			else {
+				returnString = "Name: '" + this.getName() + "'";
+			}
 		} else {
-			returnString = "URI: " + this.getUri();
+			returnString = "URI: '" + this.getUri() + "'";
 		}
 
 		return returnString;
