@@ -226,7 +226,7 @@ public class UrlConstructor {
 	 * Creates the value set definition url.
 	 *
 	 * @param valueSetName the value set name
-	 * @param valueSetDefinitionDocumentUri the value set definition document uri
+	 * @param definitionLocalId the value set definition document uri
 	 * @return the string
 	 */
 	public String createValueSetDefinitionUrl(String valueSetName, String definitionLocalId) {
