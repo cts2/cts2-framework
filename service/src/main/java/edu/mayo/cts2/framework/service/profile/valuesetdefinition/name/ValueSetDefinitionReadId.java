@@ -79,6 +79,6 @@ public class ValueSetDefinitionReadId extends NameOrURI {
 	@Override
 	public String toString()
 	{
-		return "ValueSetDefinition " + super.toString() + " ValueSet " + valueSet.toString();
+		return "ValueSetDefinition " + super.toString() + " ValueSet " + (valueSet == null ? "null" :  valueSet.toString());
 	}
 }
