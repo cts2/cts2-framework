@@ -62,4 +62,66 @@ public class ResolvedFilter {
 		this.propertyReference = propertyReference;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 37;
+		int result = 1;
+		result = prime * result + ((matchAlgorithmReference == null) ? 0 : matchAlgorithmReference.hashCode());
+		result = prime * result + ((matchValue == null) ? 0 : matchValue.hashCode());
+		result = prime * result + ((propertyReference == null) ? 0 : propertyReference.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		ResolvedFilter other = (ResolvedFilter) obj;
+		if (matchAlgorithmReference == null)
+		{
+			if (other.matchAlgorithmReference != null)
+			{
+				return false;
+			}
+		}
+		else if (!matchAlgorithmReference.equals(other.matchAlgorithmReference))
+		{
+			return false;
+		}
+		if (matchValue == null)
+		{
+			if (other.matchValue != null)
+			{
+				return false;
+			}
+		}
+		else if (!matchValue.equals(other.matchValue))
+		{
+			return false;
+		}
+		if (propertyReference == null)
+		{
+			if (other.propertyReference != null)
+			{
+				return false;
+			}
+		}
+		else if (!propertyReference.equals(other.propertyReference))
+		{
+			return false;
+		}
+		return true;
+	}
 }

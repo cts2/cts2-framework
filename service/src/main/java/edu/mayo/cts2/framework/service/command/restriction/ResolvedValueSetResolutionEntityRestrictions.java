@@ -2,7 +2,6 @@ package edu.mayo.cts2.framework.service.command.restriction;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 
@@ -38,4 +37,66 @@ public class ResolvedValueSetResolutionEntityRestrictions {
 		this.taggedCodeSystem = taggedCodeSystem;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((codeSystemVersion == null) ? 0 : codeSystemVersion.hashCode());
+		result = prime * result + ((entities == null) ? 0 : entities.hashCode());
+		result = prime * result + ((taggedCodeSystem == null) ? 0 : taggedCodeSystem.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		ResolvedValueSetResolutionEntityRestrictions other = (ResolvedValueSetResolutionEntityRestrictions) obj;
+		if (codeSystemVersion == null)
+		{
+			if (other.codeSystemVersion != null)
+			{
+				return false;
+			}
+		}
+		else if (!codeSystemVersion.equals(other.codeSystemVersion))
+		{
+			return false;
+		}
+		if (entities == null)
+		{
+			if (other.entities != null)
+			{
+				return false;
+			}
+		}
+		else if (!entities.equals(other.entities))
+		{
+			return false;
+		}
+		if (taggedCodeSystem == null)
+		{
+			if (other.taggedCodeSystem != null)
+			{
+				return false;
+			}
+		}
+		else if (!taggedCodeSystem.equals(other.taggedCodeSystem))
+		{
+			return false;
+		}
+		return true;
+	}
 }
