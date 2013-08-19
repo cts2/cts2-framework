@@ -75,4 +75,45 @@ public class ValueSetDefinitionReadId extends NameOrURI {
 	public void setValueSet(NameOrURI valueSet) {
 		this.valueSet = valueSet;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		int hash = super.hashCode();
+		if (valueSet != null)
+		{
+			hash = 37 * hash + valueSet.hashCode();
+		}
+		return hash;
+	}
+	
+	
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		boolean parentEqual = super.equals(obj);
+		if (parentEqual)
+		{
+			if (obj != null && obj instanceof ValueSetDefinitionReadId)
+			{
+				ValueSetDefinitionReadId other = (ValueSetDefinitionReadId)obj;
+				if (valueSet == null)
+				{
+					return (other.valueSet == null);
+				}
+				else
+				{
+					return valueSet.equals(other.valueSet);
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "ValueSetDefinition " + super.toString() + " ValueSet " + (valueSet == null ? "null" :  valueSet.toString());
+	}
 }

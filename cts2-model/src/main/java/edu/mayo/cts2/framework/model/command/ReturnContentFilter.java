@@ -32,9 +32,9 @@ import java.util.Set;
  */
 public class ReturnContentFilter {
 
-    public enum PropertyType {PROPERTY, PRESENTATION, DEFINTION, COMMENT}
-    
-    private Set<PropertyType> propertyTypes = new HashSet<PropertyType>();
+	public enum PropertyType {PROPERTY, PRESENTATION, DEFINTION, COMMENT}
+
+	private Set<PropertyType> propertyTypes = new HashSet<PropertyType>();
 
 	public Set<PropertyType> getPropertyTypes() {
 		return propertyTypes;
@@ -44,4 +44,38 @@ public class ReturnContentFilter {
 		this.propertyTypes = propertyTypes;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 37;
+		int result = 1;
+		result = prime * result + ((propertyTypes == null) ? 0 : propertyTypes.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		ReturnContentFilter other = (ReturnContentFilter) obj;
+		if (propertyTypes == null)
+		{
+			if (other.propertyTypes != null)
+			{
+				return false;
+			}
+		}
+		return propertyTypes.equals(other.propertyTypes);
+	}
 }

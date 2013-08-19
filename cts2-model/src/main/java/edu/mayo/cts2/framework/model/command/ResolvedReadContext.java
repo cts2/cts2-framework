@@ -77,4 +77,84 @@ public class ResolvedReadContext {
 	public void setReturnContentFilter(ReturnContentFilter returnContentFilter) {
 		this.returnContentFilter = returnContentFilter;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 37;
+		int result = super.hashCode();
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
+		result = prime * result + ((changeSetContextUri == null) ? 0 : changeSetContextUri.hashCode());
+		result = prime * result + ((languageReference == null) ? 0 : languageReference.hashCode());
+		result = prime * result + ((referenceTime == null) ? 0 : referenceTime.hashCode());
+		result = prime * result + ((returnContentFilter == null) ? 0 : returnContentFilter.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		ResolvedReadContext other = (ResolvedReadContext) obj;
+		if (active != other.active)
+		{
+			return false;
+		}
+		if (changeSetContextUri == null)
+		{
+			if (other.changeSetContextUri != null)
+			{
+				return false;
+			}
+		}
+		else if (!changeSetContextUri.equals(other.changeSetContextUri))
+		{
+			return false;
+		}
+		if (languageReference == null)
+		{
+			if (other.languageReference != null)
+			{
+				return false;
+			}
+		}
+		else if (!languageReference.equals(other.languageReference))
+		{
+			return false;
+		}
+		if (referenceTime == null)
+		{
+			if (other.referenceTime != null)
+			{
+				return false;
+			}
+		}
+		else if (!referenceTime.equals(other.referenceTime))
+		{
+			return false;
+		}
+		if (returnContentFilter == null)
+		{
+			if (other.returnContentFilter != null)
+			{
+				return false;
+			}
+		}
+		else if (!returnContentFilter.equals(other.returnContentFilter))
+		{
+			return false;
+		}
+		return true;
+	}
 }

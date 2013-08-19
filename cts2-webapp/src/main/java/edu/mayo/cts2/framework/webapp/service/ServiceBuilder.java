@@ -108,7 +108,7 @@ public class ServiceBuilder implements InitializingBean {
 		if(description == null){
 			description = ModelUtils.createOpaqueData(
 				//TODO: Maybe add a little more pizazz to the default description...
-				"A CTS2 Development Framework Service Implmentation." 
+				"A CTS2 Development Framework Service Implementation."
 			);
 		}
 		service.setServiceDescription(description);

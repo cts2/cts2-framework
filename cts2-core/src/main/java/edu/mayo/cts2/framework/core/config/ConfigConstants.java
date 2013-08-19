@@ -23,6 +23,9 @@
  */
 package edu.mayo.cts2.framework.core.config;
 
+import java.net.InetAddress;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * The Class ConfigConstants.
  *
@@ -80,7 +83,19 @@ public class ConfigConstants {
 	public static final String PLUGIN_PROVIDER_CLASS_PROP = "service.provider.class";
 	
 	public static final String SERVER_ROOT_PROPERTY = "server.root";
-	public static final String DEFAULT_SERVER_ROOT_PROPERTY_VALUE = "http://localhost:8080";
+	public static final String DEFAULT_SERVER_ROOT_PROPERTY_VALUE;
+	static {
+		String temp = "http://localhost:8080";
+		try
+		{
+			temp = "http://" + InetAddress.getLocalHost().getHostName() + ":8080";
+		}
+		catch (Exception e)
+		{
+			LogFactory.getLog(ConfigConstants.class).warn("Error determining hostname automatically, using 'localhost'.  ", e);;
+		}
+		DEFAULT_SERVER_ROOT_PROPERTY_VALUE = temp;
+	}
 	
 	public static final String APP_NAME_PROPERTY = "app.name";	
 	public static final String DEFAULT_APP_NAME_PROPERTY_VALUE = "webapp-rest";

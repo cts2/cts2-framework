@@ -138,6 +138,18 @@ public class UrlConstructor {
 	}
 	
 	/**
+	 * Creates the targetof url.
+	 *
+	 * @param codeSystemName the code system name
+	 * @param codeSystemVersionName the code system version name
+	 * @param entityName the entity name
+	 * @return the string
+	 */
+	public String createTargetOfUrl(String codeSystemName, String codeSystemVersionName, String entityName){
+		return this.createEntityUrl(codeSystemName, codeSystemVersionName, entityName) + "/" + URIHelperInterface.TARGETOF;
+	}
+	
+	/**
 	 * Creates the children url.
 	 *
 	 * @param codeSystemName the code system name
@@ -226,7 +238,7 @@ public class UrlConstructor {
 	 * Creates the value set definition url.
 	 *
 	 * @param valueSetName the value set name
-	 * @param valueSetDefinitionDocumentUri the value set definition document uri
+	 * @param definitionLocalId the value set definition document uri
 	 * @return the string
 	 */
 	public String createValueSetDefinitionUrl(String valueSetName, String definitionLocalId) {

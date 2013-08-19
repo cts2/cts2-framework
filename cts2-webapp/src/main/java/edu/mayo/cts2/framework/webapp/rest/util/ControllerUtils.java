@@ -95,7 +95,23 @@ public class ControllerUtils {
 		}
 		return returnSet;
 	}
-	
+
+    public static EntityNameOrURI idToEntityNameOrUri(String id){
+        if(id == null){
+            return null;
+        }
+
+        EntityNameOrURI nameOrUri;
+        if(ModelUtils.isValidUri(id)){
+            nameOrUri = ModelUtils.entityNameOrUriFromUri(id);
+        } else {
+            nameOrUri = ModelUtils.entityNameOrUriFromName(
+                    EncodingUtils.decodeEntityName(id));
+        }
+
+        return nameOrUri;
+    }
+
 	/**
 	 * Gets the reference.
 	 *

@@ -49,10 +49,9 @@ import edu.mayo.cts2.framework.core.plugin.ExportedService;
 public class RefreshableServerContext extends AbstractConfigurableExportedService 
 	implements InitializingBean, ServerContext {
 	
-	private static final String DEFAULT_APPNAME = "webapp";
-	private static final String DEFAULT_SERVERROOT = "http://localhost:8080";
-
-	private String serverRoot = DEFAULT_SERVERROOT;
+	private static final String DEFAULT_APPNAME = "webapp";  //TODO should this point to a ConfigConstant?  DEFAULT_APP_NAME_PROPERTY_VALUE is slightly different.
+	
+	private String serverRoot = ConfigConstants.DEFAULT_SERVER_ROOT_PROPERTY_VALUE;
 
 	private String appName = DEFAULT_APPNAME;
 

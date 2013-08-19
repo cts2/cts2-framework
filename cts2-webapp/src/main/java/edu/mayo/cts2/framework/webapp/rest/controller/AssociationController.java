@@ -23,7 +23,27 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import edu.mayo.cts2.framework.model.association.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import edu.mayo.cts2.framework.model.association.Association;
+import edu.mayo.cts2.framework.model.association.AssociationDirectory;
+import edu.mayo.cts2.framework.model.association.AssociationGraph;
+import edu.mayo.cts2.framework.model.association.AssociationList;
+import edu.mayo.cts2.framework.model.association.AssociationMsg;
+import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
@@ -33,8 +53,6 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
-import edu.mayo.cts2.framework.model.extension.LocalIdAssociation;
-import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
@@ -58,15 +76,6 @@ import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.AssociationQueryBuilder;
 import edu.mayo.cts2.framework.webapp.rest.query.EntityQueryBuilder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The Class AssociationController.
@@ -94,14 +103,14 @@ public class AssociationController extends AbstractMessageWrappingController {
 	@Cts2Service
 	private CodeSystemVersionReadService codeSystemVersionReadService;
 	
-	private static UrlTemplateBinder<LocalIdAssociation> URL_BINDER = new
-			UrlTemplateBinder<LocalIdAssociation>(){
+	private static UrlTemplateBinder<Association> URL_BINDER = new 
+			UrlTemplateBinder<Association>(){
 
 		@Override
-		public Map<String,String> getPathValues(LocalIdAssociation resource) {
+		public Map<String,String> getPathValues(Association resource) {
 			Map<String,String> returnMap = new HashMap<String,String>();
 			
-			CodeSystemVersionReference ref = getAssertedIn(resource.getResource());
+			CodeSystemVersionReference ref = getAssertedIn(resource);
 			
 			returnMap.put(VAR_CODESYSTEMID,
 					ref.getCodeSystem().getContent());
@@ -125,13 +134,13 @@ public class AssociationController extends AbstractMessageWrappingController {
 		}
 	}
 	
-	private final static MessageFactory<LocalIdAssociation> MESSAGE_FACTORY =
-			new MessageFactory<LocalIdAssociation>() {
+	private final static MessageFactory<Association> MESSAGE_FACTORY = 
+			new MessageFactory<Association>() {
 
 		@Override
-		public Message createMessage(LocalIdAssociation resource) {
+		public Message createMessage(Association resource) {
 			AssociationMsg msg = new AssociationMsg();
-			msg.setAssociation(resource.getResource());
+			msg.setAssociation(resource);
 
 			return msg;
 		}
@@ -372,7 +381,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	
 		return this.doRead(
 				httpServletRequest,
-				MESSAGE_FACTORY,
+				MESSAGE_FACTORY, 
 				this.associationReadService,
 				restReadContext,
 				UnknownAssociation.class,
@@ -738,7 +747,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 			
 		return this.doUpdate(
 				httpServletResponse,
-				new LocalIdAssociation(associationLocalName, association),
+				association, 
 				changeseturi,
 				new AssociationReadId(
 						associationLocalName, 
@@ -769,6 +778,52 @@ public class AssociationController extends AbstractMessageWrappingController {
 						this.associationMaintenanceService);
 	
 	}
+
+
+    @InitBinder
+    public void initAssociationQueryServiceRestrictionsBinder(
+            WebDataBinder binder,
+            @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codeSystemVersion,
+            @RequestParam(value=PARAM_SOURCEENTITYID, required=false) String sourceEntity,
+            @RequestParam(value=PARAM_TARGETENTITYID, required=false) String targetEntity,
+            @RequestParam(value=PARAM_SOURCEORTARGETENTITYID, required=false) String sourceOrTargetEntity,
+            @RequestParam(value=PARAM_TARGETLITERALID, required=false) String targetLiteral,
+            @RequestParam(value=PARAM_PREDICATEID, required=false) String predicate,
+            @RequestParam(value=PARAM_TARGETEXPRESSIONID, required=false) String targetExpression) {
+
+        if(binder.getTarget() instanceof AssociationQueryServiceRestrictions){
+            AssociationQueryServiceRestrictions restrictions =
+                    (AssociationQueryServiceRestrictions) binder.getTarget();
+
+            if(StringUtils.isNotBlank(codeSystemVersion)){
+                restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromEither(codeSystemVersion));
+            }
+
+            if(StringUtils.isNotBlank(sourceEntity)){
+                restrictions.setSourceEntity(ControllerUtils.idToEntityNameOrUri(sourceEntity));
+            }
+
+            if(StringUtils.isNotBlank(targetEntity)){
+                restrictions.setTargetEntity(ControllerUtils.idToEntityNameOrUri(targetEntity));
+            }
+
+            if(StringUtils.isNotBlank(sourceOrTargetEntity)){
+                restrictions.setSourceOrTargetEntity(ControllerUtils.idToEntityNameOrUri(sourceOrTargetEntity));
+            }
+
+            if(StringUtils.isNotBlank(targetLiteral)){
+                restrictions.setTargetLiteral(ControllerUtils.idToEntityNameOrUri(targetLiteral));
+            }
+
+            if(StringUtils.isNotBlank(predicate)){
+                restrictions.setPredicate(ControllerUtils.idToEntityNameOrUri(predicate));
+            }
+
+            if(StringUtils.isNotBlank(targetExpression)){
+                restrictions.setTargetExpression(ControllerUtils.idToEntityNameOrUri(targetExpression));
+            }
+        }
+    }
 	
 	private AssociationQueryBuilder getNewResourceQueryBuilder(){
 		return new AssociationQueryBuilder(
