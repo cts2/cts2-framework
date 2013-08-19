@@ -24,16 +24,12 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
-import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceRestrictions;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -696,9 +692,9 @@ public class AssociationController extends AbstractMessageWrappingController {
 				codeSystemVersionId, 
 				readContext);
 		
-		associationRestrictions.setPredicate(
-				ModelUtils.entityNameOrUriFromName(
-						this.getScopedEntityName(entityName, codeSystemName)));
+		associationRestrictions.setPredicateEntity(
+                ModelUtils.entityNameOrUriFromName(
+                        this.getScopedEntityName(entityName, codeSystemName)));
 		
 		return this.getAssociationsOfCodeSystemVersion(
 				httpServletRequest, 
@@ -791,7 +787,7 @@ public class AssociationController extends AbstractMessageWrappingController {
             @RequestParam(value=PARAM_TARGETENTITYID, required=false) String targetEntity,
             @RequestParam(value=PARAM_SOURCEORTARGETENTITYID, required=false) String sourceOrTargetEntity,
             @RequestParam(value=PARAM_TARGETLITERALID, required=false) String targetLiteral,
-            @RequestParam(value=PARAM_PREDICATEID, required=false) String predicate,
+            @RequestParam(value=PARAM_PREDICATEID, required=false) String predicateEntity,
             @RequestParam(value=PARAM_TARGETEXPRESSIONID, required=false) String targetExpression) {
 
         if(binder.getTarget() instanceof AssociationQueryServiceRestrictions){
@@ -818,8 +814,8 @@ public class AssociationController extends AbstractMessageWrappingController {
                 restrictions.setTargetLiteral(ControllerUtils.idToEntityNameOrUri(targetLiteral));
             }
 
-            if(StringUtils.isNotBlank(predicate)){
-                restrictions.setPredicate(ControllerUtils.idToEntityNameOrUri(predicate));
+            if(StringUtils.isNotBlank(predicateEntity)){
+                restrictions.setPredicateEntity(ControllerUtils.idToEntityNameOrUri(predicateEntity));
             }
 
             if(StringUtils.isNotBlank(targetExpression)){

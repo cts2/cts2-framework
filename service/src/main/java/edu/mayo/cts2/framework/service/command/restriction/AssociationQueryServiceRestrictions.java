@@ -43,7 +43,7 @@ public class AssociationQueryServiceRestrictions {
 	
 	private EntityNameOrURI targetLiteral;
 
-	private EntityNameOrURI predicate;
+	private EntityNameOrURI predicateEntity;
 	
 	private EntityNameOrURI targetExpression;
 
@@ -87,12 +87,12 @@ public class AssociationQueryServiceRestrictions {
 		this.targetLiteral = targetLiteral;
 	}
 
-	public EntityNameOrURI getPredicate() {
-		return predicate;
+	public EntityNameOrURI getPredicateEntity() {
+		return predicateEntity;
 	}
 
-	public void setPredicate(EntityNameOrURI predicate) {
-		this.predicate = predicate;
+	public void setPredicateEntity(EntityNameOrURI predicateEntity) {
+		this.predicateEntity = predicateEntity;
 	}
 
 	public EntityNameOrURI getTargetExpression() {
