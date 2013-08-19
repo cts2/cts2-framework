@@ -24,18 +24,21 @@
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.service.command.restriction.MapEntryQueryServiceRestrictions;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.mayo.cts2.framework.model.association.Association;
@@ -778,6 +781,52 @@ public class AssociationController extends AbstractMessageWrappingController {
 						this.associationMaintenanceService);
 	
 	}
+
+
+    @InitBinder
+    public void initAssociationQueryServiceRestrictionsBinder(
+            WebDataBinder binder,
+            @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) String codeSystemVersion,
+            @RequestParam(value=PARAM_SOURCEENTITYID, required=false) String sourceEntity,
+            @RequestParam(value=PARAM_TARGETENTITYID, required=false) String targetEntity,
+            @RequestParam(value=PARAM_SOURCEORTARGETENTITYID, required=false) String sourceOrTargetEntity,
+            @RequestParam(value=PARAM_TARGETLITERALID, required=false) String targetLiteral,
+            @RequestParam(value=PARAM_PREDICATEID, required=false) String predicate,
+            @RequestParam(value=PARAM_TARGETEXPRESSIONID, required=false) String targetExpression) {
+
+        if(binder.getTarget() instanceof AssociationQueryServiceRestrictions){
+            AssociationQueryServiceRestrictions restrictions =
+                    (AssociationQueryServiceRestrictions) binder.getTarget();
+
+            if(StringUtils.isNotBlank(codeSystemVersion)){
+                restrictions.setCodeSystemVersion(ModelUtils.nameOrUriFromEither(codeSystemVersion));
+            }
+
+            if(StringUtils.isNotBlank(sourceEntity)){
+                restrictions.setSourceEntity(ControllerUtils.idToEntityNameOrUri(sourceEntity));
+            }
+
+            if(StringUtils.isNotBlank(targetEntity)){
+                restrictions.setTargetEntity(ControllerUtils.idToEntityNameOrUri(targetEntity));
+            }
+
+            if(StringUtils.isNotBlank(sourceOrTargetEntity)){
+                restrictions.setSourceOrTargetEntity(ControllerUtils.idToEntityNameOrUri(sourceOrTargetEntity));
+            }
+
+            if(StringUtils.isNotBlank(targetLiteral)){
+                restrictions.setTargetLiteral(ControllerUtils.idToEntityNameOrUri(targetLiteral));
+            }
+
+            if(StringUtils.isNotBlank(predicate)){
+                restrictions.setPredicate(ControllerUtils.idToEntityNameOrUri(predicate));
+            }
+
+            if(StringUtils.isNotBlank(targetExpression)){
+                restrictions.setTargetExpression(ControllerUtils.idToEntityNameOrUri(targetExpression));
+            }
+        }
+    }
 	
 	private AssociationQueryBuilder getNewResourceQueryBuilder(){
 		return new AssociationQueryBuilder(

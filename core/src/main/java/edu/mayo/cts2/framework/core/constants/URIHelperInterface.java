@@ -383,6 +383,8 @@ interface PathParameters {
 	public static final String PARAM_TARGETENTITYID = "targetentity";	
 	public static final String PARAM_SOURCEORTARGETENTITYID = "sourceortargetentity";
 	public static final String PARAM_PREDICATEID = "predicate";
+    public static final String PARAM_TARGETLITERALID = "targetliteral";
+    public static final String PARAM_TARGETEXPRESSIONID = "targetexpression";
 
 	public static final String PARAM_MATCHALGORITHM = "matchalgorithm";
 	public static final String PARAM_MATCHVALUE = "matchvalue";

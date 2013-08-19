@@ -23,11 +23,6 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
@@ -35,6 +30,10 @@ import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class ControllerUtils.
@@ -95,7 +94,23 @@ public class ControllerUtils {
 		}
 		return returnSet;
 	}
-	
+
+    public static EntityNameOrURI idToEntityNameOrUri(String id){
+        if(id == null){
+            return null;
+        }
+
+        EntityNameOrURI nameOrUri;
+        if(ModelUtils.isValidUri(id)){
+            nameOrUri = ModelUtils.entityNameOrUriFromUri(id);
+        } else {
+            nameOrUri = ModelUtils.entityNameOrUriFromName(
+                    EncodingUtils.decodeEntityName(id));
+        }
+
+        return nameOrUri;
+    }
+
 	/**
 	 * Gets the reference.
 	 *

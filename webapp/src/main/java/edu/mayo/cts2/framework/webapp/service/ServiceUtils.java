@@ -23,19 +23,18 @@
  */
 package edu.mayo.cts2.framework.webapp.service;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.springframework.util.Assert;
-
 import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.model.service.core.FunctionalProfileEntry;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.profile.FunctionalConformance;
 import edu.mayo.cts2.framework.service.profile.StructuralConformance;
+import org.springframework.util.Assert;
+
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class ServiceUtils.
@@ -109,9 +108,12 @@ public final class ServiceUtils {
 				
 				FunctionalProfileEntry entry = new FunctionalProfileEntry();
 				entry.setContent(functional.value().name());
+
+                /* TODO: re-enable HREFS when these service pages are finished
 				entry.setHref(
 					urlConstructor.
 						createServiceUrl(structural.value(), functional.value()));
+		        */
 
 				element.addFunctionalProfile(entry);
 				element.setStructuralProfile(structural.value());
