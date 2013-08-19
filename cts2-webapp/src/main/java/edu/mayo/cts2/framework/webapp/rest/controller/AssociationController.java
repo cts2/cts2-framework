@@ -23,27 +23,7 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
-import edu.mayo.cts2.framework.model.association.Association;
-import edu.mayo.cts2.framework.model.association.AssociationDirectory;
-import edu.mayo.cts2.framework.model.association.AssociationGraph;
-import edu.mayo.cts2.framework.model.association.AssociationList;
-import edu.mayo.cts2.framework.model.association.AssociationMsg;
-import edu.mayo.cts2.framework.model.association.GraphNode;
+import edu.mayo.cts2.framework.model.association.*;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
@@ -53,6 +33,7 @@ import edu.mayo.cts2.framework.model.core.Message;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectory;
 import edu.mayo.cts2.framework.model.entity.EntityList;
+import edu.mayo.cts2.framework.model.extension.LocalIdAssociation;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.service.exception.UnknownAssociation;
@@ -76,6 +57,18 @@ import edu.mayo.cts2.framework.webapp.rest.command.RestFilter;
 import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.AssociationQueryBuilder;
 import edu.mayo.cts2.framework.webapp.rest.query.EntityQueryBuilder;
+import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class AssociationController.
@@ -103,14 +96,14 @@ public class AssociationController extends AbstractMessageWrappingController {
 	@Cts2Service
 	private CodeSystemVersionReadService codeSystemVersionReadService;
 	
-	private static UrlTemplateBinder<Association> URL_BINDER = new 
-			UrlTemplateBinder<Association>(){
+	private static UrlTemplateBinder<LocalIdAssociation> URL_BINDER = new
+			UrlTemplateBinder<LocalIdAssociation>(){
 
 		@Override
-		public Map<String,String> getPathValues(Association resource) {
+		public Map<String,String> getPathValues(LocalIdAssociation resource) {
 			Map<String,String> returnMap = new HashMap<String,String>();
 			
-			CodeSystemVersionReference ref = getAssertedIn(resource);
+			CodeSystemVersionReference ref = getAssertedIn(resource.getResource());
 			
 			returnMap.put(VAR_CODESYSTEMID,
 					ref.getCodeSystem().getContent());
@@ -134,13 +127,13 @@ public class AssociationController extends AbstractMessageWrappingController {
 		}
 	}
 	
-	private final static MessageFactory<Association> MESSAGE_FACTORY = 
-			new MessageFactory<Association>() {
+	private final static MessageFactory<LocalIdAssociation> MESSAGE_FACTORY =
+			new MessageFactory<LocalIdAssociation>() {
 
 		@Override
-		public Message createMessage(Association resource) {
+		public Message createMessage(LocalIdAssociation resource) {
 			AssociationMsg msg = new AssociationMsg();
-			msg.setAssociation(resource);
+			msg.setAssociation(resource.getResource());
 
 			return msg;
 		}
@@ -381,7 +374,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 	
 		return this.doRead(
 				httpServletRequest,
-				MESSAGE_FACTORY, 
+				MESSAGE_FACTORY,
 				this.associationReadService,
 				restReadContext,
 				UnknownAssociation.class,
@@ -747,7 +740,7 @@ public class AssociationController extends AbstractMessageWrappingController {
 			
 		return this.doUpdate(
 				httpServletResponse,
-				association, 
+				new LocalIdAssociation(associationLocalName, association),
 				changeseturi,
 				new AssociationReadId(
 						associationLocalName, 

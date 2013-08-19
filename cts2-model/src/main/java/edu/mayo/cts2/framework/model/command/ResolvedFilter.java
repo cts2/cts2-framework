@@ -69,7 +69,7 @@ public class ResolvedFilter {
 		int result = 1;
 		result = prime * result + ((matchAlgorithmReference == null) ? 0 : matchAlgorithmReference.hashCode());
 		result = prime * result + ((matchValue == null) ? 0 : matchValue.hashCode());
-		result = prime * result + ((propertyReference == null) ? 0 : propertyReference.hashCode());
+		result = prime * result + ((componentReference == null) ? 0 : componentReference.hashCode());
 		return result;
 	}
 
@@ -111,14 +111,14 @@ public class ResolvedFilter {
 		{
 			return false;
 		}
-		if (propertyReference == null)
+		if (componentReference == null)
 		{
-			if (other.propertyReference != null)
+			if (other.componentReference != null)
 			{
 				return false;
 			}
 		}
-		else if (!propertyReference.equals(other.propertyReference))
+		else if (!componentReference.equals(other.componentReference))
 		{
 			return false;
 		}
