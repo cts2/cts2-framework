@@ -204,8 +204,25 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 								getUrlString(request),
 								getParameterString(request));
 	}
-	
-	/**
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public CTS2Exception handleException(
+            HttpServletResponse response,
+            HttpServletRequest request,
+            IllegalArgumentException ex) {
+        int status = HttpServletResponse.SC_BAD_REQUEST;
+
+        response.setStatus(status);
+
+        return ExceptionFactory.createUnknownException(
+                "Invalid request. " + ex.getMessage() != null ? ex.getMessage() : "",
+                getUrlString(request),
+                getParameterString(request));
+    }
+
+
+    /**
 	 * Gets the url string.
 	 *
 	 * @param request the request
