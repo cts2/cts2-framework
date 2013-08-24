@@ -101,9 +101,22 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 	 */
 	@ExceptionHandler(CTS2Exception.class)
 	@ResponseBody
-	public CTS2Exception handleException(HttpServletResponse response, CTS2Exception ex) {
+	public CTS2Exception handleException(HttpServletRequest request, HttpServletResponse response, CTS2Exception ex) {
 		int status = this.cts2RestExceptionCodeMapper.getErrorCode(ex);
 
+		try
+		{
+			//Horrible hack for Firefox - https://github.com/cts2/cts2-framework/issues/30 - https://bugzilla.mozilla.org/show_bug.cgi?id=907800
+			if (status == 408 && request.getHeader("User-Agent").indexOf("Firefox") > 0)
+			{
+				status = 508;
+			}
+		}
+		catch (Exception e)
+		{
+			// noop - just want to ensure this hack doesn't break other things unexpectedly
+		}
+		
 		if(ex.getSeverity() == null){
 			ex.setSeverity(LoggingLevel.ERROR);
 		}
