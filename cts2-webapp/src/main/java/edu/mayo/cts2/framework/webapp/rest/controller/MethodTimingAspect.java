@@ -28,16 +28,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
+import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang.ArrayUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-
+import edu.mayo.cts2.framework.core.timeout.Timeout;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 
@@ -51,6 +52,7 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 public class MethodTimingAspect {
 	
 	private ExecutorService executorService = Executors.newCachedThreadPool();
+	private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 	
 	/**
 	 * Execute.
@@ -82,11 +84,29 @@ public class MethodTimingAspect {
 			throw new IllegalStateException("Pointcut failure!");
 		}
 		
+		final AtomicLong threadId = new AtomicLong(-1); 
+		
 		Future<Object> future = this.executorService.submit(new Callable<Object>(){
 
 			@Override
 			public Object call() {
 				try {
+					threadId.set(Thread.currentThread().getId());
+					
+					/*
+					 * The model here is that we clear any previous timeout before we launch the job. A design flaw is that we
+					 * can't tell if we are clearing a previous timeout that simply hadn't been cleaned up yet, or if we are
+					 * clearing a timeout meant for this thread that happened before this thread even launched. The second scenario 
+					 * seems unlikely as the minimum timeout is 1 second - hard to believe it would take more than 1 second to 
+					 * launch this thread. Plus, this thread would have to launch in the exact window in between the timeout and 
+					 * the future.cancel()
+					 * 
+					 * If the above scenario did defy all odds and happen , it shouldn't cause much harm, as the end result would
+					 * be that this thread wouldn't see the cancelled flag - and would churn away for no reason, wasting some cpu
+					 * cycles, but doing no other harm.
+					 */
+					
+					Timeout.clearThreadFlag(threadId.get());
 					return pjp.proceed();
 				} catch (Throwable e) {
 					
@@ -114,6 +134,30 @@ public class MethodTimingAspect {
 		} catch (ExecutionException e) {
 			throw e.getCause();
 		} catch (TimeoutException e) {
+			try
+			{
+				//Set the flag for the processing thread to read
+				Timeout.setTimeLimitExceeded(threadId.get());
+				
+				//Schedule another future to make sure we don't cause a memory leak if the thread IDs aren't being reused (though, they should be)
+				//and therefore don't get cleared up by the next run.  Give the running thread 30 seconds to see the cancelled flag before this 
+				//cleanup takes place.
+				this.scheduledExecutorService.schedule(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Timeout.clearThreadFlag(threadId.get());
+					}
+				}, 30, TimeUnit.SECONDS);
+				
+				//Interrupt the processing thread so it has an opportunity to check the flag and stop.
+				future.cancel(true);
+			}
+			catch (Exception e1)
+			{
+				// don't think this is possible, but just in case...
+			}
 			throw ExceptionFactory.createTimeoutException(e.getMessage());
 		}
 	}
