@@ -539,6 +539,33 @@ public class CodeSystemVersionController extends AbstractMessageWrappingControll
 		return msg;
 	}
 	
+	/**
+	 * Gets the code system version by name.
+	 *
+	 * @param httpServletRequest the http servlet request
+	 * @param codeSystemVersionName the code system version name
+	 * @return the code system version by name
+	 */
+	@RequestMapping(value={	
+			PATH_CODESYSTEMVERSIONBYID
+			},
+		method=RequestMethod.GET)
+	public Object getCodeSystemVersionByNameOrOfficialResourceVersionId(
+			HttpServletRequest httpServletRequest,
+			RestReadContext restReadContext,
+			QueryControl queryControl,
+			@PathVariable(VAR_CODESYSTEMVERSIONID) String versionId) {
+		
+		Object msg = this.doRead(
+					httpServletRequest, 
+					MESSAGE_FACTORY, 
+					this.codeSystemVersionReadService, 
+					restReadContext,
+					UnknownCodeSystemVersion.class,
+					ModelUtils.nameOrUriFromName(versionId));
+		return msg;
+	}
+	
 	@RequestMapping(value=PATH_CODESYSTEMVERSIONBYURI, method=RequestMethod.GET)
 	public ModelAndView getCodeSystemVersionByUri(
 			HttpServletRequest httpServletRequest,

@@ -64,6 +64,8 @@ public interface URIHelperInterface extends PathKeywords, PathVariables,
 	public static final String PATH_CODESYSTEMVERSIONS = "/" + CODESYSTEMVERSIONS;
 	
 	public static final String PATH_CODESYSTEMVERSION = "/" + CODESYSTEMVERSION;
+	
+	public static final String PATH_CODESYSTEMVERSIONBYID = "/" + CODESYSTEMVERSION + "/{" + VAR_CODESYSTEMVERSIONID + "}";
 
 	public static final String PATH_CODESYSTEMVERSIONS_OF_CODESYSTEM = 
 		"/" + CODESYSTEM + "/{" + VAR_CODESYSTEMID + "}/" + VERSIONS;
