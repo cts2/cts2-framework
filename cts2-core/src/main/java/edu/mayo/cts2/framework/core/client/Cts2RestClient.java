@@ -38,6 +38,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.CommonsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -52,6 +53,9 @@ import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
  */
 @SuppressWarnings("deprecation")
 public class Cts2RestClient {
+	
+	public static int connectTimeoutMS = 5000;
+	public static int readTimeoutMS = 30000;
 	
 	private static Cts2RestClient instance;
 	
@@ -139,6 +143,10 @@ public class Cts2RestClient {
 		} else {
 			restTemplate = new RestTemplate();
 		}
+		
+		SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
+		rf.setConnectTimeout(connectTimeoutMS);
+		rf.setReadTimeout(readTimeoutMS);
 		
 		List<HttpMessageConverter<?>> list = new ArrayList<HttpMessageConverter<?>>();
 		
