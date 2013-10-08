@@ -82,7 +82,7 @@ public class ResolvedReadContext {
 	public int hashCode()
 	{
 		final int prime = 37;
-		int result = super.hashCode();
+		int result = 1;
 		result = prime * result + ((active == null) ? 0 : active.hashCode());
 		result = prime * result + ((changeSetContextUri == null) ? 0 : changeSetContextUri.hashCode());
 		result = prime * result + ((languageReference == null) ? 0 : languageReference.hashCode());
