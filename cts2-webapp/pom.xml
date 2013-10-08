@@ -357,8 +357,6 @@
 				<version>2.3</version>
 				<configuration>
 					<packagingExcludes>
-						WEB-INF/lib/xml-apis-*.jar,
-						WEB-INF/lib/xercesImpl-*.jar,
 						WEB-INF/lib/xmlParserAPIs-*.jar
 					</packagingExcludes>
 				</configuration>

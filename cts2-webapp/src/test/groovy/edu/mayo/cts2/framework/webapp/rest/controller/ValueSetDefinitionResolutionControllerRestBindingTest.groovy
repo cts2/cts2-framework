@@ -82,7 +82,7 @@ class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRe
 		def isCalled = false;
 		
 		def rs = [
-			resolveDefinition:{ p1,p2,p3,p4,p5,p6,p7-> 
+			resolveDefinition:{ p1,p2,p3,p4,p5,p6->
 				isCalled = true
 				new ResolvedValueSetResult(new ResolvedValueSetHeader(
 					resolutionOf: new ValueSetDefinitionReference(
@@ -107,7 +107,7 @@ class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRe
 		def isCalled = false;
 		
 		def rs = [
-			resolveDefinition:{ p1,p2,p3,p4,p5,p6,p7-> 
+			resolveDefinition:{ p1,p2,p3,p4,p5,p6->
 				isCalled = true
 				new ResolvedValueSetResult(new ResolvedValueSetHeader(
 					resolutionOf: new ValueSetDefinitionReference(

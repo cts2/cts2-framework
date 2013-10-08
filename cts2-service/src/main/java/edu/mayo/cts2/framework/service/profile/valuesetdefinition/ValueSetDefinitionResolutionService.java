@@ -63,7 +63,6 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
 			NameOrURI tag,
-			ResolvedValueSetResolutionEntityQuery query,
 			SortCriteria sortCriteria,
 			ResolvedReadContext readContext, 
 			Page page);

@@ -239,8 +239,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 						resolveDefinition(
 								definitionId, 
 								codeSystemVersions, 
-								tag, 
-								entityQuery,
+								tag,
 								this.resolveSort(queryControl, this.valueSetDefinitionResolutionService), 
 								readContext,
 								page);
