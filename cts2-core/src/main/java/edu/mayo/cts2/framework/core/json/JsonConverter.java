@@ -23,14 +23,10 @@
  */
 package edu.mayo.cts2.framework.core.json;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.google.gson.*;
+import edu.mayo.cts2.framework.model.Cts2ModelObject;
+import edu.mayo.cts2.framework.model.core.TsAnyType;
+import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -41,24 +37,13 @@ import org.reflections.util.FilterBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.FieldNamingStrategy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import edu.mayo.cts2.framework.model.Cts2ModelObject;
-import edu.mayo.cts2.framework.model.core.TsAnyType;
-import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Responsible for converting CTS2 Model output into JSON.
@@ -68,8 +53,11 @@ import edu.mayo.cts2.framework.model.entity.EntityDescription;
 @Component
 public class JsonConverter {
 
-	private static String MODEL_PACKAGE = "edu.mayo.cts2.framework.model";
-	private static String WSDL_PACKAGE = "edu.mayo.cts2.framework.model.wsdl.*";
+	private static final String MODEL_PACKAGE = "edu.mayo.cts2.framework.model";
+	private static final String WSDL_PACKAGE = "edu.mayo.cts2.framework.model.wsdl.*";
+
+    private static final String LIST_SUFFIX = "List";
+    private static final String CHOICE_VALUE = "_choiceValue";
 
 	private Gson gson;
 
@@ -106,7 +94,7 @@ public class JsonConverter {
 				.getSubTypesOf(Cts2ModelObject.class);
 
 		for (Class<? extends Cts2ModelObject> type : types) {
-			String name = StringUtils.uncapitalize(type.getSimpleName());
+			String name = type.getSimpleName();
 			cache.put(name, type);
 		}
 
@@ -122,9 +110,7 @@ public class JsonConverter {
 	public String toJson(Object cts2Object) {
 		JsonElement element = this.gson.toJsonTree(cts2Object);
 		JsonObject object = new JsonObject();
-		object.add(
-			StringUtils.uncapitalize(
-					cts2Object.getClass().getSimpleName()), element);
+		object.add(cts2Object.getClass().getSimpleName(), element);
 
 		return object.toString();
 	}
@@ -196,8 +182,7 @@ public class JsonConverter {
 				f.setAccessible(true);
 				Object fieldValue = f.get(obj);
 				if (fieldValue != null) {
-					Field choiceValue = obj.getClass().getDeclaredField(
-							"_choiceValue");
+					Field choiceValue = obj.getClass().getDeclaredField(CHOICE_VALUE);
 					choiceValue.setAccessible(true);
 					choiceValue.set(obj, fieldValue);
 					break;
@@ -226,7 +211,7 @@ public class JsonConverter {
 
 			@Override
 			public boolean shouldSkipField(FieldAttributes f) {
-				return f.getName().equals("_choiceValue");
+				return f.getName().equals(CHOICE_VALUE);
 			}
 
 			@Override
@@ -250,8 +235,13 @@ public class JsonConverter {
 				if(array[0] == '_'){
 					array = ArrayUtils.remove(array, 0);
 				}
+
+                String name = new String(array);
+                if(name.endsWith(LIST_SUFFIX)){
+                    name = StringUtils.removeEnd(name, LIST_SUFFIX);
+                }
 				
-				return new String(array);
+				return name;
 			}
 			
 		});

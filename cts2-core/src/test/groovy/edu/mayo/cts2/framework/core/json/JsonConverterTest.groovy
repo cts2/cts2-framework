@@ -25,7 +25,7 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def json = """
-		{"codeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTaskList":[],"usedOntologyEngineeringToolList":[],"releaseFormatList":[],"about":"urn:oid:about","keywordList":[],"resourceTypeList":[],"additionalDocumentationList":[],"sourceAndRoleList":[],"noteList":[],"propertyList":[],"alternateIDList":[],"entryState":"ACTIVE"}}
+		{"CodeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTask":[],"usedOntologyEngineeringTool":[],"releaseFormat":[],"about":"urn:oid:about","keyword":[],"resourceType":[],"additionalDocumentation":[],"sourceAndRole":[],"note":[],"property":[],"alternateID":[],"entryState":"ACTIVE"}}
 		"""	
 		
 		assertEquals CodeSystemCatalogEntry, converter.getJsonClass(json)
@@ -36,7 +36,7 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def json = """
-		{"codeSystemCatalogEntry":{"somethingElse" : "aDifferentThing", "codeSystemName":"csname","about":"urn:oid:about","entryState":"ACTIVE"}}
+		{"CodeSystemCatalogEntry":{"somethingElse" : "aDifferentThing", "codeSystemName":"csname","about":"urn:oid:about","entryState":"ACTIVE"}}
 		"""
 		
 		def cs = converter.fromJson(json);
@@ -62,7 +62,7 @@ class JsonConverterTest {
 		def converter = new JsonConverter()
 		
 		def json = """
-		{"codeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTaskList":[],"usedOntologyEngineeringToolList":[],"releaseFormatList":[],"about":"urn:oid:about","keywordList":[],"resourceTypeList":[],"additionalDocumentationList":[],"sourceAndRoleList":[],"noteList":[],"propertyList":[],"alternateIDList":[],"entryState":"ACTIVE"}}
+		{"CodeSystemCatalogEntry":{"codeSystemName":"csname","designedForOntologyTask":[],"usedOntologyEngineeringTool":[],"releaseFormat":[],"about":"urn:oid:about","keyword":[],"resourceType":[],"additionalDocumentation":[],"sourceAndRole":[],"note":[],"property":[],"alternateID":[],"entryState":"ACTIVE"}}
 		"""
 		
 		assertEquals "csname", converter.fromJson(json, CodeSystemCatalogEntry).codeSystemName
@@ -112,7 +112,7 @@ class JsonConverterTest {
 		cs.addKeyword("test1");
 		cs.addKeyword("test2");
 
-		assertTrue converter.toJson(cs).contains("\"keywordList\":[\"test1\",\"test2\"]");
+		assertTrue converter.toJson(cs).contains("\"keyword\":[\"test1\",\"test2\"]");
 	}
 
     @Test
