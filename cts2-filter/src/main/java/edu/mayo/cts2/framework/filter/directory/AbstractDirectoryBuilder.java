@@ -121,7 +121,7 @@ public abstract class AbstractDirectoryBuilder<T> implements DirectoryBuilder<T>
 	@Override
 	public DirectoryBuilder<T> restrict(Query query) {
 		if(this.query != null){
-			throw new IllegalStateException("Query alread added.");
+			throw new IllegalStateException("Query already added.");
 		}
 		
 		this.query = query;
