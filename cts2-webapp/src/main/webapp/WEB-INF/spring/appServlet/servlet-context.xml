@@ -839,42 +839,4 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
-	<!-- NOT NEEDED -->
-	<!-- <beans:bean -->
-	<!-- class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"> -->
-	<!-- <beans:property name="mediaTypes"> -->
-	<!-- <beans:map> -->
-	<!-- <beans:entry key="xml" value="application/xml" /> -->
-	<!-- <beans:entry key="json" value="application/json" /> -->
-	<!-- <beans:entry key="htm" value="text/html" /> -->
-	<!-- <beans:entry key="html" value="text/html" /> -->
-	<!-- </beans:map> -->
-	<!-- </beans:property> -->
-	<!-- <beans:property name="viewResolvers"> -->
-	<!-- <util:list> -->
-	<!-- <beans:bean -->
-	<!-- class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
-	<!-- <beans:property name="prefix" value="/WEB-INF/views/" /> -->
-	<!-- <beans:property name="suffix" value=".jsp" /> -->
-	<!-- </beans:bean> -->
-	<!-- </util:list> -->
-	<!-- </beans:property> -->
-	<!-- <beans:property name="defaultViews"> -->
-	<!-- <util:list> -->
-	<!-- <beans:bean class="edu.mayo.cts2.framework.webapp.rest.view.XmlView"> -->
-	<!-- <beans:property name="modelKey"> -->
-	<!-- <util:constant -->
-	<!-- static-field="edu.mayo.cts2.framework.core.constants.ModelAndViewInterface.CTS2_MODEL_OBJECT" 
-		/> -->
-	<!-- </beans:property> -->
-	<!-- <beans:property name="marshaller" ref="marshaller" /> -->
-	<!-- </beans:bean> -->
-	<!-- </util:list> -->
-	<!-- </beans:property> -->
-	<!-- <beans:property name="defaultContentType" value="application/xml" /> -->
-	<!-- <beans:property name="ignoreAcceptHeader" value="false" /> -->
-	<!-- <beans:property name="favorParameter" value="true" /> -->
-	<!-- <beans:property name="favorPathExtension" value="false" /> -->
-	<!-- </beans:bean> -->
-
 </beans:beans>
