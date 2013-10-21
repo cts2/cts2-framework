@@ -297,6 +297,12 @@
 			<version>0.9.8</version>
 		</dependency>
 
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>8.7</version>
+        </dependency>
+
 	</dependencies>
 
 	<repositories>

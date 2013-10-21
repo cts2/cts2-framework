@@ -1,22 +1,22 @@
 package edu.mayo.cts2.framework.core.json
 
-import static org.junit.Assert.*
-
-import javax.xml.transform.stream.StreamSource
-
-import org.junit.Test
-import org.springframework.core.io.ClassPathResource
-import org.springframework.core.io.Resource
-
 import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
-import edu.mayo.cts2.framework.model.core.EntryDescription
-import edu.mayo.cts2.framework.model.core.ScopedEntityName
-import edu.mayo.cts2.framework.model.core.TsAnyType
+import edu.mayo.cts2.framework.model.core.*
+import edu.mayo.cts2.framework.model.core.types.ChangeType
 import edu.mayo.cts2.framework.model.entity.Designation
 import edu.mayo.cts2.framework.model.entity.EntityDescription
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 import edu.mayo.cts2.framework.model.service.exception.UnsupportedNameOrURI
+import edu.mayo.cts2.framework.model.updates.ChangeSet
+import edu.mayo.cts2.framework.model.updates.ChangeableResource
+import org.junit.Test
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
+
+import javax.xml.transform.stream.StreamSource
+
+import static org.junit.Assert.*
 
 class JsonConverterTest {
 	
@@ -136,7 +136,22 @@ class JsonConverterTest {
 		
 		converter.toJson(cs)
 	}
-	
+
+    @Test
+    void TestChangeSet(){
+        def converter = new JsonConverter()
+
+        def cs = new ChangeSet()
+        cs.setChangeSetURI("111")
+
+        def resource = new ChangeableResource()
+        resource.codeSystem = new CodeSystemCatalogEntry(codeSystemName: "asdf", about: "asdf")
+        resource.entryOrder = 1
+        resource.changeableElementGroup = new ChangeableElementGroup(changeDescription: new ChangeDescription(changeType: ChangeType.CREATE))
+        cs.addMember(resource)
+
+        println converter.toJson(cs)
+    }
 	
 	@Test
 	void TestGetJsonBlankSynopsisValue(){

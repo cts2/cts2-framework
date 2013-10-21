@@ -796,6 +796,10 @@
 			<beans:property name="marshaller" ref="marshaller" />
 			<beans:property name="unmarshaller" ref="marshaller" />
 		</beans:bean>
+        <beans:bean
+            class="edu.mayo.cts2.framework.webapp.rest.converter.Cts2v10XmlHttpMessageConverter">
+            <beans:property name="cts2Marshaller" ref="marshaller" />
+        </beans:bean>
 		<beans:bean
 			class="edu.mayo.cts2.framework.webapp.rest.converter.MappingGsonHttpMessageConverter" />
 		<beans:bean

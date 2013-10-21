@@ -48,7 +48,7 @@ class MappingGsonHttpMessageConverterTest {
 		
 		assertNotNull json
 		
-		assertEquals '{"jTablesResponse":{"Result":"OK","Records":["hi","there"]}}', json
+		assertEquals '{"JTablesResponse":{"Result":"OK","Records":["hi","there"]}}', json
 	}
 	
 	@Test
