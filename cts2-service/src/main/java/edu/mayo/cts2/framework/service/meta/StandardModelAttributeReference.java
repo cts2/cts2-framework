@@ -52,6 +52,11 @@ public enum StandardModelAttributeReference {
 	KEYWORD (
 			ExternalCts2Constants.MA_KEYWORD_NAME,
 			ExternalCts2Constants.MA_KEYWORD_URI, 
+			null),
+			
+	DESIGNATION (
+			ExternalCts2Constants.MA_ENTITY_DESCRIPTION_DESIGNATION_NAME,
+			ExternalCts2Constants.MA_ENTITY_DESCRIPTION_DESIGNATION_URI, 
 			null);
 
 	private final ModelAttributeReference reference;
