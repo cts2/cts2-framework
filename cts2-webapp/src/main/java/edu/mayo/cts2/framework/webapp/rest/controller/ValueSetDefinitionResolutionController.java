@@ -232,9 +232,6 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		switch (resolution) {
 			case iterable : {
-				ResolvedValueSetResolutionEntityQuery entityQuery = 
-						this.getResolvedValueSetResolutionEntityQuery(query, restFilter, restrictions);
-				
 				ResolvedValueSetResult<URIAndEntityName> directory = this.valueSetDefinitionResolutionService.
 						resolveDefinition(
 								definitionId, 
@@ -607,7 +604,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
 				restFilter,
-				this.resolvedValueSetResolutionService);
+				this.valueSetDefinitionResolutionService);
 		
 		if(filter != null){
 			filters.add(filter);
