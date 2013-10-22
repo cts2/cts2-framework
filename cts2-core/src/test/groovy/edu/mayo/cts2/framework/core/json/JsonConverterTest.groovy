@@ -150,7 +150,10 @@ class JsonConverterTest {
         resource.changeableElementGroup = new ChangeableElementGroup(changeDescription: new ChangeDescription(changeType: ChangeType.CREATE))
         cs.addMember(resource)
 
-        println converter.toJson(cs)
+        cs = converter.fromJson(converter.toJson(cs))
+
+        assertNotNull cs.member[0].choiceValue
+        assertTrue cs.member[0].choiceValue instanceof CodeSystemCatalogEntry
     }
 	
 	@Test

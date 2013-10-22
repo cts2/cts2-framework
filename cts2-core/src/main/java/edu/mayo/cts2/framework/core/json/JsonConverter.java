@@ -24,9 +24,13 @@
 package edu.mayo.cts2.framework.core.json;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import edu.mayo.cts2.framework.model.Cts2ModelObject;
 import edu.mayo.cts2.framework.model.core.TsAnyType;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.updates.ChangeableResource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,7 +40,9 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -133,10 +139,6 @@ public class JsonConverter {
 
 		T obj = gson.fromJson(entrySet.iterator().next().getValue(), clazz);
 
-		if (obj instanceof EntityDescription) {
-			this.setChoiceValue(obj);
-		}
-
 		return obj;
 	}
 
@@ -181,20 +183,14 @@ public class JsonConverter {
 			for (Field f : obj.getClass().getDeclaredFields()) {
 				f.setAccessible(true);
 				Object fieldValue = f.get(obj);
-				if (fieldValue != null) {
+				if (fieldValue != null && !ClassUtils.isPrimitiveOrWrapper(fieldValue.getClass())) {
 					Field choiceValue = obj.getClass().getDeclaredField(CHOICE_VALUE);
 					choiceValue.setAccessible(true);
 					choiceValue.set(obj, fieldValue);
 					break;
 				}
 			}
-		} catch (SecurityException e) {
-			throw new IllegalStateException(e);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalStateException(e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalStateException(e);
-		} catch (NoSuchFieldException e) {
+		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
 	}
@@ -223,6 +219,7 @@ public class JsonConverter {
 		
 		gson.registerTypeAdapter(List.class, new EmptyCollectionSerializer());
 		gson.registerTypeAdapter(TsAnyType.class, new TsAnyTypeSerializer());
+        gson.registerTypeAdapterFactory(new ChangeableResourceTypeAdapterFactory());
 		
 		gson.setFieldNamingStrategy(new FieldNamingStrategy(){
 
@@ -317,5 +314,27 @@ public class JsonConverter {
 		}
 
 	}
+
+    private class ChangeableResourceTypeAdapterFactory implements TypeAdapterFactory {
+
+        public TypeAdapter create(Gson gson, TypeToken type) {
+            final TypeAdapter<Object> delegate = gson.getDelegateAdapter(this, type);
+            return new TypeAdapter<Object>() {
+                public void write(JsonWriter out, Object value) throws IOException {
+                    delegate.write(out, value);
+                }
+                public Object read(JsonReader in) throws IOException {
+                    Object obj = delegate.read(in);
+
+                    if (obj instanceof EntityDescription ||
+                            obj instanceof ChangeableResource) {
+                        setChoiceValue(obj);
+                    }
+
+                    return obj;
+                }
+            };
+        }
+    }
 
 }
