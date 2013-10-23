@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,8 +52,26 @@ import edu.mayo.cts2.framework.webapp.rest.command.QueryControl;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class MethodTimingAspect {
 	
-	private ExecutorService executorService = Executors.newCachedThreadPool();
-	private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+	private ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory()
+	{
+		@Override
+		public Thread newThread(Runnable r)
+		{
+			Thread t = new Thread(r);
+			t.setName("ProcessingThread-" + t.getId());
+			return t;
+		}
+	});
+	private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1, new ThreadFactory()
+	{
+		@Override
+		public Thread newThread(Runnable r)
+		{
+			Thread t = new Thread(r);
+			t.setName("ExecutionTimer-" + t.getId());
+			return t;
+		}
+	});
 	
 	/**
 	 * Execute.
