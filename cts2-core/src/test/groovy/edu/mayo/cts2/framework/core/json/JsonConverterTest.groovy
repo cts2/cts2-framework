@@ -78,7 +78,7 @@ class JsonConverterTest {
 		
 		def cs_return = converter.fromJson(json)
 		
-		assertEquals cs, cs_return
+		assertEquals cs.resourceSynopsis.value.content, cs_return.resourceSynopsis.value.content
 	}
 	
 	@Test
@@ -150,10 +150,31 @@ class JsonConverterTest {
         resource.changeableElementGroup = new ChangeableElementGroup(changeDescription: new ChangeDescription(changeType: ChangeType.CREATE))
         cs.addMember(resource)
 
-        cs = converter.fromJson(converter.toJson(cs))
+        def json = converter.toJson(cs)
+        print json
+        assertFalse json.contains("changeableElementGroup")
+
+        cs = converter.fromJson(json)
 
         assertNotNull cs.member[0].choiceValue
         assertTrue cs.member[0].choiceValue instanceof CodeSystemCatalogEntry
+    }
+
+    @Test
+    void TestChangeableElementGroup(){
+        def converter = new JsonConverter()
+        def resource = new ChangeableResource()
+        resource.codeSystem = new CodeSystemCatalogEntry(codeSystemName: "asdf", about: "asdf")
+        resource.entryOrder = 1
+        resource.changeableElementGroup = new ChangeableElementGroup(changeDescription: new ChangeDescription(changeType: ChangeType.CREATE))
+
+        def json = converter.toJson(resource)
+
+        print json
+
+        def roundTrip = converter.fromJson(json);
+
+        assertNotNull roundTrip.changeableElementGroup
     }
 	
 	@Test
@@ -167,7 +188,14 @@ class JsonConverterTest {
 		
 		converter.toJson(cs)
 	}
-	
+
+    @Test
+    void TestISODate(){
+        def converter = new JsonConverter()
+
+        print converter.fromJson("{\"ChangeSet\":{\"state\":\"FINAL\",\"changeSetURI\":\"asdf\",\"creationDate\":\"2013-10-23T16:45:21.142-05:00\"}}")
+    }
+
 	@Test
 	void TestGetJsonFromComplexObject(){
 		def converter = new JsonConverter()

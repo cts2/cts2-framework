@@ -28,12 +28,16 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import edu.mayo.cts2.framework.model.Cts2ModelObject;
+import edu.mayo.cts2.framework.model.core.Changeable;
+import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
 import edu.mayo.cts2.framework.model.core.TsAnyType;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.updates.ChangeableResource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -45,11 +49,8 @@ import org.springframework.util.ClassUtils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Responsible for converting CTS2 Model output into JSON.
@@ -223,6 +224,8 @@ public class JsonConverter {
 		
 		gson.registerTypeAdapter(List.class, new EmptyCollectionSerializer());
 		gson.registerTypeAdapter(TsAnyType.class, new TsAnyTypeSerializer());
+        gson.registerTypeAdapter(Date.class, new DateTypeAdapter());
+        gson.registerTypeAdapterFactory(new ChangeableTypeAdapterFactory());
         gson.registerTypeAdapterFactory(new ChangeableResourceTypeAdapterFactory());
 		
 		gson.setFieldNamingStrategy(new FieldNamingStrategy(){
@@ -319,6 +322,55 @@ public class JsonConverter {
 
 	}
 
+    private class ChangeableTypeAdapterFactory implements TypeAdapterFactory {
+
+        public TypeAdapter create(final Gson gson, TypeToken type) {
+            final TypeAdapter<Object> delegate = gson.getDelegateAdapter(this, type);
+            return new TypeAdapter<Object>() {
+                public void write(JsonWriter out, Object value) throws IOException {
+                    if(value instanceof Changeable){
+                        Changeable changeable = (Changeable)value;
+                        ChangeableElementGroup changeableElementGroup = changeable.getChangeableElementGroup();
+
+                        JsonElement changeableJson;
+
+                        if(changeableElementGroup != null){
+                            changeable.setChangeableElementGroup(null);
+
+                            changeableJson = delegate.toJsonTree(changeable);
+
+                            JsonObject changeableElementGroupJson = gson.toJsonTree(changeableElementGroup).getAsJsonObject();
+
+                            for(Entry<String, JsonElement> entry : changeableElementGroupJson.entrySet()){
+                                changeableJson.getAsJsonObject().add(entry.getKey(),entry.getValue());
+                            }
+                        } else {
+                            changeableJson = delegate.toJsonTree(changeable);
+                        }
+
+                        gson.toJson(changeableJson, out);
+                    } else {
+                        delegate.write(out, value);
+                    }
+                }
+                public Object read(JsonReader in) throws IOException {
+                    JsonParser jsonParser = new JsonParser();
+                    JsonElement jsonElement = jsonParser.parse(in);
+
+                    Object obj = delegate.fromJsonTree(jsonElement);
+                    if(obj instanceof Changeable){
+                        ChangeableElementGroup changeableElementGroup =
+                            gson.fromJson(jsonElement, ChangeableElementGroup.class);
+                        ((Changeable) obj).setChangeableElementGroup(changeableElementGroup);
+                    }
+
+                    return obj;
+                }
+            };
+        }
+    }
+
+
     private class ChangeableResourceTypeAdapterFactory implements TypeAdapterFactory {
 
         public TypeAdapter create(Gson gson, TypeToken type) {
@@ -338,6 +390,20 @@ public class JsonConverter {
                     return obj;
                 }
             };
+        }
+    }
+
+    private static class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<Date> {
+        private DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
+
+        @Override public synchronized JsonElement serialize(Date date, Type type,
+                                                            JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(formatter.print(date.getTime()));
+        }
+
+        @Override public synchronized Date deserialize(JsonElement jsonElement, Type type,
+                                                       JsonDeserializationContext jsonDeserializationContext) {
+            return formatter.parseDateTime(jsonElement.getAsString()).toDate();
         }
     }
 
