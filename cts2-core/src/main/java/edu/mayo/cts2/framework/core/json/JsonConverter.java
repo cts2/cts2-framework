@@ -65,6 +65,8 @@ public class JsonConverter {
     private static final String LIST_SUFFIX = "List";
     private static final String CHOICE_VALUE = "_choiceValue";
 
+    private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm'Z'";
+
 	private Gson gson;
 
 	private JsonParser jsonParser = new JsonParser();
@@ -202,6 +204,8 @@ public class JsonConverter {
 	 */
 	protected Gson buildGson(){
 		GsonBuilder gson = new GsonBuilder();
+
+        gson.setDateFormat(ISO_DATE_FORMAT);
 		
 		gson.setExclusionStrategies(new ExclusionStrategy(){
 
