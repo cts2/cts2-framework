@@ -116,6 +116,41 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		}
 
 	};
+	
+    /**
+     * Gets the Entities resulting from the Resolution of a {$lnk ValueSetDefinition}.
+     *
+     * Example URL: {@code http://server.root/valueset/{id}/definition/entities}
+     */
+    @RequestMapping(value=PATH_RESOLUTION_OF_VALUESETDEFINITION_ENTITIES, method=RequestMethod.POST)
+    @ResponseBody
+    public Object getValueSetDefinitionResolutionEntities(
+            HttpServletRequest httpServletRequest,
+            QueryControl queryControl,
+            RestReadContext restReadContext,
+            @RequestBody Query query,
+            ResolvedValueSetResolutionEntityRestrictions restrictions,
+            RestFilter restFilter,
+            @PathVariable(VAR_VALUESETID) String valueSetName,
+            @PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
+            @RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
+            @RequestParam(value=PARAM_TAG, required=false) String tagName,
+            Page page) {
+
+        return this.doGetValueSetDefinitionResolution(
+                httpServletRequest,
+                queryControl,
+                restReadContext,
+                query,
+                restrictions,
+                restFilter,
+                valueSetName,
+                definitionLocalId,
+                ValueSetDefinitionResolutionTypes.entitydirectory,
+                codeSystemVersionIds,
+                tagName,
+                page);
+    }
 
     /**
      * Gets the Entities resulting from the Resolution of a {$lnk ValueSetDefinition}.
@@ -169,8 +204,6 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 			HttpServletRequest httpServletRequest,
 			QueryControl queryControl,
 			RestReadContext restReadContext,
-			ResolvedValueSetResolutionEntityRestrictions restrictions,
-			RestFilter restFilter,
 			@PathVariable(VAR_VALUESETID) String valueSetName,
 			@PathVariable(VAR_VALUESETDEFINITIONID) String definitionLocalId,
 			@RequestParam(value=PARAM_CODESYSTEMVERSION, required=false) List<String> codeSystemVersionIds,
@@ -190,8 +223,8 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 				queryControl,
 				restReadContext,
 				null,
-				restrictions, 
-				restFilter,
+				null, 
+				null,
 				valueSetName, 
 				definitionLocalId,
 				resolution,
@@ -232,9 +265,6 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		switch (resolution) {
 			case iterable : {
-				ResolvedValueSetResolutionEntityQuery entityQuery = 
-						this.getResolvedValueSetResolutionEntityQuery(query, restFilter, restrictions);
-				
 				ResolvedValueSetResult<URIAndEntityName> directory = this.valueSetDefinitionResolutionService.
 						resolveDefinition(
 								definitionId, 
@@ -607,7 +637,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 		
 		ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
 				restFilter,
-				this.resolvedValueSetResolutionService);
+				this.valueSetDefinitionResolutionService);
 		
 		if(filter != null){
 			filters.add(filter);
