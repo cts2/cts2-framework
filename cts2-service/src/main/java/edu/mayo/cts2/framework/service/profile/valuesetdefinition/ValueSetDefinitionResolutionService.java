@@ -54,7 +54,7 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * @param definitionId the definition id
 	 * @param codeSystemVersions the code system versions to execute against
 	 * @param tag the tag (if any) of the code system versions to use
-	 * @param query the query to filter the returned results
+	 * @param sortCriteria the criteria to use to sort the results
 	 * @param readContext the read context
 	 * @param page the page
 	 * @return the resolved value set result
@@ -73,7 +73,7 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * @param definitionId the definition id
      * @param codeSystemVersions the code system versions to execute against
      * @param tag the tag (if any) of the code system versions to use
-     * @param query the query to filter the returned results
+     * @param sortCriteria the criteria to use to sort the results
 	 * @param readContext the read context
 	 * @param page the page
 	 * @return the directory result
@@ -93,6 +93,7 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 	 * @param definitionId the definition id
      * @param codeSystemVersions the code system versions to execute against
      * @param tag the tag (if any) of the code system versions to use
+     * @param sortCriteria the criteria to use to sort the results
 	 * @param readContext the read context
 	 * @return the resolved value set
 	 */
@@ -100,6 +101,7 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 			ValueSetDefinitionReadId definitionId,
 			Set<NameOrURI> codeSystemVersions,
 			NameOrURI tag,
+			SortCriteria sortCriteria,
 			ResolvedReadContext readContext);
 	
 }

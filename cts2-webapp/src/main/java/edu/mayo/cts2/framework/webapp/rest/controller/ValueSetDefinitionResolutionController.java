@@ -315,6 +315,7 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
 							definitionId, 
 							codeSystemVersions, 
 							tag, 
+							this.resolveSort(queryControl, this.valueSetDefinitionResolutionService), 
 							readContext);
 				
 				ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
