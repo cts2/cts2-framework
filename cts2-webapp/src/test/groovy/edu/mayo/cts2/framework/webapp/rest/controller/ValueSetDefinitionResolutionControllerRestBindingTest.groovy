@@ -132,7 +132,7 @@ class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRe
 		def isCalled = false;
 		
 		def rs = [
-			resolveDefinitionAsCompleteSet:{ p1,p2,p3,p4->
+			resolveDefinitionAsCompleteSet:{ p1,p2,p3,p4,p5->
 				isCalled = true
 				new ResolvedValueSet(resolutionInfo:new ResolvedValueSetHeader(
 					resolutionOf:new ValueSetDefinitionReference(
