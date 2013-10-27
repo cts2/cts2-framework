@@ -36,6 +36,7 @@ public class ServiceController extends AbstractMessageWrappingController
 	private class ServiceType {
 		private static final String READ_SUFFIX = "read";
 		private static final String QUERY_SUFFIX = "query";
+		private static final String RESOLUTION_SUFFIX = "resolution";
 		private static final String MAINTENANCE_SUFFIX = "maintenance";
 		private static final String HISTORY_SUFFIX = "history";
 
@@ -120,7 +121,16 @@ public class ServiceController extends AbstractMessageWrappingController
 								service,
 								(Class<edu.mayo.cts2.framework.model.service.core.BaseMaintenanceService>) 
 									this.classForName(metadataClassName));
-			} else {
+			} else if (StringUtils.equals(suffix, RESOLUTION_SUFFIX)) {
+				BaseQueryService service = (BaseQueryService) serviceProvider
+						.getService(serviceClass);
+				return serviceBuilder
+						.buildServiceMetadata(
+								service,
+								(Class<edu.mayo.cts2.framework.model.service.core.BaseService>) 
+									this.classForName(metadataClassName));
+			} 
+			else {
 				throw new IllegalStateException();
 			}
 		}
@@ -136,7 +146,9 @@ public class ServiceController extends AbstractMessageWrappingController
 				suffix = HISTORY_SUFFIX;
 			} else if (StringUtils.endsWith(path, MAINTENANCE_SUFFIX)) {
 				suffix = MAINTENANCE_SUFFIX;
-			} else {
+			}else if (StringUtils.endsWith(path, RESOLUTION_SUFFIX)) {
+				suffix = RESOLUTION_SUFFIX;
+			}else {
 				throw new InvalidServiceRequest();
 			}
 
@@ -156,10 +168,12 @@ public class ServiceController extends AbstractMessageWrappingController
 				structureName = StringUtils.capitalize(structure);
 			}
 			
+			//TODO The nasty little if/else block embedded is because of a naming consistency issue in the schema
 			return packageName + "." + 
 				structure + "."+ 
 				structureName + 
-				StringUtils.capitalize(suffix) + SERVICE_SUFFIX;
+				StringUtils.capitalize(suffix) +
+				((packageName == MODEL_PACKAGE && suffix == RESOLUTION_SUFFIX) ? "" : SERVICE_SUFFIX);
 		}
 	}
 

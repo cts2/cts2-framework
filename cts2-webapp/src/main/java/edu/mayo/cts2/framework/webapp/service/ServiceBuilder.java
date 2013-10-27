@@ -27,15 +27,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
 import edu.mayo.cts2.framework.core.config.ServerContext;
 import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
@@ -44,10 +41,15 @@ import edu.mayo.cts2.framework.model.core.FormatReference;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.SourceReference;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.DocumentedNamespaceReference;
 import edu.mayo.cts2.framework.model.service.core.ProfileElement;
 import edu.mayo.cts2.framework.model.service.core.types.ImplementationProfile;
+import edu.mayo.cts2.framework.model.service.entitydescription.EntityDescriptionQueryService;
+import edu.mayo.cts2.framework.model.service.entitydescription.EntityDescriptionReadService;
+import edu.mayo.cts2.framework.model.service.valuesetdefinition.ValueSetDefinitionResolution;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 
@@ -156,6 +158,18 @@ public class ServiceBuilder implements InitializingBean {
 			Class<T> serviceMetadataBeanClass){
 		
 		T service = this.buildBaseServiceMetadata(cts2Service, serviceMetadataBeanClass);
+		
+		//TODO I think the other advanced services need some sort of mapping like this too... both here and in the QueryService 
+		//Otherwise, all of the service metadata calls fail.
+		if (service instanceof EntityDescriptionReadService)
+		{
+			((EntityDescriptionReadService)service).setKnownCodeSystem(
+					((edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService)cts2Service).getKnownCodeSystems());
+			((EntityDescriptionReadService)service).setKnownCodeSystemVersion(
+					((edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService)cts2Service).getKnownCodeSystemVersions());
+			((EntityDescriptionReadService)service).setSupportedVersionTag(
+					((edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService)cts2Service).getSupportedVersionTags());
+		}
 
 		return service;
 	}
@@ -172,13 +186,29 @@ public class ServiceBuilder implements InitializingBean {
 			edu.mayo.cts2.framework.service.profile.BaseQueryService cts2Service,
 			Class<T> serviceMetadataBeanClass){
 		
-		T service = this.newInstance(serviceMetadataBeanClass);
+		T service = this.buildBaseServiceMetadata(cts2Service, serviceMetadataBeanClass);
 		
 		service.setSupportedMatchAlgorithm(
 			new ArrayList<MatchAlgorithmReference>(cts2Service.getSupportedMatchAlgorithms()));
 		
 		service.setSupportedModelAttribute(
 			this.toModelAttributeReferences(cts2Service.getSupportedSearchReferences()));	
+		
+		Set<PredicateReference> pr = cts2Service.getKnownProperties();
+		if (pr != null)
+		{
+			service.setKnownProperty(new ArrayList<PredicateReference>(pr));
+		}
+		
+		if (service instanceof EntityDescriptionQueryService)
+		{
+			//TODO this is an odd mis-match (set to list)
+			((EntityDescriptionQueryService)service).setSupportedVersionTag(
+					(new ArrayList<VersionTagReference>(
+							((edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService)cts2Service).getSupportedTags())));
+			//TODO I have no idea what this is supposed to represent.. but the schema requires it.
+			((EntityDescriptionQueryService)service).setEntities("entities");
+		}
 		
 		return service;
 	}
@@ -196,7 +226,18 @@ public class ServiceBuilder implements InitializingBean {
 				ref.setContent(EncodingUtils.encodeScopedEntityName(component.getPropertyReference()));
 				ref.setUri(component.getPropertyReference().getUri());
 				ref.setHref(component.getPropertyReference().getHref());
-				
+				returnList.add(ref);
+			}
+			else if (component.getAttributeReference() != null)
+			{
+				ModelAttributeReference ref = new ModelAttributeReference();
+				ref.setContent(component.getAttributeReference());
+				returnList.add(ref);
+			}
+			else if (component.getSpecialReference() != null)
+			{
+				ModelAttributeReference ref = new ModelAttributeReference();
+				ref.setContent(component.getAttributeReference());
 				returnList.add(ref);
 			}
 		}
