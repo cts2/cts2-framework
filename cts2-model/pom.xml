@@ -234,6 +234,38 @@
                         </configuration>
 
                     </execution>
+                    
+                    <execution>
+                        <id>disable a validator that is currently broken in castor</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+
+                        <configuration>
+                            <includes>
+                                <include>target/generated-sources/castor/edu/mayo/cts2/framework/model/core/descriptors/FilterComponentDescriptor.java</include>
+                            </includes>
+                            <token>\}\s*$</token>
+                            <value>
+//Hack for broken castor https://github.com/cts2/cts2-framework/issues/33
+    @Override
+    public void checkDescriptorForCorrectOrderWithinSequence(
+    		final org.exolab.castor.xml.XMLFieldDescriptor elementDescriptor, org.exolab.castor.xml.UnmarshalState parentState, String xmlName) 
+    		throws org.exolab.castor.xml.ValidationException
+    {
+    	//noop, because castor is broken.
+    }
+}
+                            </value>
+                            <!--regexFlags>
+                                <regexFlag>MULTILINE</regexFlag>
+                            </regexFlags-->
+                            <regex>true</regex>
+                        </configuration>
+
+                    </execution>
+                    
 				</executions>
 			</plugin>
 
