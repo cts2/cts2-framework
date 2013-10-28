@@ -168,7 +168,8 @@ public class ServiceController extends AbstractMessageWrappingController
 				structureName = StringUtils.capitalize(structure);
 			}
 			
-			//TODO The nasty little if/else block embedded is because of a naming consistency issue in the schema
+			//TODO BUG The nasty little if/else block embedded is because of a naming consistency issue in the schema
+			//https://github.com/cts2/cts2-specification/issues/181
 			return packageName + "." + 
 				structure + "."+ 
 				structureName + 
