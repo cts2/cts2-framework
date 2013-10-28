@@ -403,6 +403,8 @@ interface PathParameters {
 	
 	public static final String PARAM_LIST = "list";
     public static final String PARAM_COMPLETE = "complete";
+    
+    public static final String PARAM_COMMIT = "commit";
 
     public static final String PARAM_REDIRECT = "redirect";
 

@@ -136,12 +136,16 @@ public class ChangeSetController extends AbstractMessageWrappingController {
 	@RequestMapping(value="/changeset/{changeSetUri}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> importChangeSet(
 			@PathVariable String changeSetUri,
+			@RequestParam(value=PARAM_COMMIT, defaultValue="true") boolean commit,
 			@RequestBody ChangeSet changeSet) {
 		
 		String returnedChangeSetUri = 
 			this.changeSetService.importChangeSet(this.prepareImportedChangeset(changeSet));
 		
-		this.changeSetService.commitChangeSet(returnedChangeSetUri);
+		if (commit)
+		{
+			this.changeSetService.commitChangeSet(returnedChangeSetUri);
+		}
 
 		return this.getResponseEntity(returnedChangeSetUri);
 	}
