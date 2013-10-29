@@ -61,7 +61,7 @@ public class CodeSystemVersionNameResolver
 
                     String versionId;
 
-                    if (csv != null) {
+                    if (csv != null && csv.getOfficialResourceVersionId() != null) {
                         versionId = csv.getOfficialResourceVersionId();
                     } else {
                         versionId = codeSystemVersionName;
