@@ -139,9 +139,9 @@ public class Cts2RestClient {
 	protected RestTemplate createRestTemplate(String username, String password) {
 		RestTemplate restTemplate;
 		if(username != null && password != null){
-			restTemplate = new RestTemplate(this.createSecureTransport(username, password));
+			restTemplate = new FixedRestTemplate(this.createSecureTransport(username, password));
 		} else {
-			restTemplate = new RestTemplate();
+			restTemplate = new FixedRestTemplate();
 		}
 		
 		SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
