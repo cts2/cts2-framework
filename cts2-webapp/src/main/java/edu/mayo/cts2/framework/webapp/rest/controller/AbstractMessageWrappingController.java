@@ -632,18 +632,15 @@ public abstract class AbstractMessageWrappingController extends
 		resource.setAccessDate(new Date());
 
 		String urlRoot = this.serverContext.getServerRootWithAppName();
-
+		
 		if (!urlRoot.endsWith("/")) {
 			urlRoot = urlRoot + "/";
 		}
+		
+		resource.setResourceRoot(urlRoot);
 
-		String resourceRoot = StringUtils.removeStart(resourceUrl, "/");
-
-		String resourceURI = urlRoot + resourceRoot;
-
-		resource.setResourceURI(resourceURI);
-
-		resource.setResourceRoot(resourceRoot);
+		String resourceRelativeURI = StringUtils.removeStart(resourceUrl, "/");
+		resource.setResourceURI(resourceRelativeURI);
 
 		return resource;
 	}
