@@ -758,5 +758,8 @@ public abstract class AbstractMessageWrappingController extends
 	protected void setServerContext(ServerContext serverContext) {
 		this.serverContext = serverContext;
 	}
-	
+
+    protected UrlTemplateBindingCreator getUrlTemplateBindingCreator() {
+        return urlTemplateBindingCreator;
+    }
 }

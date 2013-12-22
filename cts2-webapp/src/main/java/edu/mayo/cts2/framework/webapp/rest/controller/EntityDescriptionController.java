@@ -23,42 +23,12 @@
  */
 package edu.mayo.cts2.framework.webapp.rest.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import edu.mayo.cts2.framework.core.util.EncodingUtils;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.ChangeableElementGroup;
-import edu.mayo.cts2.framework.model.core.EntityReference;
-import edu.mayo.cts2.framework.model.core.Message;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.entity.EntityDescription;
-import edu.mayo.cts2.framework.model.entity.EntityDescriptionBase;
-import edu.mayo.cts2.framework.model.entity.EntityDescriptionMsg;
-import edu.mayo.cts2.framework.model.entity.EntityDirectory;
-import edu.mayo.cts2.framework.model.entity.EntityList;
-import edu.mayo.cts2.framework.model.entity.EntityListEntry;
-import edu.mayo.cts2.framework.model.entity.EntityReferenceMsg;
+import edu.mayo.cts2.framework.model.entity.*;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -79,6 +49,20 @@ import edu.mayo.cts2.framework.webapp.rest.command.RestReadContext;
 import edu.mayo.cts2.framework.webapp.rest.query.EntityQueryBuilder;
 import edu.mayo.cts2.framework.webapp.rest.util.ControllerUtils;
 import edu.mayo.cts2.framework.webapp.rest.validator.EntityDescriptionValidator;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class EntityDescriptionController.
@@ -144,7 +128,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 		}
 
 	};
-	
+
 	private final static MessageFactory<EntityDescription> MESSAGE_FACTORY = 
 			new MessageFactory<EntityDescription>() {
 
@@ -587,14 +571,42 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 							this.resolveSort(queryControl, this.entityDescriptionQueryService),
 							readContext, 
 							page);
-			response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+
+            if(entityList != null &&
+                    entityList.getEntries() != null &&
+                    entityList.getEntries().size() == 1 &&
+                    StringUtils.isNotBlank(entityList.getEntries().get(0).getHref())){
+
+                Map<String,Object> parameters =
+                        new HashMap<String,Object>(httpServletRequest.getParameterMap());
+                parameters.remove(PARAM_LIST);
+
+                String queryString = this.mapToQueryString(parameters);
+
+                return new ModelAndView(
+                        "redirect:" + entityList.getEntries().get(0).getHref() + queryString);
+            } else {
+			    response = this.populateDirectory(entityList, page, httpServletRequest, EntityList.class);
+            }
 		} else {
 			EntityReference entityReference = this.entityDescriptionReadService.availableDescriptions(entityId, readContext);
 			
 			if(entityReference != null){
-				response = this.wrapMessage(
-					ENTITYREFERENCE_MESSAGE_FACTORY.createMessage(entityReference), 
-					httpServletRequest);
+                if(entityReference.getKnownEntityDescription() != null &&
+                        entityReference.getKnownEntityDescriptionCount() == 1 &&
+                        StringUtils.isNotBlank(entityReference.getKnownEntityDescription(0).getHref())){
+                    Map<String,Object> parameters =
+                            new HashMap<String,Object>(httpServletRequest.getParameterMap());
+
+                    String queryString = this.mapToQueryString(parameters);
+
+                    return new ModelAndView(
+                            "redirect:" + entityReference.getKnownEntityDescription(0).getHref() + queryString);
+                } else {
+				    response = this.wrapMessage(
+				    	ENTITYREFERENCE_MESSAGE_FACTORY.createMessage(entityReference),
+					    httpServletRequest);
+                }
 			}
 		}
 		

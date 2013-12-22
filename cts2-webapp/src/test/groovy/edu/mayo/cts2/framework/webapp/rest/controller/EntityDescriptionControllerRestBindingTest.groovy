@@ -1,25 +1,19 @@
-package edu.mayo.cts2.framework.webapp.rest.controller;
-
-import static org.junit.Assert.*
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*
-import static org.springframework.test.web.server.result.MockMvcResultActions.*
-import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup
-
-import javax.annotation.Resource
-
-import org.junit.Test
-import org.springframework.test.web.server.setup.MockMvcBuilders
-
+package edu.mayo.cts2.framework.webapp.rest.controller
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry
-import edu.mayo.cts2.framework.model.core.CodeSystemReference
-import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference
-import edu.mayo.cts2.framework.model.core.EntityReference
-import edu.mayo.cts2.framework.model.core.NameAndMeaningReference
-import edu.mayo.cts2.framework.model.core.ScopedEntityName
+import edu.mayo.cts2.framework.model.core.*
+import edu.mayo.cts2.framework.model.directory.DirectoryResult
 import edu.mayo.cts2.framework.model.entity.EntityDescription
+import edu.mayo.cts2.framework.model.entity.EntityListEntry
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService
+import org.junit.Test
+import org.springframework.test.web.server.setup.MockMvcBuilders
+
+import javax.annotation.Resource
+
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.server.result.MockMvcResultActions.response
 
 class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTestBase {
 	
@@ -62,7 +56,20 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 			read:{id,readcontext -> ed },
 			availableDescriptions:{id,cxt -> new EntityReference(
 				about: "http://test/about",
-				name: new ScopedEntityName(name:"entityName", namespace:"ns")) }
+				name: new ScopedEntityName(name:"entityName", namespace:"ns"),
+                knownEntityDescription: [
+                        new DescriptionInCodeSystem(
+                                href: "http://server/codesystem/TESTCS/version/TESTCSVERSION/entity/entityName",
+                                describingCodeSystemVersion: entry.getDescribingCodeSystemVersion()
+                        )
+                ]
+            ) },
+            readEntityDescriptions:{id,sort,ctx,page->
+                new DirectoryResult([new EntityListEntry(
+                      href: "http://server/codesystem/TESTCS/version/TESTCSVERSION/entity/entityName",
+                      entry: ed
+                )], true)
+            }
 		] as EntityDescriptionReadService;
 	
 		def csv = new CodeSystemVersionCatalogEntry(
@@ -83,8 +90,25 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 		
 		controller
 	}
-	
-	
+
+    @Test
+    void testGetOneEntityDescriptionWithRedirect(){
+        MockMvcBuilders
+                .webApplicationContextSetup(context).build()
+                .perform(get("/entity/ns:entityName"))
+                .andExpect(response().status().isOk())
+                .andExpect(response().redirectedUrl("http://server/codesystem/TESTCS/version/TESTCSVERSION/entity/entityName"))
+    }
+
+    @Test
+    void testGetOneEntityDescriptionWithRedirectList(){
+        MockMvcBuilders
+                .webApplicationContextSetup(context).build()
+                .perform(get("/entity/ns:entityName").param("list","true"))
+                .andExpect(response().status().isOk())
+                .andExpect(response().redirectedUrl("http://server/codesystem/TESTCS/version/TESTCSVERSION/entity/entityName"))
+    }
+
 	@Test
 	void testGetByCodeSystemVersionUriWithRedirect(){
 
