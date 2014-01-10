@@ -331,7 +331,6 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	 * @param query the query
 	 * @param restrictions the restrictions
 	 * @param resolvedFilter the filter
-	 * @param page the page
 	 * @param codeSystemName the code system name
 	 * @param codeSystemVersionName the code system version name
 	 * @return the entity descriptions of code system version count
@@ -341,10 +340,9 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	public void getEntityDescriptionsOfCodeSystemVersionCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
-			@RequestBody Query query,
+			Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter,
-			Page page,
 			@PathVariable(VAR_CODESYSTEMID) String codeSystemName,
 			@PathVariable(VAR_CODESYSTEMVERSIONID) String codeSystemVersionId) {
 		
@@ -452,7 +450,7 @@ public class EntityDescriptionController extends AbstractMessageWrappingControll
 	public void getEntityDescriptionsCount(
 			HttpServletResponse httpServletResponse,
 			RestReadContext restReadContext,
-			@RequestBody Query query,
+			Query query,
 			EntityDescriptionQueryServiceRestrictions restrictions,
 			RestFilter restFilter) {
 		
