@@ -420,7 +420,12 @@ public class ValueSetDefinitionResolutionController extends AbstractMessageWrapp
                 throw ExceptionFactory.createUnknownResourceException(
                         id.toString(), UnknownResourceReference.class);
             } else {
-                return resolvedValueSet;
+                ResolvedValueSetMsg msg = new ResolvedValueSetMsg();
+                msg.setResolvedValueSet(resolvedValueSet);
+
+                msg = this.wrapMessage(msg, httpServletRequest);
+
+                return this.buildResponse(httpServletRequest, msg);
             }
         } else {
             ResolvedFilter filter = this.getFilterResolver().resolveRestFilter(
