@@ -2,6 +2,7 @@ package edu.mayo.cts2.framework.webapp.rest.controller;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,7 +32,12 @@ public class HomeController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView renderHomePage(){
 		if(this.restConfig.getShowHomePage()){
-			return new ModelAndView("home");
+			String alternateHomePage = this.restConfig.getAlternateHomePage();
+			if (StringUtils.isNotBlank(alternateHomePage)) {
+				return new ModelAndView("redirect:" + alternateHomePage);
+			} else {
+				return new ModelAndView("home");
+			}
 		} else {
 			throw new HomePageDisabledException();
 		}

@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.webapp.rest.config;
 
 import edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService;
 import edu.mayo.cts2.framework.core.plugin.ExportedService;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
@@ -49,6 +50,7 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	public static final String SHOW_STACK_TRACE = "showStackTrace";
 	public static final String SHOW_HOME_PAGE = "showHomePage";
     public static final String SUPPORT_EMAIL = "supportEmail";
+    public static final String ALTERNATE_HOME_PAGE = "alternateHomePage";
 
     private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
@@ -63,6 +65,8 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	
 	private static final boolean SHOW_HOME_PAGE_DEFAULT = true;
 	private boolean showHomePage = SHOW_HOME_PAGE_DEFAULT;
+	
+	private String alternateHomePage = null;
 
 	/* (non-Javadoc)
 	 * @see org.osgi.service.metatype.MetaTypeProvider#getLocales()
@@ -89,6 +93,8 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 			
 			boolean soap = BooleanUtils.toBooleanDefaultIfNull( (Boolean) properties.get(ALLOW_SOAP), ALLOW_SOAP_DEFAULT);
 			this.allowSoap = soap;
+			
+			this.alternateHomePage = (String) properties.get(ALTERNATE_HOME_PAGE);
 		}		
 	}
 
@@ -145,6 +151,11 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
     public String getSupportEmail() {
         return this.checkEnvironmentVariableOverride(SUPPORT_EMAIL, null);
     }
+    
+    @Override
+	public String getAlternateHomePage() {
+		return this.checkEnvironmentVariableOverride(ALTERNATE_HOME_PAGE, this.alternateHomePage);
+	}
 
     /* (non-Javadoc)
          * @see edu.mayo.cts2.framework.core.config.AbstractConfigurableExportedService#getMetatypeXmlPath()
@@ -153,5 +164,7 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	protected String getMetatypeXmlPath() {
 		return "/rest/webapp-rest-metatype.xml";
 	}
+	
+	
 
 }

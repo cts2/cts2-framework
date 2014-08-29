@@ -6,6 +6,7 @@
 		<AD name="Show the HTML Home (Welcome) Page" id="showHomePage" required="true" default="true" type="Boolean"  />
 		<AD name="Allow SOAP API Access" id="allowSoap" required="true" default="false" type="Boolean"  />
         <AD name="Support Email" id="supportEmail" type="String"  />
+        <AD name="Alternate Homepage" id="alternateHomePage" type="String"  />
     </OCD>
 	<Designate pid="edu.mayo.cts2.framework.webapp.rest.config">
         <Object ocdref="edu.mayo.cts2.framework.webapp.rest.config"/>
