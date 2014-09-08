@@ -3,7 +3,7 @@
 <urlrewrite>
     <rule match-type="regex">
         <note>Remove trailing slash</note>
-        <from>^(.*)/$</from>
+        <from>^((?:[A-Za-z0-9.,:-]*/[A-Za-z0-9.,:-]*)+)/$</from>
         <to type="redirect">%{context-path}$1</to>
     </rule>
 </urlrewrite>
