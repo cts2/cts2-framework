@@ -25,9 +25,11 @@ package edu.mayo.cts2.framework.service.profile.valuesetdefinition;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
@@ -49,7 +51,7 @@ import java.util.Set;
 public interface ValueSetDefinitionResolutionService extends BaseQueryService, Cts2Profile {
 
 	/**
-	 * Resolve a {@link ValueSetDefinition} into a set of {@link EntitySynopsis} entries.
+	 * Resolve a {@link ValueSetDefinition} into a set of {@link URIAndEntityName} entries.
 	 *
 	 * @param definitionId the definition id
 	 * @param codeSystemVersions the code system versions to execute against
@@ -103,5 +105,17 @@ public interface ValueSetDefinitionResolutionService extends BaseQueryService, C
 			NameOrURI tag,
 			SortCriteria sortCriteria,
 			ResolvedReadContext readContext);
+
+
+    /**
+     * Contains
+     *
+     * @param definitionId
+     * @param entities
+     * @return
+     */
+    public EntityReferenceList contains(
+            ValueSetDefinitionReadId definitionId,
+            Set<EntityNameOrURI> entities);
 	
 }

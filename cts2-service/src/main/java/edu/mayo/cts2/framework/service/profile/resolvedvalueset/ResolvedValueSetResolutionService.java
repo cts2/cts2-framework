@@ -23,15 +23,15 @@
  */
 package edu.mayo.cts2.framework.service.profile.resolvedvalueset;
 
-import java.util.Set;
-
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.types.StructuralProfile;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
@@ -42,6 +42,9 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedVal
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+
+import java.util.Set;
 
 /**
  * A CTS2 Service that exposes pre-resolved {@link ResolvedValueSet} content in
@@ -93,4 +96,11 @@ public interface ResolvedValueSetResolutionService extends BaseQueryService,
 			ResolvedValueSetResolutionEntityQuery query,
 			SortCriteria sortCriteria, 
 			Page page);
+
+    /**
+     * Contains.
+     */
+    public EntityReferenceList contains(
+            ValueSetDefinitionReadId definitionId,
+            Set<EntityNameOrURI> entities);
 }
