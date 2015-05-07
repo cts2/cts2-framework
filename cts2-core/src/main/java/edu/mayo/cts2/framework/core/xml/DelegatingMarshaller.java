@@ -72,7 +72,7 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 
 	private CastorMarshaller defaultMarshaller;
 	
-	private ModelXmlPropertiesHandler modelXmlPropertiesHandler = new ModelXmlPropertiesHandler();
+	private ModelXmlPropertiesHandler modelXmlPropertiesHandler;
 	
 	private Properties castorBuilderProperties;
 	private Properties namespaceLocationProperties;
@@ -81,14 +81,19 @@ public class DelegatingMarshaller implements Cts2Marshaller {
 	public DelegatingMarshaller(){
 		this(true);
 	}
-	
+
+    public DelegatingMarshaller(boolean validate){
+        this(validate, new ModelXmlPropertiesHandler());
+    }
+
 	/**
 	 * Instantiates a new delgating marshaller.
 	 *
 	 * @throws Exception the exception
 	 */
-	public DelegatingMarshaller(boolean validate){
+	public DelegatingMarshaller(boolean validate, ModelXmlPropertiesHandler modelXmlPropertiesHandler){
 		super();
+        this.modelXmlPropertiesHandler = modelXmlPropertiesHandler;
 		this.castorBuilderProperties = this.modelXmlPropertiesHandler.getCastorBuilderProperties();
 		this.namespaceLocationProperties = this.modelXmlPropertiesHandler.getNamespaceLocationProperties();
 		this.namespaceMappingProperties = this.modelXmlPropertiesHandler.getNamespaceMappingProperties();

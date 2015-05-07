@@ -42,7 +42,6 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedVal
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
-import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
 import java.util.Set;
 
@@ -101,6 +100,6 @@ public interface ResolvedValueSetResolutionService extends BaseQueryService,
      * Contains.
      */
     public EntityReferenceList contains(
-            ValueSetDefinitionReadId definitionId,
+            ResolvedValueSetReadId identifier,
             Set<EntityNameOrURI> entities);
 }
