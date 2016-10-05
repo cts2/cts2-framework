@@ -23,19 +23,12 @@
  */
 package edu.mayo.cts2.framework.core.client;
 
-import java.net.URI;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
+import edu.mayo.cts2.framework.core.xml.Cts2Marshaller;
+import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.CommonsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -43,8 +36,14 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import edu.mayo.cts2.framework.core.xml.Cts2Marshaller;
-import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.net.URI;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A client for interacting with a CTS2 REST service.
@@ -180,6 +179,18 @@ public class Cts2RestClient {
 	public <T> T getCts2Resource(String url, String username, String password, Class<T> clazz){
 		return this.getCts2Resource(url, username, password, clazz, new String[0]);
 	}
+
+    /**
+     * Perform an HTTP 'HEAD' of the CTS2 resource.
+     *
+     * @param url the url
+     * @param username the username
+     * @param password the password
+     * @return the cts2 resource
+     */
+    public HttpHeaders headCts2Resource(String url, String username, String password, String... queryParameters){
+        return this.doGetRestTemplate(username, password).headForHeaders(url, queryParameters);
+    }
 	
 	/**
 	 * Perform an HTTP 'GET' of the CTS2 resource.
