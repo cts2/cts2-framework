@@ -31,7 +31,7 @@ import edu.mayo.cts2.framework.service.profile.map.MapReadService
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def map = new MapCatalogEntry(mapName:"mapname")
 		
 		def rs = [

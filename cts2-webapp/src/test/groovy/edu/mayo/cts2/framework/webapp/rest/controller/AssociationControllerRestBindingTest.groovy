@@ -37,7 +37,7 @@ class AssociationControllerRestBindingTest extends ControllerRestBindingTestBase
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def a = new Association(
 			assertedBy:new CodeSystemVersionReference(
 				codeSystem:new CodeSystemReference(content:"csname"),
