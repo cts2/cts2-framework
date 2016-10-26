@@ -7,6 +7,8 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 import javax.annotation.Resource
 
+import org.junit.Before;
+
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 
@@ -31,7 +33,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def cs = new CodeSystemCatalogEntry(codeSystemName:"csn")
 		
 		def rs = [

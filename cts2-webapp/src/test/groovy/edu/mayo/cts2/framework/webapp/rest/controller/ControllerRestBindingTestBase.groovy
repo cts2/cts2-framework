@@ -32,13 +32,14 @@ abstract class ControllerRestBindingTestBase {
 
 	@Before
 	void setup(){
-		getController().setServerContext(serverContext)
+		initController().setServerContext(serverContext)
 	}
 	
 	abstract getByUriUrl()
 	abstract getByNameUrl()
 	abstract getUriToTest()
-	abstract getController()
+ 	abstract initController()
+
 
 	
 	@Test

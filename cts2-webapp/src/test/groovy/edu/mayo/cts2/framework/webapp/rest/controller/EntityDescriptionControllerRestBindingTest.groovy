@@ -39,7 +39,7 @@ class EntityDescriptionControllerRestBindingTest extends ControllerRestBindingTe
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def ed = new EntityDescription();
 		
 		def entry = new NamedEntityDescription(about:"about")

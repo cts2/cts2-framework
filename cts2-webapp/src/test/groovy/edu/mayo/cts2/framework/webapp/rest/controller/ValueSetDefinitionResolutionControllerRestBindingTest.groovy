@@ -39,7 +39,7 @@ class ValueSetDefinitionResolutionControllerRestBindingTest extends ControllerRe
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def vsdef = createEntry(getUriToTest())
 	
 		def readService = [
