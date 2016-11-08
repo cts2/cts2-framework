@@ -238,7 +238,8 @@
 							<argLine>-Xmx1028m</argLine>
 							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
 							<excludes>
-								<exclude>**/*IT.*</exclude>
+<!-- 								<exclude>**/*IT.*</exclude> -->
+								<exclude>edu.mayo.cts2.framework.webapp.soap.*</exclude>
 							</excludes>
 							<systemProperties>
 								<systemProperty>
@@ -248,7 +249,7 @@
 							</systemProperties>
 						</configuration>
 					</execution>
-					<execution>
+<!-- 					<execution>
 						<id>integration-tests</id>
 						<phase>integration-test</phase>
 						<goals>
@@ -257,11 +258,14 @@
 						<configuration>
 							<argLine>-Xmx1028m</argLine>
 							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
-							<includes>
+							<excludes>
+								<exclude>edu.mayo.cts2.framework.webapp.soap.endpoint.codesystem.*</exclude>
+							</excludes>
+ 							<includes>
 								<include>**/*IT.*</include>
 							</includes>
 						</configuration>
-					</execution>
+					</execution> -->
 				</executions>
 			</plugin>
 
@@ -415,6 +419,12 @@
 			<artifactId>groovy-all</artifactId>
 			<version>1.7.4</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
