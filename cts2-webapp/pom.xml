@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>edu.mayo.cts2</groupId>
 		<artifactId>cts2-framework</artifactId>
-		<version>1.2.2.SNAPSHOT</version>
+		<version>1.2.2-SNAPSHOT</version>
 	</parent>
 
 	<groupId>edu.mayo.cts2.framework</groupId>
@@ -259,6 +259,12 @@
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>1.7.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -411,7 +417,7 @@
 			<plugin>
 				<groupId>org.simplericity.jettyconsole</groupId>
 				<artifactId>jetty-console-maven-plugin</artifactId>
-				<version>1.45</version>
+				<version>1.58</version>
 				<executions>
 					<execution>
 						<goals>

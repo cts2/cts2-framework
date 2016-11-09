@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>1.2.2.SNAPSHOT</version>
+	<version>1.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
@@ -239,7 +239,6 @@
 							<argLine>-Xmx1028m</argLine>
 							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
 							<excludes>
-								<exclude>**/*IT.*</exclude>
 							</excludes>
 							<systemProperties>
 								<systemProperty>
@@ -247,20 +246,6 @@
 									<value>true</value>
 								</systemProperty>
 							</systemProperties>
-						</configuration>
-					</execution>
-					<execution>
-						<id>integration-tests</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<argLine>-Xmx1028m</argLine>
-							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
-							<includes>
-								<include>**/*IT.*</include>
-							</includes>
 						</configuration>
 					</execution>
 				</executions>
@@ -416,6 +401,12 @@
 			<artifactId>groovy-all</artifactId>
 			<version>1.7.4</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
