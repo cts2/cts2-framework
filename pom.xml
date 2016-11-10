@@ -65,12 +65,12 @@
 		<repository>
 			<id>nci.maven.releases</id>
 			<name>NCI Maven Release Repository</name>
-			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSRelease</url>
+			<url>https://ncimvn-dev.nci.nih.gov/nexus/content/repositories/LexEVSRelease</url>
 		</repository>
 		<snapshotRepository>
 			<id>nci.maven.snapshot</id>
 			<name>NCI Maven Snapshot Repository</name>
-			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSSnapshots</url>
+			<url>https://ncimvn-dev.nci.nih.gov/nexus/content/repositories/LexEVSSnapshots</url>
 		</snapshotRepository>
 		<site>
 			<id>site-upload-server</id>
@@ -524,7 +524,7 @@
 		<repository>
 			<id>nci.maven.snapshot</id>
 			<name>NCI Maven Snapshot Repository</name>
-			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSSnapshots</url>
+			<url>https://ncimvn-dev.nci.nih.gov/nexus/content/repositories/LexEVSSnapshots</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -536,7 +536,7 @@
 		<repository>
 			<id>nci.maven.releases</id>
 			<name>NCI Maven Release Repository</name>
-			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSRelease</url>
+			<url>https://ncimvn-dev.nci.nih.gov/nexus/content/repositories/LexEVSRelease</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -548,7 +548,7 @@
 		<repository>
 			<id>nci.maven.thirdparty</id>
 			<name>NCI Maven 3rd Party Repository</name>
-			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVS3rdParty</url>
+			<url>https://ncimvn-dev.nci.nih.gov/nexus/content/repositories/LexEVS3rdParty</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
