@@ -109,7 +109,7 @@ public class AbstractServiceAwareBean implements InitializingBean, ServiceProvid
 						Cts2Profile service = (Cts2Profile)factory.createInvokerProxy( new Invoker(){
 
 							@Override
-							public Object invoke(Object o, Method method, Object[] olist) throws Throwable {
+							public Object invoke(Object o, Method method, Object[] arguments) throws Throwable {
 								ServiceProvider retrievedServiceProvider = 
 										serviceProviderFactory.getServiceProvider();
 
@@ -125,9 +125,7 @@ public class AbstractServiceAwareBean implements InitializingBean, ServiceProvid
 								}
 
 								try {
-									return method
-											.invoke(retrievedService,
-													(Object[])method.getParameters());
+									return method.invoke(retrievedService, arguments);
 								} catch (InvocationTargetException e) {
 									throw e.getCause();
 								}
@@ -163,7 +161,7 @@ public class AbstractServiceAwareBean implements InitializingBean, ServiceProvid
 		return (T) factory.createInvokerProxy( nullServiceMethodInterceptor, new Class<?>[]{serviceClass});
 	}
 	
-	protected Invoker nullServiceMethodInterceptor = new  Invoker() {
+	protected Invoker nullServiceMethodInterceptor = new Invoker() {
 
 		@Override
 		public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
