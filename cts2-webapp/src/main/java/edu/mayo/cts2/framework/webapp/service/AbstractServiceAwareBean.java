@@ -29,6 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.annotation.Resource;
 
@@ -36,8 +37,10 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.aop.framework.ProxyFactory;
+import org.apache.commons.proxy.Invoker;
+import org.apache.commons.proxy.ProxyFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.MethodInvoker;
 
 import edu.mayo.cts2.framework.service.profile.Cts2Profile;
 import edu.mayo.cts2.framework.service.provider.ServiceProvider;
@@ -102,11 +105,11 @@ public class AbstractServiceAwareBean implements InitializingBean, ServiceProvid
 						@SuppressWarnings("unchecked")
 						final Class<? extends Cts2Profile> clazz = (Class<? extends Cts2Profile>) field
 								.getType();
-						
-						Cts2Profile service = ProxyFactory.getProxy(clazz, new MethodInterceptor(){
+						ProxyFactory factory = new ProxyFactory();
+						Cts2Profile service = (Cts2Profile)factory.createInvokerProxy( new Invoker(){
 
 							@Override
-							public Object invoke(MethodInvocation method) throws Throwable {
+							public Object invoke(Object o, Method method, Object[] arguments) throws Throwable {
 								ServiceProvider retrievedServiceProvider = 
 										serviceProviderFactory.getServiceProvider();
 
@@ -122,16 +125,14 @@ public class AbstractServiceAwareBean implements InitializingBean, ServiceProvid
 								}
 
 								try {
-									return method.getMethod()
-											.invoke(retrievedService,
-													method.getArguments());
+									return method.invoke(retrievedService, arguments);
 								} catch (InvocationTargetException e) {
 									throw e.getCause();
 								}
 
 							}
 							
-						});
+						}, new Class<?>[]{clazz});
 						
 						if(service == null){
 							service = proxyNullService(clazz);
@@ -155,16 +156,16 @@ public class AbstractServiceAwareBean implements InitializingBean, ServiceProvid
 	protected <T extends Cts2Profile> T proxyNullService(Class<T> serviceClass){
 		
 		ProxyFactory factory =
-				new ProxyFactory(serviceClass, nullServiceMethodInterceptor);
+				new ProxyFactory();
 		
-		return (T) factory.getProxy();
+		return (T) factory.createInvokerProxy( nullServiceMethodInterceptor, new Class<?>[]{serviceClass});
 	}
 	
-	protected MethodInterceptor nullServiceMethodInterceptor = new MethodInterceptor() {
+	protected Invoker nullServiceMethodInterceptor = new Invoker() {
 
 		@Override
-		public Object invoke(MethodInvocation invocation) throws Throwable {
-			throw new UnsupportedOperationException("This service is not implemented.");
+		public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
+			throw new UnsupportedOperationException("This method is not yet supported");
 		}
 		
 	};

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>1.1.3-SNAPSHOT</version>
+	<version>1.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
@@ -41,8 +41,7 @@
 
 	<scm>
 		<developerConnection>scm:git:git@github.com:cts2/cts2-framework.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+  	</scm>
 
 	<modules>
 		<module>cts2-model</module>
@@ -56,7 +55,7 @@
 	</modules>
 
 	<properties>
-		<java-version>1.7</java-version>
+		<java-version>1.8</java-version>
 		<org.springframework-version>3.1.0.RELEASE</org.springframework-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<test.permgen.max>500m</test.permgen.max>
@@ -64,12 +63,14 @@
 
 	<distributionManagement>
 		<repository>
-			<id>informatics-releases</id>
-			<url>http://informatics.mayo.edu/maven/content/repositories/releases</url>
+			<id>nci.maven.releases</id>
+			<name>NCI Maven Release Repository</name>
+			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSRelease</url>
 		</repository>
 		<snapshotRepository>
-			<id>informatics-snapshots</id>
-			<url>http://informatics.mayo.edu/maven/content/repositories/snapshots</url>
+			<id>nci.maven.snapshot</id>
+			<name>NCI Maven Snapshot Repository</name>
+			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSSnapshots</url>
 		</snapshotRepository>
 		<site>
 			<id>site-upload-server</id>
@@ -238,7 +239,6 @@
 							<argLine>-Xmx1028m</argLine>
 							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
 							<excludes>
-								<exclude>**/*IT.*</exclude>
 							</excludes>
 							<systemProperties>
 								<systemProperty>
@@ -246,20 +246,6 @@
 									<value>true</value>
 								</systemProperty>
 							</systemProperties>
-						</configuration>
-					</execution>
-					<execution>
-						<id>integration-tests</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<argLine>-Xmx1028m</argLine>
-							<argLine>-XX:MaxPermSize=${test.permgen.max}</argLine>
-							<includes>
-								<include>**/*IT.*</include>
-							</includes>
 						</configuration>
 					</execution>
 				</executions>
@@ -330,7 +316,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.4.2</version>
+					<version>2.5</version>
 					<dependencies>
 				    	<dependency>
 				        	<groupId>org.apache.maven.scm</groupId>
@@ -415,6 +401,12 @@
 			<artifactId>groovy-all</artifactId>
 			<version>1.7.4</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -530,9 +522,9 @@
 		</repository>
 
 		<repository>
-			<id>edu.informatics.maven.snapshot</id>
-			<name>Informatics Maven Snapshot Repository</name>
-			<url>http://informatics.mayo.edu/maven/content/repositories/snapshots</url>
+			<id>nci.maven.snapshot</id>
+			<name>NCI Maven Snapshot Repository</name>
+			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSSnapshots</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -542,9 +534,9 @@
 		</repository>
 
 		<repository>
-			<id>edu.informatics.maven.releases</id>
-			<name>Informatics Maven Release Repository</name>
-			<url>http://informatics.mayo.edu/maven/content/repositories/releases</url>
+			<id>nci.maven.releases</id>
+			<name>NCI Maven Release Repository</name>
+			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVSRelease</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -554,9 +546,9 @@
 		</repository>
 
 		<repository>
-			<id>edu.informatics.maven.thirdparty</id>
-			<name>Informatics Maven ThirdParty Repository</name>
-			<url>http://informatics.mayo.edu/maven/content/repositories/thirdparty</url>
+			<id>nci.maven.thirdparty</id>
+			<name>NCI Maven 3rd Party Repository</name>
+			<url>https://ncimvn.nci.nih.gov/nexus/content/repositories/LexEVS3rdParty</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>

@@ -47,7 +47,7 @@ class ValueSetDefinitionControllerRestBindingTest extends ControllerRestBindingT
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def vsdef = createEntry(getUriToTest())
 		
 		def rs = [

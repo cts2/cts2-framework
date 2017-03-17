@@ -93,7 +93,7 @@ public class UrlConstructor {
 	 */
 	public String createEntityUrl(String codeSystemName, String codeSystemVersionName, String entityName){
 		return this.createCodeSystemVersionUrl(codeSystemName, codeSystemVersionName) + "/" +
-			URIHelperInterface.ENTITY + "/" + entityName;
+			URIHelperInterface.ENTITY + "/" + EncodingUtils.encodeEntityName(entityName);
 	}
 	
 	public String createEntityUrl(String codeSystemName, String codeSystemVersionName, ScopedEntityName entityName){
@@ -102,12 +102,17 @@ public class UrlConstructor {
 	}
 	
 	public String createEntityUrl(ScopedEntityName entityName){
-		return this.createEntityUrl(EncodingUtils.encodeScopedEntityName(entityName));
+		return this.addServerContext(
+				URIHelperInterface.ENTITY  + "/" + EncodingUtils.encodeScopedEntityName(entityName));
 	}
-	
+
+	/**
+	 * This should never really be used... this should always be a scoped entity name.
+	 */
+	@Deprecated
 	public String createEntityUrl(String entityName){
 		return this.addServerContext(
-				URIHelperInterface.ENTITY + "/" + entityName);
+				URIHelperInterface.ENTITY + "/" + EncodingUtils.encodeEntityName(entityName));
 	}
 
 	/**

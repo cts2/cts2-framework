@@ -34,7 +34,8 @@ import edu.mayo.cts2.framework.model.core.URIAndEntityName;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public class EncodingUtils {
-	
+
+	private static final String URL_ESCAPE_CHAR = "%253A";
 	private static final String ESCAPE_CHAR = "%3A";
 	private static final String SCOPED_ENTITY_NAME_SEPERATOR = ":";
 
@@ -51,7 +52,21 @@ public class EncodingUtils {
 	public static String encodeScopedEntityName(URIAndEntityName name){
 		return encodeColon(name.getNamespace()) + SCOPED_ENTITY_NAME_SEPERATOR + encodeColon(name.getName());
 	}
-	
+
+	/**
+	 * Return an encoding of the Entity name suitable for an HREF.
+	 *
+	 * NOTE: This is NOT to be used for 'scoped' names, or, names with a namespace.
+	 *
+	 * Don't pass in 'myNamespace:myName'
+	 *
+	 * @param name
+	 * @return
+	 */
+	public static String encodeEntityName(String name){
+		return encodeColon(name);
+	}
+
 	/**
 	 * Encode colon.
 	 *
@@ -59,7 +74,7 @@ public class EncodingUtils {
 	 * @return the string
 	 */
 	private static String encodeColon(String text){
-		return text.replaceAll(SCOPED_ENTITY_NAME_SEPERATOR, ESCAPE_CHAR);		
+		return text.replaceAll(SCOPED_ENTITY_NAME_SEPERATOR, URL_ESCAPE_CHAR);
 	}
 	
 	/**
@@ -69,15 +84,19 @@ public class EncodingUtils {
 	 * @return the scoped entity name
 	 */
 	public static ScopedEntityName decodeEntityName(String text){
+		return decodeEntityName(text, null);
+	}
+
+	public static ScopedEntityName decodeEntityName(String text, String defaultNamespace){
 		ScopedEntityName scopedName = new ScopedEntityName();
 		String[] name = text.split(":");
 		if(name.length == 1){
-			name = new String[]{null,text};
+			name = new String[]{defaultNamespace,text};
 		}
-		
+
 		scopedName.setNamespace(StringUtils.replace(name[0], ESCAPE_CHAR, SCOPED_ENTITY_NAME_SEPERATOR));
 		scopedName.setName(StringUtils.replace(name[1], ESCAPE_CHAR, SCOPED_ENTITY_NAME_SEPERATOR));
-		
+
 		return scopedName;
 	}
 }

@@ -46,7 +46,7 @@ class MapVersionControllerRestBindingTest extends ControllerRestBindingTestBase 
 	}
 	
 	@Override
-	public getController() {
+	public initController() {
 		def mapversion = new MapVersion(mapVersionName:"mvn",versionOf:new MapReference(content:"mapname"))
 		
 		def rs = [
