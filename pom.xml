@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>CTS2 Development Framework</name>
@@ -74,7 +74,7 @@
 		</snapshotRepository>
 		<site>
 			<id>site-upload-server</id>
-			<url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/sites/${project.artifactId}</url>
+			<url>scp://ncimvn.nci.nih.gov:/nexus/content/repositories/${project.artifactId}</url>
 		</site>
 	</distributionManagement>
 
