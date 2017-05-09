@@ -81,19 +81,19 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	 */
 	@Override
 	public void updated(@SuppressWarnings("rawtypes") Dictionary properties) throws ConfigurationException {
-		if(properties != null){
-			boolean allow = BooleanUtils.toBooleanDefaultIfNull( Boolean.valueOf((String)properties.get(ALLOW_HTML_RENDERING)), ALLOW_HTML_RENDERING_DEFAULT);
-			this.allowHtmlRendering = allow;
+		if(properties != null){	
+			String str_allow = (String)properties.get(ALLOW_HTML_RENDERING);
+			this.allowHtmlRendering = str_allow != null ? Boolean.valueOf(str_allow) : ALLOW_HTML_RENDERING_DEFAULT;
 			
-			boolean show = BooleanUtils.toBooleanDefaultIfNull( Boolean.valueOf((String)properties.get(SHOW_STACK_TRACE)), SHOW_STACK_TRACE_DEFAULT);
-			this.showStackTrace = show;
+			String str_show = (String)properties.get(SHOW_STACK_TRACE);
+			this.showStackTrace = str_show != null ? Boolean.valueOf(str_show) : SHOW_STACK_TRACE_DEFAULT;
 			
-			boolean home = BooleanUtils.toBooleanDefaultIfNull( Boolean.valueOf((String)properties.get(SHOW_HOME_PAGE)), SHOW_HOME_PAGE_DEFAULT);
-			this.showHomePage = home;
-			
-			boolean soap = BooleanUtils.toBooleanDefaultIfNull( Boolean.valueOf((String)properties.get(ALLOW_SOAP)), ALLOW_SOAP_DEFAULT);
-			this.allowSoap = soap;
-			
+			String str_home = (String)properties.get(SHOW_HOME_PAGE);
+			this.showHomePage = str_home != null ? Boolean.valueOf(str_home) : SHOW_HOME_PAGE_DEFAULT;
+
+			String str_soap = (String)properties.get(ALLOW_SOAP);
+			this.allowSoap = str_soap != null ? Boolean.valueOf(str_soap) : ALLOW_SOAP_DEFAULT;
+
 			this.alternateHomePage = (String) properties.get(ALTERNATE_HOME_PAGE);
 		}		
 	}

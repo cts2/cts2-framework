@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>edu.mayo.cts2</groupId>
 		<artifactId>cts2-framework</artifactId>
-		<version>1.3.0.FINAL</version>
+		<version>1.3.1.FINAL</version>
 	</parent>
 
 	<groupId>edu.mayo.cts2.framework</groupId>
