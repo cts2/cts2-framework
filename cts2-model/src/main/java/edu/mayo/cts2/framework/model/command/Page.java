@@ -30,7 +30,7 @@ package edu.mayo.cts2.framework.model.command;
  */
 public class Page implements Cloneable {
 
-	private int DEFAULT_PAGE_SIZE = 50;
+	private int DEFAULT_PAGE_SIZE = 1000;
 	private int DEFAULT_PAGE = 0;
 	
 	private int page = DEFAULT_PAGE;
