@@ -51,6 +51,8 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	public static final String SHOW_HOME_PAGE = "showHomePage";
     public static final String SUPPORT_EMAIL = "supportEmail";
     public static final String ALTERNATE_HOME_PAGE = "alternateHomePage";
+    public static final String MAX_TO_RETURN = "maxToReturn";
+    
 
     private static final String SERVICE_PID = "edu.mayo.cts2.framework.webapp.rest.config";
 	
@@ -67,6 +69,8 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	private boolean showHomePage = SHOW_HOME_PAGE_DEFAULT;
 	
 	private String alternateHomePage = null;
+	
+	private Integer maxToReturn = null;
 
 	/* (non-Javadoc)
 	 * @see org.osgi.service.metatype.MetaTypeProvider#getLocales()
@@ -95,6 +99,12 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 			this.allowSoap = str_soap != null ? Boolean.valueOf(str_soap) : ALLOW_SOAP_DEFAULT;
 
 			this.alternateHomePage = (String) properties.get(ALTERNATE_HOME_PAGE);
+						
+			String str_maxToReturn = (String)properties.get(MAX_TO_RETURN);
+			if (str_maxToReturn != null && Integer.valueOf(str_maxToReturn) != null){
+				this.maxToReturn = Integer.valueOf(str_maxToReturn);
+			}
+			
 		}		
 	}
 
@@ -164,7 +174,10 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	protected String getMetatypeXmlPath() {
 		return "/rest/webapp-rest-metatype.xml";
 	}
-	
-	
 
+	@Override
+	public Integer getMaxToReturn() {
+		return this.maxToReturn;
+	}
+	
 }

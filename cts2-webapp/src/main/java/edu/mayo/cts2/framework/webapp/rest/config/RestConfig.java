@@ -46,4 +46,6 @@ public interface RestConfig {
     public String getSupportEmail();
     
     public String getAlternateHomePage();
+    
+    public Integer getMaxToReturn();
 }
