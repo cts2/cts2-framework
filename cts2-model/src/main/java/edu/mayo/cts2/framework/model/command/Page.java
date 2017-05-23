@@ -30,11 +30,19 @@ package edu.mayo.cts2.framework.model.command;
  */
 public class Page implements Cloneable {
 
-	private int DEFAULT_PAGE_SIZE = 1000;
+	private int DEFAULT_PAGE_SIZE = 50;
 	private int DEFAULT_PAGE = 0;
-	
+			
 	private int page = DEFAULT_PAGE;
 	private int maxtoreturn = DEFAULT_PAGE_SIZE;
+	
+	public Page(){
+		this.maxtoreturn = DEFAULT_PAGE_SIZE;
+	}
+	
+	public Page(int maxtoreturn){
+		this.maxtoreturn = maxtoreturn;
+	}
 	
 	public int getPage() {
 		return page;
@@ -57,7 +65,7 @@ public class Page implements Cloneable {
 	 */
 	@Override
 	public Page clone() throws CloneNotSupportedException {
-		Page page = new Page();
+		Page page = new Page(maxtoreturn);
 		page.setPage(this.getPage());
 		page.setMaxToReturn(this.getMaxToReturn());
 		return page;
