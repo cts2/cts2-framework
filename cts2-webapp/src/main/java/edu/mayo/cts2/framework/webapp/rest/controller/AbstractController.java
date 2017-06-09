@@ -329,6 +329,12 @@ public abstract class AbstractController extends AbstractServiceAwareBean implem
 			if(maxToReturn != null){
 				page.setMaxToReturn(maxToReturn);
 			}
+			else {
+				// get default page size if it is not null in the properties file
+				if (getRestConfig().getMaxToReturn() != null) {
+					page.setMaxToReturn(getRestConfig().getMaxToReturn().intValue());
+				}
+			}
 			
 			if(pageNumber != null){
 				page.setPage(pageNumber);
