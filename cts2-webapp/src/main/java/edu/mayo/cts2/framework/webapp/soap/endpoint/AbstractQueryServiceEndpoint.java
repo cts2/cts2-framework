@@ -193,13 +193,6 @@ public abstract class AbstractQueryServiceEndpoint extends AbstractEndpoint {
     }
 
     protected Page getPage(int pageNumber, QueryControl queryControl) {
-        Page page = new Page();
-        if (queryControl != null) {
-            page.setMaxToReturn(queryControl.getMaxToReturn().intValue());
-        }
-
-        page.setPage(pageNumber);
-
-        return page;
+        throw new UnsupportedOperationException();
     }
 }
