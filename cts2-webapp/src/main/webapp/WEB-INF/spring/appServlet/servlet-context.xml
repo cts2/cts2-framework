@@ -587,127 +587,127 @@
 
   <!-- Association Services -->
   <!--<sws:static-wsdl id="AdvancedAssociationQueryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AdvancedAssociationQueryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/AdvancedAssociationQueryService.wsdl" />-->
   <!--<sws:static-wsdl id="AssociationHistoryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationHistoryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/AssociationHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="AssociationMaintenanceService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationMaintenanceService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/AssociationMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="AssociationQueryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationQueryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/AssociationQueryService.wsdl" />-->
   <sws:static-wsdl id="AssociationReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/AssociationReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/AssociationReadService.wsdl" />
 
   <!-- Code System Catalog Services -->
   <!--<sws:static-wsdl id="CodeSystemCatalogHistoryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogHistoryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemCatalogMaintenanceService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogMaintenanceService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemCatalogMaintenanceService.wsdl" />-->
 	<sws:static-wsdl id="CodeSystemCatalogQueryService"
-		location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogQueryService.wsdl" />
+		location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemCatalogQueryService.wsdl" />
 	<sws:static-wsdl id="CodeSystemCatalogReadService"
-		location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemCatalogReadService.wsdl" />
+		location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemCatalogReadService.wsdl" />
 
   <!-- Code System Version Catalog Services  -->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogHistoryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemVersionCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogMaintenanceService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogMaintenanceService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemVersionCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="CodeSystemVersionCatalogQueryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogQueryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemVersionCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="CodeSystemVersionCatalogReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/CodeSystemVersionCatalogReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/CodeSystemVersionCatalogReadService.wsdl" />
 
   <!-- Concept Domain Binding Services   -->
   <!--<sws:static-wsdl id="ConceptDomainBindingMaintenanceService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingMaintenanceService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainBindingMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ConceptDomainBindingQueryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingQueryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainBindingQueryService.wsdl" />-->
   <sws:static-wsdl id="ConceptDomainBindingReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainBindingReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainBindingReadService.wsdl" />
 
   <!-- Concept Domain Catalog Services  -->
   <!--<sws:static-wsdl id="ConceptDomainCatalogHistoryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogHistoryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="ConceptDomainCatalogMaintenanceService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogMaintenanceService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ConceptDomainCatalogQueryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogQueryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="ConceptDomainCatalogReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/ConceptDomainCatalogReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/ConceptDomainCatalogReadService.wsdl" />
 
   <!-- Entity Description Services  -->
   <!--<sws:static-wsdl id="EntityDescriptionHistoryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionHistoryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/EntityDescriptionHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="EntityDescriptionMaintenanceService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionMaintenanceService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/EntityDescriptionMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="EntityDescriptionQueryService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionQueryService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/EntityDescriptionQueryService.wsdl" />-->
   <sws:static-wsdl id="EntityDescriptionReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/EntityDescriptionReadService.wsdl" />
   <!--<sws:static-wsdl id="EntityDescriptionTransformService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/EntityDescriptionTransformService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/EntityDescriptionTransformService.wsdl" />-->
 
   <!-- Map Services  -->
   <!--<sws:static-wsdl id="MapCatalogHistoryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogHistoryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="MapCatalogMaintenanceService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogMaintenanceService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="MapCatalogQueryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogQueryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="MapCatalogReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/MapCatalogReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/MapCatalogReadService.wsdl" />
   <!--<sws:static-wsdl id="MapResolutionService"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapResolutionService.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapResolutionService.wsdl" />-->
 
   <!-- Map Entry Services  -->
   <!--<sws:static-wsdl id="MapEntryHistoryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryHistoryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapEntryHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="MapEntryMaintenanceService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryMaintenanceService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapEntryMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="MapEntryQueryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryQueryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapEntryQueryService.wsdl" />-->
   <sws:static-wsdl id="MapEntryReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/MapEntryReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/MapEntryReadService.wsdl" />
 
   <!-- Map Version Services  -->
   <!--<sws:static-wsdl id="MapVersionHistoryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionHistoryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapVersionHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="MapVersionMaintenanceService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionMaintenanceService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapVersionMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="MapVersionQueryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionQueryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/MapVersionQueryService.wsdl" />-->
   <sws:static-wsdl id="MapVersionReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/MapVersionReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/MapVersionReadService.wsdl" />
 
   <!-- Statement Services  -->
   <!--<sws:static-wsdl id="StatementHistoryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/StatementHistoryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/StatementHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="StatementQueryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/StatementQueryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/StatementQueryService.wsdl" />-->
   <sws:static-wsdl id="StatementReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/StatementReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/StatementReadService.wsdl" />
 
   <!-- ValueSet Catalog Services  -->
   <!--<sws:static-wsdl id="ValueSetCatalogHistoryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogHistoryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetCatalogHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetCatalogMaintenanceService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogMaintenanceService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetCatalogMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetCatalogQueryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogQueryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetCatalogQueryService.wsdl" />-->
   <sws:static-wsdl id="ValueSetCatalogReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetCatalogReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetCatalogReadService.wsdl" />
 
   <!-- ValueSet Definition Services  -->
   <!--<sws:static-wsdl id="ValueSetDefinitionHistoryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionHistoryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetDefinitionHistoryService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetDefinitionMaintenanceService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionMaintenanceService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetDefinitionMaintenanceService.wsdl" />-->
   <!--<sws:static-wsdl id="ValueSetDefinitionQueryService"-->
-  <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionQueryService.wsdl" />-->
+  <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetDefinitionQueryService.wsdl" />-->
   <sws:static-wsdl id="ValueSetDefinitionReadService"
-    location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionReadService.wsdl" />
+    location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetDefinitionReadService.wsdl" />
   <!--<sws:static-wsdl id="ValueSetDefinitionResolution"-->
-    <!--location="http://www.omg.org/spec/cts2/201206/wsdl/ValueSetDefinitionResolution.wsdl" />-->
+    <!--location="https://www.omg.org/spec/CTS2/201206/wsdl/ValueSetDefinitionResolution.wsdl" />-->
 
   <!-- ===================== -->
   <!--       Endpoints       -->

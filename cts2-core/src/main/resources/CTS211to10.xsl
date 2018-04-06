@@ -48,8 +48,8 @@
     <xsl:variable name="sourceNamespace">http://www.omg.org/spec/CTS2/1.1/</xsl:variable>
     <!-- Change this to the appropriate spot on the OMG server once the spec is accepted and published -->
     <xsl:param name="sourceSchemaLocation">http://informatics.mayo.edu/cts2/spec/CTS2/1.1/</xsl:param>
-    <xsl:variable name="targetNamespace">http://schema.omg.org/spec/CTS2/1.0/</xsl:variable>
-    <xsl:variable name="targetSchemaLocation">http://www.omg.org/spec/cts2/201206/</xsl:variable>
+    <xsl:variable name="targetNamespace">https://schema.omg.org/spec/CTS2/1.0/</xsl:variable>
+    <xsl:variable name="targetSchemaLocation">https://www.omg.org/spec/cts2/201206/</xsl:variable>
 
     <xsl:include href="CTS2ConversionUtils.xsl"/>
 
