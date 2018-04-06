@@ -45,7 +45,6 @@ class DelegatingMarshallerTest {
 	Resource updateEmpty = new ClassPathResource("xml/updateRequestEmpty.xml");
 	Resource rxNorm = new ClassPathResource("xml/rxNorm.xml");
 	Resource emptyVersions = new ClassPathResource("xml/emptyVersions.xml");
-	Resource getAllCodeSystemsResponse = new ClassPathResource("xml/GetAllCodeSystemsResponse.xml");
 
     @Test
     void "Test Get Marshaller"(){
@@ -64,13 +63,6 @@ class DelegatingMarshallerTest {
 	@Test
 	void "Test Unmarshall Valid"(){
 		def stream = valid.getInputStream()
-		
-		assertNotNull marshaller.unmarshal(new StreamSource(stream))
-	}
-	
-	@Test
-	void "Test Unmarshall GetAllCodeSystemsRequest"(){
-		def stream = getAllCodeSystemsResponse.getInputStream()
 		
 		assertNotNull marshaller.unmarshal(new StreamSource(stream))
 	}

@@ -12,8 +12,8 @@
 	<artifactId>cts2-webapp</artifactId>
 	<packaging>war</packaging>
 
-	<name>CTS2 Development Framework REST/SOAP WebApp</name>
-	<description>REST/SOAP Web Bindings for The CTS2 Development Framework.</description>
+	<name>CTS2 Development Framework RESTWebApp</name>
+	<description>REST Web Bindings for The CTS2 Development Framework.</description>
 
 	<properties>
 		<org.aspectj-version>1.8.0</org.aspectj-version>
@@ -401,6 +401,7 @@
 				<version>1.2</version>
 				<configuration>
 					<providerSelection>1.7</providerSelection>
+					<source/>
 				</configuration>
 				<executions>
 					<execution>
