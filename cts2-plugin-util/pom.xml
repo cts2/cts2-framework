@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>cts2-framework</artifactId>
 		<groupId>edu.mayo.cts2</groupId>
-		<version>1.3.4.FINAL</version>
+		<version>1.3.6.RC1</version>
 	</parent>
 
 	<groupId>edu.mayo.cts2.framework</groupId>
