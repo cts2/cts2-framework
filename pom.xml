@@ -4,7 +4,6 @@
 	<artifactId>cts2-framework</artifactId>
 	<version>1.3.6.RC1</version>
 	<packaging>pom</packaging>
-
 	<name>CTS2 Development Framework</name>
 	<description>The CTS2 Development Framework.</description>
 	<url>http://informatics.mayo.edu/cts2/framework</url>
