@@ -129,7 +129,7 @@ pageEncoding="UTF-8"%>
 					<div class="products-desc">
 						<h3><a href="http://informatics.mayo.edu/cts2/framework">CTS2 Development Framework</a></h3>
 						<p>The CTS2 Development Framework is a development kit for rapidly creating CTS2 compliant applications. The Development Framework allows for users to create plugins which may be loaded into the 
-						Development Framework to provide REST and SOAP Web Services that use CTS2 compliant paths and model objects.</p>
+						Development Framework to provide REST Services that use CTS2 compliant paths and model objects.</p>
 					</div> <!-- /products-desc -->
 				</li>
 				<li class="last box">
@@ -137,7 +137,7 @@ pageEncoding="UTF-8"%>
 					<div class="products-desc">
 						<h3><a href="http://www.omg.org/spec/CTS2/1.0/Beta1/">Official OMG© Specification</a></h3>
 						<p>CTS2 is an Official Object Management Group© (OMG) Specification. Go here to see the specification, which includes Platfrom Independent UML® Models, as well as Platform Specific bindings
-						to REST and SOAP implementations.</p>
+						to REST implementations.</p>
 					</div> <!-- /products-desc -->
 				</li>
 			</ul>

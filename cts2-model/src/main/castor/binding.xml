@@ -24,10 +24,4 @@
    			</java-class>  
 		</complexTypeBinding>
 
-        <complexTypeBinding name="/complexType:resolve">
-            <java-class>
-                <implements>edu.mayo.cts2.framework.model.wsdl.SoapResolveRequest</implements>
-            </java-class>
-        </complexTypeBinding>
-
 </binding>
