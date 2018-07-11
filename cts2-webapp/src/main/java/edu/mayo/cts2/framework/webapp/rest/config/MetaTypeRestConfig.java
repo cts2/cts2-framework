@@ -46,7 +46,6 @@ import java.util.Hashtable;
 public class MetaTypeRestConfig extends AbstractConfigurableExportedService implements RestConfig {
 	
 	public static final String ALLOW_HTML_RENDERING = "allowHtmlRendering";
-	public static final String ALLOW_SOAP = "allowSoap";
 	public static final String SHOW_STACK_TRACE = "showStackTrace";
 	public static final String SHOW_HOME_PAGE = "showHomePage";
     public static final String SUPPORT_EMAIL = "supportEmail";
@@ -58,9 +57,6 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	
 	private static final boolean ALLOW_HTML_RENDERING_DEFAULT = false;
 	private boolean allowHtmlRendering = ALLOW_HTML_RENDERING_DEFAULT;
-	
-	private static final boolean ALLOW_SOAP_DEFAULT = false;
-	private boolean allowSoap = ALLOW_SOAP_DEFAULT;
 	
 	private static final boolean SHOW_STACK_TRACE_DEFAULT = false;
 	private boolean showStackTrace = SHOW_STACK_TRACE_DEFAULT;
@@ -88,15 +84,12 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 		if(properties != null){	
 			String str_allow = (String)properties.get(ALLOW_HTML_RENDERING);
 			this.allowHtmlRendering = str_allow != null ? Boolean.valueOf(str_allow) : ALLOW_HTML_RENDERING_DEFAULT;
-			
+
 			String str_show = (String)properties.get(SHOW_STACK_TRACE);
 			this.showStackTrace = str_show != null ? Boolean.valueOf(str_show) : SHOW_STACK_TRACE_DEFAULT;
 			
 			String str_home = (String)properties.get(SHOW_HOME_PAGE);
 			this.showHomePage = str_home != null ? Boolean.valueOf(str_home) : SHOW_HOME_PAGE_DEFAULT;
-
-			String str_soap = (String)properties.get(ALLOW_SOAP);
-			this.allowSoap = str_soap != null ? Boolean.valueOf(str_soap) : ALLOW_SOAP_DEFAULT;
 
 			this.alternateHomePage = (String) properties.get(ALTERNATE_HOME_PAGE);
 						
@@ -150,11 +143,6 @@ public class MetaTypeRestConfig extends AbstractConfigurableExportedService impl
 	@Override
 	public boolean getShowHomePage() {
 		return this.checkEnvironmentVariableOverride(SHOW_HOME_PAGE, this.showHomePage);
-	}
-	
-	@Override
-	public boolean getAllowSoap() {
-		return this.checkEnvironmentVariableOverride(ALLOW_SOAP, this.allowSoap);
 	}
 
     @Override

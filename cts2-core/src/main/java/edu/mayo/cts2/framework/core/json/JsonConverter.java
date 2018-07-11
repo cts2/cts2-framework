@@ -61,7 +61,6 @@ import java.util.Map.Entry;
 public class JsonConverter {
 
 	private static final String MODEL_PACKAGE = "edu.mayo.cts2.framework.model";
-	private static final String WSDL_PACKAGE = "edu.mayo.cts2.framework.model.wsdl.*";
 
     private static final String LIST_SUFFIX = "List";
     private static final String CHOICE_VALUE = "_choiceValue";
@@ -95,8 +94,7 @@ public class JsonConverter {
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 				.filterInputsBy(
 						new FilterBuilder().include(
-								"edu.mayo.cts2.framework.model.*").exclude(
-								WSDL_PACKAGE)).setUrls(
+								"edu.mayo.cts2.framework.model.*")).setUrls(
 						ClasspathHelper.forPackage(MODEL_PACKAGE)));
 
 		Set<Class<? extends Cts2ModelObject>> types = reflections

@@ -4,7 +4,6 @@
 		<AD name="Allow HTML Rendering" id="allowHtmlRendering" required="true" default="false" type="Boolean"  />
 		<AD name="Show Stack Trace on Error" id="showStackTrace" required="true" default="false" type="Boolean"  />
 		<AD name="Show the HTML Home (Welcome) Page" id="showHomePage" required="true" default="true" type="Boolean"  />
-		<AD name="Allow SOAP API Access" id="allowSoap" required="true" default="false" type="Boolean"  />
         <AD name="Support Email" id="supportEmail" type="String"  />
         <AD name="Alternate Homepage" id="alternateHomePage" type="String"  />
     </OCD>

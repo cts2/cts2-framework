@@ -39,7 +39,7 @@ import java.util.Properties;
  * Some examples of how this can be used:
  * 
  * - To fully or partially start OSGi.
- * - To expose (or not) various Web Resources (HTML pages, SOAP Services, etc).
+ * - To expose (or not) various Web Resources (HTML pages etc).
  * 
  * This will be configured by a 'cts2-deployment.properties' file in the CTS2 config directory.
  *

@@ -4,48 +4,48 @@
 	elementFormDefault="qualified">
 
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/Updates"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/updates/Updates.xsd" />
-
+		schemaLocation="../updates/Updates.xsd" />
+		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CoreService"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/CoreService.xsd" />
+		schemaLocation="../core/CoreService.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/AssociationServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/association/AssociationServices.xsd" />
+		schemaLocation="../association/AssociationServices.xsd" />
 
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CodeSystemServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/codesystem/CodeSystemServices.xsd" />
+		schemaLocation="../codesystem/CodeSystemServices.xsd" />
 
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CodeSystemVersionServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/codesystemversion/CodeSystemVersionServices.xsd" />
+		schemaLocation="../codesystemversion/CodeSystemVersionServices.xsd" />
 	
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/EntityDescriptionServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/entity/EntityDescriptionServices.xsd" />
+		schemaLocation="../entity/EntityDescriptionServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/MapServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/map/MapServices.xsd" />
+		schemaLocation="../map/MapServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/MapVersionServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/mapversion/MapVersionServices.xsd" />
+		schemaLocation="../mapversion/MapVersionServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/MapEntryServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/mapversion/MapEntryServices.xsd" />
+		schemaLocation="../mapversion/MapEntryServices.xsd" />
 
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/ConceptDomainServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/conceptdomain/ConceptDomainServices.xsd" />
+		schemaLocation="../conceptdomain/ConceptDomainServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/ConceptDomainBindingServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/conceptdomainbinding/ConceptDomainBindingServices.xsd" />
+		schemaLocation="../conceptdomainbinding/ConceptDomainBindingServices.xsd" />
 	
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/ValueSetServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/valueset/ValueSetServices.xsd" />
+		schemaLocation="../valueset/ValueSetServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/ValueSetDefinitionServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/valuesetdefinition/ValueSetDefinitionServices.xsd" />
+		schemaLocation="../valuesetdefinition/ValueSetDefinitionServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/StatementServices"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/statement/StatementServices.xsd" />
+		schemaLocation="../statement/StatementServices.xsd" />
 		
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/Exceptions"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/Exceptions.xsd" />
+		schemaLocation="../core/Exceptions.xsd" />
 	
 </schema>

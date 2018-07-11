@@ -6,9 +6,9 @@
 	targetNamespace="http://www.omg.org/spec/CTS2/1.1/extensions/ChangeSetQueryExtension"
 	elementFormDefault="qualified">
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/Core"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/Core.xsd" />
+		schemaLocation="../core/Core.xsd" />
 	<xs:import namespace="http://www.omg.org/spec/CTS2/1.1/CoreService"
-		schemaLocation="http://informatics.mayo.edu/cts2/spec/CTS2/1.1/core/CoreService.xsd" />
+		schemaLocation="../core/CoreService.xsd" />
 
 	<xs:element name="ChangeSetDirectory">
 		<xs:annotation>
