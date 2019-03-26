@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.service.profile;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 
 /**
  * The Interface QueryService allows for querying and counting CTS2 Resources.
@@ -44,7 +45,20 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 public interface QueryService<ListEntry,Summary,Q extends ResourceQuery> extends BaseQueryService {
-
+	/**
+	 * Gets the resource summaries.
+	 *
+	 * @param query the query
+	 * @param sortCriteria the sort criteria
+	 * @param page the page
+	 * @param String uri that represents the resource
+	 * @return the resource summaries
+	 */
+	public DirectoryResult<Summary> getResourceSummaries(
+			Q query,
+			SortCriteria sortCriteria,
+			Page page,
+			String uri);
 	/**
 	 * Gets the resource summaries.
 	 *
