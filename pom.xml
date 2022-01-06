@@ -484,9 +484,9 @@
 	<repositories>
 		<!-- For testing against latest Spring snapshots -->
 		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
+			<id>repository.spring.snapshot</id>
+			<name>Spring Snapshot Repository</name>
+			<url>https://repo.spring.io/snapshot</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -496,9 +496,9 @@
 		</repository>
 		<!-- For developing against latest Spring milestones -->
 		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
+			<id>repository.spring.milestone</id>
+			<name>Spring Milestone Repository</name>
+			<url>https://repo.spring.io/milestone</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -507,17 +507,17 @@
 		<repository>
 			<id>com.springsource.repository.bundles.release</id>
 			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-			<url>http://repository.springsource.com/maven/bundles/release</url>
+			<url>https://repository.springsource.com/maven/bundles/release</url>
 		</repository>
 		<repository>
 			<id>com.springsource.repository.bundles.external</id>
 			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-			<url>http://repository.springsource.com/maven/bundles/external</url>
+			<url>https://repository.springsource.com/maven/bundles/external</url>
 		</repository>
 		<repository>
 			<id>com.springsource.repository.bundles.milestone</id>
 			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-			<url>http://repository.springsource.com/maven/bundles/milestone</url>
+			<url>https://repository.springsource.com/maven/bundles/milestone</url>
 		</repository>
 
 <!--		<repository>-->
@@ -532,7 +532,7 @@
 		</repository>
 		<repository>
 			<id>clojars</id>
-			<url>http://clojars.org/repo/</url>
+			<url>https://repo.clojars.org/</url>
 		</repository>
 
 		<repository>
