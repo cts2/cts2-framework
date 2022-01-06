@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.mayo.cts2</groupId>
 	<artifactId>cts2-framework</artifactId>
@@ -79,18 +79,32 @@
 	</distributionManagement>
 
 	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.8</version>
-				<configuration>
-					<minmemory>128m</minmemory>
-					<maxmemory>512m</maxmemory>
-					<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>
-				</configuration>
-			</plugin>
-		</plugins>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>2.8</version>
+			<configuration>
+				<minmemory>128m</minmemory>
+				<maxmemory>512m</maxmemory>
+				<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>
+			</configuration>
+		</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jxr-plugin</artifactId>
+			<version>2.3</version>
+		</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-project-info-reports-plugin</artifactId>
+			<version>2.2</version>
+			<configuration>
+				<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+			</configuration>
+		</plugin>
+	</plugins>
 	</reporting>
 
 	<build>
@@ -271,34 +285,34 @@
 						<version>1.0</version>
 					</dependency>
 				</dependencies>
-				<configuration>
-					<reportPlugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>2.8</version>
-							<configuration>
-					          	<minmemory>128m</minmemory>
-								<maxmemory>512m</maxmemory>
-								<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>
-					        </configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-jxr-plugin</artifactId>
-							<version>2.3</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-project-info-reports-plugin</artifactId>
-							<version>2.2</version>
-                            <configuration>
-                                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                            </configuration>
-						</plugin>
-					</reportPlugins>
-				</configuration>
+<!--				<configuration>-->
+<!--					<reportPlugins>-->
+<!--						<plugin>-->
+<!--							<groupId>org.apache.maven.plugins</groupId>-->
+<!--							<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--							<version>2.8</version>-->
+<!--							<configuration>-->
+<!--					          	<minmemory>128m</minmemory>-->
+<!--								<maxmemory>512m</maxmemory>-->
+<!--								<additionalJOption>-J-XX:MaxPermSize=512m</additionalJOption>-->
+<!--					        </configuration>-->
+<!--						</plugin>-->
+<!--						<plugin>-->
+<!--							<groupId>org.apache.maven.plugins</groupId>-->
+<!--							<artifactId>maven-jxr-plugin</artifactId>-->
+<!--							<version>2.3</version>-->
+<!--						</plugin>-->
+<!--						<plugin>-->
+<!--							<groupId>org.apache.maven.plugins</groupId>-->
+<!--							<artifactId>maven-project-info-reports-plugin</artifactId>-->
+<!--							<version>2.2</version>-->
+<!--                            <configuration>-->
+<!--                                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>-->
+<!--                                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>-->
+<!--                            </configuration>-->
+<!--						</plugin>-->
+<!--					</reportPlugins>-->
+<!--				</configuration>-->
 			</plugin>
 			
 				<plugin>
@@ -506,11 +520,11 @@
 			<url>http://repository.springsource.com/maven/bundles/milestone</url>
 		</repository>
 
-		<repository>
-			<id>scala-tools.org</id>
-			<name>Scala-Tools Maven2 Repository</name>
-			<url>http://scala-tools.org/repo-releases</url>
-		</repository>
+<!--		<repository>-->
+<!--			<id>scala-tools.org</id>-->
+<!--			<name>Scala-Tools Maven2 Repository</name>-->
+<!--			<url>http://scala-tools.org/repo-releases</url>-->
+<!--		</repository>-->
 
 		<repository>
 			<id>clojure-releases</id>

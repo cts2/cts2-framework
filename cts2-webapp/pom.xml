@@ -18,7 +18,7 @@
 	<properties>
 		<org.aspectj-version>1.8.0</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
-		<spring-security.version>3.1.0.RC3</spring-security.version>
+		<spring-security.version>3.1.0.RELEASE</spring-security.version>
 		<jetty.version>6.1.26</jetty.version>
         <context.path>cts2</context.path>
         <port>8888</port>
